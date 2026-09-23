@@ -1,1 +1,1 @@
-# meili-cli
+# Meilisearch CLI
