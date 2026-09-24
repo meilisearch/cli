@@ -1,0 +1,134 @@
+{
+  "commands": {
+    "health": {
+      "aliases": [],
+      "args": {},
+      "description": "Check that the Meilisearch instance is available.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %>",
+        "<%= config.bin %> <%= command.id %> --output json",
+        "MEILI_URL=http://localhost:7700 <%= config.bin %> <%= command.id %>"
+      ],
+      "flags": {
+        "context": {
+          "description": "Use a named context from the config file.",
+          "name": "context",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "url": {
+          "description": "Engine URL. Overrides the context.",
+          "name": "url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
+          "multiple": false,
+          "type": "option"
+        },
+        "api-key": {
+          "description": "Engine API key. Overrides the context.",
+          "name": "api-key",
+          "hasDynamicHelp": false,
+          "helpValue": "<key>",
+          "multiple": false,
+          "type": "option"
+        },
+        "output": {
+          "char": "o",
+          "description": "Output mode. Default: json when stdout is not a TTY, table when it is.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson",
+            "table"
+          ],
+          "type": "option"
+        },
+        "json": {
+          "description": "Same as --output json.",
+          "exclusive": [
+            "output"
+          ],
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "yes": {
+          "char": "y",
+          "description": "Skip the confirmation of destructive commands. Required when stdin is not a TTY.",
+          "name": "yes",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Disable colors. Also honored through the NO_COLOR environment variable.",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "health",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "engine",
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "health.js"
+      ]
+    }
+  },
+  "version": "0.0.0"
+}

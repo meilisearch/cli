@@ -1,0 +1,71 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili health > fails with cli_config and exits 2 when no URL is configured 1`] = `
+{
+  "exitCode": 2,
+  "stderr": "{"error":{"code":"cli_config","type":"cli","message":"No Meilisearch URL configured. Provide one with the \`--url\` flag, the \`MEILI_URL\` environment variable, or a context from the config file (\`--context <name>\`, \`MEILI_CONTEXT\`, or the default context)."}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili health > passes an API error through and exits 1 1`] = `
+{
+  "exitCode": 1,
+  "stderr": "{"error":{"code":"internal","type":"internal","message":"An internal error has occurred. \`Index creation\` failed.","link":"https://docs.meilisearch.com/errors#internal"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili health > prints its help without any network call 1`] = `
+"Check that the Meilisearch instance is available.
+
+USAGE
+  $ meili health [--context <name>] [--url <url>] [--api-key <key>]
+    [--json | -o <mode>] [-y] [--debug] [--no-color]
+
+FLAGS
+  -o, --output=<mode>   Output mode. Default: json when stdout is not a TTY,
+                        table when it is.
+  -y, --yes             Skip the confirmation of destructive commands. Required
+                        when stdin is not a TTY.
+      --api-key=<key>   Engine API key. Overrides the context.
+      --context=<name>  Use a named context from the config file.
+      --debug           Print every HTTP request and response on stderr, secrets
+                        redacted.
+      --json            Same as --output json.
+      --no-color        Disable colors. Also honored through the NO_COLOR
+                        environment variable.
+      --url=<url>       Engine URL. Overrides the context.
+
+DESCRIPTION
+  Check that the Meilisearch instance is available.
+
+EXAMPLES
+  $ meili health
+
+  $ meili health --output json
+
+  MEILI_URL=http://localhost:7700 meili health
+
+"
+`;
+
+exports[`meili health > prints the health of the instance as JSON 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"status":"available"}
+",
+}
+`;
+
+exports[`meili health > reports a connection failure with cli_network and exits 6 1`] = `
+{
+  "exitCode": 6,
+  "stderr": "{"error":{"code":"cli_network","type":"cli","message":"Cannot connect to http://meili.test:7700/health: Failed to fetch."}}
+",
+  "stdout": "",
+}
+`;

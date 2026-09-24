@@ -1,0 +1,4 @@
+# pnpm 11 refuses to run dependency build scripts until each one is approved or denied here.
+# msw ships a postinstall script that only prints a message, so it is denied.
+allowBuilds:
+  msw: false

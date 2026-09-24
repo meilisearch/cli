@@ -1,0 +1,53 @@
+{
+  "name": "@meilisearch/cli",
+  "version": "0.0.0",
+  "description": "The Meilisearch command line tool, built for coding agents.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "meili": "./bin/run.js"
+  },
+  "files": [
+    "bin",
+    "dist",
+    "oclif.manifest.json"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.21.0",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "gen:manifest": "pnpm build && oclif manifest",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "typecheck": "tsc --noEmit",
+    "test": "pnpm gen:manifest && vitest run",
+    "test:integration": "pnpm build && MEILI_INTEGRATION=required vitest run --project integration-engine",
+    "changeset": "changeset"
+  },
+  "oclif": {
+    "bin": "meili",
+    "dirname": "meili",
+    "commands": "./dist/commands",
+    "topicSeparator": " ",
+    "helpClass": "./dist/lib/help"
+  },
+  "dependencies": {
+    "@oclif/core": "^5.0.0",
+    "meilisearch": "^0.62.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.14",
+    "@changesets/cli": "^3.0.3",
+    "@types/node": "^26.6.2",
+    "msw": "^2.15.0",
+    "oclif": "^6.0.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meilisearch/cli.git"
+  }
+}
