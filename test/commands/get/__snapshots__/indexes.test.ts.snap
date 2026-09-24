@@ -1,0 +1,77 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili get indexes > gets one index with --id, as the API returns it 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"uid":"books","primaryKey":"isbn","createdAt":"2026-09-24T10:00:00.000000Z","updatedAt":"2026-09-24T10:00:00.000000Z"}
+",
+}
+`;
+
+exports[`meili get indexes > passes an authentication error through with a hint and exits 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili get indexes > passes the 404 of an unknown --id through and exits 4 1`] = `
+{
+  "exitCode": 4,
+  "stderr": "{"error":{"code":"index_not_found","type":"invalid_request","message":"Index \`nope\` not found.","link":"https://docs.meilisearch.com/errors#index_not_found"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili get indexes > prints its help without any network call 1`] = `
+"List the indexes of the instance, or get one with --id.
+
+USAGE
+  $ meili get indexes [--project-url <url>] [--project-api-key <key>] [-o
+    <mode>] [--debug] [--id <index>] [--limit <n>] [--offset <n>] [--all]
+
+FLAGS
+  -o, --output=<mode>          json (default): one document, the API body as it
+                               is, indented in a terminal, compact when piped.
+                               ndjson: one item per line, list commands only,
+                               streams with --all.
+      --all                    Fetch every page. Streams with ndjson, buffers
+                               into one array with json.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --id=<index>             The index to get. Without it, the command lists
+                               the indexes.
+      --limit=<n>              Passed to the API.
+      --offset=<n>             Passed to the API.
+      --project-api-key=<key>  Project API key.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+
+DESCRIPTION
+  List the indexes of the instance, or get one with --id.
+
+EXAMPLES
+  $ meili get indexes
+
+  $ meili get indexes --output json
+
+  $ meili get indexes --id movies
+
+  $ meili get indexes --limit 5 --offset 10
+
+  $ meili get indexes --all --output ndjson
+
+"
+`;
+
+exports[`meili get indexes > prints the API envelope as it is in JSON 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"results":[{"uid":"movies","primaryKey":"id","createdAt":"2026-09-24T10:00:00.000000Z","updatedAt":"2026-09-24T10:00:00.000000Z"},{"uid":"books","primaryKey":"isbn","createdAt":"2026-09-24T10:00:00.000000Z","updatedAt":"2026-09-24T10:00:00.000000Z"},{"uid":"songs","createdAt":"2026-09-24T10:00:00.000000Z","updatedAt":"2026-09-24T10:00:00.000000Z"}],"offset":0,"limit":20,"total":3}
+",
+}
+`;

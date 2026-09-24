@@ -1,0 +1,67 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili get health > fails with cli_config and exits 2 when no URL is configured 1`] = `
+{
+  "exitCode": 2,
+  "stderr": "{"error":{"code":"cli_config","type":"cli","message":"No project URL configured. Provide one with the \`--project-url\` flag or the \`MEILI_PROJECT_URL\` environment variable."}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili get health > passes an API error through and exits 1 1`] = `
+{
+  "exitCode": 1,
+  "stderr": "{"error":{"code":"internal","type":"internal","message":"An internal error has occurred. \`Index creation\` failed.","link":"https://docs.meilisearch.com/errors#internal"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili get health > prints its help without any network call 1`] = `
+"Check that the Meilisearch instance is available.
+
+USAGE
+  $ meili get health [--project-url <url>] [--project-api-key <key>] [-o
+    <mode>] [--debug]
+
+FLAGS
+  -o, --output=<mode>          json (default): one document, the API body as it
+                               is, indented in a terminal, compact when piped.
+                               ndjson: one item per line, list commands only,
+                               streams with --all.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --project-api-key=<key>  Project API key.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+
+DESCRIPTION
+  Check that the Meilisearch instance is available.
+
+EXAMPLES
+  $ meili get health
+
+  $ meili get health --output json
+
+  MEILI_PROJECT_URL=http://localhost:7700 meili get health
+
+"
+`;
+
+exports[`meili get health > prints the health of the instance as JSON 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"status":"available"}
+",
+}
+`;
+
+exports[`meili get health > reports a connection failure with cli_network and exits 6 1`] = `
+{
+  "exitCode": 6,
+  "stderr": "{"error":{"code":"cli_network","type":"cli","message":"Cannot connect to http://meili.test:7700/health: Failed to fetch."}}
+",
+  "stdout": "",
+}
+`;

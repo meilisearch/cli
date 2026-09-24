@@ -1,0 +1,32 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili schema > prints its help without any network call 1`] = `
+"Print every command with its flags and examples as JSON, from the oclif manifest.
+
+USAGE
+  $ meili schema [--project-url <url>] [--project-api-key <key>] [-o
+    <mode>] [--debug]
+
+FLAGS
+  -o, --output=<mode>          json (default): one document, the API body as it
+                               is, indented in a terminal, compact when piped.
+                               ndjson: one item per line, list commands only,
+                               streams with --all.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --project-api-key=<key>  Project API key.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+
+DESCRIPTION
+  Print every command with its flags and examples as JSON, from the oclif
+  manifest.
+
+EXAMPLES
+  $ meili schema
+
+  $ meili schema --output json
+
+  $ meili schema | jq '.commands[].id'
+
+"
+`;

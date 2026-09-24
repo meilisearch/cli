@@ -1,0 +1,100 @@
+/**
+ * msw handlers for the Meilisearch API. The host is fake: msw intercepts fetch before
+ * any DNS lookup, and an unhandled request is an error.
+ */
+import type { IndexObject, MeilisearchErrorResponse, Task } from "meilisearch";
+import { HttpResponse, http } from "msw";
+
+export const MEILISEARCH_URL = "http://meili.test:7700";
+
+export const meilisearchHandlers = {
+  /** `GET /health` answering `{ "status": "available" }`. */
+  health: (url = MEILISEARCH_URL) =>
+    http.get(`${url}/health`, () => HttpResponse.json({ status: "available" })),
+
+  /**
+   * `GET /indexes` paginating over `all` like the API does: `limit` defaults to
+   * 20, `offset` to 0, and the envelope carries `offset`, `limit` and `total`.
+   */
+  indexes: (all: IndexObject[]) =>
+    http.get(`${MEILISEARCH_URL}/indexes`, ({ request }) => {
+      const params = new URL(request.url).searchParams;
+      const limit = Number(params.get("limit") ?? 20);
+      const offset = Number(params.get("offset") ?? 0);
+      return HttpResponse.json({
+        results: all.slice(offset, offset + limit),
+        offset,
+        limit,
+        total: all.length,
+      });
+    }),
+
+  /** `GET /indexes/{uid}` answering the index from `all`, or the 404 body of Meilisearch. */
+  index: (all: IndexObject[]) =>
+    http.get(`${MEILISEARCH_URL}/indexes/:uid`, ({ params }) => {
+      const found = all.find((index) => index.uid === params.uid);
+      return found === undefined
+        ? HttpResponse.json(indexNotFoundError(String(params.uid)), { status: 404 })
+        : HttpResponse.json(found);
+    }),
+
+  /** Any method on `path` answering a Meilisearch error body with `status`. */
+  apiError: (path: string, status: number, body: MeilisearchErrorResponse) =>
+    http.all(`${MEILISEARCH_URL}${path}`, () => HttpResponse.json(body, { status })),
+
+  /** Any method on `path` failing at the network level. */
+  networkError: (path: string) => http.all(`${MEILISEARCH_URL}${path}`, () => HttpResponse.error()),
+
+  /** `GET /tasks/{uid}` answering the given tasks in order, then the last one forever. */
+  taskSequence: (uid: number, tasks: Task[]) => {
+    let index = 0;
+    return http.get(`${MEILISEARCH_URL}/tasks/${uid}`, () => {
+      const task = tasks[Math.min(index, tasks.length - 1)];
+      index += 1;
+      return HttpResponse.json(task);
+    });
+  },
+};
+
+/** The error body Meilisearch returns for a wrong or missing API key. */
+export const invalidApiKeyError: MeilisearchErrorResponse = {
+  message: "The provided API key is invalid.",
+  code: "invalid_api_key",
+  type: "auth",
+  link: "https://docs.meilisearch.com/errors#invalid_api_key",
+};
+
+/** The error body Meilisearch returns for an index that does not exist. */
+function indexNotFoundError(uid: string): MeilisearchErrorResponse {
+  return {
+    message: `Index \`${uid}\` not found.`,
+    code: "index_not_found",
+    type: "invalid_request",
+    link: "https://docs.meilisearch.com/errors#index_not_found",
+  };
+}
+
+export function makeIndex(uid: string, primaryKey?: string): IndexObject {
+  return {
+    uid,
+    ...(primaryKey === undefined ? {} : { primaryKey }),
+    createdAt: "2026-09-24T10:00:00.000000Z",
+    updatedAt: "2026-09-24T10:00:00.000000Z",
+  };
+}
+
+export function makeTask(overrides: Partial<Task> & Pick<Task, "uid" | "status">): Task {
+  return {
+    indexUid: "movies",
+    type: "indexCreation",
+    enqueuedAt: "2026-09-24T10:00:00Z",
+    startedAt: null,
+    finishedAt: null,
+    duration: null,
+    batchUid: null,
+    canceledBy: null,
+    details: undefined,
+    error: undefined,
+    ...overrides,
+  } as Task;
+}

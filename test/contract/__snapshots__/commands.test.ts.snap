@@ -1,0 +1,168 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`oclif.manifest.json > \`meili schema\` output is a snapshot, so a renamed command or flag is visible in review 1`] = `
+{
+  "commands": [
+    {
+      "description": "Check that the Meilisearch instance is available.",
+      "examples": [
+        "meili get health",
+        "meili get health --output json",
+        "MEILI_PROJECT_URL=http://localhost:7700 meili get health",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "required": false,
+          "type": "option",
+        },
+        {
+          "description": "Project API key.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "required": false,
+          "type": "option",
+        },
+        {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "helpValue": "<mode>",
+          "name": "output",
+          "options": [
+            "json",
+            "ndjson",
+          ],
+          "required": false,
+          "type": "option",
+        },
+        {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "required": false,
+          "type": "boolean",
+        },
+      ],
+      "id": "get health",
+    },
+    {
+      "description": "List the indexes of the instance, or get one with --id.",
+      "examples": [
+        "meili get indexes",
+        "meili get indexes --output json",
+        "meili get indexes --id movies",
+        "meili get indexes --limit 5 --offset 10",
+        "meili get indexes --all --output ndjson",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "required": false,
+          "type": "option",
+        },
+        {
+          "description": "Project API key.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "required": false,
+          "type": "option",
+        },
+        {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "helpValue": "<mode>",
+          "name": "output",
+          "options": [
+            "json",
+            "ndjson",
+          ],
+          "required": false,
+          "type": "option",
+        },
+        {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "required": false,
+          "type": "boolean",
+        },
+        {
+          "description": "The index to get. Without it, the command lists the indexes.",
+          "helpValue": "<index>",
+          "name": "id",
+          "required": false,
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "required": false,
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "required": false,
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "name": "all",
+          "required": false,
+          "type": "boolean",
+        },
+      ],
+      "id": "get indexes",
+    },
+    {
+      "description": "Print every command with its flags and examples as JSON, from the oclif manifest.",
+      "examples": [
+        "meili schema",
+        "meili schema --output json",
+        "meili schema | jq '.commands[].id'",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "required": false,
+          "type": "option",
+        },
+        {
+          "description": "Project API key.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "required": false,
+          "type": "option",
+        },
+        {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "helpValue": "<mode>",
+          "name": "output",
+          "options": [
+            "json",
+            "ndjson",
+          ],
+          "required": false,
+          "type": "option",
+        },
+        {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "required": false,
+          "type": "boolean",
+        },
+      ],
+      "id": "schema",
+    },
+  ],
+  "name": "meili",
+  "version": "0.0.0",
+}
+`;

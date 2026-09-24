@@ -1,0 +1,7 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.DS_Store
+# OpenAPI documents downloaded by `pnpm openapi`, never committed
+openapi/
