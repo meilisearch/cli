@@ -3,7 +3,7 @@
  * declared API and the global flags. The route-derived names are checked in
  * api.test.ts.
  */
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { glob } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -12,13 +12,22 @@ import { BaseCommand } from "../../src/lib/base-command.js";
 import { PROJECT_ROOT, runCommand } from "../helpers/run-command.js";
 import { codeSpans, readDoc, section, tableRows } from "./markdown.js";
 
+interface ManifestFlag {
+  type: "boolean" | "option";
+  char?: string;
+  description?: string;
+  helpValue?: string;
+  options?: string[];
+  hidden?: boolean;
+}
+
 interface Manifest {
   commands: Record<
     string,
     {
       description?: string;
       examples?: Array<string | { command: string }>;
-      flags: Record<string, { char?: string }>;
+      flags: Record<string, ManifestFlag>;
     }
   >;
 }
@@ -51,6 +60,33 @@ describe("oclif.manifest.json", () => {
         examples.some((example) => example.includes("--output json")),
         `${id} needs an example with --output json`,
       ).toBe(true);
+    }
+  });
+
+  it("every flag has a one-sentence description, and every flag with a value documents it", () => {
+    for (const [id, command] of Object.entries(manifest.commands)) {
+      for (const [name, flag] of Object.entries(command.flags)) {
+        if (flag.hidden === true) continue;
+        expect(
+          flag.description?.trim().endsWith("."),
+          `${id} --${name} needs a description that is a sentence`,
+        ).toBe(true);
+        if (flag.type === "option") {
+          expect(
+            flag.helpValue !== undefined || (flag.options?.length ?? 0) > 0,
+            `${id} --${name} needs a helpValue or options`,
+          ).toBe(true);
+        }
+      }
+    }
+  });
+});
+
+describe("every command has a test file", () => {
+  it("test/commands/ mirrors src/commands/", async () => {
+    for await (const file of glob("src/commands/**/*.ts", { cwd: PROJECT_ROOT })) {
+      const test = file.replace(/^src\//, "test/").replace(/\.ts$/, ".test.ts");
+      expect(existsSync(join(PROJECT_ROOT, test)), `${file} needs ${test}`).toBe(true);
     }
   });
 });
