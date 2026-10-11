@@ -127,7 +127,9 @@ So that a red `pnpm test` reads as a message, not as flakiness:
 - the exceptions table of `commands.md` equals `ROUTE_EXCEPTIONS` in the code, and every exception matches a route of the documents
 - a command without API is not named after an API command or verb
 - every command class exports `static api` in `meilisearch | management | none`
-- every command has a description and two examples, one with `--output json`
+- every command has a description and two examples, one with `--output json`; every flag has a description, and a flag with a value a `helpValue` or options
+- every command in `src/commands/` has its test file in `test/commands/`
+- every path, `pnpm` script and `BaseCommand` member the guides cite exists; a path cited before it exists is listed as planned in `test/contract/docs.test.ts`, and the test asks to remove it from the list once it exists
 - every command exposes the global flags of `commands.md`; a parent path parameter is a required flag; no command has a positional argument
 - the `meili schema` output is a snapshot
 - a variable that doubles a flag is named `MEILI_` plus the flag name (rule 14)

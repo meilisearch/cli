@@ -29,7 +29,8 @@ Not per command. They protect the promises of `docs/contract/`:
 
 - `meili schema` output is a snapshot, so a renamed command or flag is visible in review
 - every command declares `static api`
-- every command has a description and at least two examples
+- every command has a description and at least two examples; every flag has a description, and a flag with a value documents it
+- every command in `src/commands/` has its test file in `test/commands/`
 - exit codes match the table in `output.md` for each `cli_` and `management_` code
 - `--help` never opens a network connection
 - redaction removes every secret from `--debug` traces
@@ -40,6 +41,7 @@ And they keep code and docs in sync:
 - every `MEILI_*` environment variable read in `src/` appears in the table of `docs/contract/config.md`, and every variable in the table is read somewhere
 - every error code defined in `src/lib/errors.ts` appears in `docs/contract/output.md`, and every code in that file is defined
 - every ADR file has a status line, and a `superseded` ADR names its successor
+- every path, `pnpm` script and `BaseCommand` member that `CLAUDE.md`, the README, `CONTRIBUTING.md`, the skills and the contracts cite exists, and every command the README shows is in the manifest; paths a doc names before they exist are listed as planned in `test/contract/docs.test.ts`, and the test fails when one of them appears, so that the list stays short
 
 These tests parse the Markdown tables. Keep the tables in the format they have today, one variable, one code or one exception per row, in backticks.
 

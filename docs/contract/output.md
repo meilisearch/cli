@@ -100,7 +100,7 @@ Destructive commands are those of the verbs `delete`, `cancel` and `swap`, as `c
 
 ## Help
 
-- Every command has a `description` of one sentence and at least two `examples`.
+- Every command has a `description` of one sentence and at least two `examples`. Every flag has a description of one sentence, and a flag that takes a value documents it with a `helpValue` or a list of options.
 - `--help` never makes a network call.
 - `meili schema` prints the same information as JSON for every command. It reads the oclif manifest and is always in sync with the code.
 
