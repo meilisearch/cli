@@ -93,7 +93,7 @@ Copy `test/integration/meilisearch/get-health.test.ts` or `get-indexes.test.ts`.
 ## 6. Manifest, changeset
 
 - `pnpm gen:manifest`: builds and rewrites `oclif.manifest.json`. The file is committed; CI fails if it differs from the code. The `meili schema` snapshot in `test/contract/__snapshots__/` changes with it: update it on purpose with `pnpm test -u`, and read the diff.
-- Changeset: a new command is visible to users of the package, so it needs a line. Until the first release there is a single changeset, `.changeset/first-version.md`: add your command to its first bullet. After the first release, write `.changeset/add-<command-with-dashes>.md` by hand, the interactive `pnpm changeset` cannot be answered by an agent. The line names the command with its required flags; the optional ones live in `--help`:
+- Changeset: a new command is visible to users of the package, so it needs a line. Until the first release there is a single changeset, `.changeset/first-version.md`: add your command to its `Commands` bullet, and a new feature to the bullet of its theme. After the first release, write `.changeset/add-<command-with-dashes>.md` by hand, the interactive `pnpm changeset` cannot be answered by an agent. The line names the command with its required flags; the optional ones live in `--help`:
 
   ```md
   ---
