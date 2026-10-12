@@ -49,11 +49,11 @@ They read the OpenAPI documents in `openapi/`, downloaded by `pnpm openapi` and 
 
 ## What runs where
 
-| Suite | Local `pnpm test` | Pull request CI | Nightly |
-|---|---|---|---|
-| Unit | yes | yes | yes |
-| Contract | yes | yes | yes |
-| Integration Meilisearch | when Meilisearch is up on :7700, skipped otherwise with a visible notice | yes | yes |
-| Integration management | when the Management API is up locally, skipped otherwise with a visible notice | yes | yes |
+| Suite | Local `pnpm test` | Pull request CI |
+|---|---|---|
+| Unit | yes | yes |
+| Contract | yes | yes |
+| Integration Meilisearch | when Meilisearch is up on :7700, skipped otherwise with a visible notice | yes |
+| Integration management | when the Management API is up locally, skipped otherwise with a visible notice | yes |
 
 Skipped is printed, never silent. A test that passes because the server is absent is a bug.
