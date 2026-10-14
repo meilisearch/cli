@@ -19,7 +19,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "gen:management": "node scripts/gen-management.mjs",
-    "gen:manifest": "pnpm build && oclif manifest",
+    "gen:manifest": "pnpm build && oclif manifest && node scripts/sort-manifest.mjs",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "typecheck": "tsc --noEmit",
