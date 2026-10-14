@@ -18,7 +18,7 @@ export function installHttpTrace(write: Write = (line) => process.stderr.write(l
   traceInstalled = true;
   const original = globalThis.fetch;
   globalThis.fetch = async (input, init) => {
-    traceRequest(write, input, init);
+    await traceRequest(write, input, init);
     const started = performance.now();
     let response: Response;
     try {
@@ -35,19 +35,21 @@ export function installHttpTrace(write: Write = (line) => process.stderr.write(l
   };
 }
 
-function traceRequest(
+/**
+ * meilisearch-js calls `fetch(url, init)`; the generated Management API client
+ * builds a `Request` and calls `fetch(request)`. Both shapes are traced.
+ */
+async function traceRequest(
   write: Write,
   input: Parameters<typeof fetch>[0],
   init: RequestInit | undefined,
-): void {
+): Promise<void> {
+  const request = input instanceof Request ? input : undefined;
   const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
-  const method = init?.method ?? (input instanceof Request ? input.method : "GET");
+  const method = init?.method ?? request?.method ?? "GET";
   write(`> ${method.toUpperCase()} ${url}\n`);
-  const headers = new Headers(
-    init?.headers ?? (input instanceof Request ? input.headers : undefined),
-  );
-  writeHeaders(write, "> ", headers);
-  const body = init?.body;
+  writeHeaders(write, "> ", new Headers(init?.headers ?? request?.headers));
+  const body = init?.body ?? (await request?.clone().text());
   if (typeof body === "string") writeBody(write, "> ", body);
   else if (body !== undefined && body !== null) write("> [body not shown: not text]\n");
 }

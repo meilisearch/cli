@@ -42,6 +42,7 @@ describe("--debug", () => {
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toContain(`> POST ${MANAGEMENT_URL}/api/v2/projects`);
     expect(result.stderr).toContain("> authorization: Bearer ****1a2b");
+    expect(result.stderr).toContain('> {"name":"demo"}');
     expect(result.stderr).toContain('"masterKey":"****9z8y"');
     expect(result.stderr).not.toContain(SECRET);
     expect(result.stderr).not.toContain(project.masterKey);

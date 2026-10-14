@@ -1,12 +1,12 @@
 ---
 name: add-command
-description: Add exactly one command to the meili CLI (for example `get stats` or `cancel tasks`) from its routes in the OpenAPI document, following the naming rules of docs/contract/commands.md and CLAUDE.md, with its snapshot tests, integration test, manifest and changeset. Use it whenever a command must be added or when someone asks to expose an API route.
+description: Add exactly one command to the meili CLI (for example `get stats` or `cancel tasks`) from its routes in the OpenAPI document, following the naming rules of docs/contract/commands.md and CLAUDE.md, with its snapshot tests, its integration test for a Meilisearch command, manifest and changeset. Use it whenever a command must be added or when someone asks to expose an API route.
 argument-hint: <command, for example: get stats>
 ---
 
 # Add the command `meili $ARGUMENTS`
 
-You ship exactly one command in this change: `meili $ARGUMENTS`, with every route of its verb and resource. One file for the command, one test file, one integration test, the regenerated manifest, one changeset line. Nothing else, unless a shared piece of `src/lib/` is missing for this kind of command (say so in the report).
+You ship exactly one command in this change: `meili $ARGUMENTS`, with every route of its verb and resource. One file for the command, one test file, one integration test for a Meilisearch command, the regenerated manifest, one changeset line. Nothing else, unless a shared piece of `src/lib/` is missing for this kind of command (say so in the report).
 
 Work through the steps in order. Every check below is enforced by `pnpm test` through `test/contract/`, so a shortcut only moves the failure later.
 
@@ -44,7 +44,7 @@ The command id is the file path. `meili get stats` gives:
 |---|---|
 | command | `src/commands/get/stats.ts` |
 | unit test | `test/commands/get/stats.test.ts` |
-| integration test | `test/integration/meilisearch/get-stats.test.ts` |
+| integration test, Meilisearch commands only | `test/integration/meilisearch/get-stats.test.ts` |
 | snapshot (generated) | `test/commands/get/__snapshots__/stats.test.ts.snap` |
 
 The class name is the command id in PascalCase (`GetStats`). The first command of a new verb (`create`, `update`, `delete`, `cancel`, ...) also needs the topic description in `package.json`, under `oclif.topics.<verb>.description`, otherwise `meili --help` does not list the verb. A verb-only command (`search`, `export`) is a file at the root of `src/commands/`.
