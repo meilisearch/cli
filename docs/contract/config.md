@@ -28,9 +28,9 @@ The path is `$MEILI_CONFIG` if set, else `$XDG_CONFIG_HOME/meili/config.json`, e
 ```
 
 - `url` is required, `apiKey` is optional. Nothing else: no current project, no default entry.
-- The CLI reads the file only when it is readable by its owner alone (mode `600`). Otherwise it fails with `cli_config`, and the hint gives the `chmod` to run. A file that does not exist is not an error: the CLI behaves as if there were no file.
+- The file holds API keys, so it belongs to one user and is readable by that user alone: mode `600`, or `400` for a file an agent must not change. When the file is readable by others, the CLI warns on stderr with the `chmod` to run (`output.md`, "Warnings") and goes on. On Windows, where file modes do not exist, there is no check. A file that does not exist is not an error: the CLI behaves as if there were no file.
 - Invalid JSON, or a shape other than the one above, fails with `cli_config` and the path of the file.
-- The file is shared state: every process that reads it is affected by whoever writes it. Give an agent its own file through `MEILI_CONFIG`, prepared by a human and mounted read-only in its sandbox, never the human's file. `meili --help` and `meili schema` say so.
+- The file is shared state: every process that reads it is affected by whoever writes it. Give an agent its own file through `MEILI_CONFIG`, prepared by a human and mounted read-only in its sandbox, never the human's file. An agent adds, removes or changes a project, or the permissions of the file, only when the human asked for it explicitly: the file decides where every later command goes, for every process that reads it. `meili --help`, the help of the `config` commands and `meili schema` say so.
 - `meili config list`, `meili config add` and `meili config remove` manage the file, see `commands.md`. `config add` refuses a name that already exists: changing an entry is a `remove` then an `add`, on purpose.
 
 ## Resolution: nothing is deduced
@@ -101,4 +101,4 @@ A variable that doubles a flag takes its name from the flag: `MEILI_` followed b
 
 - API keys and tokens never appear on stdout, on stderr, in `--debug` traces, in error messages or in snapshots. When a secret must be shown at all, only its last four characters are: `****1a2b`. `meili config list` masks keys the same way.
 - `--debug` redacts the `Authorization` header and every field named `apiKey`, `apikey`, `key`, `token` in request and response bodies. `apikey` is the Management API's spelling of a project's master key. The redaction lives in `src/lib/config.ts` and is tested.
-- The CLI reads keys from the config file, and from nowhere else on disk, and only when the file is readable by its owner alone. Passing a key in a flag is allowed and documented as visible in the process list and in the shell history; `--project-api-key -` reads it from stdin instead.
+- The CLI reads keys from the config file, and from nowhere else on disk, and warns when the file is readable by others. Passing a key in a flag is allowed and documented as visible in the process list and in the shell history; `--project-api-key -` reads it from stdin instead.

@@ -16,7 +16,7 @@ import {
   resolveManagementCredentials,
   resolveProjectConnection,
 } from "./config.js";
-import { MeiliCliError, toRenderedError, writeError } from "./errors.js";
+import { MeiliCliError, toRenderedError, writeError, writeWarning } from "./errors.js";
 import { readStdin } from "./input.js";
 import { type OutputMode, resolveOutputMode, writeData } from "./output.js";
 import { iteratePages, type ListPage, mergePages, type OffsetQuery } from "./pagination.js";
@@ -162,7 +162,7 @@ export abstract class BaseCommand extends Command {
 
   /** The config file of docs/contract/config.md, empty when it does not exist. */
   protected configFile(): ConfigFile {
-    return readConfigFile(configFilePath(process.env));
+    return readConfigFile(configFilePath(process.env), writeWarning);
   }
 
   /** Writes the API response as it is. Read commands end with this call. */

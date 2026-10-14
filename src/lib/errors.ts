@@ -297,6 +297,18 @@ export function writeError(rendered: RenderedError, options: RenderErrorOptions)
 }
 
 /**
+ * Writes a warning on stderr, `{ "warning": ... }` in the shape of an error,
+ * and the command goes on. Indented when stderr is a TTY, like errors.
+ */
+export function writeWarning(warning: MeiliCliError): void {
+  const document = { warning: warning.toBody() };
+  const pretty = process.stderr.isTTY === true;
+  process.stderr.write(
+    `${pretty ? JSON.stringify(document, null, 2) : JSON.stringify(document)}\n`,
+  );
+}
+
+/**
  * Last-resort handler for bin/run.js: errors thrown before a command exists
  * (unknown command, bad global flags on a topic) or escaped from one.
  * Errors already rendered by BaseCommand arrive as ExitError and print nothing.

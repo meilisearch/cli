@@ -73,15 +73,18 @@ export function configFilePath(env: Env): string {
 
 /**
  * The config file; no projects when it does not exist. A file readable by
- * others is refused: it holds API keys.
+ * others holds API keys that others can read: `warn` receives it, and the
+ * file is read anyway. Windows has no file modes, so no check there.
  */
-export function readConfigFile(path: string): ConfigFile {
+export function readConfigFile(path: string, warn: (warning: MeiliCliError) => void): ConfigFile {
   const stat = statSync(path, { throwIfNoEntry: false });
   if (stat === undefined) return { path, projects: {} };
-  if ((stat.mode & 0o077) !== 0) {
-    throw new MeiliCliError("cli_config", `The config file ${path} is readable by others.`, {
-      hint: `Run \`chmod 600 ${path}\`.`,
-    });
+  if (process.platform !== "win32" && (stat.mode & 0o077) !== 0) {
+    warn(
+      new MeiliCliError("cli_config", `The config file ${path} is readable by others.`, {
+        hint: `Run \`chmod 600 ${path}\`.`,
+      }),
+    );
   }
   let parsed: unknown;
   try {

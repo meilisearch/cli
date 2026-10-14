@@ -1,3 +1,4 @@
+import { chmodSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import ConfigList from "../../../src/commands/config/list.js";
@@ -48,5 +49,19 @@ describe("meili config list", () => {
       },
     });
     expect(result.stdout).not.toContain("supersecretkey");
+  });
+
+  it("warns on stderr about a file readable by others, and goes on", async () => {
+    const path = join(scrubbedHome, "open.json");
+    writeConfigFile({ path, projects: { local: { url: "http://localhost:7700" } } });
+    chmodSync(path, 0o644);
+    const result = await runCommand(ConfigList, ["--output", "json"], {
+      env: { MEILI_CONFIG: path },
+    });
+    expect(result).toEqual({
+      stdout: `{"path":"${path}","projects":{"local":{"url":"http://localhost:7700"}}}\n`,
+      stderr: `{"warning":{"code":"cli_config","type":"cli","message":"The config file ${path} is readable by others.","hint":"Run \`chmod 600 ${path}\`."}}\n`,
+      exitCode: 0,
+    });
   });
 });

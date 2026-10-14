@@ -5,7 +5,9 @@ import { projectOf, writeConfigFile } from "../../lib/config.js";
 export default class ConfigRemove extends BaseCommand {
   static api: Api = "none";
 
-  static override description = "Remove a project from the config file.";
+  static override description = `Remove a project from the config file.
+
+The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod",

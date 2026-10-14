@@ -18,6 +18,11 @@ import {
 import { MeiliCliError } from "../../src/lib/errors.js";
 import { scrubbedHome } from "../helpers/run-command.js";
 
+/** A read that must not warn: an unexpected warning fails the test. */
+const noWarning = (warning: MeiliCliError): never => {
+  throw warning;
+};
+
 function caught(fn: () => unknown): MeiliCliError {
   try {
     fn();
@@ -46,21 +51,32 @@ describe("configFilePath", () => {
 describe("readConfigFile", () => {
   it("has no project when the file does not exist", () => {
     const path = join(scrubbedHome, "missing.json");
-    expect(readConfigFile(path)).toEqual({ path, projects: {} });
+    expect(readConfigFile(path, noWarning)).toEqual({ path, projects: {} });
   });
 
   it("reads the projects of an owner-only file", () => {
     writeConfigFile(file("ok.json", { prod, local }));
-    expect(readConfigFile(join(scrubbedHome, "ok.json"))).toEqual(file("ok.json", { prod, local }));
+    expect(readConfigFile(join(scrubbedHome, "ok.json"), noWarning)).toEqual(
+      file("ok.json", { prod, local }),
+    );
   });
 
-  it("refuses a file readable by others, with the chmod to run", () => {
+  it("warns about a file readable by others, with the chmod to run, and reads it", () => {
     const path = join(scrubbedHome, "open.json");
-    writeFileSync(path, '{"projects":{}}');
+    writeFileSync(path, '{"projects":{"prod":{"url":"http://prod"}}}');
     chmodSync(path, 0o644);
-    const error = caught(() => readConfigFile(path));
-    expect(error.code).toBe("cli_config");
-    expect(error.hint).toBe(`Run \`chmod 600 ${path}\`.`);
+    const warnings: MeiliCliError[] = [];
+    expect(readConfigFile(path, (warning) => warnings.push(warning)).projects).toEqual({
+      prod: { url: "http://prod" },
+    });
+    expect(warnings.map((warning) => warning.toBody())).toEqual([
+      {
+        code: "cli_config",
+        type: "cli",
+        message: `The config file ${path} is readable by others.`,
+        hint: `Run \`chmod 600 ${path}\`.`,
+      },
+    ]);
   });
 
   it("refuses invalid JSON and a shape other than projects of url and apiKey", () => {
@@ -72,7 +88,7 @@ describe("readConfigFile", () => {
     ] as const) {
       const path = join(scrubbedHome, name);
       writeFileSync(path, content, { mode: 0o600 });
-      const error = caught(() => readConfigFile(path));
+      const error = caught(() => readConfigFile(path, noWarning));
       expect(error.code, name).toBe("cli_config");
       expect(error.message, name).toContain(path);
     }

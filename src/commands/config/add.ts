@@ -7,7 +7,9 @@ export default class ConfigAdd extends BaseCommand {
   static api: Api = "none";
 
   static override description =
-    "Add a project to the config file, creating it owner-only; refuses a name that exists.";
+    `Add a project to the config file, creating it owner-only; refuses a name that exists.
+
+The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700",
