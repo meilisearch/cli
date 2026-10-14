@@ -6,12 +6,20 @@
  */
 import { Command, Errors, Flags, type Interfaces } from "@oclif/core";
 import type { EnqueuedTask, Meilisearch } from "meilisearch";
+import { type BodyInputFlags, buildBody, readBodyInput } from "./body.js";
+import { installHttpTrace } from "./clients/http-trace.js";
+import {
+  createManagementClient,
+  type ManagementClient,
+  type ManagementResult,
+  managementRequest,
+} from "./clients/management.js";
 import { createMeilisearchClient } from "./clients/meilisearch.js";
 import {
   type ConfigFile,
   configFilePath,
+  DEFAULT_MANAGEMENT_URL,
   ENV,
-  type ManagementCredentials,
   readConfigFile,
   resolveManagementCredentials,
   resolveProjectConnection,
@@ -60,6 +68,14 @@ export abstract class BaseCommand extends Command {
         "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
       helpValue: "<name>",
     }),
+    "management-token": Flags.string({
+      description: "Management API personal access token.",
+      helpValue: "<pat>",
+    }),
+    "management-url": Flags.string({
+      description: `Management API base URL. Default ${DEFAULT_MANAGEMENT_URL}.`,
+      helpValue: "<url>",
+    }),
     output: Flags.option({
       char: "o",
       options: ["json", "ndjson"] as const,
@@ -107,8 +123,8 @@ export abstract class BaseCommand extends Command {
   protected outputMode!: OutputMode;
   /** Set when `static api` is `meilisearch`. */
   protected meilisearch!: Meilisearch;
-  /** Set when `static api` is `management`. The client is built here once it is generated. */
-  protected management: ManagementCredentials | undefined;
+  /** Set when `static api` is `management`. Commands call it through `management()`. */
+  protected managementClient!: ManagementClient;
 
   protected get api(): Api {
     return (this.constructor as typeof BaseCommand).api;
@@ -124,6 +140,7 @@ export abstract class BaseCommand extends Command {
     });
     this.globalFlags = flags as GlobalFlags;
     this.outputMode = resolveOutputMode({ flag: this.globalFlags.output, env: process.env });
+    if (this.globalFlags.debug) installHttpTrace();
 
     if (this.api === "none") return;
 
@@ -140,13 +157,43 @@ export abstract class BaseCommand extends Command {
       this.meilisearch = createMeilisearchClient({
         url: connection.url,
         apiKey: connection.apiKey,
-        debug: this.globalFlags.debug,
-        version: this.config.version,
+        userAgent: this.userAgent,
       });
       return;
     }
 
-    this.management = resolveManagementCredentials(process.env);
+    this.managementClient = createManagementClient({
+      ...resolveManagementCredentials(
+        { token: this.globalFlags["management-token"], url: this.globalFlags["management-url"] },
+        process.env,
+      ),
+      userAgent: this.userAgent,
+    });
+  }
+
+  /** What both APIs see in their client header: `meili-cli (v1.2.3)`. */
+  private get userAgent(): string {
+    return `meili-cli (v${this.config.version})`;
+  }
+
+  /**
+   * One request of a management command: the body of the 2xx answer of `route`,
+   * or a contract error. `call` is one function of the generated SDK.
+   */
+  protected management<T>(
+    route: string,
+    call: (client: ManagementClient) => Promise<ManagementResult<T>>,
+  ): Promise<T> {
+    return managementRequest(this.managementClient, route, call);
+  }
+
+  /**
+   * The body of a write command: `--file` or `--data`, then the body-field
+   * flags, field by field. `fields` maps API field names to flag values; an
+   * undefined value is a flag not given.
+   */
+  protected body<T extends Record<string, unknown>>(flags: BodyInputFlags, fields: T): T {
+    return buildBody(readBodyInput(flags), fields) as T;
   }
 
   /** Renders every error as the contract says, then exits with its code. */

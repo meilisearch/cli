@@ -15,23 +15,14 @@ import {
   resolveProjectConnection,
   writeConfigFile,
 } from "../../src/lib/config.js";
-import { MeiliCliError } from "../../src/lib/errors.js";
+import type { MeiliCliError } from "../../src/lib/errors.js";
+import { caught } from "../helpers/errors.js";
 import { scrubbedHome } from "../helpers/run-command.js";
 
 /** A read that must not warn: an unexpected warning fails the test. */
 const noWarning = (warning: MeiliCliError): never => {
   throw warning;
 };
-
-function caught(fn: () => unknown): MeiliCliError {
-  try {
-    fn();
-  } catch (error) {
-    if (error instanceof MeiliCliError) return error;
-    throw error;
-  }
-  throw new Error("expected a MeiliCliError");
-}
 
 const file = (name: string, projects: ConfigFile["projects"]): ConfigFile => ({
   path: join(scrubbedHome, name),
@@ -201,20 +192,29 @@ describe("resolveProjectConnection", () => {
 
 describe("resolveManagementCredentials", () => {
   it("reads the token and the URL, with the production URL by default", () => {
-    expect(resolveManagementCredentials({ MEILI_MANAGEMENT_TOKEN: "envToken" })).toEqual({
+    expect(resolveManagementCredentials({}, { MEILI_MANAGEMENT_TOKEN: "envToken" })).toEqual({
       token: "envToken",
       url: DEFAULT_MANAGEMENT_URL,
     });
     expect(
-      resolveManagementCredentials({
-        MEILI_MANAGEMENT_TOKEN: "envToken",
-        MEILI_MANAGEMENT_URL: "http://mgmt.test",
-      }),
+      resolveManagementCredentials(
+        {},
+        { MEILI_MANAGEMENT_TOKEN: "envToken", MEILI_MANAGEMENT_URL: "http://mgmt.test" },
+      ),
     ).toEqual({ token: "envToken", url: "http://mgmt.test" });
   });
 
+  it("takes the flags over the variables", () => {
+    expect(
+      resolveManagementCredentials(
+        { token: "flagToken", url: "http://flag.test" },
+        { MEILI_MANAGEMENT_TOKEN: "envToken", MEILI_MANAGEMENT_URL: "http://mgmt.test" },
+      ),
+    ).toEqual({ token: "flagToken", url: "http://flag.test" });
+  });
+
   it("fails before any network call with cli_auth_missing and exit 3", () => {
-    const error = caught(() => resolveManagementCredentials({}));
+    const error = caught(() => resolveManagementCredentials({}, {}));
     expect(error.code).toBe("cli_auth_missing");
     expect(error.exitCode).toBe(3);
     expect(error.message).toContain("`MEILI_MANAGEMENT_TOKEN`");

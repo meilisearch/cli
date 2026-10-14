@@ -5,6 +5,8 @@
 First version of `meili`, the Meilisearch CLI built for coding agents.
 
 - Commands derive from the routes of the Meilisearch API and of the Management API, verb first and resource plural: `meili get health`, `meili get indexes`, `meili get indexes --id movies`.
+- `meili create projects`, `meili update projects` and `meili delete projects` manage Meilisearch Cloud projects through the Management API, with `--management-token` and `--management-url`.
+- Write commands take their body from flags, `--data '<json>'` or `--file <path>` (`-` for stdin), a flag overriding its field; `null` sends a JSON null.
 - `meili schema` prints every command with its flags and examples as JSON.
 - Connection through `--project-url` and `--project-api-key`, or `MEILI_PROJECT_URL` and `MEILI_PROJECT_API_KEY`; `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL` for the Management API.
 - Several projects in a config file, `~/.config/meili/config.json` or `MEILI_CONFIG`, chosen with `--project` on the command line and never deduced; `meili config list`, `config add` and `config remove` manage the file.

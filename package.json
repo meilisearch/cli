@@ -18,6 +18,7 @@
   "packageManager": "pnpm@11.21.0",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "gen:management": "node scripts/gen-management.mjs",
     "gen:manifest": "pnpm build && oclif manifest",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
@@ -40,8 +41,17 @@
       "config": {
         "description": "Projects of the config file, which holds API keys and decides where every command goes. An agent works with the file it was given and changes nothing in it unless the human asked for it explicitly."
       },
+      "create": {
+        "description": "Create a resource from flags, or from --data or --file."
+      },
+      "delete": {
+        "description": "Delete a resource chosen with --id, as written: no confirmation."
+      },
       "get": {
         "description": "Read a resource: the list, or one item with --id."
+      },
+      "update": {
+        "description": "Update a resource chosen with --id, from flags, or from --data or --file."
       }
     }
   },

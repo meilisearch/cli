@@ -8,7 +8,7 @@
 import { mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
-import { MeiliCliError } from "./errors.js";
+import { isRecord, MeiliCliError } from "./errors.js";
 
 export type Env = Readonly<Record<string, string | undefined>>;
 
@@ -42,10 +42,15 @@ export const ENV_VARS: ReadonlyArray<{ name: string; description: string; flag?:
     description:
       "Config file path. Default ~/.config/meili/config.json. Give each agent its own file, read-only.",
   },
-  { name: ENV.MANAGEMENT_TOKEN, description: "Management API personal access token." },
+  {
+    name: ENV.MANAGEMENT_TOKEN,
+    description: "Management API personal access token.",
+    flag: "management-token",
+  },
   {
     name: ENV.MANAGEMENT_URL,
     description: `Management API base URL. Default ${DEFAULT_MANAGEMENT_URL}.`,
+    flag: "management-url",
   },
   { name: ENV.OUTPUT, description: "Default output mode: json or ndjson.", flag: "output" },
   { name: ENV.TIMEOUT, description: "Default --timeout for --wait.", flag: "timeout" },
@@ -209,28 +214,36 @@ export function projectOf(file: ConfigFile, name: string): ProjectEntry {
 
 // Management API credentials
 
+export interface ManagementFlags {
+  token?: string | undefined;
+  url?: string | undefined;
+}
+
 export interface ManagementCredentials {
   token: string;
   url: string;
 }
 
 /**
- * `MEILI_MANAGEMENT_TOKEN`, and `MEILI_MANAGEMENT_URL` with its default. Fails
- * before any network call when the token is missing. The `--management-token`
- * and `--management-url` flags arrive with the first management command.
+ * The flags, then `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL`, with the
+ * production URL by default. Fails before any network call when the token is missing.
  */
-export function resolveManagementCredentials(env: Env): ManagementCredentials {
-  const token = nonEmpty(env[ENV.MANAGEMENT_TOKEN]);
+export function resolveManagementCredentials(
+  flags: ManagementFlags,
+  env: Env,
+): ManagementCredentials {
+  const token = flags.token ?? nonEmpty(env[ENV.MANAGEMENT_TOKEN]);
   if (token === undefined) {
     throw new MeiliCliError(
       "cli_auth_missing",
-      "No Management API token configured. Set the `MEILI_MANAGEMENT_TOKEN` environment variable.",
-      {
-        hint: "Create a personal access token in the Meilisearch Cloud dashboard and set `MEILI_MANAGEMENT_TOKEN`.",
-      },
+      "No Management API token configured. Provide one with the `--management-token` flag or the `MEILI_MANAGEMENT_TOKEN` environment variable.",
+      { hint: "Create a personal access token in the Meilisearch Cloud dashboard." },
     );
   }
-  return { token, url: nonEmpty(env[ENV.MANAGEMENT_URL]) ?? DEFAULT_MANAGEMENT_URL };
+  return {
+    token,
+    url: flags.url ?? nonEmpty(env[ENV.MANAGEMENT_URL]) ?? DEFAULT_MANAGEMENT_URL,
+  };
 }
 
 // Secrets
@@ -279,8 +292,4 @@ export function redactBody(value: unknown): unknown {
 
 function nonEmpty(value: string | undefined): string | undefined {
   return value === undefined || value === "" ? undefined : value;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }

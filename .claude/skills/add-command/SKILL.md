@@ -88,7 +88,7 @@ Run `pnpm test` once to write the snapshots, then read the `.snap` file: the JSO
 
 ## 5. Integration test
 
-Copy `test/integration/meilisearch/get-health.test.ts` or `get-indexes.test.ts`. The file starts with `const meilisearchUp = await meilisearchAvailable()` and wraps everything in `describe.skipIf(!meilisearchUp)`. It runs the built binary with `runBinary([...])` against `MEILISEARCH_URL` and `MASTER_KEY` from `setup.ts`, never against the shell's `MEILI_PROJECT_URL`. Fixtures (an index, documents) are created with the SDK under a random suffix and deleted in `afterAll`, so the suite can run in parallel and never depends on existing data. A management command needs `test/integration/management/`, whose bootstrap (`docs/contract/testing.md`, section 2) does not exist yet: stop and tell the user it must be built first, in its own change.
+Copy `test/integration/meilisearch/get-health.test.ts` or `get-indexes.test.ts`. The file starts with `const meilisearchUp = await meilisearchAvailable()` and wraps everything in `describe.skipIf(!meilisearchUp)`. It runs the built binary with `runBinary([...])` against `MEILISEARCH_URL` and `MASTER_KEY` from `setup.ts`, never against the shell's `MEILI_PROJECT_URL`. Fixtures (an index, documents) are created with the SDK under a random suffix and deleted in `afterAll`, so the suite can run in parallel and never depends on existing data. A management command has no integration test (`docs/contract/testing.md`, section 2): its handlers in `test/helpers/management-handlers.ts` follow `openapi/management.json`, and what the document does not say is reported to the user as a documentation gap, never guessed.
 
 ## 6. Manifest, changeset
 

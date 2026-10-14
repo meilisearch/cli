@@ -10,11 +10,47 @@ import {
   EXIT_CODES,
   formatError,
   MANAGEMENT_ERROR_CODES,
+  ManagementApiError,
   MeiliCliError,
   managementErrorCode,
   meilisearchExitCode,
   toRenderedError,
 } from "../../src/lib/errors.js";
+
+describe("ManagementApiError", () => {
+  it("builds the error object from the status, the API's error field, no link", () => {
+    const rendered = toRenderedError(
+      new ManagementApiError(403, { error: "Forbidden" }, "team not accessible"),
+    );
+    expect(rendered.body).toEqual({
+      code: "management_forbidden",
+      type: "management",
+      message: "Forbidden",
+    });
+    expect(rendered.exitCode).toBe(3);
+  });
+
+  it("falls back to the document's description, then to the status", () => {
+    expect(
+      toRenderedError(new ManagementApiError(422, { errors: {} }, "invalid project attributes"))
+        .body.message,
+    ).toBe("invalid project attributes");
+    expect(toRenderedError(new ManagementApiError(500, undefined, undefined)).body).toEqual({
+      code: "management_error",
+      type: "management",
+      message: "The Management API answered HTTP 500.",
+    });
+  });
+
+  it("hints at the token on 401", () => {
+    const rendered = toRenderedError(
+      new ManagementApiError(401, { error: "Unauthorized" }, "unauthorized"),
+    );
+    expect(rendered.body.code).toBe("management_unauthorized");
+    expect(rendered.body.hint).toContain("--management-token");
+    expect(rendered.exitCode).toBe(3);
+  });
+});
 
 const apiBody = {
   message: "Index `movies` not found.",

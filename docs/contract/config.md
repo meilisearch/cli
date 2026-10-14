@@ -59,7 +59,7 @@ The credential is a personal access token (PAT), created in the Meilisearch Clou
 
 If no token is found, the CLI fails before any network call with `cli_auth_missing` and exit code 3. The hint says where to create a token.
 
-The base URL comes from `--management-url`, then `MEILI_MANAGEMENT_URL`, and defaults to `https://api.meilisearch.com`. Every path starts with `/api/v2`. Both management flags arrive with the first management command.
+The base URL comes from `--management-url`, then `MEILI_MANAGEMENT_URL`, and defaults to `https://api.meilisearch.com`. Every path starts with `/api/v2`.
 
 Storing a token on disk, with a `login` command, is a decision of the Management API milestone. It is not in this contract.
 
@@ -95,7 +95,7 @@ A command cannot build a client by itself. Commands with `api = "none"` (`schema
 
 Every variable is documented in `meili --help`. Adding a variable is a contract change.
 
-A variable that doubles a flag takes its name from the flag: `MEILI_` followed by the flag name in upper snake case. `--project-url` and `MEILI_PROJECT_URL`, `--timeout` and `MEILI_TIMEOUT`, `--management-token` and `MEILI_MANAGEMENT_TOKEN`. `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL` get their flags with the first management command. `MEILI_CONFIG` has no flag, the file is chosen per process, and `--project` has no variable, a project is chosen per command. The contract tests check the pairs.
+A variable that doubles a flag takes its name from the flag: `MEILI_` followed by the flag name in upper snake case. `--project-url` and `MEILI_PROJECT_URL`, `--timeout` and `MEILI_TIMEOUT`, `--management-token` and `MEILI_MANAGEMENT_TOKEN`. `MEILI_CONFIG` has no flag, the file is chosen per process, and `--project` has no variable, a project is chosen per command. The contract tests check the pairs.
 
 ## Secrets
 

@@ -26,7 +26,7 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 5. **Identifiers are named by what they identify.** A query or body parameter that carries identifiers, `uid`, `uids`, `batchUids`, `indexUids`, is named after the resource it identifies: the command's own resource gives `--id` or `--ids`, another resource gives `--<resource>-ids`. So `create indexes --id movies` and `create keys --id <uuid>` carry `uid`; `get tasks --ids 1,2 --batch-ids 7 --index-ids movies` carries `uids`, `batchUids` and `indexUids`; `get batches --ids 7 --task-ids 1,2` carries `batchUids` and `uids`, because bare `uids` are task identifiers everywhere. The API spellings, `--uid`, `--uids`, `--batch-uids`, `--index-uids`, are accepted as aliases, absent from `--help` and `meili schema`. One exception: on `update indexes`, `--id` is the index itself, so the new `uid` is `--new-id`, alias `--uid`. Every other body field keeps its API name, `--primary-key`, `--name`.
 6. **Other flags.** The query parameters and the first-level fields of the JSON body, in kebab-case of the API name: `retrieveVectors` is `--retrieve-vectors`, `teamId` is `--team-id`, `primaryKey` is `--primary-key`. When a body has a single object property named after the resource, `{"project": {"name": …}}` in the Management API, the fields of that object are the flags. The only flags that do not come from a route are the global flags and the CLI-owned flags: `--wait`, `--timeout`, `--all`, `--file`, `--data`.
 7. **Values.** A scalar is passed as it is. A boolean is a bare flag, `--retrieve-vectors`. An array of scalars is comma-separated, `--fields id,title`, as the API's own GET syntax. An object or a nested array is JSON text, `--typo-tolerance '{"enabled":false}'`. The value `null` sends a JSON null, `--expires-at null`, `--stop-words null`.
-8. **Body input.** On every route with a body, `--file <path>` or `--data '<json>'` replaces the body fields; `--file -` reads stdin. Path and query flags stay valid next to them. A body-field flag given together with `--file` or `--data` overrides that field, as a flag overrides its environment variable. Documents are sent as JSON, the only content type the document declares.
+8. **Body input.** On every route with a body, `--file <path>` or `--data '<json>'` replaces the body fields; `--file -` reads stdin. Path and query flags stay valid next to them. A body-field flag given together with `--file` or `--data` overrides that field, as a flag overrides its environment variable. When the body is wrapped, `{"project": {…}}`, `--file` and `--data` give the wrapped object, as the flags do. Documents are sent as JSON, the only content type the document declares.
 9. **Routes that are not implemented.** The `GET` twin of a `POST` route that takes the same parameters in a body (search, similar, the list of documents); the unit route of a resource whose list filters by identifiers (documents, tasks, batches); the settings sub-routes, since `update settings` sends any subset and `null` resets one setting; `GET /api/v2/meilisearch-versions`. Each is recorded without command in the exceptions.
 10. **Experimental routes** are out of the contract until the feature is stable. Implementing one is a contract change: an exception row with the reason. `compact` is the one exception today.
 11. **Destructive commands**, `delete`, `cancel` and `swap`, run as written. There is no confirmation flag and never a question, see `output.md`.
@@ -52,6 +52,8 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 | `POST /dumps` | `meili create dumps` |
 | `GET /api/v2/projects`, `GET /api/v2/projects/{id}` | `meili get projects [--id <id>] [--team-id <id>]` |
 | `POST /api/v2/projects` | `meili create projects --name <name> --team-id <id> --resource-id <id>` |
+| `PATCH /api/v2/projects/{id}` | `meili update projects --id <id> --name <name>` |
+| `DELETE /api/v2/projects/{id}` | `meili delete projects --id <id>` |
 | `GET /api/v2/team-members` | `meili get team-members --team-id <id>` |
 
 ## Exceptions
@@ -104,10 +106,10 @@ These flags work on every command.
 | `--project-url <url>` | Project URL, the Meilisearch instance to talk to. |
 | `--project-api-key <key>` | Project API key. `-` reads it from stdin. |
 | `--project <name>` | A project of the config file. Cannot be combined with `--project-url`. Required when the file has several projects. See `config.md`. |
+| `--management-token <pat>` | Management API personal access token. |
+| `--management-url <url>` | Management API base URL. Default `https://api.meilisearch.com`. |
 | `-o, --output <mode>` | `json` (default) or `ndjson`. See `output.md`. |
 | `--debug` | Print every HTTP request and response on stderr, secrets redacted. |
-
-`--management-token <pat>` and `--management-url <url>`, the pairs of `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL`, join this table with the first management command.
 
 ## Shared flag groups
 
