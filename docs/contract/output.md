@@ -27,9 +27,9 @@ One exception, documented in `commands.md`: commands that do not call an API (`s
 
 Three consequences of pass-through:
 
-- Both APIs name their fields in camelCase, but they do not spell everything alike: the Meilisearch API says `apiKey`, the Management API says `apikey`. The CLI does not normalize. An agent reads each API's documentation and gets exactly that.
+- Both APIs name their fields in camelCase, but they do not name everything alike: a key is `apiKey` in a Meilisearch config file and `masterKey` on a Cloud project. The CLI does not normalize. An agent reads each API's documentation and gets exactly that.
 - A command that filters a list instead of calling a unit route returns the list envelope: `get tasks --ids 42` prints `{"results": [the task], …}`, and the agent reads `results[0]`.
-- Some API responses contain secrets by design, for example `apikey` on a Meilisearch Cloud project. They are data the agent needs and they go to stdout unchanged. Redaction applies to stderr, `--debug` traces and logs, not to the data stream.
+- Some API responses contain secrets by design, for example `masterKey` on a Meilisearch Cloud project. They are data the agent needs and they go to stdout unchanged. Redaction applies to stderr, `--debug` traces and logs, not to the data stream.
 
 ## Errors
 

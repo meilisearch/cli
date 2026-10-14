@@ -1,6 +1,7 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { patchApiV2ProjectsById } from "../../lib/clients/management/generated/sdk.gen.js";
+import type { PatchApiV2ProjectsByIdData } from "../../lib/clients/management/generated/types.gen.js";
 
 export default class UpdateProjects extends BaseCommand {
   static api: Api = "management";
@@ -23,7 +24,9 @@ export default class UpdateProjects extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(UpdateProjects);
-    const project = this.body(flags, { name: flags.name });
+    const project = this.body<NonNullable<PatchApiV2ProjectsByIdData["body"]>["project"]>(flags, {
+      name: flags.name,
+    });
     await this.output(
       await patchApiV2ProjectsById({
         client: this.managementClient,

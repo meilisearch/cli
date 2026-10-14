@@ -172,11 +172,15 @@ export abstract class BaseCommand extends Command {
   }
 
   /**
-   * The body of a write command: `--file` or `--data`, then the body-field
-   * flags, field by field. `fields` maps API field names to flag values; an
-   * undefined value is a flag not given.
+   * The body of a write command, shaped as the generated type `T` says:
+   * `--file` or `--data`, then the body-field flags, field by field. `fields`
+   * maps API field names to flag values; an undefined value is a flag not
+   * given, and the API validates what is required.
    */
-  protected body<T extends Record<string, unknown>>(flags: BodyInputFlags, fields: T): T {
+  protected body<T extends object>(
+    flags: BodyInputFlags,
+    fields: { [K in keyof T]?: T[K] | undefined },
+  ): T {
     return buildBody(flags, fields) as T;
   }
 

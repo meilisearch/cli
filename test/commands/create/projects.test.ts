@@ -32,7 +32,7 @@ describe("meili create projects", () => {
     expect(received).toEqual([
       {
         authorization: `Bearer ${MANAGEMENT_TOKEN}`,
-        body: { project: { name: "demo", teamId: 12, resourceId: 3 } },
+        body: { name: "demo", teamId: 12, resourceId: 3 },
       },
     ]);
   });
@@ -46,7 +46,7 @@ describe("meili create projects", () => {
       { env },
     );
     expect(result.exitCode).toBe(0);
-    expect(received[0]?.body).toEqual({ project: { name: "demo", teamId: 12, resourceId: 3 } });
+    expect(received[0]?.body).toEqual({ name: "demo", teamId: 12, resourceId: 3 });
   });
 
   it("takes the token from --management-token over MEILI_MANAGEMENT_TOKEN", async () => {

@@ -27,6 +27,30 @@ export const RESPONSES: Readonly<Record<string, Readonly<Record<string, string>>
     "403": "not the organization owner",
     "422": "organization still has active projects"
   },
+  "GET /api/v2/projects/{projectId}/cost": {
+    "200": "project estimated cost",
+    "401": "unauthorized",
+    "403": "project not accessible",
+    "422": "invalid window: from after to, larger than 93 days or not an ISO 8601 date"
+  },
+  "PATCH /api/v2/projects/{projectId}/master-key": {
+    "202": "master key rotated, instance restarting",
+    "401": "unauthorized",
+    "403": "not a team or organization owner",
+    "423": "project not running"
+  },
+  "PATCH /api/v2/projects/{projectId}/plan": {
+    "202": "plan change started",
+    "401": "unauthorized",
+    "403": "organization not self-serve",
+    "422": "project in failed state"
+  },
+  "GET /api/v2/projects/{projectId}/usage": {
+    "200": "project usage",
+    "401": "unauthorized",
+    "403": "project not accessible",
+    "422": "invalid window: from after to, larger than 93 days or not an ISO 8601 date"
+  },
   "PATCH /api/v2/projects/{projectId}/version": {
     "202": "version upgrade started",
     "401": "unauthorized",

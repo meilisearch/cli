@@ -30,7 +30,7 @@ describe("--debug", () => {
     expect(result.stderr).not.toContain(SECRET);
   });
 
-  it("masks the management token and the project's apikey in the trace, not on stdout", async () => {
+  it("masks the management token and the project's masterKey in the trace, not on stdout", async () => {
     server.use(managementHandlers.createProject());
     const result = await runCommand(
       CreateProjects,
@@ -42,11 +42,11 @@ describe("--debug", () => {
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toContain(`> POST ${MANAGEMENT_URL}/api/v2/projects`);
     expect(result.stderr).toContain("> authorization: Bearer ****1a2b");
-    expect(result.stderr).toContain('"apikey":"****9z8y"');
+    expect(result.stderr).toContain('"masterKey":"****9z8y"');
     expect(result.stderr).not.toContain(SECRET);
-    expect(result.stderr).not.toContain(project.apikey);
+    expect(result.stderr).not.toContain(project.masterKey);
     // The API body is data: the key the agent asked for goes to stdout unchanged.
-    expect(JSON.parse(result.stdout).apikey).toBe(project.apikey);
+    expect(JSON.parse(result.stdout).masterKey).toBe(project.masterKey);
   });
 
   it("never prints the key from MEILI_PROJECT_API_KEY either", async () => {

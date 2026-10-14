@@ -100,5 +100,5 @@ A variable that doubles a flag takes its name from the flag: `MEILI_` followed b
 ## Secrets
 
 - API keys and tokens never appear on stdout, on stderr, in `--debug` traces, in error messages or in snapshots. When a secret must be shown at all, only its last four characters are: `****1a2b`. `meili config list` masks keys the same way.
-- `--debug` redacts the `Authorization` header and every field named `apiKey`, `apikey`, `key`, `token` in request and response bodies. `apikey` is the Management API's spelling of a project's master key. The redaction lives in `src/lib/config.ts` and is tested.
+- `--debug` redacts the `Authorization` header and every field named `apiKey`, `apikey`, `masterKey`, `key`, `token` in request and response bodies. `masterKey` is a Cloud project's master key, as the Management API returns it. The redaction lives in `src/lib/config.ts` and is tested.
 - The CLI reads keys from the config file, and from nowhere else on disk, and warns when the file is readable by others. Passing a key in a flag is allowed and documented as visible in the process list and in the shell history; `--project-api-key -` reads it from stdin instead.

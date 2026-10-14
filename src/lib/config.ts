@@ -253,8 +253,14 @@ export function maskSecret(value: string): string {
   return value.length > 4 ? `****${value.slice(-4)}` : "****";
 }
 
-/** Body fields whose value is a secret, as listed in config.md. `apikey` is the Management API's spelling. */
-export const REDACTED_FIELDS: ReadonlySet<string> = new Set(["apiKey", "apikey", "key", "token"]);
+/** Body fields whose value is a secret, as listed in config.md. `masterKey` is a Cloud project's, in the Management API. */
+export const REDACTED_FIELDS: ReadonlySet<string> = new Set([
+  "apiKey",
+  "apikey",
+  "masterKey",
+  "key",
+  "token",
+]);
 
 const REDACTED_HEADERS: ReadonlySet<string> = new Set(["authorization", "x-meili-api-key"]);
 

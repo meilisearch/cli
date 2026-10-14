@@ -41,6 +41,13 @@ export type PlanFeature = {
     productName?: string | null;
     unitPrice?: number | null;
     monthlyEstimation?: number | null;
+    /**
+     * Billed per package of units: the quantity is divided by `divideBy` before applying `unitPrice`.
+     */
+    transformQuantity?: {
+        divideBy?: number;
+        round?: 'up' | 'down';
+    } | null;
 };
 
 export type Plan = {
@@ -81,7 +88,7 @@ export type Project = {
     name: string;
     projectUid: string;
     url?: string | null;
-    apikey: string;
+    masterKey: string;
     teamId: number;
     resourceId: number;
     msVersion: string;
@@ -93,6 +100,65 @@ export type Project = {
     terminatedAt?: string | null;
     freeTrialEndsAt?: string | null;
     resource: Resource;
+};
+
+/**
+ * Usage of a UTC day. A null quantity means nothing was collected that day.
+ */
+export type ProjectUsageDay = {
+    date: string;
+    /**
+     * Hours per machine size (resource), each one having its own hourly price.
+     */
+    runtime: Array<{
+        resourceId: number;
+        hours: number;
+    }>;
+    /**
+     * Provisioned disk.
+     */
+    storageGb: number | null;
+    /**
+     * Outbound bandwidth.
+     */
+    bandwidthBytes: number | null;
+    documents: number | null;
+    searches: number | null;
+    chatTokens: number | null;
+};
+
+export type ProjectUsage = {
+    projectId: number;
+    from: string;
+    to: string;
+    days: Array<ProjectUsageDay>;
+};
+
+/**
+ * A feature the project is billed per usage for. Monthly prices (storage, documents, base fee) are prorated on the hours the project existed.
+ */
+export type ProjectCostItem = {
+    kind: 'instance_runtime' | 'storage' | 'bandwidth' | 'document' | 'search' | 'chat_token' | 'base';
+    /**
+     * Machine size of an instance_runtime item.
+     */
+    resourceId?: number;
+    quantity: number;
+    unit: 'hour' | 'GB-month' | 'MiB' | 'document-month' | 'search' | 'token' | 'month';
+    unitPrice: number;
+    /**
+     * quantity × unitPrice
+     */
+    amount: number;
+};
+
+export type ProjectCost = {
+    projectId: number;
+    from: string;
+    to: string;
+    currency: string;
+    total: number;
+    items: Array<ProjectCostItem>;
 };
 
 export type GetApiV2MeData = {
@@ -250,6 +316,158 @@ export type PatchApiV2OrganizationsByIdResponses = {
 
 export type PatchApiV2OrganizationsByIdResponse = PatchApiV2OrganizationsByIdResponses[keyof PatchApiV2OrganizationsByIdResponses];
 
+export type GetApiV2ProjectsByProjectIdCostData = {
+    body?: never;
+    path: {
+        projectId: number;
+    };
+    query?: {
+        /**
+         * First UTC day of the window, inclusive. Defaults to the first day of the current month.
+         */
+        from?: string;
+        /**
+         * Last UTC day of the window, inclusive. Defaults to today. The window can not exceed 93 days.
+         */
+        to?: string;
+    };
+    url: '/api/v2/projects/{projectId}/cost';
+};
+
+export type GetApiV2ProjectsByProjectIdCostErrors = {
+    /**
+     * unauthorized
+     */
+    401: unknown;
+    /**
+     * project not accessible
+     */
+    403: unknown;
+    /**
+     * invalid window: from after to, larger than 93 days or not an ISO 8601 date
+     */
+    422: unknown;
+};
+
+export type GetApiV2ProjectsByProjectIdCostResponses = {
+    /**
+     * project estimated cost
+     */
+    200: ProjectCost;
+};
+
+export type GetApiV2ProjectsByProjectIdCostResponse = GetApiV2ProjectsByProjectIdCostResponses[keyof GetApiV2ProjectsByProjectIdCostResponses];
+
+export type PatchApiV2ProjectsByProjectIdMasterKeyData = {
+    body?: never;
+    path: {
+        projectId: number;
+    };
+    query?: never;
+    url: '/api/v2/projects/{projectId}/master-key';
+};
+
+export type PatchApiV2ProjectsByProjectIdMasterKeyErrors = {
+    /**
+     * unauthorized
+     */
+    401: unknown;
+    /**
+     * not a team or organization owner
+     */
+    403: unknown;
+    /**
+     * project not running
+     */
+    423: unknown;
+};
+
+export type PatchApiV2ProjectsByProjectIdMasterKeyResponses = {
+    /**
+     * master key rotated, instance restarting
+     */
+    202: Project;
+};
+
+export type PatchApiV2ProjectsByProjectIdMasterKeyResponse = PatchApiV2ProjectsByProjectIdMasterKeyResponses[keyof PatchApiV2ProjectsByProjectIdMasterKeyResponses];
+
+export type PatchApiV2ProjectsByProjectIdPlanData = {
+    body?: {
+        resourceId: number;
+    };
+    path: {
+        projectId: number;
+    };
+    query?: never;
+    url: '/api/v2/projects/{projectId}/plan';
+};
+
+export type PatchApiV2ProjectsByProjectIdPlanErrors = {
+    /**
+     * unauthorized
+     */
+    401: unknown;
+    /**
+     * organization not self-serve
+     */
+    403: unknown;
+    /**
+     * project in failed state
+     */
+    422: unknown;
+};
+
+export type PatchApiV2ProjectsByProjectIdPlanResponses = {
+    /**
+     * plan change started
+     */
+    202: Project;
+};
+
+export type PatchApiV2ProjectsByProjectIdPlanResponse = PatchApiV2ProjectsByProjectIdPlanResponses[keyof PatchApiV2ProjectsByProjectIdPlanResponses];
+
+export type GetApiV2ProjectsByProjectIdUsageData = {
+    body?: never;
+    path: {
+        projectId: number;
+    };
+    query?: {
+        /**
+         * First UTC day of the window, inclusive. Defaults to the first day of the current month.
+         */
+        from?: string;
+        /**
+         * Last UTC day of the window, inclusive. Defaults to today. The window can not exceed 93 days.
+         */
+        to?: string;
+    };
+    url: '/api/v2/projects/{projectId}/usage';
+};
+
+export type GetApiV2ProjectsByProjectIdUsageErrors = {
+    /**
+     * unauthorized
+     */
+    401: unknown;
+    /**
+     * project not accessible
+     */
+    403: unknown;
+    /**
+     * invalid window: from after to, larger than 93 days or not an ISO 8601 date
+     */
+    422: unknown;
+};
+
+export type GetApiV2ProjectsByProjectIdUsageResponses = {
+    /**
+     * project usage
+     */
+    200: ProjectUsage;
+};
+
+export type GetApiV2ProjectsByProjectIdUsageResponse = GetApiV2ProjectsByProjectIdUsageResponses[keyof GetApiV2ProjectsByProjectIdUsageResponses];
+
 export type PatchApiV2ProjectsByProjectIdVersionData = {
     body?: {
         version: string;
@@ -316,11 +534,10 @@ export type GetApiV2ProjectsResponse = GetApiV2ProjectsResponses[keyof GetApiV2P
 
 export type PostApiV2ProjectsData = {
     body?: {
-        project: {
-            name?: string;
-            teamId?: number;
-            resourceId?: number;
-        };
+        name: string;
+        teamId: number;
+        resourceId: number;
+        msVersion?: string;
     };
     path?: never;
     query?: never;

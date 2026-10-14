@@ -16,7 +16,7 @@ USAGE
   $ meili create projects [--project-url <url>] [--project-api-key <key>]
     [--project <name>] [--management-token <pat>] [--management-url <url>] [-o
     <mode>] [--debug] [--name <name>] [--team-id <id>] [--resource-id <id>]
-    [--file <path> | --data <json>]
+    [--ms-version <version>] [--file <path> | --data <json>]
 
 FLAGS
   -o, --output=<mode>           json (default): one document, the API body as it
@@ -30,6 +30,8 @@ FLAGS
       --management-token=<pat>  Management API personal access token.
       --management-url=<url>    Management API base URL. Default
                                 https://api.meilisearch.com.
+      --ms-version=<version>    Meilisearch version of the project, the latest
+                                by default.
       --name=<name>             Name of the project.
       --project=<name>          A project of the config file. Cannot be combined
                                 with --project-url. Required when the file has
@@ -49,6 +51,8 @@ EXAMPLES
 
   $ meili create projects --name demo --team-id 12 --resource-id 3 --output json
 
+  $ meili create projects --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0
+
   $ meili create projects --data '{"name":"demo","teamId":12,"resourceId":3}'
 
   $ meili create projects --file project.json --name other-name
@@ -60,7 +64,7 @@ exports[`meili create projects > sends the flags as the project body with the to
 {
   "exitCode": 0,
   "stderr": "",
-  "stdout": "{"id":343,"name":"demo","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","apikey":"projectmasterkey9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","plan":"build","regionId":1}}
+  "stdout": "{"id":343,"name":"demo","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","masterKey":"projectmasterkey9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","plan":"build","regionId":1}}
 ",
 }
 `;

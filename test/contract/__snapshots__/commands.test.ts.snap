@@ -203,6 +203,7 @@ The file holds API keys and decides where every later command goes, for every pr
       "examples": [
         "meili create projects --name demo --team-id 12 --resource-id 3",
         "meili create projects --name demo --team-id 12 --resource-id 3 --output json",
+        "meili create projects --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
         "meili create projects --data '{"name":"demo","teamId":12,"resourceId":3}'",
         "meili create projects --file project.json --name other-name",
       ],
@@ -278,6 +279,13 @@ The file holds API keys and decides where every later command goes, for every pr
           "description": "Resource of the project: its plan and its region.",
           "helpValue": "<id>",
           "name": "resource-id",
+          "required": false,
+          "type": "option",
+        },
+        {
+          "description": "Meilisearch version of the project, the latest by default.",
+          "helpValue": "<version>",
+          "name": "ms-version",
           "required": false,
           "type": "option",
         },

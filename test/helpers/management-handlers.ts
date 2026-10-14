@@ -14,13 +14,13 @@ export const managementEnv = {
   MEILI_MANAGEMENT_URL: MANAGEMENT_URL,
 };
 
-/** A project as the API returns it; `apikey` is a secret by design (output.md, "Pass-through"). */
+/** A project as the API returns it; `masterKey` is a secret by design (output.md, "Pass-through"). */
 export const project: Project = {
   id: 343,
   name: "demo",
   projectUid: "ms-abc",
   url: "https://ms-abc.sfo.meilisearch.io",
-  apikey: "projectmasterkey9z8y",
+  masterKey: "projectmasterkey9z8y",
   teamId: 12,
   resourceId: 3,
   msVersion: "v1.54.0",
@@ -39,11 +39,8 @@ export interface ReceivedRequest {
 }
 
 /** Parses the JSON body and records it with the `Authorization` header. */
-async function record(
-  received: ReceivedRequest[],
-  request: Request,
-): Promise<{ project?: Record<string, unknown> }> {
-  const body = (await request.json()) as { project?: Record<string, unknown> };
+async function record(received: ReceivedRequest[], request: Request): Promise<unknown> {
+  const body: unknown = await request.json();
   received.push({ authorization: request.headers.get("authorization"), body });
   return body;
 }
@@ -52,14 +49,14 @@ export const managementHandlers = {
   /** `POST /api/v2/projects` answering 201 with `project` carrying the attributes received. */
   createProject: (received: ReceivedRequest[] = []) =>
     http.post(`${MANAGEMENT_URL}/api/v2/projects`, async ({ request }) => {
-      const body = await record(received, request);
-      return HttpResponse.json({ ...project, ...body.project }, { status: 201 });
+      const attributes = (await record(received, request)) as Record<string, unknown>;
+      return HttpResponse.json({ ...project, ...attributes }, { status: 201 });
     }),
 
   /** `PATCH /api/v2/projects/{id}` answering 200 with `project` carrying the attributes received. */
   updateProject: (received: ReceivedRequest[] = []) =>
     http.patch(`${MANAGEMENT_URL}/api/v2/projects/:id`, async ({ request }) => {
-      const body = await record(received, request);
+      const body = (await record(received, request)) as { project?: Record<string, unknown> };
       return HttpResponse.json({ ...project, ...body.project });
     }),
 

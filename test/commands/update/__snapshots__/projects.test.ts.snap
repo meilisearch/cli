@@ -55,7 +55,7 @@ exports[`meili update projects > sends the new name for the project of --id, and
 {
   "exitCode": 0,
   "stderr": "",
-  "stdout": "{"id":343,"name":"renamed","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","apikey":"projectmasterkey9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","plan":"build","regionId":1}}
+  "stdout": "{"id":343,"name":"renamed","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","masterKey":"projectmasterkey9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","plan":"build","regionId":1}}
 ",
 }
 `;

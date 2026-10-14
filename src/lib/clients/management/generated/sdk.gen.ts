@@ -2,7 +2,7 @@
 
 import { client } from './client.gen.js';
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client/index.js';
-import type { DeleteApiV2OrganizationsByIdData, DeleteApiV2OrganizationsByIdErrors, DeleteApiV2OrganizationsByIdResponses, DeleteApiV2ProjectsByIdData, DeleteApiV2ProjectsByIdErrors, DeleteApiV2ProjectsByIdResponses, DeleteApiV2TeamMembersData, DeleteApiV2TeamMembersErrors, DeleteApiV2TeamMembersResponses, DeleteApiV2TeamsByIdData, DeleteApiV2TeamsByIdErrors, DeleteApiV2TeamsByIdResponses, GetApiV2MeData, GetApiV2MeErrors, GetApiV2MeilisearchVersionsData, GetApiV2MeilisearchVersionsErrors, GetApiV2MeilisearchVersionsResponses, GetApiV2MeResponses, GetApiV2OrganizationsByIdData, GetApiV2OrganizationsByIdErrors, GetApiV2OrganizationsByIdResponses, GetApiV2OrganizationsData, GetApiV2OrganizationsErrors, GetApiV2OrganizationsResponses, GetApiV2ProjectsByIdData, GetApiV2ProjectsByIdErrors, GetApiV2ProjectsByIdResponses, GetApiV2ProjectsData, GetApiV2ProjectsErrors, GetApiV2ProjectsResponses, GetApiV2RegionsData, GetApiV2RegionsErrors, GetApiV2RegionsResponses, GetApiV2ResourcesData, GetApiV2ResourcesErrors, GetApiV2ResourcesResponses, GetApiV2TeamMembersData, GetApiV2TeamMembersErrors, GetApiV2TeamMembersResponses, GetApiV2TeamsByIdData, GetApiV2TeamsByIdErrors, GetApiV2TeamsByIdResponses, GetApiV2TeamsData, GetApiV2TeamsErrors, GetApiV2TeamsResponses, PatchApiV2OrganizationsByIdData, PatchApiV2OrganizationsByIdErrors, PatchApiV2OrganizationsByIdResponses, PatchApiV2ProjectsByIdData, PatchApiV2ProjectsByIdErrors, PatchApiV2ProjectsByIdResponses, PatchApiV2ProjectsByProjectIdVersionData, PatchApiV2ProjectsByProjectIdVersionErrors, PatchApiV2ProjectsByProjectIdVersionResponses, PatchApiV2TeamsByIdData, PatchApiV2TeamsByIdErrors, PatchApiV2TeamsByIdResponses, PostApiV2ProjectsData, PostApiV2ProjectsErrors, PostApiV2ProjectsResponses, PostApiV2TeamMembersData, PostApiV2TeamMembersErrors, PostApiV2TeamMembersResponses, PostApiV2TeamsData, PostApiV2TeamsErrors, PostApiV2TeamsResponses } from './types.gen.js';
+import type { DeleteApiV2OrganizationsByIdData, DeleteApiV2OrganizationsByIdErrors, DeleteApiV2OrganizationsByIdResponses, DeleteApiV2ProjectsByIdData, DeleteApiV2ProjectsByIdErrors, DeleteApiV2ProjectsByIdResponses, DeleteApiV2TeamMembersData, DeleteApiV2TeamMembersErrors, DeleteApiV2TeamMembersResponses, DeleteApiV2TeamsByIdData, DeleteApiV2TeamsByIdErrors, DeleteApiV2TeamsByIdResponses, GetApiV2MeData, GetApiV2MeErrors, GetApiV2MeilisearchVersionsData, GetApiV2MeilisearchVersionsErrors, GetApiV2MeilisearchVersionsResponses, GetApiV2MeResponses, GetApiV2OrganizationsByIdData, GetApiV2OrganizationsByIdErrors, GetApiV2OrganizationsByIdResponses, GetApiV2OrganizationsData, GetApiV2OrganizationsErrors, GetApiV2OrganizationsResponses, GetApiV2ProjectsByIdData, GetApiV2ProjectsByIdErrors, GetApiV2ProjectsByIdResponses, GetApiV2ProjectsByProjectIdCostData, GetApiV2ProjectsByProjectIdCostErrors, GetApiV2ProjectsByProjectIdCostResponses, GetApiV2ProjectsByProjectIdUsageData, GetApiV2ProjectsByProjectIdUsageErrors, GetApiV2ProjectsByProjectIdUsageResponses, GetApiV2ProjectsData, GetApiV2ProjectsErrors, GetApiV2ProjectsResponses, GetApiV2RegionsData, GetApiV2RegionsErrors, GetApiV2RegionsResponses, GetApiV2ResourcesData, GetApiV2ResourcesErrors, GetApiV2ResourcesResponses, GetApiV2TeamMembersData, GetApiV2TeamMembersErrors, GetApiV2TeamMembersResponses, GetApiV2TeamsByIdData, GetApiV2TeamsByIdErrors, GetApiV2TeamsByIdResponses, GetApiV2TeamsData, GetApiV2TeamsErrors, GetApiV2TeamsResponses, PatchApiV2OrganizationsByIdData, PatchApiV2OrganizationsByIdErrors, PatchApiV2OrganizationsByIdResponses, PatchApiV2ProjectsByIdData, PatchApiV2ProjectsByIdErrors, PatchApiV2ProjectsByIdResponses, PatchApiV2ProjectsByProjectIdMasterKeyData, PatchApiV2ProjectsByProjectIdMasterKeyErrors, PatchApiV2ProjectsByProjectIdMasterKeyResponses, PatchApiV2ProjectsByProjectIdPlanData, PatchApiV2ProjectsByProjectIdPlanErrors, PatchApiV2ProjectsByProjectIdPlanResponses, PatchApiV2ProjectsByProjectIdVersionData, PatchApiV2ProjectsByProjectIdVersionErrors, PatchApiV2ProjectsByProjectIdVersionResponses, PatchApiV2TeamsByIdData, PatchApiV2TeamsByIdErrors, PatchApiV2TeamsByIdResponses, PostApiV2ProjectsData, PostApiV2ProjectsErrors, PostApiV2ProjectsResponses, PostApiV2TeamMembersData, PostApiV2TeamMembersErrors, PostApiV2TeamMembersResponses, PostApiV2TeamsData, PostApiV2TeamsErrors, PostApiV2TeamsResponses } from './types.gen.js';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -80,6 +80,56 @@ export const patchApiV2OrganizationsById = <ThrowOnError extends boolean = true>
         'Content-Type': 'application/json',
         ...options.headers
     }
+});
+
+/**
+ * Returns the estimated cost of a project usage
+ *
+ * Gross estimation of the cost of the project usage over the window: quantity × unit price of the project plan, before free tiers shared across the organization, discounts and taxes. The window is the same as the usage one.
+ */
+export const getApiV2ProjectsByProjectIdCost = <ThrowOnError extends boolean = true>(options: Options<GetApiV2ProjectsByProjectIdCostData, ThrowOnError>): RequestResult<GetApiV2ProjectsByProjectIdCostResponses, GetApiV2ProjectsByProjectIdCostErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetApiV2ProjectsByProjectIdCostResponses, GetApiV2ProjectsByProjectIdCostErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v2/projects/{projectId}/cost',
+    ...options
+});
+
+/**
+ * Rotates the master key of a project
+ *
+ * Generates a new master key and restarts the instance to apply it. The previous master key and every API key derived from it stop working.
+ */
+export const patchApiV2ProjectsByProjectIdMasterKey = <ThrowOnError extends boolean = true>(options: Options<PatchApiV2ProjectsByProjectIdMasterKeyData, ThrowOnError>): RequestResult<PatchApiV2ProjectsByProjectIdMasterKeyResponses, PatchApiV2ProjectsByProjectIdMasterKeyErrors, ThrowOnError, 'data'> => (options.client ?? client).patch<PatchApiV2ProjectsByProjectIdMasterKeyResponses, PatchApiV2ProjectsByProjectIdMasterKeyErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v2/projects/{projectId}/master-key',
+    ...options
+});
+
+/**
+ * Changes the plan (resource) of a project
+ */
+export const patchApiV2ProjectsByProjectIdPlan = <ThrowOnError extends boolean = true>(options: Options<PatchApiV2ProjectsByProjectIdPlanData, ThrowOnError>): RequestResult<PatchApiV2ProjectsByProjectIdPlanResponses, PatchApiV2ProjectsByProjectIdPlanErrors, ThrowOnError, 'data'> => (options.client ?? client).patch<PatchApiV2ProjectsByProjectIdPlanResponses, PatchApiV2ProjectsByProjectIdPlanErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v2/projects/{projectId}/plan',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Returns the daily usage of a project
+ *
+ * Usage per UTC day. The window is clamped to the project lifetime, terminated projects included.
+ */
+export const getApiV2ProjectsByProjectIdUsage = <ThrowOnError extends boolean = true>(options: Options<GetApiV2ProjectsByProjectIdUsageData, ThrowOnError>): RequestResult<GetApiV2ProjectsByProjectIdUsageResponses, GetApiV2ProjectsByProjectIdUsageErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetApiV2ProjectsByProjectIdUsageResponses, GetApiV2ProjectsByProjectIdUsageErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/api/v2/projects/{projectId}/usage',
+    ...options
 });
 
 /**

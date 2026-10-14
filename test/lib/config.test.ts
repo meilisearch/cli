@@ -243,12 +243,13 @@ describe("redaction", () => {
     });
   });
 
-  it("redacts apiKey, key and token fields at any depth", () => {
+  it("redacts apiKey, masterKey, key and token fields at any depth", () => {
     expect(
       redactBody({
         results: [{ uid: "1", key: "supersecretkey1a2b", nested: { token: "tok1234x" } }],
         apiKey: "k",
-        apikey: "masterKey1234",
+        apikey: "oldspelling1234",
+        masterKey: "projectmasterkey9z8y",
         keep: "visible",
         count: 2,
       }),
@@ -256,6 +257,7 @@ describe("redaction", () => {
       results: [{ uid: "1", key: "****1a2b", nested: { token: "****234x" } }],
       apiKey: "****",
       apikey: "****1234",
+      masterKey: "****9z8y",
       keep: "visible",
       count: 2,
     });
