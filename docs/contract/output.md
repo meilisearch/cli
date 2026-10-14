@@ -53,6 +53,16 @@ Errors go to stderr, as one JSON document: compact when stderr is not a TTY, ind
 - The Management API does not define an error body in its spec, and the running API answers with `{"error": "Forbidden"}`: a message, no code. For its errors the CLI builds the object itself: `type` is `management`, `code` comes from the HTTP status (`management_unauthorized` 401, `management_forbidden` 403, `management_not_found` 404, `management_unprocessable` 422, `management_error` otherwise), `message` is the API's `error` field when the body has one and the spec's response description otherwise, `link` is absent. When the spec gains an error schema with codes, this rule is replaced by pass-through.
 - Stack traces appear only with `--debug`.
 
+## Warnings
+
+A warning is a condition the command goes on through. It goes to stderr as one JSON document in the shape of an error, under `warning` instead of `error`, with a code from the table of this file; the exit code and stdout are not affected. Compact when stderr is not a TTY, indented when it is.
+
+```json
+{"warning":{"code":"cli_config","type":"cli","message":"The config file /home/me/.config/meili/config.json is readable by others.","hint":"Run `chmod 600 /home/me/.config/meili/config.json`."}}
+```
+
+The CLI warns when the config file is readable by others, see `config.md`.
+
 ## Exit codes
 
 | Code | Meaning |
@@ -91,7 +101,7 @@ Destructive commands are those of the verbs `delete`, `cancel` and `swap`, as `c
 - `--data <json>` passes a body inline.
 - A body-field flag given together with `--file` or `--data` overrides that field in the body. A flag overrides its environment variable the same way.
 - The value `null` on a flag sends a JSON null: `--expires-at null`, `--stop-words null`.
-- A command never reads stdin unless `--file -` is given. This avoids hanging when an agent runs it in a pipeline.
+- A command never reads stdin unless `--file -` or `--project-api-key -` is given. This avoids hanging when an agent runs it in a pipeline.
 
 ## Pagination
 

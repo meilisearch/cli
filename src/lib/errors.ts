@@ -4,6 +4,7 @@
  * This file, output.ts and config.ts implement the contract. They change only
  * through a contract pull request.
  */
+import { stripVTControlCharacters } from "node:util";
 import { Errors } from "@oclif/core";
 import {
   MeilisearchApiError,
@@ -190,7 +191,8 @@ export function toRenderedError(error: unknown, commandIds: readonly string[] = 
 
   if (error instanceof Errors.CLIError) {
     // oclif parse errors and "command not found". Their exit code is 2 by default.
-    const cleaned = error.message.replace(HELP_SUFFIX, "");
+    // oclif colors parts of its messages in a terminal: the JSON carries none of it.
+    const cleaned = stripVTControlCharacters(error.message).replace(HELP_SUFFIX, "");
     const typed = cleaned.match(NOT_FOUND)?.[1]?.replaceAll(":", " ");
     const closest = typed === undefined ? undefined : closestCommand(typed, commandIds);
     return {
@@ -294,6 +296,18 @@ export function formatError(rendered: RenderedError, options: RenderErrorOptions
 /** Writes a rendered error on stderr. Nothing ever goes to stdout from here. */
 export function writeError(rendered: RenderedError, options: RenderErrorOptions): void {
   process.stderr.write(formatError(rendered, options));
+}
+
+/**
+ * Writes a warning on stderr, `{ "warning": ... }` in the shape of an error,
+ * and the command goes on. Indented when stderr is a TTY, like errors.
+ */
+export function writeWarning(warning: MeiliCliError): void {
+  const document = { warning: warning.toBody() };
+  const pretty = process.stderr.isTTY === true;
+  process.stderr.write(
+    `${pretty ? JSON.stringify(document, null, 2) : JSON.stringify(document)}\n`,
+  );
 }
 
 /**

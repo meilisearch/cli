@@ -19,7 +19,7 @@ Package: `@meilisearch/cli` on npm. Binary: `meili`.
 2. Only `src/lib/output.ts` writes to stdout. Commands never call `console.log`, `process.stdout.write` or `this.log` directly.
 3. Only the generated Management API client and `meilisearch-js` make HTTP calls. Never write `fetch` in a command.
 4. Never prompt and never ask for confirmation. A destructive command, `delete`, `cancel` or `swap`, runs as written.
-5. Never open `$EDITOR`. Every input comes from a flag, an environment variable, a file (`--file`) or stdin (`--file -`).
+5. Never open `$EDITOR`. Every input comes from a flag, an environment variable, a file (`--file`), stdin (`--file -`) or the config file of `docs/contract/config.md`, from which nothing is deduced.
 6. Command and flag names derive from the API routes by the rules of `docs/contract/commands.md`: verb first, resource plural, `meili get indexes --id movies`. The resource's own identifier is `--id`, or `--ids` when the list route filters by identifiers; a parent in the path is a flag named after its collection, `--index`; a query or body parameter keeps its API name in kebab-case, `primaryKey` is `--primary-key`. No positional argument, and no synonym beyond the aliases the contract lists.
 7. Errors are structured. Use `MeiliCliError` from `src/lib/errors.ts` with a code and an exit code from the table in `docs/contract/output.md`. Never `throw new Error("...")`.
 8. Secrets never appear in output, logs or debug traces. Use the redaction helpers in `src/lib/config.ts`.
@@ -80,11 +80,11 @@ pnpm test
 
 Update snapshots (`pnpm test -u`) only when you changed the interface on purpose. A snapshot diff on a command you did not touch is a bug, not something to accept.
 
-Then read the diff of your pull request twice. Once for simplicity: in Claude Code, run the `simplify` skill on your changes and rerun the three commands above after it; in any agent, apply rule 16 by hand and delete every line that does not earn its place. Once from the point of view of `docs/`: does every name, flag, variable and code you added or renamed appear in the right contract file? The contract tests catch the mechanical part. The meaning is on you: a new behavior that `docs/contract/` does not describe is a contract change and needs its own pull request first. Finally, go through `.github/PULL_REQUEST_TEMPLATE.md` box by box (rule 15).
+Then read the diff of your pull request twice. Once for simplicity: in Claude Code, run the `simplify` skill on your changes and rerun the three commands above after it; in any agent, apply rule 16 by hand and delete every line that does not earn its place. Once from the point of view of `docs/`: does every name, flag, variable and code you added or renamed appear in the right contract file? The contract tests catch the mechanical part. The meaning is on you: a new behavior that `docs/contract/` does not describe is a contract change, so the contract file and the code land together (rule 12). Finally, go through `.github/PULL_REQUEST_TEMPLATE.md` box by box (rule 15).
 
 ## What not to do
 
-- Do not add a command or flag that the OpenAPI document does not describe and the naming rules do not derive, unless it is a recorded exception. A new global flag, output field, environment variable or error code is a contract change first, in its own pull request.
+- Do not add a command or flag that the OpenAPI document does not describe and the naming rules do not derive, unless it is a recorded exception. A new global flag, output field, environment variable or error code is a contract change: it ships in one pull request with the code that implements it and, when a decision changes, its ADR, because the contract tests tie the two together. Discuss it before, not in a docs-only pull request that cannot be green.
 - Do not add "human friendly" text to the JSON output. There is no human mode: a human reads the indented JSON.
 - Do not wrap API responses. Return the API body as it is. See `docs/contract/output.md`.
 - Do not catch errors to print them yourself. Let `BaseCommand` render them.
@@ -97,7 +97,7 @@ Then read the diff of your pull request twice. Once for simplicity: in Claude Co
 
 - `docs/contract/commands.md`: the naming rules that turn an API route into a command, the exceptions, the global and shared flags, the commands without an API
 - `docs/contract/output.md`: output modes, error format, exit codes, async tasks, pagination
-- `docs/contract/config.md`: connection resolution, environment variables, secrets
+- `docs/contract/config.md`: projects, the config file, connection resolution, environment variables, secrets
 - `openapi/`: the OpenAPI documents downloaded by `pnpm openapi`, the reference for every command name
 - `docs/contract/testing.md`: test levels, how the two local APIs start, what runs in pull request CI
 - `docs/adr/`: the decisions and the reasons

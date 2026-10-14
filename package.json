@@ -37,6 +37,9 @@
     "topicSeparator": " ",
     "helpClass": "./dist/lib/help",
     "topics": {
+      "config": {
+        "description": "Projects of the config file, which holds API keys and decides where every command goes. An agent works with the file it was given and changes nothing in it unless the human asked for it explicitly."
+      },
       "get": {
         "description": "Read a resource: the list, or one item with --id."
       }

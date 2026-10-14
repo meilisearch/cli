@@ -4,8 +4,8 @@ exports[`meili schema > prints its help without any network call 1`] = `
 "Print every command with its flags and examples as JSON, from the oclif manifest.
 
 USAGE
-  $ meili schema [--project-url <url>] [--project-api-key <key>] [-o
-    <mode>] [--debug]
+  $ meili schema [--project-url <url>] [--project-api-key <key>]
+    [--project <name>] [-o <mode>] [--debug]
 
 FLAGS
   -o, --output=<mode>          json (default): one document, the API body as it
@@ -14,7 +14,10 @@ FLAGS
                                streams with --all.
       --debug                  Print every HTTP request and response on stderr,
                                secrets redacted.
-      --project-api-key=<key>  Project API key.
+      --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. Required when the file has
+                               several projects.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
 
 DESCRIPTION

@@ -60,7 +60,8 @@ export async function runCli(argv: string[], options: RunOptions = {}): Promise<
   return capture(options.env, () => oclifRun(argv, config));
 }
 
-const scrubbedHome = mkdtempSync(join(tmpdir(), "meili-test-home-"));
+/** A temporary home per test file, where tests may write config files. */
+export const scrubbedHome = mkdtempSync(join(tmpdir(), "meili-test-home-"));
 
 /** A fresh environment: the developer's MEILI_* variables never leak in. */
 export function scrubbedEnv(
@@ -69,6 +70,7 @@ export function scrubbedEnv(
   const base: Record<string, string | undefined> = {
     PATH: process.env.PATH,
     HOME: scrubbedHome,
+    MEILI_CONFIG: join(scrubbedHome, "config.json"),
     TMPDIR: process.env.TMPDIR,
     NODE_ENV: process.env.NODE_ENV,
     OCLIF_COLUMNS: process.env.OCLIF_COLUMNS,

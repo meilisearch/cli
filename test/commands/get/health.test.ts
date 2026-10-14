@@ -1,8 +1,10 @@
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import GetHealth from "../../../src/commands/get/health.js";
+import { writeConfigFile } from "../../../src/lib/config.js";
 import { MEILISEARCH_URL, meilisearchHandlers } from "../../helpers/meilisearch-handlers.js";
 import { server, useMockServer } from "../../helpers/msw.js";
-import { runCli, runCommand } from "../../helpers/run-command.js";
+import { runCli, runCommand, scrubbedHome } from "../../helpers/run-command.js";
 
 useMockServer();
 
@@ -34,6 +36,20 @@ describe("meili get health", () => {
     expect(result).toEqual({ stdout: '{"status":"available"}\n', stderr: "", exitCode: 0 });
   });
 
+  it("takes the project named by --project from the config file", async () => {
+    // Not the scrubbed default path: the other tests of this file must see no project.
+    const path = join(scrubbedHome, "projects.json");
+    writeConfigFile({
+      path,
+      projects: { local: { url: "http://nowhere.test" }, prod: { url: MEILISEARCH_URL } },
+    });
+    server.use(meilisearchHandlers.health());
+    const result = await runCommand(GetHealth, ["--project", "prod", "--output", "json"], {
+      env: { MEILI_CONFIG: path },
+    });
+    expect(result).toEqual({ stdout: '{"status":"available"}\n', stderr: "", exitCode: 0 });
+  });
+
   it("passes an API error through and exits 1", async () => {
     server.use(
       meilisearchHandlers.apiError("/health", 500, {
@@ -57,9 +73,15 @@ describe("meili get health", () => {
     expect(result).toMatchSnapshot();
   });
 
-  it("fails with cli_config and exits 2 when no URL is configured", async () => {
+  it("fails with cli_config and exits 2 when no project is configured", async () => {
     const result = await runCommand(GetHealth, ["--output", "json"]);
-    expect(result).toMatchSnapshot();
+    expect(result.exitCode).toBe(2);
+    expect(result.stdout).toBe("");
+    const error = JSON.parse(result.stderr).error as { code: string; message: string };
+    expect(error.code).toBe("cli_config");
+    expect(error.message).toMatch(
+      /^No project configured\. .*`--project-url`.*`MEILI_PROJECT_URL`.*config\.json\.$/,
+    );
     expect(result.stderr).not.toContain("MEILI_MANAGEMENT_TOKEN");
   });
 

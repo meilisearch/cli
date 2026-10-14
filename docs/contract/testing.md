@@ -12,11 +12,13 @@ One test file per command, mirroring `src/commands/`. HTTP is mocked with `msw`.
 
 Handlers for the Management API live in `test/helpers/management-handlers.ts` and follow `openapi/management.json`. Handlers for the Meilisearch API live in `test/helpers/meilisearch-handlers.ts`.
 
+Commands run in a scrubbed environment: no `MEILI_*` variable but the ones the test sets, `HOME` in a temporary directory, and `MEILI_CONFIG` pointing at a file that does not exist, so that a developer's own config file never leaks into a test.
+
 A snapshot change is an interface change. It is accepted only when the pull request says so.
 
 ## 2. Integration tests, `test/integration/`
 
-They hit real local instances of both APIs, with no mock.
+They hit real local instances of both APIs, with no mock, through the built binary and the same scrubbed environment as the unit tests.
 
 - `test/integration/meilisearch/`: against Meilisearch, started by the `docker-compose.yml` of this repository on `http://localhost:7700` with the master key `masterKey`.
 - `test/integration/management/`: against the Management API from the `meilisearch-cloud` repository. Known facts: it starts with `docker compose up` in that repository; its images are private, so CI needs a registry token to pull them; the seed creates no user and no personal access token, so the test bootstrap must create both before the suite runs (a script in `test/integration/management/bootstrap/`, run once by CI and by `pnpm test:integration`). The base URL, the bootstrap command and the token it produces are documented in `test/integration/management/README.md`, which is the only place where they live. Building this bootstrap is a task of its own, before the first management command.
