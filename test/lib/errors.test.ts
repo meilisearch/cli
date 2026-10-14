@@ -92,6 +92,17 @@ describe("toRenderedError", () => {
     expect(rendered.exitCode).toBe(5);
   });
 
+  it("strips the terminal colors oclif puts in its messages", () => {
+    const rendered = toRenderedError(
+      new Errors.CLIError(
+        "The following errors occurred:\n  \u001b[2mMissing required flag project\u001b[22m",
+      ),
+    );
+    expect(rendered.body.message).toBe(
+      "The following errors occurred:\n  Missing required flag project",
+    );
+  });
+
   it("maps oclif usage errors to cli_usage and exit 2, without the help suffix", () => {
     const rendered = toRenderedError(
       new Errors.CLIError("Unexpected argument: extra\nSee more help with --help"),
