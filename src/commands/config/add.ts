@@ -32,7 +32,9 @@ The file holds API keys and decides where every later command goes, for every pr
 
   async run(): Promise<void> {
     const { flags } = await this.parse(ConfigAdd);
-    if (!URL.canParse(flags["project-url"])) {
+    // A Meilisearch instance answers over HTTP(S) only; the SDK mangles any other scheme.
+    const url = URL.parse(flags["project-url"]);
+    if (url === null || (url.protocol !== "http:" && url.protocol !== "https:")) {
       throw new MeiliCliError("cli_usage", `Invalid project URL \`${flags["project-url"]}\`.`);
     }
     const file = this.configFile();

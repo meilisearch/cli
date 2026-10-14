@@ -60,11 +60,13 @@ describe("meili config add", () => {
     expect(read(path)).toEqual({ projects: { a: { url: "http://a" }, b: { url: "http://b" } } });
   });
 
-  it("rejects an invalid URL with cli_usage", async () => {
-    const result = await runCommand(ConfigAdd, ["--project", "ok", "--project-url", "not a url"], {
-      env: { MEILI_CONFIG: join(scrubbedHome, "invalid.json") },
-    });
-    expect(result.exitCode).toBe(2);
-    expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
+  it("rejects a URL that is invalid or not HTTP(S) with cli_usage", async () => {
+    for (const url of ["not a url", "ftp://example.com", "localhost:7700"]) {
+      const result = await runCommand(ConfigAdd, ["--project", "ok", "--project-url", url], {
+        env: { MEILI_CONFIG: join(scrubbedHome, "invalid.json") },
+      });
+      expect(result.exitCode, url).toBe(2);
+      expect(JSON.parse(result.stderr).error.code, url).toBe("cli_usage");
+    }
   });
 });
