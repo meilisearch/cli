@@ -102,7 +102,8 @@ These flags work on every command.
 | Flag | Meaning |
 |---|---|
 | `--project-url <url>` | Project URL, the Meilisearch instance to talk to. |
-| `--project-api-key <key>` | Project API key. |
+| `--project-api-key <key>` | Project API key. `-` reads it from stdin. |
+| `--project <name>` | A project of the config file. Cannot be combined with `--project-url`. Required when the file has several projects. See `config.md`. |
 | `-o, --output <mode>` | `json` (default) or `ndjson`. See `output.md`. |
 | `--debug` | Print every HTTP request and response on stderr, secrets redacted. |
 
@@ -136,11 +137,14 @@ Commands reuse these groups. A command that matches a group uses the whole group
 
 ## Commands without an API
 
-These commands call no API. They are the only ones listed here; their `--help` defines their shape. Their name is never the name of an API resource.
+These commands call no API. They are the only ones listed here; their `--help` defines their shape. Their name is never the name of an API resource. The `config` commands are for humans: an agent works with the file it was given, see `config.md`.
 
 | Command | Effect |
 |---|---|
 | `meili schema` | Print the full command tree as JSON: commands, flags, descriptions, examples. Generated from the oclif manifest. This is how an agent learns the CLI in one call. |
+| `meili config list` | Print the config file path and its projects as JSON, keys masked. |
+| `meili config add --project <name> --project-url <url> [--project-api-key <key>]` | Add a project to the config file, creating it in mode `600`. `--project-api-key -` reads the key from stdin. Refuses a name that already exists. Nothing on stdout. |
+| `meili config remove --project <name>` | Remove a project from the config file. Nothing on stdout. |
 | `meili --version` | CLI version only. No network call. |
 
 ## Not in scope

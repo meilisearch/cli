@@ -19,7 +19,7 @@ Package: `@meilisearch/cli` on npm. Binary: `meili`.
 2. Only `src/lib/output.ts` writes to stdout. Commands never call `console.log`, `process.stdout.write` or `this.log` directly.
 3. Only the generated Management API client and `meilisearch-js` make HTTP calls. Never write `fetch` in a command.
 4. Never prompt and never ask for confirmation. A destructive command, `delete`, `cancel` or `swap`, runs as written.
-5. Never open `$EDITOR`. Every input comes from a flag, an environment variable, a file (`--file`) or stdin (`--file -`).
+5. Never open `$EDITOR`. Every input comes from a flag, an environment variable, a file (`--file`), stdin (`--file -`) or the config file of `docs/contract/config.md`, from which nothing is deduced.
 6. Command and flag names derive from the API routes by the rules of `docs/contract/commands.md`: verb first, resource plural, `meili get indexes --id movies`. The resource's own identifier is `--id`, or `--ids` when the list route filters by identifiers; a parent in the path is a flag named after its collection, `--index`; a query or body parameter keeps its API name in kebab-case, `primaryKey` is `--primary-key`. No positional argument, and no synonym beyond the aliases the contract lists.
 7. Errors are structured. Use `MeiliCliError` from `src/lib/errors.ts` with a code and an exit code from the table in `docs/contract/output.md`. Never `throw new Error("...")`.
 8. Secrets never appear in output, logs or debug traces. Use the redaction helpers in `src/lib/config.ts`.
@@ -97,7 +97,7 @@ Then read the diff of your pull request twice. Once for simplicity: in Claude Co
 
 - `docs/contract/commands.md`: the naming rules that turn an API route into a command, the exceptions, the global and shared flags, the commands without an API
 - `docs/contract/output.md`: output modes, error format, exit codes, async tasks, pagination
-- `docs/contract/config.md`: connection resolution, environment variables, secrets
+- `docs/contract/config.md`: projects, the config file, connection resolution, environment variables, secrets
 - `openapi/`: the OpenAPI documents downloaded by `pnpm openapi`, the reference for every command name
 - `docs/contract/testing.md`: test levels, how the two local APIs start, what runs in pull request CI
 - `docs/adr/`: the decisions and the reasons

@@ -91,7 +91,7 @@ Destructive commands are those of the verbs `delete`, `cancel` and `swap`, as `c
 - `--data <json>` passes a body inline.
 - A body-field flag given together with `--file` or `--data` overrides that field in the body. A flag overrides its environment variable the same way.
 - The value `null` on a flag sends a JSON null: `--expires-at null`, `--stop-words null`.
-- A command never reads stdin unless `--file -` is given. This avoids hanging when an agent runs it in a pipeline.
+- A command never reads stdin unless `--file -` or `--project-api-key -` is given. This avoids hanging when an agent runs it in a pipeline.
 
 ## Pagination
 
