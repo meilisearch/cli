@@ -112,12 +112,15 @@ function parseProjects(parsed: unknown, path: string): Record<string, ProjectEnt
 
 /**
  * Writes the file owner-only and atomically: a command reading it meanwhile
- * sees the previous file or the new one, never a half-written one.
+ * sees the previous file or the new one, never a half-written one. The
+ * temporary file is created exclusively: a pre-existing file or symlink at
+ * that path, in a shared directory, would receive the keys.
  */
 export function writeConfigFile(file: ConfigFile): void {
   mkdirSync(dirname(file.path), { recursive: true, mode: 0o700 });
   const temporary = `${file.path}.${process.pid}.tmp`;
   writeFileSync(temporary, `${JSON.stringify({ projects: file.projects }, null, 2)}\n`, {
+    flag: "wx",
     mode: 0o600,
   });
   renameSync(temporary, file.path);
