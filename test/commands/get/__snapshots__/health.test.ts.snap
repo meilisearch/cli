@@ -1,14 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`meili get health > fails with cli_config and exits 2 when no URL is configured 1`] = `
-{
-  "exitCode": 2,
-  "stderr": "{"error":{"code":"cli_config","type":"cli","message":"No project URL configured. Provide one with the \`--project-url\` flag or the \`MEILI_PROJECT_URL\` environment variable."}}
-",
-  "stdout": "",
-}
-`;
-
 exports[`meili get health > passes an API error through and exits 1 1`] = `
 {
   "exitCode": 1,
@@ -22,8 +13,8 @@ exports[`meili get health > prints its help without any network call 1`] = `
 "Check that the Meilisearch instance is available.
 
 USAGE
-  $ meili get health [--project-url <url>] [--project-api-key <key>] [-o
-    <mode>] [--debug]
+  $ meili get health [--project-url <url>] [--project-api-key <key>]
+    [--project <name>] [-o <mode>] [--debug]
 
 FLAGS
   -o, --output=<mode>          json (default): one document, the API body as it
@@ -32,7 +23,10 @@ FLAGS
                                streams with --all.
       --debug                  Print every HTTP request and response on stderr,
                                secrets redacted.
-      --project-api-key=<key>  Project API key.
+      --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. Required when the file has
+                               several projects.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
 
 DESCRIPTION

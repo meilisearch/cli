@@ -8,12 +8,16 @@ import { Command, Errors, Flags, type Interfaces } from "@oclif/core";
 import type { EnqueuedTask, Meilisearch } from "meilisearch";
 import { createMeilisearchClient } from "./clients/meilisearch.js";
 import {
+  type ConfigFile,
+  configFilePath,
   ENV,
   type ManagementCredentials,
+  readConfigFile,
   resolveManagementCredentials,
   resolveProjectConnection,
 } from "./config.js";
 import { MeiliCliError, toRenderedError, writeError } from "./errors.js";
+import { readStdin } from "./input.js";
 import { type OutputMode, resolveOutputMode, writeData } from "./output.js";
 import { iteratePages, type ListPage, mergePages, type OffsetQuery } from "./pagination.js";
 import { DEFAULT_TIMEOUT, isTaskFailure, parseDuration, waitForTask } from "./tasks.js";
@@ -47,8 +51,14 @@ export abstract class BaseCommand extends Command {
       helpValue: "<url>",
     }),
     "project-api-key": Flags.string({
-      description: "Project API key.",
+      description: "Project API key. `-` reads it from stdin.",
       helpValue: "<key>",
+      parse: async (value) => (value === "-" ? readStdin() : value),
+    }),
+    project: Flags.string({
+      description:
+        "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+      helpValue: "<name>",
     }),
     output: Flags.option({
       char: "o",
@@ -119,8 +129,13 @@ export abstract class BaseCommand extends Command {
 
     if (this.api === "meilisearch") {
       const connection = resolveProjectConnection(
-        { url: this.globalFlags["project-url"], apiKey: this.globalFlags["project-api-key"] },
+        {
+          url: this.globalFlags["project-url"],
+          apiKey: this.globalFlags["project-api-key"],
+          project: this.globalFlags.project,
+        },
         process.env,
+        () => this.configFile(),
       );
       this.meilisearch = createMeilisearchClient({
         url: connection.url,
@@ -143,6 +158,11 @@ export abstract class BaseCommand extends Command {
       debug: this.globalFlags?.debug ?? this.argv.includes("--debug"),
     });
     this.exit(rendered.exitCode);
+  }
+
+  /** The config file of docs/contract/config.md, empty when it does not exist. */
+  protected configFile(): ConfigFile {
+    return readConfigFile(configFilePath(process.env));
   }
 
   /** Writes the API response as it is. Read commands end with this call. */

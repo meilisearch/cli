@@ -37,6 +37,9 @@
     "topicSeparator": " ",
     "helpClass": "./dist/lib/help",
     "topics": {
+      "config": {
+        "description": "Projects of the config file. add and remove are for humans; an agent works with the file it was given."
+      },
       "get": {
         "description": "Read a resource: the list, or one item with --id."
       }

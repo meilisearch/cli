@@ -25,7 +25,7 @@ export MEILI_MANAGEMENT_TOKEN=...       # a personal access token from the Meili
 
 Every setting also exists as a flag with the same name: `--project-url`, `--project-api-key`, and `--management-token` with the management commands. The flag wins over the variable.
 
-**Several projects** (not shipped yet): put them in `~/.config/meili/config.json`, readable by you alone, and name the one a command targets with `--project`:
+**Several projects**: put them in `~/.config/meili/config.json`, readable by you alone, and name the one a command targets with `--project`:
 
 ```json
 {
@@ -40,7 +40,7 @@ Every setting also exists as a flag with the same name: `--project-url`, `--proj
 meili get indexes --project prod
 ```
 
-With several projects in the file, `--project` is required: the CLI never guesses, and it refuses to run when the file and the `MEILI_PROJECT_URL` variable both define a project. `MEILI_CONFIG` names another file. For a coding agent, give it its own file through `MEILI_CONFIG`, read-only: the file is shared state, and an agent must not be able to change where another one's commands go. `meili config list`, `meili config add` and `meili config remove` manage the file (not shipped yet).
+With several projects in the file, `--project` is required: the CLI never guesses, and it refuses to run when the file and the `MEILI_PROJECT_URL` variable both define a project. `MEILI_CONFIG` names another file. For a coding agent, give it its own file through `MEILI_CONFIG`, read-only: the file is shared state, and an agent must not be able to change where another one's commands go. `meili config list`, `meili config add` and `meili config remove` manage the file.
 
 ## Documentation
 
