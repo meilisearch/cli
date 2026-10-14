@@ -61,23 +61,27 @@ describe("readConfigFile", () => {
     );
   });
 
-  it("warns about a file readable by others, with the chmod to run, and reads it", () => {
-    const path = join(scrubbedHome, "open.json");
-    writeFileSync(path, '{"projects":{"prod":{"url":"http://prod"}}}');
-    chmodSync(path, 0o644);
-    const warnings: MeiliCliError[] = [];
-    expect(readConfigFile(path, (warning) => warnings.push(warning)).projects).toEqual({
-      prod: { url: "http://prod" },
-    });
-    expect(warnings.map((warning) => warning.toBody())).toEqual([
-      {
-        code: "cli_config",
-        type: "cli",
-        message: `The config file ${path} is readable by others.`,
-        hint: `Run \`chmod 600 ${path}\`.`,
-      },
-    ]);
-  });
+  // Windows has no file modes: readConfigFile does not check them there.
+  it.skipIf(process.platform === "win32")(
+    "warns about a file readable by others, with the chmod to run, and reads it",
+    () => {
+      const path = join(scrubbedHome, "open.json");
+      writeFileSync(path, '{"projects":{"prod":{"url":"http://prod"}}}');
+      chmodSync(path, 0o644);
+      const warnings: MeiliCliError[] = [];
+      expect(readConfigFile(path, (warning) => warnings.push(warning)).projects).toEqual({
+        prod: { url: "http://prod" },
+      });
+      expect(warnings.map((warning) => warning.toBody())).toEqual([
+        {
+          code: "cli_config",
+          type: "cli",
+          message: `The config file ${path} is readable by others.`,
+          hint: `Run \`chmod 600 ${path}\`.`,
+        },
+      ]);
+    },
+  );
 
   it("refuses invalid JSON and a shape other than projects of url and apiKey", () => {
     for (const [name, content] of [
