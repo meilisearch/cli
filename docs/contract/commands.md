@@ -143,7 +143,7 @@ These commands call no API. They are the only ones listed here; their `--help` d
 |---|---|
 | `meili schema` | Print the full command tree as JSON: commands, flags, descriptions, examples. Generated from the oclif manifest. This is how an agent learns the CLI in one call. |
 | `meili config list` | Print the config file path and its projects as JSON, keys masked. |
-| `meili config add --project <name> --project-url <url> [--project-api-key <key>]` | Add a project to the config file, creating it in mode `600`. `--project-api-key -` reads the key from stdin. Refuses a name that already exists. Nothing on stdout. |
+| `meili config add --project <name> --project-url <url> [--project-api-key <key>]` | Add a project to the config file, creating it in mode `600`. `--project-api-key -` reads the key from stdin. Refuses an invalid URL with `cli_usage` and a name that already exists with `cli_config`. Nothing on stdout. |
 | `meili config remove --project <name>` | Remove a project from the config file. Nothing on stdout. |
 | `meili --version` | CLI version only. No network call. |
 

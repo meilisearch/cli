@@ -17,7 +17,7 @@ describe("meili config remove", () => {
   });
 
   it("removes the project and prints nothing", async () => {
-    const path = join(scrubbedHome, "config.json");
+    const path = join(scrubbedHome, "projects.json");
     writeConfigFile({ path, projects: { a: { url: "http://a" }, b: { url: "http://b" } } });
     const result = await runCommand(ConfigRemove, ["--project", "a", "--output", "json"], {
       env: { MEILI_CONFIG: path },
@@ -29,7 +29,7 @@ describe("meili config remove", () => {
   });
 
   it("fails with cli_config when the project or the file does not exist", async () => {
-    const path = join(scrubbedHome, "config.json");
+    const path = join(scrubbedHome, "projects.json");
     const unknown = await runCommand(ConfigRemove, ["--project", "nope"], {
       env: { MEILI_CONFIG: path },
     });

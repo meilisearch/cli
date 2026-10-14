@@ -4,7 +4,7 @@ Status: accepted. Date: 2026-10-14.
 
 ## Context
 
-`meili` talks to one project at a time, given by `--project-url` and `--project-api-key` or by `MEILI_PROJECT_URL` and `MEILI_PROJECT_API_KEY`. Working with several instances, a local one, a staging one, a Cloud project, means re-exporting variables between commands or repeating the URL and the key on every command line, where the key lands in the shell history and in the transcript of an agent. We want a human to set up several projects once and share that setup easily, and an agent to work on two projects in the same session, each command naming its target.
+`meili` talks to one project at a time, given by `--project-url` and `--project-api-key` or by `MEILI_PROJECT_URL` and `MEILI_PROJECT_API_KEY`. Working with several instances, a local one, a staging one, a Cloud project, means re-exporting variables between commands or repeating the URL and the key on every command line, where the key lands in the shell history and in the transcript of an agent. We want a human to set up several projects once and share that setup easily, and an agent to work on two projects in the same session, each command naming its target. ADR 0004 left a config file undecided, to come with its own ADR: this is it.
 
 kubectl solves this with contexts in a file and a current context that `kubectl config use-context` switches. That current context is shared by every process that reads the file: two agents on one machine, or a `use-context prod` forgotten in another terminal, send the next command to the wrong cluster. Wrong-context incidents are documented for humans, and the people who tool agents on Kubernetes describe it as the first failure mode to guard against.
 

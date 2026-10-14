@@ -29,7 +29,7 @@ describe("meili config list", () => {
   });
 
   it("prints the projects with their keys masked", async () => {
-    const path = join(scrubbedHome, "config.json");
+    const path = join(scrubbedHome, "projects.json");
     writeConfigFile({
       path,
       projects: {

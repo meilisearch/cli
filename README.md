@@ -23,7 +23,7 @@ meili get health
 export MEILI_MANAGEMENT_TOKEN=...       # a personal access token from the Meilisearch Cloud dashboard
 ```
 
-Every setting also exists as a flag with the same name: `--project-url`, `--project-api-key`, and `--management-token` with the management commands. The flag wins over the variable.
+The URL, the key and the token also exist as flags with the same name: `--project-url`, `--project-api-key`, and `--management-token` with the management commands. The flag wins over the variable.
 
 **Several projects**: put them in `~/.config/meili/config.json`, readable by you alone, and name the one a command targets with `--project`:
 
