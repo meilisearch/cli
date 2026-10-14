@@ -58,9 +58,9 @@ export const managementHandlers = {
 
   /** `PATCH /api/v2/projects/{id}` answering 200 with `project` carrying the attributes received. */
   updateProject: (received: ReceivedRequest[] = []) =>
-    http.patch(`${MANAGEMENT_URL}/api/v2/projects/:id`, async ({ request, params }) => {
+    http.patch(`${MANAGEMENT_URL}/api/v2/projects/:id`, async ({ request }) => {
       const body = await record(received, request);
-      return HttpResponse.json({ ...project, id: Number(params.id), ...body.project });
+      return HttpResponse.json({ ...project, ...body.project });
     }),
 
   /** `DELETE /api/v2/projects/{id}` answering 204. */

@@ -21,8 +21,6 @@ export default class DeleteProjects extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(DeleteProjects);
-    await this.management("DELETE /api/v2/projects/{id}", (client) =>
-      deleteApiV2ProjectsById({ client, path: { id: flags.id } }),
-    );
+    await deleteApiV2ProjectsById({ client: this.managementClient, path: { id: flags.id } });
   }
 }

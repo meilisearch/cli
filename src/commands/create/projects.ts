@@ -34,9 +34,7 @@ export default class CreateProjects extends BaseCommand {
       resourceId: flags["resource-id"],
     });
     await this.output(
-      await this.management("POST /api/v2/projects", (client) =>
-        postApiV2Projects({ client, body: { project } }),
-      ),
+      await postApiV2Projects({ client: this.managementClient, body: { project } }),
     );
   }
 }

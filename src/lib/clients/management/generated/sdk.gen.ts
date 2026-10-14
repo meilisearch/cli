@@ -21,7 +21,8 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 /**
  * Retrieves the authenticated user identity
  */
-export const getApiV2Me = <ThrowOnError extends boolean = false>(options?: Options<GetApiV2MeData, ThrowOnError>): RequestResult<GetApiV2MeResponses, GetApiV2MeErrors, ThrowOnError> => (options?.client ?? client).get<GetApiV2MeResponses, GetApiV2MeErrors, ThrowOnError>({
+export const getApiV2Me = <ThrowOnError extends boolean = true>(options?: Options<GetApiV2MeData, ThrowOnError>): RequestResult<GetApiV2MeResponses, GetApiV2MeErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<GetApiV2MeResponses, GetApiV2MeErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/me',
     ...options
@@ -30,7 +31,8 @@ export const getApiV2Me = <ThrowOnError extends boolean = false>(options?: Optio
 /**
  * Lists the active Meilisearch versions
  */
-export const getApiV2MeilisearchVersions = <ThrowOnError extends boolean = false>(options?: Options<GetApiV2MeilisearchVersionsData, ThrowOnError>): RequestResult<GetApiV2MeilisearchVersionsResponses, GetApiV2MeilisearchVersionsErrors, ThrowOnError> => (options?.client ?? client).get<GetApiV2MeilisearchVersionsResponses, GetApiV2MeilisearchVersionsErrors, ThrowOnError>({
+export const getApiV2MeilisearchVersions = <ThrowOnError extends boolean = true>(options?: Options<GetApiV2MeilisearchVersionsData, ThrowOnError>): RequestResult<GetApiV2MeilisearchVersionsResponses, GetApiV2MeilisearchVersionsErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<GetApiV2MeilisearchVersionsResponses, GetApiV2MeilisearchVersionsErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/meilisearch-versions',
     ...options
@@ -39,7 +41,8 @@ export const getApiV2MeilisearchVersions = <ThrowOnError extends boolean = false
 /**
  * Lists organizations the authenticated user can access
  */
-export const getApiV2Organizations = <ThrowOnError extends boolean = false>(options?: Options<GetApiV2OrganizationsData, ThrowOnError>): RequestResult<GetApiV2OrganizationsResponses, GetApiV2OrganizationsErrors, ThrowOnError> => (options?.client ?? client).get<GetApiV2OrganizationsResponses, GetApiV2OrganizationsErrors, ThrowOnError>({
+export const getApiV2Organizations = <ThrowOnError extends boolean = true>(options?: Options<GetApiV2OrganizationsData, ThrowOnError>): RequestResult<GetApiV2OrganizationsResponses, GetApiV2OrganizationsErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<GetApiV2OrganizationsResponses, GetApiV2OrganizationsErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/organizations',
     ...options
@@ -48,7 +51,8 @@ export const getApiV2Organizations = <ThrowOnError extends boolean = false>(opti
 /**
  * Deletes an organization
  */
-export const deleteApiV2OrganizationsById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV2OrganizationsByIdData, ThrowOnError>): RequestResult<DeleteApiV2OrganizationsByIdResponses, DeleteApiV2OrganizationsByIdErrors, ThrowOnError> => (options.client ?? client).delete<DeleteApiV2OrganizationsByIdResponses, DeleteApiV2OrganizationsByIdErrors, ThrowOnError>({
+export const deleteApiV2OrganizationsById = <ThrowOnError extends boolean = true>(options: Options<DeleteApiV2OrganizationsByIdData, ThrowOnError>): RequestResult<DeleteApiV2OrganizationsByIdResponses, DeleteApiV2OrganizationsByIdErrors, ThrowOnError, 'data'> => (options.client ?? client).delete<DeleteApiV2OrganizationsByIdResponses, DeleteApiV2OrganizationsByIdErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/organizations/{id}',
     ...options
@@ -57,7 +61,8 @@ export const deleteApiV2OrganizationsById = <ThrowOnError extends boolean = fals
 /**
  * Retrieves an organization
  */
-export const getApiV2OrganizationsById = <ThrowOnError extends boolean = false>(options: Options<GetApiV2OrganizationsByIdData, ThrowOnError>): RequestResult<GetApiV2OrganizationsByIdResponses, GetApiV2OrganizationsByIdErrors, ThrowOnError> => (options.client ?? client).get<GetApiV2OrganizationsByIdResponses, GetApiV2OrganizationsByIdErrors, ThrowOnError>({
+export const getApiV2OrganizationsById = <ThrowOnError extends boolean = true>(options: Options<GetApiV2OrganizationsByIdData, ThrowOnError>): RequestResult<GetApiV2OrganizationsByIdResponses, GetApiV2OrganizationsByIdErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetApiV2OrganizationsByIdResponses, GetApiV2OrganizationsByIdErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/organizations/{id}',
     ...options
@@ -66,7 +71,8 @@ export const getApiV2OrganizationsById = <ThrowOnError extends boolean = false>(
 /**
  * Updates an organization
  */
-export const patchApiV2OrganizationsById = <ThrowOnError extends boolean = false>(options: Options<PatchApiV2OrganizationsByIdData, ThrowOnError>): RequestResult<PatchApiV2OrganizationsByIdResponses, PatchApiV2OrganizationsByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchApiV2OrganizationsByIdResponses, PatchApiV2OrganizationsByIdErrors, ThrowOnError>({
+export const patchApiV2OrganizationsById = <ThrowOnError extends boolean = true>(options: Options<PatchApiV2OrganizationsByIdData, ThrowOnError>): RequestResult<PatchApiV2OrganizationsByIdResponses, PatchApiV2OrganizationsByIdErrors, ThrowOnError, 'data'> => (options.client ?? client).patch<PatchApiV2OrganizationsByIdResponses, PatchApiV2OrganizationsByIdErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/organizations/{id}',
     ...options,
@@ -79,7 +85,8 @@ export const patchApiV2OrganizationsById = <ThrowOnError extends boolean = false
 /**
  * Upgrades the Meilisearch version of a project
  */
-export const patchApiV2ProjectsByProjectIdVersion = <ThrowOnError extends boolean = false>(options: Options<PatchApiV2ProjectsByProjectIdVersionData, ThrowOnError>): RequestResult<PatchApiV2ProjectsByProjectIdVersionResponses, PatchApiV2ProjectsByProjectIdVersionErrors, ThrowOnError> => (options.client ?? client).patch<PatchApiV2ProjectsByProjectIdVersionResponses, PatchApiV2ProjectsByProjectIdVersionErrors, ThrowOnError>({
+export const patchApiV2ProjectsByProjectIdVersion = <ThrowOnError extends boolean = true>(options: Options<PatchApiV2ProjectsByProjectIdVersionData, ThrowOnError>): RequestResult<PatchApiV2ProjectsByProjectIdVersionResponses, PatchApiV2ProjectsByProjectIdVersionErrors, ThrowOnError, 'data'> => (options.client ?? client).patch<PatchApiV2ProjectsByProjectIdVersionResponses, PatchApiV2ProjectsByProjectIdVersionErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/projects/{projectId}/version',
     ...options,
@@ -92,7 +99,8 @@ export const patchApiV2ProjectsByProjectIdVersion = <ThrowOnError extends boolea
 /**
  * Lists the projects of the accessible teams
  */
-export const getApiV2Projects = <ThrowOnError extends boolean = false>(options?: Options<GetApiV2ProjectsData, ThrowOnError>): RequestResult<GetApiV2ProjectsResponses, GetApiV2ProjectsErrors, ThrowOnError> => (options?.client ?? client).get<GetApiV2ProjectsResponses, GetApiV2ProjectsErrors, ThrowOnError>({
+export const getApiV2Projects = <ThrowOnError extends boolean = true>(options?: Options<GetApiV2ProjectsData, ThrowOnError>): RequestResult<GetApiV2ProjectsResponses, GetApiV2ProjectsErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<GetApiV2ProjectsResponses, GetApiV2ProjectsErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/projects',
     ...options
@@ -101,7 +109,8 @@ export const getApiV2Projects = <ThrowOnError extends boolean = false>(options?:
 /**
  * Creates a project in a team
  */
-export const postApiV2Projects = <ThrowOnError extends boolean = false>(options?: Options<PostApiV2ProjectsData, ThrowOnError>): RequestResult<PostApiV2ProjectsResponses, PostApiV2ProjectsErrors, ThrowOnError> => (options?.client ?? client).post<PostApiV2ProjectsResponses, PostApiV2ProjectsErrors, ThrowOnError>({
+export const postApiV2Projects = <ThrowOnError extends boolean = true>(options?: Options<PostApiV2ProjectsData, ThrowOnError>): RequestResult<PostApiV2ProjectsResponses, PostApiV2ProjectsErrors, ThrowOnError, 'data'> => (options?.client ?? client).post<PostApiV2ProjectsResponses, PostApiV2ProjectsErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/projects',
     ...options,
@@ -114,7 +123,8 @@ export const postApiV2Projects = <ThrowOnError extends boolean = false>(options?
 /**
  * Deletes a project
  */
-export const deleteApiV2ProjectsById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV2ProjectsByIdData, ThrowOnError>): RequestResult<DeleteApiV2ProjectsByIdResponses, DeleteApiV2ProjectsByIdErrors, ThrowOnError> => (options.client ?? client).delete<DeleteApiV2ProjectsByIdResponses, DeleteApiV2ProjectsByIdErrors, ThrowOnError>({
+export const deleteApiV2ProjectsById = <ThrowOnError extends boolean = true>(options: Options<DeleteApiV2ProjectsByIdData, ThrowOnError>): RequestResult<DeleteApiV2ProjectsByIdResponses, DeleteApiV2ProjectsByIdErrors, ThrowOnError, 'data'> => (options.client ?? client).delete<DeleteApiV2ProjectsByIdResponses, DeleteApiV2ProjectsByIdErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/projects/{id}',
     ...options
@@ -123,7 +133,8 @@ export const deleteApiV2ProjectsById = <ThrowOnError extends boolean = false>(op
 /**
  * Retrieves a project
  */
-export const getApiV2ProjectsById = <ThrowOnError extends boolean = false>(options: Options<GetApiV2ProjectsByIdData, ThrowOnError>): RequestResult<GetApiV2ProjectsByIdResponses, GetApiV2ProjectsByIdErrors, ThrowOnError> => (options.client ?? client).get<GetApiV2ProjectsByIdResponses, GetApiV2ProjectsByIdErrors, ThrowOnError>({
+export const getApiV2ProjectsById = <ThrowOnError extends boolean = true>(options: Options<GetApiV2ProjectsByIdData, ThrowOnError>): RequestResult<GetApiV2ProjectsByIdResponses, GetApiV2ProjectsByIdErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetApiV2ProjectsByIdResponses, GetApiV2ProjectsByIdErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/projects/{id}',
     ...options
@@ -132,7 +143,8 @@ export const getApiV2ProjectsById = <ThrowOnError extends boolean = false>(optio
 /**
  * Updates a project
  */
-export const patchApiV2ProjectsById = <ThrowOnError extends boolean = false>(options: Options<PatchApiV2ProjectsByIdData, ThrowOnError>): RequestResult<PatchApiV2ProjectsByIdResponses, PatchApiV2ProjectsByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchApiV2ProjectsByIdResponses, PatchApiV2ProjectsByIdErrors, ThrowOnError>({
+export const patchApiV2ProjectsById = <ThrowOnError extends boolean = true>(options: Options<PatchApiV2ProjectsByIdData, ThrowOnError>): RequestResult<PatchApiV2ProjectsByIdResponses, PatchApiV2ProjectsByIdErrors, ThrowOnError, 'data'> => (options.client ?? client).patch<PatchApiV2ProjectsByIdResponses, PatchApiV2ProjectsByIdErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/projects/{id}',
     ...options,
@@ -145,7 +157,8 @@ export const patchApiV2ProjectsById = <ThrowOnError extends boolean = false>(opt
 /**
  * Lists the active regions
  */
-export const getApiV2Regions = <ThrowOnError extends boolean = false>(options?: Options<GetApiV2RegionsData, ThrowOnError>): RequestResult<GetApiV2RegionsResponses, GetApiV2RegionsErrors, ThrowOnError> => (options?.client ?? client).get<GetApiV2RegionsResponses, GetApiV2RegionsErrors, ThrowOnError>({
+export const getApiV2Regions = <ThrowOnError extends boolean = true>(options?: Options<GetApiV2RegionsData, ThrowOnError>): RequestResult<GetApiV2RegionsResponses, GetApiV2RegionsErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<GetApiV2RegionsResponses, GetApiV2RegionsErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/regions',
     ...options
@@ -154,7 +167,8 @@ export const getApiV2Regions = <ThrowOnError extends boolean = false>(options?: 
 /**
  * Lists the active resources and their plan pricing
  */
-export const getApiV2Resources = <ThrowOnError extends boolean = false>(options?: Options<GetApiV2ResourcesData, ThrowOnError>): RequestResult<GetApiV2ResourcesResponses, GetApiV2ResourcesErrors, ThrowOnError> => (options?.client ?? client).get<GetApiV2ResourcesResponses, GetApiV2ResourcesErrors, ThrowOnError>({
+export const getApiV2Resources = <ThrowOnError extends boolean = true>(options?: Options<GetApiV2ResourcesData, ThrowOnError>): RequestResult<GetApiV2ResourcesResponses, GetApiV2ResourcesErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<GetApiV2ResourcesResponses, GetApiV2ResourcesErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/resources',
     ...options
@@ -163,7 +177,8 @@ export const getApiV2Resources = <ThrowOnError extends boolean = false>(options?
 /**
  * Removes a member from a team
  */
-export const deleteApiV2TeamMembers = <ThrowOnError extends boolean = false>(options?: Options<DeleteApiV2TeamMembersData, ThrowOnError>): RequestResult<DeleteApiV2TeamMembersResponses, DeleteApiV2TeamMembersErrors, ThrowOnError> => (options?.client ?? client).delete<DeleteApiV2TeamMembersResponses, DeleteApiV2TeamMembersErrors, ThrowOnError>({
+export const deleteApiV2TeamMembers = <ThrowOnError extends boolean = true>(options?: Options<DeleteApiV2TeamMembersData, ThrowOnError>): RequestResult<DeleteApiV2TeamMembersResponses, DeleteApiV2TeamMembersErrors, ThrowOnError, 'data'> => (options?.client ?? client).delete<DeleteApiV2TeamMembersResponses, DeleteApiV2TeamMembersErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/team-members',
     ...options,
@@ -176,7 +191,8 @@ export const deleteApiV2TeamMembers = <ThrowOnError extends boolean = false>(opt
 /**
  * Lists the members and pending invitees of a team
  */
-export const getApiV2TeamMembers = <ThrowOnError extends boolean = false>(options?: Options<GetApiV2TeamMembersData, ThrowOnError>): RequestResult<GetApiV2TeamMembersResponses, GetApiV2TeamMembersErrors, ThrowOnError> => (options?.client ?? client).get<GetApiV2TeamMembersResponses, GetApiV2TeamMembersErrors, ThrowOnError>({
+export const getApiV2TeamMembers = <ThrowOnError extends boolean = true>(options?: Options<GetApiV2TeamMembersData, ThrowOnError>): RequestResult<GetApiV2TeamMembersResponses, GetApiV2TeamMembersErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<GetApiV2TeamMembersResponses, GetApiV2TeamMembersErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/team-members',
     ...options
@@ -185,7 +201,8 @@ export const getApiV2TeamMembers = <ThrowOnError extends boolean = false>(option
 /**
  * Invites a member to a team
  */
-export const postApiV2TeamMembers = <ThrowOnError extends boolean = false>(options?: Options<PostApiV2TeamMembersData, ThrowOnError>): RequestResult<PostApiV2TeamMembersResponses, PostApiV2TeamMembersErrors, ThrowOnError> => (options?.client ?? client).post<PostApiV2TeamMembersResponses, PostApiV2TeamMembersErrors, ThrowOnError>({
+export const postApiV2TeamMembers = <ThrowOnError extends boolean = true>(options?: Options<PostApiV2TeamMembersData, ThrowOnError>): RequestResult<PostApiV2TeamMembersResponses, PostApiV2TeamMembersErrors, ThrowOnError, 'data'> => (options?.client ?? client).post<PostApiV2TeamMembersResponses, PostApiV2TeamMembersErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/team-members',
     ...options,
@@ -198,7 +215,8 @@ export const postApiV2TeamMembers = <ThrowOnError extends boolean = false>(optio
 /**
  * Lists teams the authenticated user can access
  */
-export const getApiV2Teams = <ThrowOnError extends boolean = false>(options?: Options<GetApiV2TeamsData, ThrowOnError>): RequestResult<GetApiV2TeamsResponses, GetApiV2TeamsErrors, ThrowOnError> => (options?.client ?? client).get<GetApiV2TeamsResponses, GetApiV2TeamsErrors, ThrowOnError>({
+export const getApiV2Teams = <ThrowOnError extends boolean = true>(options?: Options<GetApiV2TeamsData, ThrowOnError>): RequestResult<GetApiV2TeamsResponses, GetApiV2TeamsErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<GetApiV2TeamsResponses, GetApiV2TeamsErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/teams',
     ...options
@@ -207,7 +225,8 @@ export const getApiV2Teams = <ThrowOnError extends boolean = false>(options?: Op
 /**
  * Creates a team
  */
-export const postApiV2Teams = <ThrowOnError extends boolean = false>(options?: Options<PostApiV2TeamsData, ThrowOnError>): RequestResult<PostApiV2TeamsResponses, PostApiV2TeamsErrors, ThrowOnError> => (options?.client ?? client).post<PostApiV2TeamsResponses, PostApiV2TeamsErrors, ThrowOnError>({
+export const postApiV2Teams = <ThrowOnError extends boolean = true>(options?: Options<PostApiV2TeamsData, ThrowOnError>): RequestResult<PostApiV2TeamsResponses, PostApiV2TeamsErrors, ThrowOnError, 'data'> => (options?.client ?? client).post<PostApiV2TeamsResponses, PostApiV2TeamsErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/teams',
     ...options,
@@ -220,7 +239,8 @@ export const postApiV2Teams = <ThrowOnError extends boolean = false>(options?: O
 /**
  * Deletes a team
  */
-export const deleteApiV2TeamsById = <ThrowOnError extends boolean = false>(options: Options<DeleteApiV2TeamsByIdData, ThrowOnError>): RequestResult<DeleteApiV2TeamsByIdResponses, DeleteApiV2TeamsByIdErrors, ThrowOnError> => (options.client ?? client).delete<DeleteApiV2TeamsByIdResponses, DeleteApiV2TeamsByIdErrors, ThrowOnError>({
+export const deleteApiV2TeamsById = <ThrowOnError extends boolean = true>(options: Options<DeleteApiV2TeamsByIdData, ThrowOnError>): RequestResult<DeleteApiV2TeamsByIdResponses, DeleteApiV2TeamsByIdErrors, ThrowOnError, 'data'> => (options.client ?? client).delete<DeleteApiV2TeamsByIdResponses, DeleteApiV2TeamsByIdErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/teams/{id}',
     ...options
@@ -229,7 +249,8 @@ export const deleteApiV2TeamsById = <ThrowOnError extends boolean = false>(optio
 /**
  * Retrieves a team
  */
-export const getApiV2TeamsById = <ThrowOnError extends boolean = false>(options: Options<GetApiV2TeamsByIdData, ThrowOnError>): RequestResult<GetApiV2TeamsByIdResponses, GetApiV2TeamsByIdErrors, ThrowOnError> => (options.client ?? client).get<GetApiV2TeamsByIdResponses, GetApiV2TeamsByIdErrors, ThrowOnError>({
+export const getApiV2TeamsById = <ThrowOnError extends boolean = true>(options: Options<GetApiV2TeamsByIdData, ThrowOnError>): RequestResult<GetApiV2TeamsByIdResponses, GetApiV2TeamsByIdErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetApiV2TeamsByIdResponses, GetApiV2TeamsByIdErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/teams/{id}',
     ...options
@@ -238,7 +259,8 @@ export const getApiV2TeamsById = <ThrowOnError extends boolean = false>(options:
 /**
  * Updates a team
  */
-export const patchApiV2TeamsById = <ThrowOnError extends boolean = false>(options: Options<PatchApiV2TeamsByIdData, ThrowOnError>): RequestResult<PatchApiV2TeamsByIdResponses, PatchApiV2TeamsByIdErrors, ThrowOnError> => (options.client ?? client).patch<PatchApiV2TeamsByIdResponses, PatchApiV2TeamsByIdErrors, ThrowOnError>({
+export const patchApiV2TeamsById = <ThrowOnError extends boolean = true>(options: Options<PatchApiV2TeamsByIdData, ThrowOnError>): RequestResult<PatchApiV2TeamsByIdResponses, PatchApiV2TeamsByIdErrors, ThrowOnError, 'data'> => (options.client ?? client).patch<PatchApiV2TeamsByIdResponses, PatchApiV2TeamsByIdErrors, ThrowOnError, 'data'>({
+    responseStyle: 'data',
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/v2/teams/{id}',
     ...options,

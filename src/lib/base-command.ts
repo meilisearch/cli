@@ -6,14 +6,9 @@
  */
 import { Command, Errors, Flags, type Interfaces } from "@oclif/core";
 import type { EnqueuedTask, Meilisearch } from "meilisearch";
-import { type BodyInputFlags, buildBody, readBodyInput } from "./body.js";
+import { type BodyInputFlags, buildBody } from "./body.js";
 import { installHttpTrace } from "./clients/http-trace.js";
-import {
-  createManagementClient,
-  type ManagementClient,
-  type ManagementResult,
-  managementRequest,
-} from "./clients/management.js";
+import { createManagementClient, type ManagementClient } from "./clients/management.js";
 import { createMeilisearchClient } from "./clients/meilisearch.js";
 import {
   type ConfigFile,
@@ -123,7 +118,7 @@ export abstract class BaseCommand extends Command {
   protected outputMode!: OutputMode;
   /** Set when `static api` is `meilisearch`. */
   protected meilisearch!: Meilisearch;
-  /** Set when `static api` is `management`. Commands call it through `management()`. */
+  /** Set when `static api` is `management`. Passed to the generated SDK functions, which throw contract errors. */
   protected managementClient!: ManagementClient;
 
   protected get api(): Api {
@@ -177,23 +172,12 @@ export abstract class BaseCommand extends Command {
   }
 
   /**
-   * One request of a management command: the body of the 2xx answer of `route`,
-   * or a contract error. `call` is one function of the generated SDK.
-   */
-  protected management<T>(
-    route: string,
-    call: (client: ManagementClient) => Promise<ManagementResult<T>>,
-  ): Promise<T> {
-    return managementRequest(this.managementClient, route, call);
-  }
-
-  /**
    * The body of a write command: `--file` or `--data`, then the body-field
    * flags, field by field. `fields` maps API field names to flag values; an
    * undefined value is a flag not given.
    */
   protected body<T extends Record<string, unknown>>(flags: BodyInputFlags, fields: T): T {
-    return buildBody(readBodyInput(flags), fields) as T;
+    return buildBody(flags, fields) as T;
   }
 
   /** Renders every error as the contract says, then exits with its code. */

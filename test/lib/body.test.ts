@@ -2,24 +2,31 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { buildBody, readBodyInput } from "../../src/lib/body.js";
+import { buildBody } from "../../src/lib/body.js";
 import { caught } from "../helpers/errors.js";
 
 vi.mock("../../src/lib/input.js", () => ({ readStdin: () => '{"fromStdin":true}' }));
 
 const directory = mkdtempSync(join(tmpdir(), "meili-body-"));
 
-describe("readBodyInput", () => {
-  it("is nothing without --file or --data", () => {
-    expect(readBodyInput({})).toBeUndefined();
+describe("buildBody", () => {
+  it("is the flags alone without --file or --data, undefined ones left out", () => {
+    expect(buildBody({}, { name: "a", teamId: undefined })).toEqual({ name: "a" });
   });
 
-  it("parses --data, a file, and stdin with --file -", () => {
+  it("starts from --data, a file, or stdin with --file -, then the flags override field by field", () => {
     const path = join(directory, "body.json");
-    writeFileSync(path, '{"fromFile":1}');
-    expect(readBodyInput({ data: '{"a":1}' })).toEqual({ a: 1 });
-    expect(readBodyInput({ file: path })).toEqual({ fromFile: 1 });
-    expect(readBodyInput({ file: "-" })).toEqual({ fromStdin: true });
+    writeFileSync(path, '{"name":"from-file","teamId":1}');
+    expect(buildBody({ data: '{"name":"a","teamId":1}' }, { name: "b" })).toEqual({
+      name: "b",
+      teamId: 1,
+    });
+    expect(buildBody({ file: path }, {})).toEqual({ name: "from-file", teamId: 1 });
+    expect(buildBody({ file: "-" }, {})).toEqual({ fromStdin: true });
+  });
+
+  it("sends a JSON null for a flag valued null", () => {
+    expect(buildBody({}, { expiresAt: "null" })).toEqual({ expiresAt: null });
   });
 
   it("fails with cli_input_invalid and exit 2 on invalid JSON, a non-object, or an unreadable file", () => {
@@ -29,23 +36,9 @@ describe("readBodyInput", () => {
       { data: '"text"' },
       { file: join(directory, "missing.json") },
     ]) {
-      const error = caught(() => readBodyInput(flags));
+      const error = caught(() => buildBody(flags, {}));
       expect(error.code, JSON.stringify(flags)).toBe("cli_input_invalid");
       expect(error.exitCode).toBe(2);
     }
-  });
-});
-
-describe("buildBody", () => {
-  it("starts from the input, then the flags given override field by field", () => {
-    expect(buildBody({ name: "a", teamId: 1 }, { name: "b", resourceId: undefined })).toEqual({
-      name: "b",
-      teamId: 1,
-    });
-    expect(buildBody(undefined, { name: "a" })).toEqual({ name: "a" });
-  });
-
-  it("sends a JSON null for a flag valued null", () => {
-    expect(buildBody(undefined, { expiresAt: "null" })).toEqual({ expiresAt: null });
   });
 });

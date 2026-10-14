@@ -25,9 +25,11 @@ export default class UpdateProjects extends BaseCommand {
     const { flags } = await this.parse(UpdateProjects);
     const project = this.body(flags, { name: flags.name });
     await this.output(
-      await this.management("PATCH /api/v2/projects/{id}", (client) =>
-        patchApiV2ProjectsById({ client, path: { id: flags.id }, body: { project } }),
-      ),
+      await patchApiV2ProjectsById({
+        client: this.managementClient,
+        path: { id: flags.id },
+        body: { project },
+      }),
     );
   }
 }

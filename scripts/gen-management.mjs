@@ -2,11 +2,12 @@
 /**
  * `pnpm gen:management`: regenerates src/lib/clients/management/generated/ from
  * openapi/management.json (ADR 0003). The client comes from @hey-api/openapi-ts,
- * run through `pnpm dlx` with TypeScript 5 beside it: the generator drives the
- * TypeScript compiler API, which TypeScript 7 no longer ships. The generator reads
- * openapi-ts.config.mjs. responses.gen.ts is the description of every response of
- * the document, by route and status: the message of a Management API error that
- * carries none (docs/contract/output.md, "Errors").
+ * which reads openapi-ts.config.mjs. It runs through `pnpm dlx` with TypeScript 5
+ * beside it: the generator drives the TypeScript compiler API, which TypeScript 7
+ * no longer ships, and pnpm resolves a peer dependency from the project, so the
+ * generator cannot be a dev dependency here. responses.gen.ts is the description
+ * of every response of the document by route and status: the message of a
+ * Management API error whose body says nothing (docs/contract/output.md, "Errors").
  */
 import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -31,7 +32,7 @@ for (const [path, item] of Object.entries(document.paths)) {
     responses[`${method.toUpperCase()} ${path}`] = Object.fromEntries(
       Object.entries(operation.responses).map(([status, response]) => [
         status,
-        response.description ?? "",
+        response.description,
       ]),
     );
   }

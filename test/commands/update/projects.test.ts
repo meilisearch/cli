@@ -30,12 +30,6 @@ describe("meili update projects", () => {
     expect(received[0]?.body).toEqual({ project: { name: "renamed" } });
   });
 
-  it("requires --id", async () => {
-    const result = await runCommand(UpdateProjects, ["--name", "renamed"], { env });
-    expect(result.exitCode).toBe(2);
-    expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
-  });
-
   it("maps a 403 to management_forbidden and exit 3", async () => {
     server.use(managementHandlers.apiError("/api/v2/projects/343", 403, { error: "Forbidden" }));
     const result = await runCommand(

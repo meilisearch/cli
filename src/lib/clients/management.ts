@@ -1,7 +1,7 @@
 /**
- * Builds the generated Management API client from resolved credentials and
- * turns its results into data or contract errors. The generated client never
- * throws on an HTTP error: it returns the parsed body next to the response.
+ * Builds the generated Management API client from resolved credentials. The
+ * client throws on any answer that is not 2xx, and the error interceptor
+ * below turns what it throws into the contract's errors.
  */
 import { cannotConnectMessage, ManagementApiError, MeiliCliError } from "../errors.js";
 import { type Client, createClient } from "./management/generated/client/index.js";
@@ -16,47 +16,26 @@ export interface ManagementClientOptions {
   userAgent: string;
 }
 
+/**
+ * A non-2xx answer becomes a ManagementApiError carrying the body and the
+ * document's description of that status for that route (output.md, "Errors");
+ * no answer at all is `cli_network`. The SDK functions then return the body.
+ */
 export function createManagementClient(options: ManagementClientOptions): ManagementClient {
-  return createClient({
+  const client = createClient({
     baseUrl: options.url,
     auth: options.token,
     headers: { "User-Agent": options.userAgent },
+    throwOnError: true,
   });
-}
-
-/**
- * What one generated SDK function resolves to, with `throwOnError` off. Not the
- * generated `RequestResult`: that type is keyed by status and does not let `T`
- * be inferred from the call.
- */
-export interface ManagementResult<T> {
-  data?: T | undefined;
-  error?: unknown;
-  response?: Response | undefined;
-}
-
-/**
- * Runs one request of `route`, `POST /api/v2/projects`, and returns the body
- * of its 2xx answer. Any other status is a ManagementApiError carrying the body
- * and the document's description of that status. A failed connection, which
- * the generated client returns as an error without response, is `cli_network`.
- */
-export async function managementRequest<T>(
-  client: ManagementClient,
-  route: string,
-  call: (client: ManagementClient) => Promise<ManagementResult<T>>,
-): Promise<T> {
-  const { data, error, response } = await call(client);
-  if (response === undefined) {
-    const where = client.getConfig().baseUrl ?? "the Management API";
-    throw new MeiliCliError("cli_network", cannotConnectMessage(where, error), { cause: error });
-  }
-  if (!response.ok) {
-    throw new ManagementApiError(
-      response.status,
-      error,
-      RESPONSES[route]?.[String(response.status)],
-    );
-  }
-  return data as T;
+  client.interceptors.error.use((error, response, _request, request) =>
+    response === undefined
+      ? new MeiliCliError("cli_network", cannotConnectMessage(options.url, error), { cause: error })
+      : new ManagementApiError(
+          response.status,
+          error,
+          RESPONSES[`${request.method} ${request.url}`]?.[String(response.status)],
+        ),
+  );
+  return client;
 }

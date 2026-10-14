@@ -11,25 +11,39 @@ export interface BodyInputFlags {
   data?: string | undefined;
 }
 
-/** The object given by `--file` (`-` is stdin) or `--data`, or nothing. */
-export function readBodyInput(flags: BodyInputFlags): Record<string, unknown> | undefined {
-  if (flags.file === undefined && flags.data === undefined) return undefined;
-  const source = flags.file === undefined ? "--data" : flags.file === "-" ? "stdin" : flags.file;
+/**
+ * The body to send: the object of `--file` (`-` is stdin) or `--data`, then
+ * the flags given, field by field. A flag valued `null` sends a JSON null; a
+ * flag not given leaves the field as it is.
+ */
+export function buildBody(
+  flags: BodyInputFlags,
+  fields: Record<string, unknown>,
+): Record<string, unknown> {
+  const body: Record<string, unknown> = { ...readInput(flags) };
+  for (const [name, value] of Object.entries(fields)) {
+    if (value === undefined) continue;
+    body[name] = value === "null" ? null : value;
+  }
+  return body;
+}
+
+function readInput(flags: BodyInputFlags): Record<string, unknown> | undefined {
+  if (flags.data !== undefined) return parseObject(flags.data, "--data");
+  if (flags.file === undefined) return undefined;
+  if (flags.file === "-") return parseObject(readStdin(), "stdin");
   let text: string;
   try {
-    text =
-      flags.file === undefined
-        ? (flags.data ?? "")
-        : flags.file === "-"
-          ? readStdin()
-          : readFileSync(flags.file, "utf8");
+    text = readFileSync(flags.file, "utf8");
   } catch (cause) {
-    throw new MeiliCliError(
-      "cli_input_invalid",
-      `Cannot read ${source}: ${cause instanceof Error ? cause.message : String(cause)}`,
-      { cause },
-    );
+    const reason = cause instanceof Error ? cause.message : String(cause);
+    throw new MeiliCliError("cli_input_invalid", `Cannot read ${flags.file}: ${reason}`, { cause });
   }
+  return parseObject(text, flags.file);
+}
+
+/** Not JSON, or not an object, is `cli_input_invalid` (output.md, "Input"). */
+function parseObject(text: string, source: string): Record<string, unknown> {
   let parsed: unknown;
   try {
     parsed = JSON.parse(text);
@@ -42,20 +56,4 @@ export function readBodyInput(flags: BodyInputFlags): Record<string, unknown> | 
     throw new MeiliCliError("cli_input_invalid", `The body from ${source} must be a JSON object.`);
   }
   return parsed;
-}
-
-/**
- * The body to send: `input`, then the flags given, field by field. A flag
- * valued `null` sends a JSON null; a flag not given leaves the field as it is.
- */
-export function buildBody(
-  input: Record<string, unknown> | undefined,
-  fields: Record<string, unknown>,
-): Record<string, unknown> {
-  const body: Record<string, unknown> = { ...input };
-  for (const [name, value] of Object.entries(fields)) {
-    if (value === undefined) continue;
-    body[name] = value === "null" ? null : value;
-  }
-  return body;
 }

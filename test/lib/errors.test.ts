@@ -18,7 +18,7 @@ import {
 } from "../../src/lib/errors.js";
 
 describe("ManagementApiError", () => {
-  it("builds the error object from the status, the API's error field, no link", () => {
+  it("takes the API's error field, else the document's description, else the status", () => {
     const rendered = toRenderedError(
       new ManagementApiError(403, { error: "Forbidden" }, "team not accessible"),
     );
@@ -28,9 +28,6 @@ describe("ManagementApiError", () => {
       message: "Forbidden",
     });
     expect(rendered.exitCode).toBe(3);
-  });
-
-  it("falls back to the document's description, then to the status", () => {
     expect(
       toRenderedError(new ManagementApiError(422, { errors: {} }, "invalid project attributes"))
         .body.message,
