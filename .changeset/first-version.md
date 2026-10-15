@@ -5,7 +5,7 @@
 First version of `meili`, the Meilisearch CLI built for coding agents.
 
 - Commands derive from the routes of the Meilisearch API and of the Management API, verb first and resource plural: `meili get health`, `meili get indexes`, `meili get indexes --id movies`.
-- `meili schema` prints every command with its flags and examples as JSON.
+- `meili schema` prints the index of the command tree as JSON, one entry per command with its routes, and `meili schema --command "get indexes"` prints one command in full, with its key actions and whether it returns a task.
 - Connection through `--project-url` and `--project-api-key`, or `MEILI_PROJECT_URL` and `MEILI_PROJECT_API_KEY`; `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL` for the Management API.
 - Several projects in a config file, `~/.config/meili/config.json` or `MEILI_CONFIG`, chosen with `--project` on the command line and never deduced; `meili config list`, `config add` and `config remove` manage the file.
 - A command of the verb `delete` requires `--yes` on the command line: without it the command refuses to run, `cli_usage` and exit 2, before any network call. The CLI still never asks a question.

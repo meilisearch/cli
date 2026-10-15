@@ -66,6 +66,7 @@ interface OpenApiSchema {
 interface OpenApiOperation {
   parameters?: OpenApiParameter[];
   requestBody?: { content?: Record<string, { schema?: OpenApiSchema }> };
+  security?: Array<Record<string, string[]>>;
 }
 
 type OpenApiPathItem = { parameters?: OpenApiParameter[] } & Partial<
@@ -99,6 +100,24 @@ function findOperation(spec: OpenApiDocument, route: Route): OpenApiOperation | 
 
 export function hasRoute(spec: OpenApiDocument, route: Route): boolean {
   return findOperation(spec, route) !== undefined;
+}
+
+/**
+ * The key actions the routes require, the specific one of each: the document
+ * lists them from the most specific to the widest wildcard, `["indexes.get",
+ * "indexes.*", "*"]`, and a command declares the first one in `keyActions`.
+ * Empty when the routes need no key action, as on `GET /health`, and on the
+ * Management API, whose personal access token declares no scope.
+ */
+export function keyActionsForRoutes(spec: OpenApiDocument, routes: readonly Route[]): string[] {
+  const actions = new Set<string>();
+  for (const route of routes) {
+    for (const scheme of findOperation(spec, route)?.security ?? []) {
+      const specific = Object.values(scheme)[0]?.[0];
+      if (specific !== undefined) actions.add(specific);
+    }
+  }
+  return [...actions].sort();
 }
 
 /** Every route of an OpenAPI document. */

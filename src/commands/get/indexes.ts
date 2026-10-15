@@ -6,6 +6,8 @@ export default class GetIndexes extends BaseCommand {
 
   static routes = ["GET /indexes", "GET /indexes/{index_uid}"];
 
+  static keyActions = ["indexes.get"];
+
   static override description = "List the indexes of the instance, or get one with --id.";
 
   static override examples = [

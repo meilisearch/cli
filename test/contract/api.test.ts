@@ -15,6 +15,7 @@ import {
   flagsForCommand,
   flagsForRoute,
   hasRoute,
+  keyActionsForRoutes,
   LITERAL_VERBS,
   matchesRoutePattern,
   type OpenApiDocument,
@@ -51,6 +52,7 @@ const derived = {
 interface CommandClass {
   api?: unknown;
   routes?: unknown;
+  keyActions?: unknown;
   args?: Record<string, unknown>;
   flags?: Record<string, { required?: boolean; aliases?: string[] }>;
 }
@@ -96,6 +98,11 @@ describe("API commands derive from their routes", () => {
         [...(command.routes as string[])].sort(),
         "a command covers every route of its verb and resource",
       ).toEqual(expected);
+
+      expect(
+        command.keyActions ?? [],
+        "static keyActions must be the specific key actions the document declares on these routes",
+      ).toEqual(keyActionsForRoutes(spec, routes));
 
       expect(Object.keys(command.args ?? {}), "no positional argument").toEqual([]);
       const flags = command.flags ?? {};
@@ -148,6 +155,7 @@ describe("commands without an API", () => {
   for (const { id, command } of commands.filter(({ command }) => command.api === "none")) {
     it(`meili ${id} has no route and takes neither the name of an API command nor a verb`, () => {
       expect(command.routes ?? []).toEqual([]);
+      expect(command.keyActions ?? []).toEqual([]);
       expect(apiCommands).not.toContain(id);
       expect(VERBS).not.toContain(id.split(" ")[0]);
     });

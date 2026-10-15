@@ -15,7 +15,7 @@ describe("meili schema", () => {
     expect(result.stdout).toMatchSnapshot();
   });
 
-  it("describes every command of the manifest, offline and without credentials", async () => {
+  it("indexes every command of the manifest, without their flags, offline", async () => {
     const manifest = JSON.parse(
       readFileSync(join(PROJECT_ROOT, "oclif.manifest.json"), "utf8"),
     ) as { commands: Record<string, unknown> };
@@ -26,11 +26,56 @@ describe("meili schema", () => {
     expect(requests).toBe(0);
     expect(result?.exitCode).toBe(0);
     expect(result?.stderr).toBe("");
-    const schema = JSON.parse(result?.stdout ?? "") as { commands: Array<{ id: string }> };
+    const schema = JSON.parse(result?.stdout ?? "") as {
+      commands: Array<{ id: string; description: string; flags?: unknown }>;
+    };
     expect(schema.commands.map((command) => command.id).sort()).toEqual(
       Object.keys(manifest.commands)
         .map((id) => id.replaceAll(":", " "))
         .sort(),
     );
+    expect(
+      schema.commands.every((command) => command.flags === undefined),
+      "the index carries no flag: that is what --command is for",
+    ).toBe(true);
+    expect(
+      schema.commands.every((command) => !command.description.includes("\n")),
+      "the index carries the first paragraph of a description, not the warning that follows",
+    ).toBe(true);
+  });
+
+  it("prints the flags a command declares itself, not the global ones it inherits", async () => {
+    const result = await runCommand(Schema, ["--command", "config add", "--output", "json"]);
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toBe("");
+    const command = JSON.parse(result.stdout) as {
+      description: string;
+      flags: Array<{ name: string }>;
+    };
+    // `config add` redefines two global flags as required, with its own descriptions.
+    expect(command.flags).toEqual([
+      {
+        name: "project",
+        type: "option",
+        required: true,
+        description: "Name of the project to add.",
+        helpValue: "<name>",
+      },
+      {
+        name: "project-url",
+        type: "option",
+        required: true,
+        description: "URL of the project.",
+        helpValue: "<url>",
+      },
+    ]);
+    expect(command.description).toContain("\n\n");
+  });
+
+  it("refuses an unknown command with cli_usage and exit 2", async () => {
+    const result = await runCommand(Schema, ["--command", "get indexs", "--output", "json"]);
+    expect(result.exitCode).toBe(2);
+    expect(result.stdout).toBe("");
+    expect(JSON.parse(result.stderr)).toMatchSnapshot();
   });
 });

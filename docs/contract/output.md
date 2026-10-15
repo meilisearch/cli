@@ -113,7 +113,10 @@ Destructive commands are those of the verb `delete`, as `commands.md` derives th
 
 - Every command has a `description` of one sentence and at least two `examples`. Every flag has a description of one sentence, and a flag that takes a value documents it with a `helpValue` or a list of options.
 - `--help` never makes a network call.
-- `meili schema` prints the same information as JSON for every command. It reads the oclif manifest and is always in sync with the code.
+- `meili schema` prints the index: the global flags once, then one entry per command with its `id`, its `description` and its `routes`. The description is its first paragraph; what follows is a warning the detail carries. It is the cheapest way for an agent to see everything that exists.
+- `meili schema --command "get indexes"` prints that one command in full: `id`, `description`, `api`, `routes`, `async`, `keyActions`, the `flags` the command declares itself and its `examples`. The global flags are not repeated there: they belong to the index. `meili config add --project` is listed, required and with its own description, because that command declares it; `--debug` is not, because no command declares it. An unknown `--command` is `cli_usage`, exit 2, with a hint that names the closest command, or `meili schema` when nothing is close.
+- A field that would say nothing is absent rather than empty or false: no `routes` on a command without an API, no `keyActions` when the routes need none, no `async` on a command that returns no task, no `required` on an optional flag.
+- The index reads the oclif manifest; `--command` reads it too and loads the command class for its own flags. Both are always in sync with the code. There is no third level: `oclif.manifest.json` is there for whoever wants everything. See ADR 0008.
 
 ## Versioning
 

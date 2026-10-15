@@ -29,7 +29,7 @@ Integration tests create their own fixtures (an index, a team, a project) with a
 
 Not per command. They protect the promises of `docs/contract/`:
 
-- `meili schema` output is a snapshot, so a renamed command or flag is visible in review
+- `meili schema` output is a snapshot, the index and every command in full, so a renamed command or flag is visible in review
 - every command declares `static api`
 - every command has a description and at least two examples; every flag has a description, and a flag with a value documents it
 - every command in `src/commands/` has its test file in `test/commands/`
@@ -39,7 +39,7 @@ Not per command. They protect the promises of `docs/contract/`:
 
 And they keep code and docs in sync:
 
-- every API command declares `static routes`, each route exists in the OpenAPI document of its API, the command name derives from them by the rules of `commands.md`, every flag belongs to one of its routes or to the CLI, and each route is reachable by a distinct set of flags; or the exception is recorded in `src/lib/api-naming.ts` and in the exceptions table of `commands.md`, which must match
+- every API command declares `static routes` and `static keyActions` that match the OpenAPI document of its API, each route exists in it, the command name derives from them by the rules of `commands.md`, every flag belongs to one of its routes or to the CLI, and each route is reachable by a distinct set of flags; or the exception is recorded in `src/lib/api-naming.ts` and in the exceptions table of `commands.md`, which must match
 - every `MEILI_*` environment variable read in `src/` appears in the table of `docs/contract/config.md`, and every variable in the table is read somewhere
 - every error code defined in `src/lib/errors.ts` appears in `docs/contract/output.md`, and every code in that file is defined
 - every ADR file has a status line, and a `superseded` ADR names its successor
