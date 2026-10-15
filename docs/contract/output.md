@@ -27,9 +27,9 @@ One exception, documented in `commands.md`: commands that do not call an API (`s
 
 Three consequences of pass-through:
 
-- Both APIs name their fields in camelCase, but they do not spell everything alike: the Meilisearch API says `apiKey`, the Management API says `apikey`. The CLI does not normalize. An agent reads each API's documentation and gets exactly that.
+- Both APIs name their fields in camelCase, but they do not name everything alike: a key is `apiKey` in a Meilisearch config file and `masterKey` on a Cloud project. The CLI does not normalize. An agent reads each API's documentation and gets exactly that.
 - A command that filters a list instead of calling a unit route returns the list envelope: `get tasks --ids 42` prints `{"results": [the task], …}`, and the agent reads `results[0]`.
-- Some API responses contain secrets by design, for example `apikey` on a Meilisearch Cloud project. They are data the agent needs and they go to stdout unchanged. Redaction applies to stderr, `--debug` traces and logs, not to the data stream.
+- Some API responses contain secrets by design, for example `masterKey` on a Meilisearch Cloud project. They are data the agent needs and they go to stdout unchanged. Redaction applies to stderr, `--debug` traces and logs, not to the data stream.
 
 ## Errors
 
@@ -50,7 +50,7 @@ Errors go to stderr, as one JSON document: compact when stderr is not a TTY, ind
 - API errors keep the API fields as they are: `code`, `type`, `message`, `link`. The CLI never rewrites an API message.
 - `hint` is optional and CLI owned. It names the next command to run. It is a full sentence, without markdown other than backticks around commands. On an unknown command, the hint names the closest existing command, "Did you mean `meili delete indexes`?", computed from the manifest: the CLI suggests, it never asks.
 - Errors that come from the CLI itself use codes prefixed with `cli_` and `type` set to `cli`. Current list: `cli_usage`, `cli_config`, `cli_auth_missing`, `cli_timeout`, `cli_network`, `cli_task_failed`, `cli_input_invalid`, `cli_internal`. `cli_internal` is an unexpected error inside the CLI itself, a bug to report, and exits 1. Adding a code is a contract change.
-- The Management API does not define an error body in its spec, and the running API answers with `{"error": "Forbidden"}`: a message, no code. For its errors the CLI builds the object itself: `type` is `management`, `code` comes from the HTTP status (`management_unauthorized` 401, `management_forbidden` 403, `management_not_found` 404, `management_unprocessable` 422, `management_error` otherwise), `message` is the API's `error` field when the body has one and the spec's response description otherwise, `link` is absent. When the spec gains an error schema with codes, this rule is replaced by pass-through.
+- The Management API does not define an error body in its spec, and the running API answers with `{"error": "Forbidden"}`: a message, no code. For its errors the CLI builds the object itself: `type` is `management`, `code` comes from the HTTP status (`management_unauthorized` 401, `management_forbidden` 403, `management_not_found` 404, `management_unprocessable` 422, `management_error` otherwise), `message` is the API's `error` field when the body has one, the spec's response description otherwise, and the status with the request (`HTTP 404 to POST https://…`) when the spec describes neither, `link` is absent. When the spec gains an error schema with codes, this rule is replaced by pass-through.
 - Stack traces appear only with `--debug`.
 
 ## Warnings

@@ -94,6 +94,23 @@ export interface MeiliCliErrorOptions {
   cause?: unknown;
 }
 
+/**
+ * A non-2xx answer of the Management API, whose error body has no code
+ * (docs/contract/output.md, "Errors"): the message is the body's `error`
+ * field, else the document's description of that status, else the status
+ * and the request, `POST https://…`, so that a wrong URL shows.
+ */
+export class ManagementApiError extends Error {
+  readonly status: number;
+
+  constructor(status: number, body: unknown, description: string | undefined, request: string) {
+    const sent = isRecord(body) && typeof body.error === "string" ? body.error : undefined;
+    super(sent ?? description ?? `The Management API answered HTTP ${status} to ${request}.`);
+    this.name = "ManagementApiError";
+    this.status = status;
+  }
+}
+
 /** The only error class commands may throw. */
 export class MeiliCliError extends Error {
   readonly code: CliErrorCode;
@@ -158,6 +175,16 @@ export function toRenderedError(error: unknown, commandIds: readonly string[] = 
       exitCode: EXIT_CODES.network,
       stack: error.stack,
     };
+  }
+
+  if (error instanceof ManagementApiError) {
+    const code = managementErrorCode(error.status);
+    const body: ErrorBody = { code, type: "management", message: error.message };
+    if (error.status === 401) {
+      body.hint =
+        "Provide a personal access token with `--management-token <pat>` or `MEILI_MANAGEMENT_TOKEN`.";
+    }
+    return { body, exitCode: MANAGEMENT_ERROR_CODES[code], stack: error.stack };
   }
 
   if (error instanceof MeilisearchRequestTimeOutError) {
@@ -260,9 +287,14 @@ function serverName(url: string): string {
 }
 
 function networkMessage(error: MeilisearchRequestError): string {
-  const reason = deepestCauseMessage(error.cause);
   const target = error.message.match(/https?:\/\/\S+/)?.[0];
   const where = target === undefined ? "the Meilisearch instance" : target.replace(/\/$/, "");
+  return cannotConnectMessage(where, error.cause);
+}
+
+/** The `cli_network` message: `Cannot connect to <where>`, with the deepest cause when there is one. */
+export function cannotConnectMessage(where: string, cause: unknown): string {
+  const reason = deepestCauseMessage(cause);
   return reason === undefined
     ? `Cannot connect to ${where}.`
     : `Cannot connect to ${where}: ${reason}.`;
@@ -328,4 +360,9 @@ export function handleFatalError(
     });
   }
   process.exitCode = rendered.exitCode;
+}
+
+/** A plain JSON object: not null, not an array. */
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }

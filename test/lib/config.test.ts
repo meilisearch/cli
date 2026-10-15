@@ -1,4 +1,4 @@
-import { chmodSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { chmodSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -11,27 +11,19 @@ import {
   readConfigFile,
   redactBody,
   redactHeaders,
+  resolveCloudProjectId,
   resolveManagementCredentials,
   resolveProjectConnection,
   writeConfigFile,
 } from "../../src/lib/config.js";
-import { MeiliCliError } from "../../src/lib/errors.js";
-import { scrubbedHome } from "../helpers/run-command.js";
+import type { MeiliCliError } from "../../src/lib/errors.js";
+import { caught } from "../helpers/errors.js";
+import { readJson, scrubbedHome } from "../helpers/run-command.js";
 
 /** A read that must not warn: an unexpected warning fails the test. */
 const noWarning = (warning: MeiliCliError): never => {
   throw warning;
 };
-
-function caught(fn: () => unknown): MeiliCliError {
-  try {
-    fn();
-  } catch (error) {
-    if (error instanceof MeiliCliError) return error;
-    throw error;
-  }
-  throw new Error("expected a MeiliCliError");
-}
 
 const file = (name: string, projects: ConfigFile["projects"]): ConfigFile => ({
   path: join(scrubbedHome, name),
@@ -83,12 +75,21 @@ describe("readConfigFile", () => {
     },
   );
 
-  it("refuses invalid JSON and a shape other than projects of url and apiKey", () => {
+  it("reads an entry's cloudId, a positive integer", () => {
+    const path = join(scrubbedHome, "cloud.json");
+    writeConfigFile({ path, projects: { prod: { url: "http://prod", cloudId: 343 } } });
+    expect(readConfigFile(path, noWarning).projects).toEqual({
+      prod: { url: "http://prod", cloudId: 343 },
+    });
+  });
+
+  it("refuses invalid JSON and a shape other than projects of url, apiKey and cloudId", () => {
     for (const [name, content] of [
       ["bad.json", "{"],
       ["shape.json", '{"current":"prod"}'],
       ["entry.json", '{"projects":{"prod":{"apiKey":"k"}}}'],
       ["key.json", '{"projects":{"prod":{"url":"http://p","apiKey":1}}}'],
+      ["cloud.json", '{"projects":{"prod":{"url":"http://p","cloudId":"343"}}}'],
     ] as const) {
       const path = join(scrubbedHome, name);
       writeFileSync(path, content, { mode: 0o600 });
@@ -104,7 +105,37 @@ describe("writeConfigFile", () => {
     const path = join(scrubbedHome, "nested", "config.json");
     writeConfigFile({ path, projects: { prod } });
     expect(statSync(path).mode & 0o777).toBe(0o600);
-    expect(JSON.parse(readFileSync(path, "utf8"))).toEqual({ projects: { prod } });
+    expect(readJson(path)).toEqual({ projects: { prod } });
+  });
+});
+
+describe("resolveCloudProjectId", () => {
+  const entries = () => file("ids.json", { prod: { url: "http://prod", cloudId: 343 }, local });
+  const unread = () => {
+    throw new Error("the file must not be read");
+  };
+
+  it("takes --id as given, or the cloudId of the entry --project names", () => {
+    expect(resolveCloudProjectId({ id: 7 }, unread)).toBe(7);
+    expect(resolveCloudProjectId({ project: "prod" }, entries)).toBe(343);
+  });
+
+  it("fails with cli_usage on both flags or neither", () => {
+    expect(caught(() => resolveCloudProjectId({ id: 7, project: "prod" }, unread)).code).toBe(
+      "cli_usage",
+    );
+    const neither = caught(() => resolveCloudProjectId({}, unread));
+    expect(neither.code).toBe("cli_usage");
+    expect(neither.message).toBe("Name the project with `--id <id>` or `--project <name>`.");
+  });
+
+  it("fails with cli_config, naming the ways to set it, on an entry without cloudId", () => {
+    const error = caught(() => resolveCloudProjectId({ project: "local" }, entries));
+    expect(error.code).toBe("cli_config");
+    expect(error.message).toContain("`local` has no `cloudId`");
+    expect(error.hint).toBe(
+      "Run `meili config sync-with-cloud`, or `meili config update --project local --project-cloud-id <id>`.",
+    );
   });
 });
 
@@ -201,20 +232,29 @@ describe("resolveProjectConnection", () => {
 
 describe("resolveManagementCredentials", () => {
   it("reads the token and the URL, with the production URL by default", () => {
-    expect(resolveManagementCredentials({ MEILI_MANAGEMENT_TOKEN: "envToken" })).toEqual({
+    expect(resolveManagementCredentials({}, { MEILI_MANAGEMENT_TOKEN: "envToken" })).toEqual({
       token: "envToken",
       url: DEFAULT_MANAGEMENT_URL,
     });
     expect(
-      resolveManagementCredentials({
-        MEILI_MANAGEMENT_TOKEN: "envToken",
-        MEILI_MANAGEMENT_URL: "http://mgmt.test",
-      }),
+      resolveManagementCredentials(
+        {},
+        { MEILI_MANAGEMENT_TOKEN: "envToken", MEILI_MANAGEMENT_URL: "http://mgmt.test" },
+      ),
     ).toEqual({ token: "envToken", url: "http://mgmt.test" });
   });
 
+  it("takes the flags over the variables", () => {
+    expect(
+      resolveManagementCredentials(
+        { token: "flagToken", url: "http://flag.test" },
+        { MEILI_MANAGEMENT_TOKEN: "envToken", MEILI_MANAGEMENT_URL: "http://mgmt.test" },
+      ),
+    ).toEqual({ token: "flagToken", url: "http://flag.test" });
+  });
+
   it("fails before any network call with cli_auth_missing and exit 3", () => {
-    const error = caught(() => resolveManagementCredentials({}));
+    const error = caught(() => resolveManagementCredentials({}, {}));
     expect(error.code).toBe("cli_auth_missing");
     expect(error.exitCode).toBe(3);
     expect(error.message).toContain("`MEILI_MANAGEMENT_TOKEN`");
@@ -243,12 +283,13 @@ describe("redaction", () => {
     });
   });
 
-  it("redacts apiKey, key and token fields at any depth", () => {
+  it("redacts apiKey, masterKey, key and token fields at any depth", () => {
     expect(
       redactBody({
         results: [{ uid: "1", key: "supersecretkey1a2b", nested: { token: "tok1234x" } }],
         apiKey: "k",
-        apikey: "masterKey1234",
+        apikey: "oldspelling1234",
+        masterKey: "projectmasterkey9z8y",
         keep: "visible",
         count: 2,
       }),
@@ -256,6 +297,7 @@ describe("redaction", () => {
       results: [{ uid: "1", key: "****1a2b", nested: { token: "****234x" } }],
       apiKey: "****",
       apikey: "****1234",
+      masterKey: "****9z8y",
       keep: "visible",
       count: 2,
     });

@@ -1,19 +1,19 @@
 ---
 name: add-command
-description: Add exactly one command to the meili CLI (for example `get stats` or `cancel tasks`) from its routes in the OpenAPI document, following the naming rules of docs/contract/commands.md and CLAUDE.md, with its snapshot tests, integration test, manifest and changeset. Use it whenever a command must be added or when someone asks to expose an API route.
+description: Add exactly one command to the meili CLI (for example `get stats` or `cancel tasks`) from its routes in the OpenAPI document, following the naming rules of docs/contract/commands.md and CLAUDE.md, with its snapshot tests, its integration test for a Meilisearch command, manifest and changeset. Use it whenever a command must be added or when someone asks to expose an API route.
 argument-hint: <command, for example: get stats>
 ---
 
 # Add the command `meili $ARGUMENTS`
 
-You ship exactly one command in this change: `meili $ARGUMENTS`, with every route of its verb and resource. One file for the command, one test file, one integration test, the regenerated manifest, one changeset line. Nothing else, unless a shared piece of `src/lib/` is missing for this kind of command (say so in the report).
+You ship exactly one command in this change: `meili $ARGUMENTS`, with every route of its verb and resource. One file for the command, one test file, one integration test for a Meilisearch command, the regenerated manifest, one changeset line. Nothing else, unless a shared piece of `src/lib/` is missing for this kind of command (say so in the report).
 
 Work through the steps in order. Every check below is enforced by `pnpm test` through `test/contract/`, so a shortcut only moves the failure later.
 
 ## 1. Read before you write
 
 - `CLAUDE.md`, fully. The non-negotiable rules are the review checklist.
-- `docs/contract/commands.md`: the grammar, the eleven naming rules, the exceptions table, the shared flag groups and the commands without an API.
+- `docs/contract/commands.md`: the grammar, the eleven naming rules, the exceptions table, the shared flag groups and the commands that do not derive from a route.
 - `docs/contract/output.md`: output modes, pass-through, errors, exit codes, asynchronous operations, destructive commands, input, pagination. The sections that match your routes are the specification of your command.
 - `docs/contract/testing.md`: what the three test levels must contain.
 
@@ -32,7 +32,7 @@ Compare the derived command with `$ARGUMENTS`:
 - different name because the user's request contradicts the rules for no such reason: tell the user, propose the derived name, and follow what they decide; if they keep their name, it is an exception with their reason.
 - no route in the document, or a parameter the user mentions that the document does not have: stop and ask the user. Do not guess a route and do not read it in Meilisearch's source code.
 - a route behind an experimental feature: it is out of the contract (rule 10). Stop and tell the user; opening it is an exception they decide.
-- a command that calls no API (`schema`): it must be in the "Commands without an API" table of `commands.md`; if it is not, stop and ask.
+- a command that does not derive from a route (`schema`, the `config` commands): it must be in the "Commands that do not derive from a route" table of `commands.md`; if it is not, stop and ask.
 
 From the routes, write down the flags of each: the path flags (rule 4: `--id` for the resource itself, the singular collection for a parent, `--index`), the query parameters and body fields (rule 6), the identifier flags named by what they identify and their API-spelling aliases (rule 5), and which flag combination selects which route (rule 3).
 
@@ -44,7 +44,7 @@ The command id is the file path. `meili get stats` gives:
 |---|---|
 | command | `src/commands/get/stats.ts` |
 | unit test | `test/commands/get/stats.test.ts` |
-| integration test | `test/integration/meilisearch/get-stats.test.ts` |
+| integration test, Meilisearch commands only | `test/integration/meilisearch/get-stats.test.ts` |
 | snapshot (generated) | `test/commands/get/__snapshots__/stats.test.ts.snap` |
 
 The class name is the command id in PascalCase (`GetStats`). The first command of a new verb (`create`, `update`, `delete`, `cancel`, ...) also needs the topic description in `package.json`, under `oclif.topics.<verb>.description`, otherwise `meili --help` does not list the verb. A verb-only command (`search`, `export`) is a file at the root of `src/commands/`.
@@ -88,7 +88,7 @@ Run `pnpm test` once to write the snapshots, then read the `.snap` file: the JSO
 
 ## 5. Integration test
 
-Copy `test/integration/meilisearch/get-health.test.ts` or `get-indexes.test.ts`. The file starts with `const meilisearchUp = await meilisearchAvailable()` and wraps everything in `describe.skipIf(!meilisearchUp)`. It runs the built binary with `runBinary([...])` against `MEILISEARCH_URL` and `MASTER_KEY` from `setup.ts`, never against the shell's `MEILI_PROJECT_URL`. Fixtures (an index, documents) are created with the SDK under a random suffix and deleted in `afterAll`, so the suite can run in parallel and never depends on existing data. A management command needs `test/integration/management/`, whose bootstrap (`docs/contract/testing.md`, section 2) does not exist yet: stop and tell the user it must be built first, in its own change.
+Copy `test/integration/meilisearch/get-health.test.ts` or `get-indexes.test.ts`. The file starts with `const meilisearchUp = await meilisearchAvailable()` and wraps everything in `describe.skipIf(!meilisearchUp)`. It runs the built binary with `runBinary([...])` against `MEILISEARCH_URL` and `MASTER_KEY` from `setup.ts`, never against the shell's `MEILI_PROJECT_URL`. Fixtures (an index, documents) are created with the SDK under a random suffix and deleted in `afterAll`, so the suite can run in parallel and never depends on existing data. A management command has no integration test (`docs/contract/testing.md`, section 2): its handlers in `test/helpers/management-handlers.ts` follow `openapi/management.json`, and what the document does not say is reported to the user as a documentation gap, never guessed.
 
 ## 6. Manifest, changeset
 

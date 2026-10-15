@@ -1,10 +1,9 @@
-import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import ConfigRemove from "../../../src/commands/config/remove.js";
 import { writeConfigFile } from "../../../src/lib/config.js";
 import { useMockServer } from "../../helpers/msw.js";
-import { runCli, runCommand, scrubbedHome } from "../../helpers/run-command.js";
+import { readJson, runCli, runCommand, scrubbedHome } from "../../helpers/run-command.js";
 
 useMockServer();
 
@@ -23,7 +22,7 @@ describe("meili config remove", () => {
       env: { MEILI_CONFIG: path },
     });
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
-    expect(JSON.parse(readFileSync(path, "utf8"))).toEqual({
+    expect(readJson(path)).toEqual({
       projects: { b: { url: "http://b" } },
     });
   });

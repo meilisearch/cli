@@ -1,0 +1,49 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili config sync-with-cloud > prints its help without any network call 1`] = `
+"Set the cloudId of the config file entries whose URL is a Meilisearch Cloud project the token sees. Never writes a key, never adds or removes an entry. Prints what changed.
+
+USAGE
+  $ meili config sync-with-cloud [--project-url <url>] [--project-api-key <key>]
+    [--project <name>] [--management-token <pat>] [--management-url <url>] [-o
+    <mode>] [--debug] [--team-id <id>]
+
+FLAGS
+  -o, --output=<mode>           json (default): one document, the API body as it
+                                is, indented in a terminal, compact when piped.
+                                ndjson: one item per line, list commands only,
+                                streams with --all.
+      --debug                   Print every HTTP request and response on stderr,
+                                secrets redacted.
+      --management-token=<pat>  Management API personal access token.
+      --management-url=<url>    Management API base URL. Default
+                                https://api.meilisearch.com.
+      --project=<name>          A project of the config file: its URL and key
+                                for a Meilisearch command, its cloudId for a
+                                management command. Cannot be combined with
+                                --project-url or --id. Required when the file
+                                has several projects.
+      --project-api-key=<key>   Project API key. \`-\` reads it from stdin.
+      --project-url=<url>       Project URL, the Meilisearch instance to talk
+                                to.
+      --team-id=<id>            Only the projects of this team; missing entries
+                                are then not reported.
+
+DESCRIPTION
+  Set the cloudId of the config file entries whose URL is a Meilisearch Cloud
+  project the token sees. Never writes a key, never adds or removes an entry.
+  Prints what changed.
+
+  The file holds API keys and decides where every later command goes, for every
+  process that reads it: an agent runs this only when the human asked for it
+  explicitly.
+
+EXAMPLES
+  $ meili config sync-with-cloud
+
+  $ meili config sync-with-cloud --team-id 12
+
+  $ meili config sync-with-cloud --output json
+
+"
+`;

@@ -4,11 +4,11 @@ This file defines how `meili` finds the APIs to talk to and how it treats secret
 
 ## Principle
 
-An agent must be able to run `meili` with environment variables only, in a fresh container, with no `HOME`. A config file exists for the people and the agents who work with several projects, and nothing is ever deduced from it: a project is named on the command line, or there is exactly one to choose from, or the command fails and says what it found.
+An agent must be able to run `meili` with environment variables only, in a fresh container, with no `HOME`. A config file exists for the people and the agents who work with several projects, and nothing is ever deduced from it: a project is named on the command line, or there is exactly one to choose from, or the command fails and says what it found. The Management API is consulted only when the command line asks for it, never to resolve the target of a command.
 
 ## Projects
 
-A project is a Meilisearch instance: the one you run, or a project on Meilisearch Cloud. The CLI needs its URL and, when the instance is protected, one of its API keys. A project comes from one of three sources:
+A project is a Meilisearch instance: the one you run, or a project on Meilisearch Cloud. A Meilisearch command needs its URL and, when the instance is protected, one of its API keys; a management command needs its id in Meilisearch Cloud, see "Cloud projects". A project comes from one of three sources:
 
 1. the command line: `--project-url <url>` and `--project-api-key <key>`, or `--project <name>`, an entry of the config file
 2. the environment: `MEILI_PROJECT_URL` and `MEILI_PROJECT_API_KEY`
@@ -22,16 +22,16 @@ The path is `$MEILI_CONFIG` if set, else `$XDG_CONFIG_HOME/meili/config.json`, e
 {
   "projects": {
     "local": { "url": "http://localhost:7700" },
-    "prod": { "url": "https://ms-abc.sfo.meilisearch.io", "apiKey": "…" }
+    "prod": { "url": "https://ms-abc.sfo.meilisearch.io", "apiKey": "…", "cloudId": 343 }
   }
 }
 ```
 
-- `url` is required, `apiKey` is optional. Nothing else: no current project, no default entry.
+- `url` is required, `apiKey` and `cloudId` are optional. `cloudId` is the project's `id` in Meilisearch Cloud, an integer. Nothing else: no current project, no default entry.
 - The file holds API keys, so it belongs to one user and is readable by that user alone: mode `600`, or `400` for a file an agent must not change. When the file is readable by others, the CLI warns on stderr with the `chmod` to run (`output.md`, "Warnings") and goes on. On Windows, where file modes do not exist, there is no check. A file that does not exist is not an error: the CLI behaves as if there were no file.
 - Invalid JSON, or a shape other than the one above, fails with `cli_config` and the path of the file.
 - The file is shared state: every process that reads it is affected by whoever writes it. Give an agent its own file through `MEILI_CONFIG`, prepared by a human and mounted read-only in its sandbox, never the human's file. An agent adds, removes or changes a project, or the permissions of the file, only when the human asked for it explicitly: the file decides where every later command goes, for every process that reads it. `meili --help`, the help of the `config` commands and `meili schema` say so.
-- `meili config list`, `meili config add` and `meili config remove` manage the file, see `commands.md`. `config add` refuses a name that already exists: changing an entry is a `remove` then an `add`, on purpose.
+- `meili config list`, `meili config add`, `meili config update`, `meili config remove` and `meili config sync-with-cloud` manage the file, see `commands.md`. `config add` refuses a name that already exists; `config update` changes the fields of an entry.
 
 ## Resolution: nothing is deduced
 
@@ -50,6 +50,20 @@ The CLI resolves the project of a command in this order, and stops at the first 
 
 A missing key is not an error at resolution time; the API answers 401 and the CLI exits 3 with a hint. The CLI never falls back to `http://localhost:7700` silently.
 
+## Cloud projects
+
+A management command acts on a project of Meilisearch Cloud, identified by its integer `id`, `meili update projects --id 343`. The id is not shown in the Cloud dashboard, so the config file can carry it, as `cloudId`, and `--project <name>` gives it to the command: `meili update projects --project prod --name renamed`.
+
+- `--project` and `--id` together are a `cli_usage` error, exit 2: the name and the id contradict each other. Neither is `cli_usage` too.
+- An entry without `cloudId` is a `cli_config` error, exit 2, whose hint names the ways to set it. The CLI never resolves the id by itself, from the URL or otherwise.
+- `--project` on a management command none of whose routes takes a project, `create projects`, is a `cli_usage` error: a flag is never ignored in silence.
+
+Three ways set `cloudId`, all explicit, the only moments the CLI consults the Management API on the config file's behalf:
+
+1. `meili create projects … --add-to-config`: the created project joins the file, as an entry named after it, with its URL, its master key as `apiKey` and its `cloudId`. Creation is the one moment the API returns the key. A name the file already has is a `cli_config` error before the project is created.
+2. `meili config add … --project-cloud-id <id>` and `meili config update --project <name> --project-cloud-id <id>`: the id, written by hand.
+3. `meili config sync-with-cloud [--team-id <id>]`: lists the projects the token sees, and sets `cloudId` on every entry without one whose URL is one of theirs, same scheme and host. The other projects are ignored: an entry without its key would serve no Meilisearch command, and the key is not returned. The entries whose `cloudId` the token no longer sees are reported as `missing` and kept. No key is ever written, no entry is added or removed: a key in the file is always the human's choice.
+
 ## Management API connection: resolution order
 
 The credential is a personal access token (PAT), created in the Meilisearch Cloud dashboard and sent as `Authorization: Bearer <token>`.
@@ -59,7 +73,7 @@ The credential is a personal access token (PAT), created in the Meilisearch Clou
 
 If no token is found, the CLI fails before any network call with `cli_auth_missing` and exit code 3. The hint says where to create a token.
 
-The base URL comes from `--management-url`, then `MEILI_MANAGEMENT_URL`, and defaults to `https://api.meilisearch.com`. Every path starts with `/api/v2`. Both management flags arrive with the first management command.
+The base URL comes from `--management-url`, then `MEILI_MANAGEMENT_URL`, and defaults to `https://api.meilisearch.com`. Every path starts with `/api/v2`.
 
 Storing a token on disk, with a `login` command, is a decision of the Management API milestone. It is not in this contract.
 
@@ -95,10 +109,10 @@ A command cannot build a client by itself. Commands with `api = "none"` (`schema
 
 Every variable is documented in `meili --help`. Adding a variable is a contract change.
 
-A variable that doubles a flag takes its name from the flag: `MEILI_` followed by the flag name in upper snake case. `--project-url` and `MEILI_PROJECT_URL`, `--timeout` and `MEILI_TIMEOUT`, `--management-token` and `MEILI_MANAGEMENT_TOKEN`. `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL` get their flags with the first management command. `MEILI_CONFIG` has no flag, the file is chosen per process, and `--project` has no variable, a project is chosen per command. The contract tests check the pairs.
+A variable that doubles a flag takes its name from the flag: `MEILI_` followed by the flag name in upper snake case. `--project-url` and `MEILI_PROJECT_URL`, `--timeout` and `MEILI_TIMEOUT`, `--management-token` and `MEILI_MANAGEMENT_TOKEN`. `MEILI_CONFIG` has no flag, the file is chosen per process, and `--project` has no variable, a project is chosen per command. The contract tests check the pairs.
 
 ## Secrets
 
 - API keys and tokens never appear on stdout, on stderr, in `--debug` traces, in error messages or in snapshots. When a secret must be shown at all, only its last four characters are: `****1a2b`. `meili config list` masks keys the same way.
-- `--debug` redacts the `Authorization` header and every field named `apiKey`, `apikey`, `key`, `token` in request and response bodies. `apikey` is the Management API's spelling of a project's master key. The redaction lives in `src/lib/config.ts` and is tested.
+- `--debug` redacts the `Authorization` header and every field named `apiKey`, `apikey`, `masterKey`, `key`, `token` in request and response bodies. `masterKey` is a Cloud project's master key, as the Management API returns it. The redaction lives in `src/lib/config.ts` and is tested.
 - The CLI reads keys from the config file, and from nowhere else on disk, and warns when the file is readable by others. Passing a key in a flag is allowed and documented as visible in the process list and in the shell history; `--project-api-key -` reads it from stdin instead.

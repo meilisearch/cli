@@ -24,18 +24,14 @@ for await (const file of glob("docs/contract/*.md", { cwd: PROJECT_ROOT })) guid
 const PLANNED_PATHS = [
   "CHANGELOG.md",
   "src/commands/create/indexes.ts",
-  "src/commands/get/projects.ts",
   "src/commands/get/stats.ts",
-  "src/lib/clients/management/generated/",
   "test/commands/get/__snapshots__/stats.test.ts.snap",
   "test/commands/get/stats.test.ts",
-  "test/helpers/management-handlers.ts",
   "test/integration/management/",
   "test/integration/management/README.md",
   "test/integration/management/bootstrap/",
   "test/integration/meilisearch/get-stats.test.ts",
 ];
-const PLANNED_SCRIPTS = ["gen:management"];
 
 /** A span that is a path of this repository: a known top-level file or folder. */
 const PATH_SPAN =
@@ -76,13 +72,7 @@ describe("the guides cite things that exist", () => {
       for (const span of spans) {
         const script = span.match(/^pnpm ([\w:-]+)/)?.[1];
         if (script === undefined || PNPM_BUILTINS.has(script)) continue;
-        const planned = PLANNED_SCRIPTS.includes(script);
-        expect(
-          scripts.includes(script),
-          planned
-            ? `pnpm ${script} exists now: remove it from PLANNED_SCRIPTS`
-            : `no script ${script}`,
-        ).toBe(!planned);
+        expect(scripts.includes(script), `no script ${script}`).toBe(true);
       }
     });
 

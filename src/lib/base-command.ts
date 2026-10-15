@@ -6,13 +6,18 @@
  */
 import { Command, Errors, Flags, type Interfaces } from "@oclif/core";
 import type { EnqueuedTask, Meilisearch } from "meilisearch";
+import { parseRoute, projectFlagForRoute } from "./api-naming.js";
+import { type BodyInputFlags, buildBody } from "./body.js";
+import { installHttpTrace } from "./clients/http-trace.js";
+import { createManagementClient, type ManagementClient } from "./clients/management.js";
 import { createMeilisearchClient } from "./clients/meilisearch.js";
 import {
   type ConfigFile,
   configFilePath,
+  DEFAULT_MANAGEMENT_URL,
   ENV,
-  type ManagementCredentials,
   readConfigFile,
+  resolveCloudProjectId,
   resolveManagementCredentials,
   resolveProjectConnection,
 } from "./config.js";
@@ -57,8 +62,16 @@ export abstract class BaseCommand extends Command {
     }),
     project: Flags.string({
       description:
-        "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+        "A project of the config file: its URL and key for a Meilisearch command, its cloudId for a management command. Cannot be combined with --project-url or --id. Required when the file has several projects.",
       helpValue: "<name>",
+    }),
+    "management-token": Flags.string({
+      description: "Management API personal access token.",
+      helpValue: "<pat>",
+    }),
+    "management-url": Flags.string({
+      description: `Management API base URL. Default ${DEFAULT_MANAGEMENT_URL}.`,
+      helpValue: "<url>",
     }),
     output: Flags.option({
       char: "o",
@@ -107,8 +120,8 @@ export abstract class BaseCommand extends Command {
   protected outputMode!: OutputMode;
   /** Set when `static api` is `meilisearch`. */
   protected meilisearch!: Meilisearch;
-  /** Set when `static api` is `management`. The client is built here once it is generated. */
-  protected management: ManagementCredentials | undefined;
+  /** Set when `static api` is `management`. Passed to the generated SDK functions, which throw contract errors. */
+  protected managementClient!: ManagementClient;
 
   protected get api(): Api {
     return (this.constructor as typeof BaseCommand).api;
@@ -124,6 +137,7 @@ export abstract class BaseCommand extends Command {
     });
     this.globalFlags = flags as GlobalFlags;
     this.outputMode = resolveOutputMode({ flag: this.globalFlags.output, env: process.env });
+    if (this.globalFlags.debug) installHttpTrace();
 
     if (this.api === "none") return;
 
@@ -140,13 +154,46 @@ export abstract class BaseCommand extends Command {
       this.meilisearch = createMeilisearchClient({
         url: connection.url,
         apiKey: connection.apiKey,
-        debug: this.globalFlags.debug,
-        version: this.config.version,
+        userAgent: this.userAgent,
       });
       return;
     }
 
-    this.management = resolveManagementCredentials(process.env);
+    const routes = (this.constructor as typeof BaseCommand).routes;
+    if (
+      this.globalFlags.project !== undefined &&
+      !routes.some((route) => projectFlagForRoute(parseRoute(route)) !== undefined)
+    ) {
+      throw new MeiliCliError(
+        "cli_usage",
+        "`--project` has no use here: none of the routes of this command takes a project.",
+      );
+    }
+    this.managementClient = createManagementClient({
+      ...resolveManagementCredentials(
+        { token: this.globalFlags["management-token"], url: this.globalFlags["management-url"] },
+        process.env,
+      ),
+      userAgent: this.userAgent,
+    });
+  }
+
+  /** What both APIs see in their client header: `meili-cli (v1.2.3)`. */
+  private get userAgent(): string {
+    return `meili-cli (v${this.config.version})`;
+  }
+
+  /**
+   * The body of a write command, shaped as the generated type `T` says:
+   * `--file` or `--data`, then the body-field flags, field by field. `fields`
+   * maps API field names to flag values; an undefined value is a flag not
+   * given, and the API validates what is required.
+   */
+  protected body<T extends object>(
+    flags: BodyInputFlags,
+    fields: { [K in keyof T]?: T[K] | undefined },
+  ): T {
+    return buildBody(flags, fields) as T;
   }
 
   /** Renders every error as the contract says, then exits with its code. */
@@ -158,6 +205,13 @@ export abstract class BaseCommand extends Command {
       debug: this.globalFlags?.debug ?? this.argv.includes("--debug"),
     });
     this.exit(rendered.exitCode);
+  }
+
+  /** The Cloud project a management command acts on: `--id`, or the `cloudId` of the entry `--project` names. */
+  protected cloudProjectId(id: number | undefined): number {
+    return resolveCloudProjectId({ id, project: this.globalFlags.project }, () =>
+      this.configFile(),
+    );
   }
 
   /** The config file of docs/contract/config.md, empty when it does not exist. */
