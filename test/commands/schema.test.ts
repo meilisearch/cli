@@ -7,14 +7,6 @@ import { PROJECT_ROOT, runCli, runCommand } from "../helpers/run-command.js";
 
 useMockServer();
 
-const manifestIds = Object.keys(
-  (
-    JSON.parse(readFileSync(join(PROJECT_ROOT, "oclif.manifest.json"), "utf8")) as {
-      commands: Record<string, unknown>;
-    }
-  ).commands,
-).map((id) => id.replaceAll(":", " "));
-
 describe("meili schema", () => {
   it("prints its help without any network call", async () => {
     const result = await runCli(["schema", "--help"]);
@@ -23,7 +15,10 @@ describe("meili schema", () => {
     expect(result.stdout).toMatchSnapshot();
   });
 
-  it("indexes every command of the manifest, with the global flags once, offline", async () => {
+  it("indexes every command of the manifest, without their flags, offline", async () => {
+    const manifest = JSON.parse(
+      readFileSync(join(PROJECT_ROOT, "oclif.manifest.json"), "utf8"),
+    ) as { commands: Record<string, unknown> };
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
       result = await runCommand(Schema, ["--output", "json"]);
@@ -32,51 +27,53 @@ describe("meili schema", () => {
     expect(result?.exitCode).toBe(0);
     expect(result?.stderr).toBe("");
     const schema = JSON.parse(result?.stdout ?? "") as {
-      globalFlags: Array<{ name: string }>;
-      commands: Array<{ id: string; flags?: unknown }>;
+      commands: Array<{ id: string; description: string; flags?: unknown }>;
     };
-    expect(schema.commands.map((command) => command.id).sort()).toEqual([...manifestIds].sort());
-    expect(schema.globalFlags.map((flag) => flag.name)).toEqual([
-      "project-url",
-      "project-api-key",
-      "project",
-      "output",
-      "debug",
-    ]);
+    expect(schema.commands.map((command) => command.id).sort()).toEqual(
+      Object.keys(manifest.commands)
+        .map((id) => id.replaceAll(":", " "))
+        .sort(),
+    );
     expect(
       schema.commands.every((command) => command.flags === undefined),
       "the index carries no flag: that is what --command is for",
     ).toBe(true);
+    expect(
+      schema.commands.every((command) => !command.description.includes("\n")),
+      "the index carries the first paragraph of a description, not the warning that follows",
+    ).toBe(true);
   });
 
-  it("prints one command in full with --command, without repeating the global flags", async () => {
-    const result = await runCommand(Schema, ["--command", "get indexes", "--output", "json"]);
-    expect(result.exitCode).toBe(0);
-    expect(result.stderr).toBe("");
-    expect(JSON.parse(result.stdout)).toMatchSnapshot();
-  });
-
-  it("keeps the global flags a command redefines, with its own description", async () => {
+  it("prints the flags a command declares itself, not the global ones it inherits", async () => {
     const result = await runCommand(Schema, ["--command", "config add", "--output", "json"]);
     expect(result.exitCode).toBe(0);
+    expect(result.stderr).toBe("");
     const command = JSON.parse(result.stdout) as {
-      flags: Array<{ name: string; required: boolean; description: string }>;
+      description: string;
+      flags: Array<{ name: string }>;
     };
-    expect(command.flags.find((flag) => flag.name === "project")).toEqual({
-      name: "project",
-      type: "option",
-      required: true,
-      description: "Name of the project to add.",
-      helpValue: "<name>",
-    });
-    expect(
-      command.flags.some((flag) => flag.name === "debug"),
-      "a global flag the command leaves untouched stays in the index only",
-    ).toBe(false);
+    // `config add` redefines two global flags as required, with its own descriptions.
+    expect(command.flags).toEqual([
+      {
+        name: "project",
+        type: "option",
+        required: true,
+        description: "Name of the project to add.",
+        helpValue: "<name>",
+      },
+      {
+        name: "project-url",
+        type: "option",
+        required: true,
+        description: "URL of the project.",
+        helpValue: "<url>",
+      },
+    ]);
+    expect(command.description).toContain("\n\n");
   });
 
   it("refuses an unknown command with cli_usage and exit 2", async () => {
-    const result = await runCommand(Schema, ["--command", "get stats", "--output", "json"]);
+    const result = await runCommand(Schema, ["--command", "get indexs", "--output", "json"]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr)).toMatchSnapshot();

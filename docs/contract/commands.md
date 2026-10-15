@@ -147,7 +147,7 @@ These commands call no API. They are the only ones listed here; their `--help` d
 
 | Command | Effect |
 |---|---|
-| `meili schema` | Print the index of the command tree as JSON: the global flags once, then one entry per command with its description and its routes. `meili schema --command "get indexes"` prints that one command in full: its API, its routes, its key actions, whether it returns a task, its own flags and its examples. Generated from the oclif manifest. This is how an agent learns the CLI: the index in one call, a command when it needs it. See ADR 0008. |
+| `meili schema` | Print the index of the command tree as JSON: the global flags once, then one entry per command with its description and its routes. `meili schema --command "get indexes"` prints that one command in full: its API, its routes, its key actions, whether it returns a task, the flags it declares itself and its examples. Generated from the oclif manifest. This is how an agent learns the CLI: the index in one call, a command when it needs it. See ADR 0008. |
 | `meili config list` | Print the config file path and its projects as JSON, keys masked. |
 | `meili config add --project <name> --project-url <url> [--project-api-key <key>]` | Add a project to the config file, creating it in mode `600`. `--project-api-key -` reads the key from stdin. Refuses a URL that is not HTTP(S) with `cli_usage`, and a name that already exists with `cli_config`. Nothing on stdout. |
 | `meili config remove --project <name>` | Remove a project from the config file. Nothing on stdout. |

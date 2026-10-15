@@ -227,7 +227,7 @@ export function toRenderedError(error: unknown, commandIds: readonly string[] = 
 const NOT_FOUND = /^command (\S+) not found$/;
 
 /** The command closest to what was typed, when it is close enough to be a typo. */
-function closestCommand(typed: string, commandIds: readonly string[]): string | undefined {
+export function closestCommand(typed: string, commandIds: readonly string[]): string | undefined {
   const tolerance = Math.max(2, Math.floor(typed.length / 3));
   let best: { id: string; distance: number } | undefined;
   for (const id of commandIds) {

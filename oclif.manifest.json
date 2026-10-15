@@ -55,7 +55,7 @@
           "type": "boolean"
         },
         "command": {
-          "description": "Print this command in full instead of the index: its API, its routes, its key actions, its own flags and its examples.",
+          "description": "Print this command in full instead of the index: its API, its routes, its key actions, the flags it declares itself and its examples.",
           "name": "command",
           "hasDynamicHelp": false,
           "helpValue": "<command>",

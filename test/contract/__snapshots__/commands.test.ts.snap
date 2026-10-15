@@ -5,7 +5,6 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
   "commands": [
     {
       "api": "none",
-      "async": false,
       "description": "Add a project to the config file, creating it owner-only; refuses a name that exists.
 
 The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
@@ -16,16 +15,16 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
       "flags": [
         {
-          "description": "URL of the project.",
-          "helpValue": "<url>",
-          "name": "project-url",
+          "description": "Name of the project to add.",
+          "helpValue": "<name>",
+          "name": "project",
           "required": true,
           "type": "option",
         },
         {
-          "description": "Name of the project to add.",
-          "helpValue": "<name>",
-          "name": "project",
+          "description": "URL of the project.",
+          "helpValue": "<url>",
+          "name": "project-url",
           "required": true,
           "type": "option",
         },
@@ -34,7 +33,6 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "none",
-      "async": false,
       "description": "Print the config file path and its projects as JSON, keys masked.",
       "examples": [
         "meili config list",
@@ -46,7 +44,6 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "none",
-      "async": false,
       "description": "Remove a project from the config file.
 
 The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
@@ -67,7 +64,6 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
-      "async": false,
       "description": "Check that the Meilisearch instance is available.",
       "examples": [
         "meili get health",
@@ -82,7 +78,6 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
-      "async": false,
       "description": "List the indexes of the instance, or get one with --id.",
       "examples": [
         "meili get indexes",
@@ -96,27 +91,23 @@ The file holds API keys and decides where every later command goes, for every pr
           "description": "The index to get. Without it, the command lists the indexes.",
           "helpValue": "<index>",
           "name": "id",
-          "required": false,
           "type": "option",
         },
         {
           "description": "Passed to the API.",
           "helpValue": "<n>",
           "name": "limit",
-          "required": false,
           "type": "option",
         },
         {
           "description": "Passed to the API.",
           "helpValue": "<n>",
           "name": "offset",
-          "required": false,
           "type": "option",
         },
         {
           "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
           "name": "all",
-          "required": false,
           "type": "boolean",
         },
       ],
@@ -131,7 +122,6 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "none",
-      "async": false,
       "description": "Print one line per command, or one command in full with --command, from the oclif manifest.",
       "examples": [
         "meili schema",
@@ -141,10 +131,9 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
       "flags": [
         {
-          "description": "Print this command in full instead of the index: its API, its routes, its key actions, its own flags and its examples.",
+          "description": "Print this command in full instead of the index: its API, its routes, its key actions, the flags it declares itself and its examples.",
           "helpValue": "<command>",
           "name": "command",
-          "required": false,
           "type": "option",
         },
       ],
@@ -154,9 +143,7 @@ The file holds API keys and decides where every later command goes, for every pr
   "index": {
     "commands": [
       {
-        "description": "Add a project to the config file, creating it owner-only; refuses a name that exists.
-
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+        "description": "Add a project to the config file, creating it owner-only; refuses a name that exists.",
         "id": "config add",
       },
       {
@@ -164,9 +151,7 @@ The file holds API keys and decides where every later command goes, for every pr
         "id": "config list",
       },
       {
-        "description": "Remove a project from the config file.
-
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+        "description": "Remove a project from the config file.",
         "id": "config remove",
       },
       {
@@ -194,21 +179,18 @@ The file holds API keys and decides where every later command goes, for every pr
         "description": "Project URL, the Meilisearch instance to talk to.",
         "helpValue": "<url>",
         "name": "project-url",
-        "required": false,
         "type": "option",
       },
       {
         "description": "Project API key. \`-\` reads it from stdin.",
         "helpValue": "<key>",
         "name": "project-api-key",
-        "required": false,
         "type": "option",
       },
       {
         "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
         "helpValue": "<name>",
         "name": "project",
-        "required": false,
         "type": "option",
       },
       {
@@ -220,13 +202,11 @@ The file holds API keys and decides where every later command goes, for every pr
           "json",
           "ndjson",
         ],
-        "required": false,
         "type": "option",
       },
       {
         "description": "Print every HTTP request and response on stderr, secrets redacted.",
         "name": "debug",
-        "required": false,
         "type": "boolean",
       },
     ],

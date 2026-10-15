@@ -13,8 +13,8 @@ FLAGS
                                ndjson: one item per line, list commands only,
                                streams with --all.
       --command=<command>      Print this command in full instead of the index:
-                               its API, its routes, its key actions, its own
-                               flags and its examples.
+                               its API, its routes, its key actions, the flags
+                               it declares itself and its examples.
       --debug                  Print every HTTP request and response on stderr,
                                secrets redacted.
       --project=<name>         A project of the config file. Cannot be combined
@@ -39,64 +39,12 @@ EXAMPLES
 "
 `;
 
-exports[`meili schema > prints one command in full with --command, without repeating the global flags 1`] = `
-{
-  "api": "meilisearch",
-  "async": false,
-  "description": "List the indexes of the instance, or get one with --id.",
-  "examples": [
-    "meili get indexes",
-    "meili get indexes --output json",
-    "meili get indexes --id movies",
-    "meili get indexes --limit 5 --offset 10",
-    "meili get indexes --all --output ndjson",
-  ],
-  "flags": [
-    {
-      "description": "The index to get. Without it, the command lists the indexes.",
-      "helpValue": "<index>",
-      "name": "id",
-      "required": false,
-      "type": "option",
-    },
-    {
-      "description": "Passed to the API.",
-      "helpValue": "<n>",
-      "name": "limit",
-      "required": false,
-      "type": "option",
-    },
-    {
-      "description": "Passed to the API.",
-      "helpValue": "<n>",
-      "name": "offset",
-      "required": false,
-      "type": "option",
-    },
-    {
-      "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
-      "name": "all",
-      "required": false,
-      "type": "boolean",
-    },
-  ],
-  "id": "get indexes",
-  "keyActions": [
-    "indexes.get",
-  ],
-  "routes": [
-    "GET /indexes",
-    "GET /indexes/{index_uid}",
-  ],
-}
-`;
-
 exports[`meili schema > refuses an unknown command with cli_usage and exit 2 1`] = `
 {
   "error": {
     "code": "cli_usage",
-    "hint": "Run \`meili schema\` to see every command.",
-    "message": "\`get stats\` is not a command of meili.",
+    "hint": "Did you mean \`meili schema --command "get indexes"\`?",
+    "message": "\`get indexs\` is not a command of meili.",
     "type": "cli",
   },
 }
