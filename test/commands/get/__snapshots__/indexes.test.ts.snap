@@ -51,9 +51,11 @@ FLAGS
       --management-url=<url>    Management API base URL. Default
                                 https://api.meilisearch.com.
       --offset=<n>              Passed to the API.
-      --project=<name>          A project of the config file. Cannot be combined
-                                with --project-url. Required when the file has
-                                several projects.
+      --project=<name>          A project of the config file: its URL and key
+                                for a Meilisearch command, its cloudId for a
+                                management command. Cannot be combined with
+                                --project-url or --id. Required when the file
+                                has several projects.
       --project-api-key=<key>   Project API key. \`-\` reads it from stdin.
       --project-url=<url>       Project URL, the Meilisearch instance to talk
                                 to.

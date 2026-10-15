@@ -6,6 +6,7 @@
  */
 import { Command, Errors, Flags, type Interfaces } from "@oclif/core";
 import type { EnqueuedTask, Meilisearch } from "meilisearch";
+import { parseRoute, projectFlagForRoute } from "./api-naming.js";
 import { type BodyInputFlags, buildBody } from "./body.js";
 import { installHttpTrace } from "./clients/http-trace.js";
 import { createManagementClient, type ManagementClient } from "./clients/management.js";
@@ -16,6 +17,7 @@ import {
   DEFAULT_MANAGEMENT_URL,
   ENV,
   readConfigFile,
+  resolveCloudProjectId,
   resolveManagementCredentials,
   resolveProjectConnection,
 } from "./config.js";
@@ -60,7 +62,7 @@ export abstract class BaseCommand extends Command {
     }),
     project: Flags.string({
       description:
-        "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+        "A project of the config file: its URL and key for a Meilisearch command, its cloudId for a management command. Cannot be combined with --project-url or --id. Required when the file has several projects.",
       helpValue: "<name>",
     }),
     "management-token": Flags.string({
@@ -157,6 +159,16 @@ export abstract class BaseCommand extends Command {
       return;
     }
 
+    const routes = (this.constructor as typeof BaseCommand).routes;
+    if (
+      this.globalFlags.project !== undefined &&
+      !routes.some((route) => projectFlagForRoute(parseRoute(route)) !== undefined)
+    ) {
+      throw new MeiliCliError(
+        "cli_usage",
+        "`--project` has no use here: none of the routes of this command takes a project.",
+      );
+    }
     this.managementClient = createManagementClient({
       ...resolveManagementCredentials(
         { token: this.globalFlags["management-token"], url: this.globalFlags["management-url"] },
@@ -193,6 +205,13 @@ export abstract class BaseCommand extends Command {
       debug: this.globalFlags?.debug ?? this.argv.includes("--debug"),
     });
     this.exit(rendered.exitCode);
+  }
+
+  /** The Cloud project a management command acts on: `--id`, or the `cloudId` of the entry `--project` names. */
+  protected cloudProjectId(id: number | undefined): number {
+    return resolveCloudProjectId({ id, project: this.globalFlags.project }, () =>
+      this.configFile(),
+    );
   }
 
   /** The config file of docs/contract/config.md, empty when it does not exist. */

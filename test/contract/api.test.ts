@@ -20,6 +20,7 @@ import {
   type OpenApiDocument,
   parseRoute,
   pathFlagsForRoute,
+  projectFlagForRoute,
   ROUTE_EXCEPTIONS,
   routeKey,
 } from "../../src/lib/api-naming.js";
@@ -68,9 +69,28 @@ const commands = await Promise.all(
 const globalFlags = Object.keys(BaseCommand.baseFlags);
 const VERBS = ["get", "create", "update", "delete", ...LITERAL_VERBS];
 
+/** The commands of the "Commands that do not derive from a route" table of commands.md. */
+const listedCommands = tableRows(
+  section(readDoc("docs/contract/commands.md"), "Commands that do not derive from a route"),
+)
+  // The command words are the ones starting with a letter: `meili config add --project <name>`.
+  .map(([command = ""]) =>
+    (codeSpans(command)[0] ?? "")
+      .split(" ")
+      .slice(1)
+      .filter((word) => /^[a-z]/.test(word))
+      .join(" "),
+  )
+  .filter((id) => id !== "");
+
+const hasRoutes = (command: CommandClass): boolean =>
+  Array.isArray(command.routes) && command.routes.length > 0;
+
 describe("API commands derive from their routes", () => {
   for (const { id, file, command } of commands) {
-    if (command.api !== "meilisearch" && command.api !== "management") continue;
+    if ((command.api !== "meilisearch" && command.api !== "management") || !hasRoutes(command)) {
+      continue;
+    }
     const api = command.api;
     const spec = specs[api];
 
@@ -80,10 +100,6 @@ describe("API commands derive from their routes", () => {
           `openapi/management.json is missing and ${file} needs it. Run \`pnpm openapi:management\` with a GitHub token that reads meilisearch/meilisearch-cloud.`,
         );
       }
-      expect(
-        Array.isArray(command.routes) && command.routes.length > 0,
-        `${file} must declare static routes`,
-      ).toBe(true);
       const routes = (command.routes as string[]).map(parseRoute);
       for (const route of routes) {
         expect(hasRoute(spec, route), `${routeKey(route)} is not in the OpenAPI document`).toBe(
@@ -100,15 +116,21 @@ describe("API commands derive from their routes", () => {
       expect(Object.keys(command.args ?? {}), "no positional argument").toEqual([]);
       const flags = command.flags ?? {};
       const pathFlags = routes.map((route) => pathFlagsForRoute(route, id));
+      // `--project <name>` may give a Cloud project's id from the config file (rule 4).
+      const fromConfig = (flag: string): boolean =>
+        routes.some((route) => projectFlagForRoute(route) === flag);
       for (const flag of new Set(pathFlags.flat())) {
         if (flag === "id") continue;
-        expect(flags[flag]?.required, `--${flag} must be a required flag`).toBe(true);
+        expect(flags[flag], `--${flag} must exist`).toBeDefined();
+        if (!fromConfig(flag)) {
+          expect(flags[flag]?.required, `--${flag} must be a required flag`).toBe(true);
+        }
       }
       const routesWithId = pathFlags.filter((set) => set.includes("id")).length;
       if (routesWithId > 0) {
         expect(flags.id, "--id must exist").toBeDefined();
         expect(flags.id?.required === true, "--id is required only when every route takes it").toBe(
-          routesWithId === routes.length,
+          routesWithId === routes.length && !fromConfig("id"),
         );
       }
 
@@ -140,18 +162,23 @@ describe("API commands derive from their routes", () => {
   }
 });
 
-describe("commands without an API", () => {
+describe("commands that do not derive from a route", () => {
   const apiCommands = new Set([
     ...derived.meilisearch.keys(),
     ...(derived.management?.keys() ?? []),
   ]);
-  for (const { id, command } of commands.filter(({ command }) => command.api === "none")) {
-    it(`meili ${id} has no route and takes neither the name of an API command nor a verb`, () => {
-      expect(command.routes ?? []).toEqual([]);
+  for (const { id } of commands.filter(({ command }) => !hasRoutes(command))) {
+    it(`meili ${id} is in the table of commands.md and takes neither the name of an API command nor a verb`, () => {
+      expect(listedCommands).toContain(id);
       expect(apiCommands).not.toContain(id);
       expect(VERBS).not.toContain(id.split(" ")[0]);
     });
   }
+  it("the table of commands.md lists only commands that exist", () => {
+    const ids = commands.map(({ id }) => id);
+    for (const listed of listedCommands)
+      expect(ids, `meili ${listed} is listed but does not exist`).toContain(listed);
+  });
 });
 
 describe("exceptions", () => {

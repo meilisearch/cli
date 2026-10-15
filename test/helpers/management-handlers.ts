@@ -32,20 +32,28 @@ export const project: Project = {
   resource: { id: 3, name: "build", plan: "build", regionId: 1 },
 };
 
-/** What a handler saw: the `Authorization` header and the parsed body. */
+/** What a handler saw: the URL, the `Authorization` header and the parsed body. */
 export interface ReceivedRequest {
+  url: string;
   authorization: string | null;
   body: unknown;
 }
 
-/** Parses the JSON body and records it with the `Authorization` header. */
+/** Parses the JSON body, if any, and records it with the URL and the `Authorization` header. */
 async function record(received: ReceivedRequest[], request: Request): Promise<unknown> {
-  const body: unknown = await request.json();
-  received.push({ authorization: request.headers.get("authorization"), body });
+  const body: unknown = request.method === "GET" ? undefined : await request.json();
+  received.push({ url: request.url, authorization: request.headers.get("authorization"), body });
   return body;
 }
 
 export const managementHandlers = {
+  /** `GET /api/v2/projects` answering `all`, as the API lists what the token sees. */
+  listProjects: (all: Project[], received: ReceivedRequest[] = []) =>
+    http.get(`${MANAGEMENT_URL}/api/v2/projects`, async ({ request }) => {
+      await record(received, request);
+      return HttpResponse.json(all);
+    }),
+
   /** `POST /api/v2/projects` answering 201 with `project` carrying the attributes received. */
   createProject: (received: ReceivedRequest[] = []) =>
     http.post(`${MANAGEMENT_URL}/api/v2/projects`, async ({ request }) => {

@@ -37,7 +37,7 @@ Package: `@meilisearch/cli` on npm. Binary: `meili`.
 - TypeScript, strict mode, `noUncheckedIndexedAccess` on. Node 22 or newer.
 - oclif v5 (`@oclif/core` 5) for the command tree, topic separator is a space (`meili get indexes`). See ADR 0001.
 - `meilisearch-js` for the Meilisearch API.
-- `@hey-api/openapi-ts` generates the Management API client from `openapi/management.json`, downloaded by `pnpm openapi:management` and never committed, into `src/lib/clients/management/generated/`. Never edit generated files. Run `pnpm gen:management` to refresh them: it runs the generator through `pnpm dlx` with TypeScript 5 beside it, which the generator needs, and CI fails when the committed files differ. In code, commands, flags and environment variables, `management` is the name for everything that touches the Management API. `Cloud` only appears in prose, as the product name.
+- `@hey-api/openapi-ts` generates the Management API client from `openapi/management.json`, downloaded by `pnpm openapi:management` and never committed, into `src/lib/clients/management/generated/`. Never edit generated files. Run `pnpm gen:management` to refresh them: it runs the generator through `pnpm dlx` with TypeScript 5 beside it, which the generator needs, and CI fails when the committed files differ. In code, flags and environment variables, `management` names the Management API itself, `--management-token`; `cloud` names the product, Meilisearch Cloud, where a command or a field speaks of it, `config sync-with-cloud`, `cloudId`.
 - vitest for tests, with snapshots. `msw` mocks HTTP in unit tests. Integration tests run against a local Meilisearch and a local Management API, see `docs/contract/testing.md`.
 - Biome for lint and format.
 - changesets for versioning and the changelog.
@@ -95,9 +95,9 @@ Then read the diff of your pull request twice. Once for simplicity: in Claude Co
 
 ## Where to read more
 
-- `docs/contract/commands.md`: the naming rules that turn an API route into a command, the exceptions, the global and shared flags, the commands without an API
+- `docs/contract/commands.md`: the naming rules that turn an API route into a command, the exceptions, the global and shared flags, the commands that do not derive from a route
 - `docs/contract/output.md`: output modes, error format, exit codes, async tasks, pagination
-- `docs/contract/config.md`: projects, the config file, connection resolution, environment variables, secrets
+- `docs/contract/config.md`: projects, the config file, connection resolution, Cloud projects, environment variables, secrets
 - `openapi/`: the OpenAPI documents downloaded by `pnpm openapi`, the reference for every command name
 - `docs/contract/testing.md`: test levels, how the two local APIs start, what runs in pull request CI
 - `docs/adr/`: the decisions and the reasons

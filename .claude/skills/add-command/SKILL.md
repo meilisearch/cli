@@ -13,7 +13,7 @@ Work through the steps in order. Every check below is enforced by `pnpm test` th
 ## 1. Read before you write
 
 - `CLAUDE.md`, fully. The non-negotiable rules are the review checklist.
-- `docs/contract/commands.md`: the grammar, the eleven naming rules, the exceptions table, the shared flag groups and the commands without an API.
+- `docs/contract/commands.md`: the grammar, the eleven naming rules, the exceptions table, the shared flag groups and the commands that do not derive from a route.
 - `docs/contract/output.md`: output modes, pass-through, errors, exit codes, asynchronous operations, destructive commands, input, pagination. The sections that match your routes are the specification of your command.
 - `docs/contract/testing.md`: what the three test levels must contain.
 
@@ -32,7 +32,7 @@ Compare the derived command with `$ARGUMENTS`:
 - different name because the user's request contradicts the rules for no such reason: tell the user, propose the derived name, and follow what they decide; if they keep their name, it is an exception with their reason.
 - no route in the document, or a parameter the user mentions that the document does not have: stop and ask the user. Do not guess a route and do not read it in Meilisearch's source code.
 - a route behind an experimental feature: it is out of the contract (rule 10). Stop and tell the user; opening it is an exception they decide.
-- a command that calls no API (`schema`): it must be in the "Commands without an API" table of `commands.md`; if it is not, stop and ask.
+- a command that does not derive from a route (`schema`, the `config` commands): it must be in the "Commands that do not derive from a route" table of `commands.md`; if it is not, stop and ask.
 
 From the routes, write down the flags of each: the path flags (rule 4: `--id` for the resource itself, the singular collection for a parent, `--index`), the query parameters and body fields (rule 6), the identifier flags named by what they identify and their API-spelling aliases (rule 5), and which flag combination selects which route (rule 3).
 

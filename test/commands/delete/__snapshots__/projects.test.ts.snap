@@ -13,9 +13,9 @@ exports[`meili delete projects > prints its help without any network call 1`] = 
 "Delete a Meilisearch Cloud project, as written: no confirmation. Prints nothing on success.
 
 USAGE
-  $ meili delete projects --id <id> [--project-url <url>] [--project-api-key
-    <key>] [--project <name>] [--management-token <pat>] [--management-url
-    <url>] [-o <mode>] [--debug]
+  $ meili delete projects [--project-url <url>] [--project-api-key <key>]
+    [--project <name>] [--management-token <pat>] [--management-url <url>] [-o
+    <mode>] [--debug] [--id <id>]
 
 FLAGS
   -o, --output=<mode>           json (default): one document, the API body as it
@@ -24,13 +24,16 @@ FLAGS
                                 streams with --all.
       --debug                   Print every HTTP request and response on stderr,
                                 secrets redacted.
-      --id=<id>                 (required) The project to delete.
+      --id=<id>                 The project to delete, or give --project <name>
+                                and its cloudId from the config file.
       --management-token=<pat>  Management API personal access token.
       --management-url=<url>    Management API base URL. Default
                                 https://api.meilisearch.com.
-      --project=<name>          A project of the config file. Cannot be combined
-                                with --project-url. Required when the file has
-                                several projects.
+      --project=<name>          A project of the config file: its URL and key
+                                for a Meilisearch command, its cloudId for a
+                                management command. Cannot be combined with
+                                --project-url or --id. Required when the file
+                                has several projects.
       --project-api-key=<key>   Project API key. \`-\` reads it from stdin.
       --project-url=<url>       Project URL, the Meilisearch instance to talk
                                 to.
@@ -43,6 +46,8 @@ EXAMPLES
   $ meili delete projects --id 343
 
   $ meili delete projects --id 343 --output json
+
+  $ meili delete projects --project staging
 
 "
 `;

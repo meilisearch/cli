@@ -6,7 +6,7 @@ exports[`meili config add > prints its help without any network call 1`] = `
 USAGE
   $ meili config add --project-url <url> --project <name>
     [--project-api-key <key>] [--management-token <pat>] [--management-url
-    <url>] [-o <mode>] [--debug]
+    <url>] [-o <mode>] [--debug] [--project-cloud-id <id>]
 
 FLAGS
   -o, --output=<mode>           json (default): one document, the API body as it
@@ -20,6 +20,8 @@ FLAGS
                                 https://api.meilisearch.com.
       --project=<name>          (required) Name of the project to add.
       --project-api-key=<key>   Project API key. \`-\` reads it from stdin.
+      --project-cloud-id=<id>   Id of the project in Meilisearch Cloud, for the
+                                management commands.
       --project-url=<url>       (required) URL of the project.
 
 DESCRIPTION
@@ -34,6 +36,8 @@ EXAMPLES
   $ meili config add --project local --project-url http://localhost:7700
 
   $ meili config add --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt
+
+  $ meili config add --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-cloud-id 343
 
   $ meili config add --project local --project-url http://localhost:7700 --output json
 
