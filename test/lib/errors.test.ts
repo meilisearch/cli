@@ -20,7 +20,12 @@ import {
 describe("ManagementApiError", () => {
   it("takes the API's error field, else the document's description, else the status", () => {
     const rendered = toRenderedError(
-      new ManagementApiError(403, { error: "Forbidden" }, "team not accessible"),
+      new ManagementApiError(
+        403,
+        { error: "Forbidden" },
+        "team not accessible",
+        "POST https://m/api/v2/projects",
+      ),
     );
     expect(rendered.body).toEqual({
       code: "management_forbidden",
@@ -29,19 +34,34 @@ describe("ManagementApiError", () => {
     });
     expect(rendered.exitCode).toBe(3);
     expect(
-      toRenderedError(new ManagementApiError(422, { errors: {} }, "invalid project attributes"))
-        .body.message,
+      toRenderedError(
+        new ManagementApiError(
+          422,
+          { errors: {} },
+          "invalid project attributes",
+          "POST https://m/api/v2/projects",
+        ),
+      ).body.message,
     ).toBe("invalid project attributes");
-    expect(toRenderedError(new ManagementApiError(500, undefined, undefined)).body).toEqual({
+    expect(
+      toRenderedError(
+        new ManagementApiError(500, undefined, undefined, "POST https://m/api/v2/projects"),
+      ).body,
+    ).toEqual({
       code: "management_error",
       type: "management",
-      message: "The Management API answered HTTP 500.",
+      message: "The Management API answered HTTP 500 to POST https://m/api/v2/projects.",
     });
   });
 
   it("hints at the token on 401", () => {
     const rendered = toRenderedError(
-      new ManagementApiError(401, { error: "Unauthorized" }, "unauthorized"),
+      new ManagementApiError(
+        401,
+        { error: "Unauthorized" },
+        "unauthorized",
+        "GET https://m/api/v2/me",
+      ),
     );
     expect(rendered.body.code).toBe("management_unauthorized");
     expect(rendered.body.hint).toContain("--management-token");

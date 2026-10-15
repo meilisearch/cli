@@ -28,13 +28,20 @@ export function createManagementClient(options: ManagementClientOptions): Manage
     headers: { "User-Agent": options.userAgent },
     throwOnError: true,
   });
-  client.interceptors.error.use((error, response, _request, request) =>
+  client.interceptors.error.use((error, response, request, options) =>
     response === undefined
-      ? new MeiliCliError("cli_network", cannotConnectMessage(options.url, error), { cause: error })
+      ? new MeiliCliError(
+          "cli_network",
+          cannotConnectMessage(client.getConfig().baseUrl ?? "", error),
+          {
+            cause: error,
+          },
+        )
       : new ManagementApiError(
           response.status,
           error,
-          RESPONSES[`${request.method} ${request.url}`]?.[String(response.status)],
+          RESPONSES[`${options.method} ${options.url}`]?.[String(response.status)],
+          `${options.method} ${request?.url ?? options.url}`,
         ),
   );
   return client;
