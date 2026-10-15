@@ -15,7 +15,7 @@ export interface Route {
 }
 
 /** Flags the CLI owns. Every other flag of an API command comes from a route. */
-export const CLI_OWNED_FLAGS: readonly string[] = ["wait", "timeout", "all", "file", "data"];
+export const CLI_OWNED_FLAGS: readonly string[] = ["wait", "timeout", "all", "file", "data", "yes"];
 
 /** Trailing path literals that are verbs (rule 1). A closed list: adding one is a contract change. */
 export const LITERAL_VERBS: readonly string[] = [

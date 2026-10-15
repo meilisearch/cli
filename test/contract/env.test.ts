@@ -40,6 +40,7 @@ describe("flags and environment variables share their name (CLAUDE.md, rule 14)"
     BaseCommand.waitFlags,
     BaseCommand.paginationFlags,
     BaseCommand.bodyInputFlags,
+    BaseCommand.confirmFlags,
   ];
   const flagNames = new Set(groups.flatMap((group) => Object.keys(group)));
   const envNames = new Set(ENV_VARS.map((variable) => variable.name));

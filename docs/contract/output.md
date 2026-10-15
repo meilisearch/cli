@@ -90,10 +90,11 @@ Most write operations of the Meilisearch API return a task, not a result. The CL
 
 ## Destructive commands
 
-Destructive commands are those of the verbs `delete`, `cancel` and `swap`, as `commands.md` derives them. They run as written.
+Destructive commands are those of the verb `delete`, as `commands.md` derives them. No other verb is one: what they write, a later command writes again.
 
-- The CLI never asks a question and has no confirmation flag. An agent is the operator: the command line it writes is the intent, the verb says what happens, and the description of the command says what it destroys.
-- A deletion that needs a selector refuses to run without one: `delete documents --index movies` alone is a usage error, exit 2; `--all` is the explicit way to delete every document.
+- A command of the verb `delete` requires `--yes`. Without it the command refuses to run, with `cli_usage` and exit 2, before any network call, like any missing required flag.
+- `--yes` is a flag, never a question: the CLI does not ask, does not wait and does not read stdin for an answer. No environment variable stands for it, so an environment can never confirm a deletion in the agent's place; the confirmation is in the command line or it does not exist.
+- A deletion that needs a selector refuses to run without one: `delete documents --index movies --yes` alone is a usage error, exit 2; `--all` is the explicit way to delete every document.
 
 ## Input
 

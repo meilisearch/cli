@@ -8,5 +8,6 @@ First version of `meili`, the Meilisearch CLI built for coding agents.
 - `meili schema` prints every command with its flags and examples as JSON.
 - Connection through `--project-url` and `--project-api-key`, or `MEILI_PROJECT_URL` and `MEILI_PROJECT_API_KEY`; `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL` for the Management API.
 - Several projects in a config file, `~/.config/meili/config.json` or `MEILI_CONFIG`, chosen with `--project` on the command line and never deduced; `meili config list`, `config add` and `config remove` manage the file.
+- A command of the verb `delete` requires `--yes` on the command line: without it the command refuses to run, `cli_usage` and exit 2, before any network call. The CLI still never asks a question.
 - `json` output by default, `ndjson` for lists, `--all` to follow the pagination, `--wait` and `--timeout` for asynchronous tasks.
 - Structured errors on stderr with stable codes and exit codes, a "did you mean" hint on an unknown command, `--debug` HTTP traces with secrets masked.

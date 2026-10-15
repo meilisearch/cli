@@ -1,7 +1,7 @@
 /**
  * What every command must have, whatever its API: a description, examples, a
- * declared API and the global flags. The route-derived names are checked in
- * api.test.ts.
+ * declared API, the global flags, and `--yes` when its verb is `delete`. The
+ * route-derived names are checked in api.test.ts.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { glob } from "node:fs/promises";
@@ -102,6 +102,20 @@ describe("static api", () => {
         ["meilisearch", "management", "none"],
         `${relative(PROJECT_ROOT, file)} must set static api`,
       ).toContain(module.default?.api);
+    }
+  });
+});
+
+describe("delete commands require --yes (ADR 0007)", () => {
+  it("every command of the verb delete declares it, and no other command does", async () => {
+    for await (const file of glob("src/commands/**/*.ts", { cwd: PROJECT_ROOT })) {
+      const module = (await import(join(PROJECT_ROOT, file))) as {
+        default?: { flags?: Record<string, { required?: boolean }> };
+      };
+      expect(
+        module.default?.flags?.yes?.required === true,
+        `${file}: --yes is required on the commands of the verb delete, and only there`,
+      ).toBe(file.startsWith("src/commands/delete/"));
     }
   });
 });
