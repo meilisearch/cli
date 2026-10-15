@@ -445,7 +445,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "Add the project to the config file, as an entry named after it with its URL and cloudId, never its key.",
+          "description": "Add the project to the config file, as an entry named after it with its URL, its master key and its cloudId.",
           "name": "add-to-config",
           "required": false,
           "type": "boolean",

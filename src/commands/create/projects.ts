@@ -34,7 +34,7 @@ export default class CreateProjects extends BaseCommand {
     }),
     "add-to-config": Flags.boolean({
       description:
-        "Add the project to the config file, as an entry named after it with its URL and cloudId, never its key.",
+        "Add the project to the config file, as an entry named after it with its URL, its master key and its cloudId.",
     }),
     ...BaseCommand.bodyInputFlags,
   };
@@ -74,7 +74,10 @@ export default class CreateProjects extends BaseCommand {
     }
     writeConfigFile({
       path: file.path,
-      projects: { ...file.projects, [project.name]: { url: project.url, cloudId: project.id } },
+      projects: {
+        ...file.projects,
+        [project.name]: { url: project.url, apiKey: project.masterKey, cloudId: project.id },
+      },
     });
   }
 }

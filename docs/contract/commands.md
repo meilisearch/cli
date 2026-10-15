@@ -141,7 +141,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 
 | Flag | Meaning |
 |---|---|
-| `--add-to-config` | Add the created project to the config file, as an entry named after it with its URL and `cloudId`, never its key. See `config.md`. |
+| `--add-to-config` | Add the created project to the config file, as an entry named after it with its URL, its master key and its `cloudId`. See `config.md`. |
 
 ## Commands that do not derive from a route
 

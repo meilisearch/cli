@@ -37,7 +37,7 @@ describe("meili create projects", () => {
     ]);
   });
 
-  it("adds the project to the config file with --add-to-config: its URL and cloudId, never its key", async () => {
+  it("adds the project to the config file with --add-to-config: its URL, its master key and its cloudId", async () => {
     server.use(managementHandlers.createProject());
     const { path, env: configEnv } = tempConfig("add-to-config.json", {
       local: { url: "http://localhost:7700" },
@@ -52,7 +52,11 @@ describe("meili create projects", () => {
     expect(readJson(path)).toEqual({
       projects: {
         local: { url: "http://localhost:7700" },
-        demo: { url: "https://ms-abc.sfo.meilisearch.io", cloudId: 343 },
+        demo: {
+          url: "https://ms-abc.sfo.meilisearch.io",
+          apiKey: "projectmasterkey9z8y",
+          cloudId: 343,
+        },
       },
     });
   });

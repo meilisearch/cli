@@ -24,8 +24,8 @@ FLAGS
                                 ndjson: one item per line, list commands only,
                                 streams with --all.
       --add-to-config           Add the project to the config file, as an entry
-                                named after it with its URL and cloudId, never
-                                its key.
+                                named after it with its URL, its master key and
+                                its cloudId.
       --data=<json>             Inline JSON body.
       --debug                   Print every HTTP request and response on stderr,
                                 secrets redacted.

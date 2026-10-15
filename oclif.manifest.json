@@ -858,7 +858,7 @@
           "type": "option"
         },
         "add-to-config": {
-          "description": "Add the project to the config file, as an entry named after it with its URL and cloudId, never its key.",
+          "description": "Add the project to the config file, as an entry named after it with its URL, its master key and its cloudId.",
           "name": "add-to-config",
           "allowNo": false,
           "type": "boolean"

@@ -60,7 +60,7 @@ A management command acts on a project of Meilisearch Cloud, identified by its i
 
 Three ways set `cloudId`, all explicit, the only moments the CLI consults the Management API on the config file's behalf:
 
-1. `meili create projects … --add-to-config`: the created project joins the file, as an entry named after it, with its URL and `cloudId`. Its key is not written. A name the file already has is a `cli_config` error before the project is created.
+1. `meili create projects … --add-to-config`: the created project joins the file, as an entry named after it, with its URL, its master key as `apiKey` and its `cloudId`. Creation is the one moment the API returns the key. A name the file already has is a `cli_config` error before the project is created.
 2. `meili config add … --project-cloud-id <id>` and `meili config update --project <name> --project-cloud-id <id>`: the id, written by hand.
 3. `meili config sync-with-cloud [--team-id <id>]`: lists the projects the token sees, and sets `cloudId` on every entry without one whose URL is one of theirs, same scheme and host. The other projects are ignored: an entry without its key would serve no Meilisearch command, and the key is not returned. The entries whose `cloudId` the token no longer sees are reported as `missing` and kept. No key is ever written, no entry is added or removed: a key in the file is always the human's choice.
 
