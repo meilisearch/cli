@@ -8,7 +8,7 @@ A management command acts on a Meilisearch Cloud project identified by its integ
 
 Many users create their projects in the dashboard and want the CLI, and the agent behind it, to act on them. ADR 0005 rejected resolving a project through the Management API because not everyone has Cloud, and because a resolution that runs before a command chooses its target in the user's back.
 
-The Cloud team may stop returning a project's master key outside of its creation, if at all.
+The Management API returns a project's master key at its creation only: `GET /projects` does not carry it.
 
 ## Decision
 
