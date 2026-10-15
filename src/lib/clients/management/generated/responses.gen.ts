@@ -64,7 +64,7 @@ export const RESPONSES: Readonly<Record<string, Readonly<Record<string, string>>
   },
   "POST /api/v2/projects": {
     "201": "project created",
-    "403": "team not accessible",
+    "403": "project limit reached",
     "422": "invalid project attributes"
   },
   "GET /api/v2/projects/{id}": {

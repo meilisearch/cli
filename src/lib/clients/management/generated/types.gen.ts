@@ -546,7 +546,7 @@ export type PostApiV2ProjectsData = {
 
 export type PostApiV2ProjectsErrors = {
     /**
-     * team not accessible
+     * project limit reached
      */
     403: unknown;
     /**
