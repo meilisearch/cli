@@ -61,6 +61,15 @@ export const managementHandlers = {
       return HttpResponse.json({ ...project, ...attributes }, { status: 201 });
     }),
 
+  /** `GET /api/v2/projects/{id}` answering the project of `all` with that id, or the API's 403. */
+  getProject: (all: Project[]) =>
+    http.get(`${MANAGEMENT_URL}/api/v2/projects/:id`, ({ params }) => {
+      const found = all.find((project) => String(project.id) === params.id);
+      return found === undefined
+        ? HttpResponse.json({ error: "Forbidden" }, { status: 403 })
+        : HttpResponse.json(found);
+    }),
+
   /** `PATCH /api/v2/projects/{id}` answering 200 with `project` carrying the attributes received. */
   updateProject: (received: ReceivedRequest[] = []) =>
     http.patch(`${MANAGEMENT_URL}/api/v2/projects/:id`, async ({ request }) => {
