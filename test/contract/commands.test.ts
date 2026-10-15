@@ -38,11 +38,18 @@ const manifest = JSON.parse(
 const commandsDoc = readDoc("docs/contract/commands.md");
 
 describe("oclif.manifest.json", () => {
-  it("`meili schema` output is a snapshot, so a renamed command or flag is visible in review", async () => {
+  it("`meili schema` is a snapshot, the index and every command in full, so a renamed command or flag is visible in review", async () => {
     const result = await runCommand(Schema, ["--output", "json"]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
-    expect(JSON.parse(result.stdout)).toMatchSnapshot();
+    const index = JSON.parse(result.stdout) as { commands: Array<{ id: string }> };
+    const commands: unknown[] = [];
+    for (const { id } of index.commands) {
+      const detail = await runCommand(Schema, ["--command", id, "--output", "json"]);
+      expect(detail.exitCode, `meili schema --command "${id}"`).toBe(0);
+      commands.push(JSON.parse(detail.stdout));
+    }
+    expect({ index, commands }).toMatchSnapshot();
   });
 
   it("every command has a one-sentence description and at least two examples, one with --output json", () => {

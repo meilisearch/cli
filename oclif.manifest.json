@@ -3,10 +3,11 @@
     "schema": {
       "aliases": [],
       "args": {},
-      "description": "Print every command with its flags and examples as JSON, from the oclif manifest.",
+      "description": "Print one line per command, or one command in full with --command, from the oclif manifest.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
         "<%= config.bin %> <%= command.id %> --output json",
+        "<%= config.bin %> <%= command.id %> --command \"get indexes\"",
         "<%= config.bin %> <%= command.id %> | jq '.commands[].id'"
       ],
       "flags": {
@@ -52,6 +53,14 @@
           "name": "debug",
           "allowNo": false,
           "type": "boolean"
+        },
+        "command": {
+          "description": "Print this command in full instead of the index: its API, its routes, its key actions, its own flags and its examples.",
+          "name": "command",
+          "hasDynamicHelp": false,
+          "helpValue": "<command>",
+          "multiple": false,
+          "type": "option"
         }
       },
       "hasDynamicHelp": false,
@@ -64,6 +73,7 @@
       "enableJsonFlag": false,
       "api": "none",
       "routes": [],
+      "keyActions": [],
       "waitFlags": {
         "wait": {
           "description": "Poll the task until it reaches a final status, then print the final task.",
@@ -202,6 +212,7 @@
       "enableJsonFlag": false,
       "api": "none",
       "routes": [],
+      "keyActions": [],
       "waitFlags": {
         "wait": {
           "description": "Poll the task until it reaches a final status, then print the final task.",
@@ -339,6 +350,7 @@
       "enableJsonFlag": false,
       "api": "none",
       "routes": [],
+      "keyActions": [],
       "waitFlags": {
         "wait": {
           "description": "Poll the task until it reaches a final status, then print the final task.",
@@ -476,6 +488,7 @@
       "enableJsonFlag": false,
       "api": "none",
       "routes": [],
+      "keyActions": [],
       "waitFlags": {
         "wait": {
           "description": "Poll the task until it reaches a final status, then print the final task.",
@@ -615,6 +628,7 @@
       "routes": [
         "GET /health"
       ],
+      "keyActions": [],
       "waitFlags": {
         "wait": {
           "description": "Poll the task until it reaches a final status, then print the final task.",
@@ -786,6 +800,9 @@
       "routes": [
         "GET /indexes",
         "GET /indexes/{index_uid}"
+      ],
+      "keyActions": [
+        "indexes.get"
       ],
       "waitFlags": {
         "wait": {

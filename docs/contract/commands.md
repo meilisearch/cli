@@ -17,7 +17,7 @@ When the document does not describe what a command needs (the route, a parameter
 
 ## Naming rules
 
-Every API command declares its routes, `static routes = ["GET /indexes", "GET /indexes/{index_uid}"]`, written as in the document. The rules below turn routes into a command name and its flags. `src/lib/api-naming.ts` implements them, `test/contract/api.test.ts` enforces them.
+Every API command declares its routes, `static routes = ["GET /indexes", "GET /indexes/{index_uid}"]`, written as in the document, and the key actions those routes require, `static keyActions = ["indexes.get"]`, the specific action of each `security` entry of the document, empty when the routes need none. `meili schema --command` prints both, and `test/contract/api.test.ts` checks both against the document. The rules below turn routes into a command name and its flags. `src/lib/api-naming.ts` implements them, `test/contract/api.test.ts` enforces them.
 
 1. **Verb.** The HTTP method gives it: `GET` is `get`, `POST` is `create`, `PUT` and `PATCH` are `update`, `DELETE` is `delete`. A trailing literal segment that is an action replaces it: `POST /tasks/cancel` gives `cancel`, `POST /indexes/{index_uid}/compact` gives `compact`, `POST /indexes/{index_uid}/documents/delete` gives `delete`. The literal verbs are a closed list: `delete`, `cancel`, `compact`, `swap`, `search`, `similar`, `facet-search`, `multi-search`, `export`. Adding one is a contract change.
 2. **Resource.** The last literal segment of the path that names a resource, plural, in kebab-case of the API name, without the `/api/v2` prefix of the Management API: `indexes`, `documents`, `team-members`, `stats`, `health`. A singleton keeps its name: `get health`, `get version`, `get stats`. Five commands have no resource word, because they are the most typed: `search`, `similar`, `facet-search`, `multi-search`, `export`. They are listed in the exceptions.
@@ -147,7 +147,7 @@ These commands call no API. They are the only ones listed here; their `--help` d
 
 | Command | Effect |
 |---|---|
-| `meili schema` | Print the full command tree as JSON: commands, flags, descriptions, examples. Generated from the oclif manifest. This is how an agent learns the CLI in one call. |
+| `meili schema` | Print the index of the command tree as JSON: the global flags once, then one entry per command with its description and its routes. `meili schema --command "get indexes"` prints that one command in full: its API, its routes, its key actions, whether it returns a task, its own flags and its examples. Generated from the oclif manifest. This is how an agent learns the CLI: the index in one call, a command when it needs it. See ADR 0008. |
 | `meili config list` | Print the config file path and its projects as JSON, keys masked. |
 | `meili config add --project <name> --project-url <url> [--project-api-key <key>]` | Add a project to the config file, creating it in mode `600`. `--project-api-key -` reads the key from stdin. Refuses a URL that is not HTTP(S) with `cli_usage`, and a name that already exists with `cli_config`. Nothing on stdout. |
 | `meili config remove --project <name>` | Remove a project from the config file. Nothing on stdout. |

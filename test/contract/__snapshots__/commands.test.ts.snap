@@ -1,9 +1,11 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`oclif.manifest.json > \`meili schema\` output is a snapshot, so a renamed command or flag is visible in review 1`] = `
+exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and every command in full, so a renamed command or flag is visible in review 1`] = `
 {
   "commands": [
     {
+      "api": "none",
+      "async": false,
       "description": "Add a project to the config file, creating it owner-only; refuses a name that exists.
 
 The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
@@ -21,91 +23,30 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "required": false,
-          "type": "option",
-        },
-        {
           "description": "Name of the project to add.",
           "helpValue": "<name>",
           "name": "project",
           "required": true,
           "type": "option",
         },
-        {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
-          "helpValue": "<mode>",
-          "name": "output",
-          "options": [
-            "json",
-            "ndjson",
-          ],
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "Print every HTTP request and response on stderr, secrets redacted.",
-          "name": "debug",
-          "required": false,
-          "type": "boolean",
-        },
       ],
       "id": "config add",
     },
     {
+      "api": "none",
+      "async": false,
       "description": "Print the config file path and its projects as JSON, keys masked.",
       "examples": [
         "meili config list",
         "meili config list --output json",
         "MEILI_CONFIG=./meili.json meili config list",
       ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
-          "helpValue": "<name>",
-          "name": "project",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
-          "helpValue": "<mode>",
-          "name": "output",
-          "options": [
-            "json",
-            "ndjson",
-          ],
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "Print every HTTP request and response on stderr, secrets redacted.",
-          "name": "debug",
-          "required": false,
-          "type": "boolean",
-        },
-      ],
+      "flags": [],
       "id": "config list",
     },
     {
+      "api": "none",
+      "async": false,
       "description": "Remove a project from the config file.
 
 The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
@@ -115,98 +56,33 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "required": false,
-          "type": "option",
-        },
-        {
           "description": "Name of the project to remove.",
           "helpValue": "<name>",
           "name": "project",
           "required": true,
           "type": "option",
         },
-        {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
-          "helpValue": "<mode>",
-          "name": "output",
-          "options": [
-            "json",
-            "ndjson",
-          ],
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "Print every HTTP request and response on stderr, secrets redacted.",
-          "name": "debug",
-          "required": false,
-          "type": "boolean",
-        },
       ],
       "id": "config remove",
     },
     {
+      "api": "meilisearch",
+      "async": false,
       "description": "Check that the Meilisearch instance is available.",
       "examples": [
         "meili get health",
         "meili get health --output json",
         "MEILI_PROJECT_URL=http://localhost:7700 meili get health",
       ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
-          "helpValue": "<name>",
-          "name": "project",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
-          "helpValue": "<mode>",
-          "name": "output",
-          "options": [
-            "json",
-            "ndjson",
-          ],
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "Print every HTTP request and response on stderr, secrets redacted.",
-          "name": "debug",
-          "required": false,
-          "type": "boolean",
-        },
-      ],
+      "flags": [],
       "id": "get health",
+      "routes": [
+        "GET /health",
+      ],
     },
     {
+      "api": "meilisearch",
+      "async": false,
       "description": "List the indexes of the instance, or get one with --id.",
       "examples": [
         "meili get indexes",
@@ -216,45 +92,6 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili get indexes --all --output ndjson",
       ],
       "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
-          "helpValue": "<name>",
-          "name": "project",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
-          "helpValue": "<mode>",
-          "name": "output",
-          "options": [
-            "json",
-            "ndjson",
-          ],
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "Print every HTTP request and response on stderr, secrets redacted.",
-          "name": "debug",
-          "required": false,
-          "type": "boolean",
-        },
         {
           "description": "The index to get. Without it, the command lists the indexes.",
           "helpValue": "<index>",
@@ -284,59 +121,117 @@ The file holds API keys and decides where every later command goes, for every pr
         },
       ],
       "id": "get indexes",
+      "keyActions": [
+        "indexes.get",
+      ],
+      "routes": [
+        "GET /indexes",
+        "GET /indexes/{index_uid}",
+      ],
     },
     {
-      "description": "Print every command with its flags and examples as JSON, from the oclif manifest.",
+      "api": "none",
+      "async": false,
+      "description": "Print one line per command, or one command in full with --command, from the oclif manifest.",
       "examples": [
         "meili schema",
         "meili schema --output json",
+        "meili schema --command "get indexes"",
         "meili schema | jq '.commands[].id'",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
-          "helpValue": "<url>",
-          "name": "project-url",
+          "description": "Print this command in full instead of the index: its API, its routes, its key actions, its own flags and its examples.",
+          "helpValue": "<command>",
+          "name": "command",
           "required": false,
           "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
-          "helpValue": "<name>",
-          "name": "project",
-          "required": false,
-          "type": "option",
-        },
-        {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
-          "helpValue": "<mode>",
-          "name": "output",
-          "options": [
-            "json",
-            "ndjson",
-          ],
-          "required": false,
-          "type": "option",
-        },
-        {
-          "description": "Print every HTTP request and response on stderr, secrets redacted.",
-          "name": "debug",
-          "required": false,
-          "type": "boolean",
         },
       ],
       "id": "schema",
     },
   ],
-  "name": "meili",
-  "version": "0.0.0",
+  "index": {
+    "commands": [
+      {
+        "description": "Add a project to the config file, creating it owner-only; refuses a name that exists.
+
+The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+        "id": "config add",
+      },
+      {
+        "description": "Print the config file path and its projects as JSON, keys masked.",
+        "id": "config list",
+      },
+      {
+        "description": "Remove a project from the config file.
+
+The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+        "id": "config remove",
+      },
+      {
+        "description": "Check that the Meilisearch instance is available.",
+        "id": "get health",
+        "routes": [
+          "GET /health",
+        ],
+      },
+      {
+        "description": "List the indexes of the instance, or get one with --id.",
+        "id": "get indexes",
+        "routes": [
+          "GET /indexes",
+          "GET /indexes/{index_uid}",
+        ],
+      },
+      {
+        "description": "Print one line per command, or one command in full with --command, from the oclif manifest.",
+        "id": "schema",
+      },
+    ],
+    "globalFlags": [
+      {
+        "description": "Project URL, the Meilisearch instance to talk to.",
+        "helpValue": "<url>",
+        "name": "project-url",
+        "required": false,
+        "type": "option",
+      },
+      {
+        "description": "Project API key. \`-\` reads it from stdin.",
+        "helpValue": "<key>",
+        "name": "project-api-key",
+        "required": false,
+        "type": "option",
+      },
+      {
+        "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+        "helpValue": "<name>",
+        "name": "project",
+        "required": false,
+        "type": "option",
+      },
+      {
+        "char": "o",
+        "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+        "helpValue": "<mode>",
+        "name": "output",
+        "options": [
+          "json",
+          "ndjson",
+        ],
+        "required": false,
+        "type": "option",
+      },
+      {
+        "description": "Print every HTTP request and response on stderr, secrets redacted.",
+        "name": "debug",
+        "required": false,
+        "type": "boolean",
+      },
+    ],
+    "name": "meili",
+    "version": "0.0.0",
+  },
 }
 `;
