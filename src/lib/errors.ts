@@ -97,14 +97,15 @@ export interface MeiliCliErrorOptions {
 /**
  * A non-2xx answer of the Management API, whose error body has no code
  * (docs/contract/output.md, "Errors"): the message is the body's `error`
- * field, else the document's description of that status, else the status.
+ * field, else the document's description of that status, else the status
+ * and the request, `POST https://…`, so that a wrong URL shows.
  */
 export class ManagementApiError extends Error {
   readonly status: number;
 
-  constructor(status: number, body: unknown, description: string | undefined) {
+  constructor(status: number, body: unknown, description: string | undefined, request: string) {
     const sent = isRecord(body) && typeof body.error === "string" ? body.error : undefined;
-    super(sent ?? description ?? `The Management API answered HTTP ${status}.`);
+    super(sent ?? description ?? `The Management API answered HTTP ${status} to ${request}.`);
     this.name = "ManagementApiError";
     this.status = status;
   }
