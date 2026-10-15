@@ -24,12 +24,12 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 3. **Several routes, one command.** Every route with the same verb and resource belongs to one command: `GET /indexes` and `GET /indexes/{index_uid}` are `get indexes`, `GET /stats` and `GET /indexes/{index_uid}/stats` are `get stats`, the three deletion routes of documents are `delete documents`. The flags choose the route: first the route whose path parameters are exactly the identifier flags given, then the route whose parameters cover the other flags given. Two flags that call for different routes, `--ids` and `--filter` on `delete documents` for example, are a usage error, `cli_usage`, exit 2, before any network call. A flag that belongs to the list route only, `--limit` or `--offset`, is ignored and not sent when `--id` selects the unit route.
 4. **Identifiers.** The path parameter of the resource itself is `--id` when the unit route is implemented: `get indexes --id movies`, `delete keys --id <uid>`, `get projects --id 343`. When the list route can filter by identifiers, the unit route is not implemented and the list takes `--ids`, with `--id` accepted as an alias: `get documents --index movies --ids 42` calls the fetch route, `get tasks --ids 42` filters `GET /tasks`, `get batches --ids 7` filters `GET /batches`. The path parameter of a parent resource is a flag named after that collection, singular: `--index movies`. The verb-only commands take the index the same way: `search --index movies`.
 5. **Identifiers are named by what they identify.** A query or body parameter that carries identifiers, `uid`, `uids`, `batchUids`, `indexUids`, is named after the resource it identifies: the command's own resource gives `--id` or `--ids`, another resource gives `--<resource>-ids`. So `create indexes --id movies` and `create keys --id <uuid>` carry `uid`; `get tasks --ids 1,2 --batch-ids 7 --index-ids movies` carries `uids`, `batchUids` and `indexUids`; `get batches --ids 7 --task-ids 1,2` carries `batchUids` and `uids`, because bare `uids` are task identifiers everywhere. The API spellings, `--uid`, `--uids`, `--batch-uids`, `--index-uids`, are accepted as aliases, absent from `--help` and `meili schema`. One exception: on `update indexes`, `--id` is the index itself, so the new `uid` is `--new-id`, alias `--uid`. Every other body field keeps its API name, `--primary-key`, `--name`.
-6. **Other flags.** The query parameters and the first-level fields of the JSON body, in kebab-case of the API name: `retrieveVectors` is `--retrieve-vectors`, `teamId` is `--team-id`, `primaryKey` is `--primary-key`. When a body has a single object property named after the resource, `{"project": {"name": …}}` in the Management API, the fields of that object are the flags. The only flags that do not come from a route are the global flags and the CLI-owned flags: `--wait`, `--timeout`, `--all`, `--file`, `--data`.
+6. **Other flags.** The query parameters and the first-level fields of the JSON body, in kebab-case of the API name: `retrieveVectors` is `--retrieve-vectors`, `teamId` is `--team-id`, `primaryKey` is `--primary-key`. When a body has a single object property named after the resource, `{"project": {"name": …}}` in the Management API, the fields of that object are the flags. The only flags that do not come from a route are the global flags and the CLI-owned flags: `--wait`, `--timeout`, `--all`, `--file`, `--data`, `--yes`.
 7. **Values.** A scalar is passed as it is. A boolean is a bare flag, `--retrieve-vectors`. An array of scalars is comma-separated, `--fields id,title`, as the API's own GET syntax. An object or a nested array is JSON text, `--typo-tolerance '{"enabled":false}'`. The value `null` sends a JSON null, `--expires-at null`, `--stop-words null`.
 8. **Body input.** On every route with a body, `--file <path>` or `--data '<json>'` replaces the body fields; `--file -` reads stdin. Path and query flags stay valid next to them. A body-field flag given together with `--file` or `--data` overrides that field, as a flag overrides its environment variable. Documents are sent as JSON, the only content type the document declares.
 9. **Routes that are not implemented.** The `GET` twin of a `POST` route that takes the same parameters in a body (search, similar, the list of documents); the unit route of a resource whose list filters by identifiers (documents, tasks, batches); the settings sub-routes, since `update settings` sends any subset and `null` resets one setting; `GET /api/v2/meilisearch-versions`. Each is recorded without command in the exceptions.
 10. **Experimental routes** are out of the contract until the feature is stable. Implementing one is a contract change: an exception row with the reason. `compact` is the one exception today.
-11. **Destructive commands**, `delete`, `cancel` and `swap`, run as written. There is no confirmation flag and never a question, see `output.md`.
+11. **Destructive commands.** A command of the verb `delete` takes `--yes` and refuses to run without it: `cli_usage`, exit 2, before any network call. `--yes` is a flag to write, never a question the CLI asks, see `output.md`.
 
 | Routes | Command |
 |---|---|
@@ -38,12 +38,12 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 | `GET /indexes`, `GET /indexes/{index_uid}` | `meili get indexes [--id <index>]` |
 | `POST /indexes` | `meili create indexes --id <index> [--primary-key <field>]` |
 | `PATCH /indexes/{index_uid}` | `meili update indexes --id <index> [--primary-key <field>] [--new-id <index>]` |
-| `DELETE /indexes/{index_uid}` | `meili delete indexes --id <index>` |
+| `DELETE /indexes/{index_uid}` | `meili delete indexes --id <index> --yes` |
 | `POST /indexes/{index_uid}/compact` | `meili compact indexes --id <index>` |
 | `POST /swap-indexes` | `meili swap indexes --indexes <a>,<b>` |
 | `POST /indexes/{index_uid}/documents/fetch` | `meili get documents --index <index> [--ids <ids>] [--filter <filter>]` |
 | `POST /indexes/{index_uid}/documents` | `meili create documents --index <index> --file <path>` |
-| `POST …/documents/delete-batch`, `POST …/documents/delete`, `DELETE …/documents` | `meili delete documents --index <index> (--ids <ids> \| --filter <filter> \| --all)` |
+| `POST …/documents/delete-batch`, `POST …/documents/delete`, `DELETE …/documents` | `meili delete documents --index <index> (--ids <ids> \| --filter <filter> \| --all) --yes` |
 | `POST /indexes/{index_uid}/search` | `meili search --index <index> --q <query>` |
 | `PATCH /indexes/{index_uid}/settings` | `meili update settings --index <index> --<setting> <value>` |
 | `GET /tasks` | `meili get tasks [--ids <uids>] [--statuses <statuses>]` |
@@ -135,6 +135,12 @@ Commands reuse these groups. A command that matches a group uses the whole group
 | `--file <path>` | Read the body from a file. `-` reads from stdin. |
 | `--data <json>` | Inline JSON body. `--file` and `--data` are exclusive. |
 
+**Delete commands** (every command of the verb `delete`, and only those):
+
+| Flag | Meaning |
+|---|---|
+| `--yes` | Confirm the deletion. Required: the command refuses to run without it, and no environment variable stands for it. |
+
 ## Commands without an API
 
 These commands call no API. They are the only ones listed here; their `--help` defines their shape. Their name is never the name of an API resource. The `config` commands are for humans: an agent works with the file it was given, see `config.md`.
@@ -149,7 +155,7 @@ These commands call no API. They are the only ones listed here; their `--help` d
 
 ## Not in scope
 
-`meili` is for coding agents only. Human comfort features are not planned: interactive modes and TUIs, `$EDITOR` integration, prompts, confirmations, wizards, shell completions, positional arguments. Also not planned: starting a local Meilisearch, self-update, chat, a guide command, dry runs, splitting a large documents file into batches, running a Meilisearch API command against a Cloud project by its id, NDJSON or CSV documents as long as the OpenAPI document does not declare them. Open a contract pull request if you think one of them belongs here.
+`meili` is for coding agents only. Human comfort features are not planned: interactive modes and TUIs, `$EDITOR` integration, prompts, questions to answer, wizards, shell completions, positional arguments. `--yes` of the `delete` commands is none of those: it is a flag the agent writes, and nothing waits for an answer. Also not planned: starting a local Meilisearch, self-update, chat, a guide command, dry runs, splitting a large documents file into batches, running a Meilisearch API command against a Cloud project by its id, NDJSON or CSV documents as long as the OpenAPI document does not declare them. Open a contract pull request if you think one of them belongs here.
 
 ## Milestones
 

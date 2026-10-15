@@ -6,7 +6,7 @@
 
 - [ ] The command name and flags derive from its routes by the naming rules of `docs/contract/commands.md`, and each route is reachable by a distinct set of flags, or the exception is recorded with its reason (or this pull request changes the contract and nothing else)
 - [ ] Output goes through `src/lib/output.ts`, errors through `src/lib/errors.ts`
-- [ ] The command never waits for a human: no prompt, no confirmation, no `$EDITOR`
+- [ ] The command never waits for a human: no prompt, no question, no `$EDITOR`; a `delete` command spreads `BaseCommand.confirmFlags` and its examples carry `--yes`
 - [ ] The command never speaks HTTP itself: the SDK or the generated client only, no `fetch` outside `src/lib/clients/`
 
 ## Tests

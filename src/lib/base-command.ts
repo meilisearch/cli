@@ -103,6 +103,14 @@ export abstract class BaseCommand extends Command {
     data: Flags.string({ description: "Inline JSON body.", helpValue: "<json>" }),
   };
 
+  /** Shared group for the commands of the verb `delete`, which refuse to run without it (ADR 0007). */
+  static confirmFlags = {
+    yes: Flags.boolean({
+      required: true,
+      description: "Confirm the deletion. Nothing is sent to the API without it.",
+    }),
+  };
+
   protected globalFlags!: GlobalFlags;
   protected outputMode!: OutputMode;
   /** Set when `static api` is `meilisearch`. */

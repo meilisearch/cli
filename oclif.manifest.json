@@ -121,6 +121,14 @@
           "type": "option"
         }
       },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "isESM": true,
       "relativePath": [
         "dist",
@@ -249,6 +257,14 @@
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
         }
       },
       "isESM": true,
@@ -380,6 +396,14 @@
           "type": "option"
         }
       },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "isESM": true,
       "relativePath": [
         "dist",
@@ -507,6 +531,14 @@
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
         }
       },
       "isESM": true,
@@ -638,6 +670,14 @@
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
         }
       },
       "isESM": true,
@@ -802,6 +842,14 @@
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
         }
       },
       "isESM": true,

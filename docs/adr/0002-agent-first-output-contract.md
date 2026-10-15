@@ -1,6 +1,6 @@
 # ADR 0002: Agent-first output contract
 
-Status: accepted. Date: 2026-09-29.
+Status: superseded by ADR 0007. Date: 2026-09-29.
 
 ## Context
 
