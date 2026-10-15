@@ -13,14 +13,22 @@ export default class DeleteProjects extends BaseCommand {
   static override examples = [
     "<%= config.bin %> <%= command.id %> --id 343",
     "<%= config.bin %> <%= command.id %> --id 343 --output json",
+    "<%= config.bin %> <%= command.id %> --project staging",
   ];
 
   static override flags = {
-    id: Flags.integer({ required: true, description: "The project to delete.", helpValue: "<id>" }),
+    id: Flags.integer({
+      description:
+        "The project to delete, or give --project <name> and its cloudId from the config file.",
+      helpValue: "<id>",
+    }),
   };
 
   async run(): Promise<void> {
     const { flags } = await this.parse(DeleteProjects);
-    await deleteApiV2ProjectsById({ client: this.managementClient, path: { id: flags.id } });
+    await deleteApiV2ProjectsById({
+      client: this.managementClient,
+      path: { id: this.cloudProjectId(flags.id) },
+    });
   }
 }

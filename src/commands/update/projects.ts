@@ -13,11 +13,16 @@ export default class UpdateProjects extends BaseCommand {
   static override examples = [
     "<%= config.bin %> <%= command.id %> --id 343 --name renamed",
     "<%= config.bin %> <%= command.id %> --id 343 --name renamed --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --name renamed",
     '<%= config.bin %> <%= command.id %> --id 343 --data \'{"name":"renamed"}\'',
   ];
 
   static override flags = {
-    id: Flags.integer({ required: true, description: "The project to update.", helpValue: "<id>" }),
+    id: Flags.integer({
+      description:
+        "The project to update, or give --project <name> and its cloudId from the config file.",
+      helpValue: "<id>",
+    }),
     name: Flags.string({ description: "New name of the project.", helpValue: "<name>" }),
     ...BaseCommand.bodyInputFlags,
   };
@@ -30,7 +35,7 @@ export default class UpdateProjects extends BaseCommand {
     await this.output(
       await patchApiV2ProjectsById({
         client: this.managementClient,
-        path: { id: flags.id },
+        path: { id: this.cloudProjectId(flags.id) },
         body: { project },
       }),
     );

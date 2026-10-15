@@ -1,6 +1,6 @@
 # ADR 0005: Named projects in a config file, chosen on the command line, nothing deduced
 
-Status: accepted. Date: 2026-10-14.
+Status: accepted. Date: 2026-10-14. One point is superseded by ADR 0006: an entry is changed with `config update`, no longer with `remove` then `add`.
 
 ## Context
 

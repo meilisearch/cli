@@ -30,6 +30,17 @@ describe("meili config add", () => {
     expect(read(path)).toEqual({ projects: { local: { url: "http://localhost:7700" } } });
   });
 
+  it("stores the Cloud id given with --project-cloud-id", async () => {
+    const path = join(scrubbedHome, "cloud.json");
+    const result = await runCommand(
+      ConfigAdd,
+      ["--project", "prod", "--project-url", "https://p", "--project-cloud-id", "343"],
+      { env: { MEILI_CONFIG: path } },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(read(path)).toEqual({ projects: { prod: { url: "https://p", cloudId: 343 } } });
+  });
+
   it("reads the key from stdin with -", async () => {
     const path = join(scrubbedHome, "stdin.json");
     const result = await runCommand(

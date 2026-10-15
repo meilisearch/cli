@@ -61,6 +61,8 @@ export const ENV_VARS: ReadonlyArray<{ name: string; description: string; flag?:
 export interface ProjectEntry {
   url: string;
   apiKey?: string;
+  /** The project's `id` in the Management API, for the management commands. */
+  cloudId?: number;
 }
 
 export interface ConfigFile {
@@ -104,16 +106,23 @@ function parseProjects(parsed: unknown, path: string): Record<string, ProjectEnt
   const shape = () =>
     new MeiliCliError(
       "cli_config",
-      `The config file ${path} must be {"projects": {"<name>": {"url": "...", "apiKey": "..."}}}.`,
+      `The config file ${path} must be {"projects": {"<name>": {"url": "...", "apiKey": "...", "cloudId": 1}}}, the key and the id optional.`,
     );
   const projects = isRecord(parsed) ? parsed.projects : undefined;
   if (!isRecord(projects)) throw shape();
   const result: Record<string, ProjectEntry> = {};
-  for (const [name, entry] of Object.entries(projects)) {
-    if (!isRecord(entry) || typeof entry.url !== "string") throw shape();
-    if (entry.apiKey !== undefined && typeof entry.apiKey !== "string") throw shape();
-    result[name] =
-      entry.apiKey === undefined ? { url: entry.url } : { url: entry.url, apiKey: entry.apiKey };
+  for (const [name, { url, apiKey, cloudId }] of Object.entries(projects).map(
+    ([name, entry]) => [name, isRecord(entry) ? entry : {}] as const,
+  )) {
+    if (typeof url !== "string") throw shape();
+    if (apiKey !== undefined && typeof apiKey !== "string") throw shape();
+    if (cloudId !== undefined && !(Number.isInteger(cloudId) && (cloudId as number) > 0))
+      throw shape();
+    result[name] = {
+      url,
+      ...(apiKey === undefined ? {} : { apiKey }),
+      ...(cloudId === undefined ? {} : { cloudId: cloudId as number }),
+    };
   }
   return result;
 }
@@ -198,6 +207,30 @@ export function resolveProjectConnection(
     "cli_config",
     `No project configured. Provide one with the \`--project-url\` flag, the \`MEILI_PROJECT_URL\` environment variable, or a config file at ${file.path}.`,
   );
+}
+
+/** A project URL as `config add` and `config update` accept it: HTTP(S) only, the SDK mangles any other scheme. */
+export function parseProjectUrl(url: string): string {
+  const parsed = URL.parse(url);
+  if (parsed === null || (parsed.protocol !== "http:" && parsed.protocol !== "https:")) {
+    throw new MeiliCliError("cli_usage", `Invalid project URL \`${url}\`.`);
+  }
+  return url;
+}
+
+/** The `cloudId` of the named entry, or `cli_config` naming the ways to set it (config.md, "Cloud projects"). */
+export function cloudIdOf(file: ConfigFile, name: string): number {
+  const { cloudId } = projectOf(file, name);
+  if (cloudId === undefined) {
+    throw new MeiliCliError(
+      "cli_config",
+      `Project \`${name}\` has no \`cloudId\` in ${file.path}: the management commands need the project's id.`,
+      {
+        hint: `Run \`meili config sync-with-cloud\`, or \`meili config update --project ${name} --project-cloud-id <id>\`.`,
+      },
+    );
+  }
+  return cloudId;
 }
 
 /** The named entry, or `cli_config` with the path and the names the file has. */

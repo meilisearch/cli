@@ -2,6 +2,8 @@ import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { postApiV2Projects } from "../../lib/clients/management/generated/sdk.gen.js";
 import type { PostApiV2ProjectsData } from "../../lib/clients/management/generated/types.gen.js";
+import { type ConfigFile, writeConfigFile } from "../../lib/config.js";
+import { MeiliCliError } from "../../lib/errors.js";
 
 export default class CreateProjects extends BaseCommand {
   static api: Api = "management";
@@ -13,6 +15,7 @@ export default class CreateProjects extends BaseCommand {
   static override examples = [
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3",
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --output json",
+    "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --add-to-config",
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
     '<%= config.bin %> <%= command.id %> --data \'{"name":"demo","teamId":12,"resourceId":3}\'',
     "<%= config.bin %> <%= command.id %> --file project.json --name other-name",
@@ -29,6 +32,10 @@ export default class CreateProjects extends BaseCommand {
       description: "Meilisearch version of the project, the latest by default.",
       helpValue: "<version>",
     }),
+    "add-to-config": Flags.boolean({
+      description:
+        "Add the project to the config file, as an entry named after it with its URL and cloudId, never its key.",
+    }),
     ...BaseCommand.bodyInputFlags,
   };
 
@@ -40,6 +47,36 @@ export default class CreateProjects extends BaseCommand {
       resourceId: flags["resource-id"],
       msVersion: flags["ms-version"],
     });
-    await this.output(await postApiV2Projects({ client: this.managementClient, body }));
+    let file: ConfigFile | undefined;
+    if (flags["add-to-config"]) {
+      if (typeof body.name !== "string" || body.name === "") {
+        throw new MeiliCliError(
+          "cli_usage",
+          "`--add-to-config` names the entry after the project: give `--name`.",
+        );
+      }
+      file = this.configFile();
+      if (file.projects[body.name] !== undefined) {
+        throw new MeiliCliError(
+          "cli_config",
+          `Project \`${body.name}\` already exists in ${file.path}: nothing was created.`,
+          { hint: `Run \`meili config remove --project ${body.name}\` first.` },
+        );
+      }
+    }
+    const project = await postApiV2Projects({ client: this.managementClient, body });
+    await this.output(project);
+    if (file === undefined) return;
+    if (project.url === undefined || project.url === null) {
+      throw new MeiliCliError(
+        "cli_config",
+        `Project ${project.id} is created but has no URL yet, so it was not added to ${file.path}.`,
+        { hint: "Run `meili config sync-with-cloud` once it has one." },
+      );
+    }
+    writeConfigFile({
+      path: file.path,
+      projects: { ...file.projects, [project.name]: { url: project.url, cloudId: project.id } },
+    });
   }
 }

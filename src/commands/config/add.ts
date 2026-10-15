@@ -1,6 +1,6 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { writeConfigFile } from "../../lib/config.js";
+import { parseProjectUrl, writeConfigFile } from "../../lib/config.js";
 import { MeiliCliError } from "../../lib/errors.js";
 
 export default class ConfigAdd extends BaseCommand {
@@ -14,6 +14,7 @@ The file holds API keys and decides where every later command goes, for every pr
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700",
     "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
+    "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-cloud-id 343",
     "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700 --output json",
   ];
 
@@ -28,15 +29,15 @@ The file holds API keys and decides where every later command goes, for every pr
       description: "URL of the project.",
       helpValue: "<url>",
     }),
+    "project-cloud-id": Flags.integer({
+      description: "Id of the project in Meilisearch Cloud, for the management commands.",
+      helpValue: "<id>",
+    }),
   };
 
   async run(): Promise<void> {
     const { flags } = await this.parse(ConfigAdd);
-    // A Meilisearch instance answers over HTTP(S) only; the SDK mangles any other scheme.
-    const url = URL.parse(flags["project-url"]);
-    if (url === null || (url.protocol !== "http:" && url.protocol !== "https:")) {
-      throw new MeiliCliError("cli_usage", `Invalid project URL \`${flags["project-url"]}\`.`);
-    }
+    const url = parseProjectUrl(flags["project-url"]);
     const file = this.configFile();
     if (file.projects[flags.project] !== undefined) {
       throw new MeiliCliError(
@@ -49,7 +50,11 @@ The file holds API keys and decides where every later command goes, for every pr
       path: file.path,
       projects: {
         ...file.projects,
-        [flags.project]: { url: flags["project-url"], apiKey: flags["project-api-key"] },
+        [flags.project]: {
+          url,
+          apiKey: flags["project-api-key"],
+          cloudId: flags["project-cloud-id"],
+        },
       },
     });
   }

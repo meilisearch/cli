@@ -205,6 +205,10 @@ describe("pathFlagsForRoute", () => {
     expect(
       pathFlagsForRoute(parseRoute("GET /tasks/{task_id}/documents"), "get documents"),
     ).toEqual(["task"]);
+    // A parent parameter of the Management API keeps its API name: `--project` is the global flag.
+    expect(
+      pathFlagsForRoute(parseRoute("PATCH /api/v2/projects/{projectId}/version"), "update version"),
+    ).toEqual(["project-id"]);
     expect(pathFlagsForRoute(parseRoute("GET /api/v2/projects/{id}"), "get projects")).toEqual([
       "id",
     ]);

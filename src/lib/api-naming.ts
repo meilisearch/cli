@@ -15,7 +15,14 @@ export interface Route {
 }
 
 /** Flags the CLI owns. Every other flag of an API command comes from a route. */
-export const CLI_OWNED_FLAGS: readonly string[] = ["wait", "timeout", "all", "file", "data"];
+export const CLI_OWNED_FLAGS: readonly string[] = [
+  "wait",
+  "timeout",
+  "all",
+  "file",
+  "data",
+  "add-to-config",
+];
 
 /** Trailing path literals that are verbs (rule 1). A closed list: adding one is a contract change. */
 export const LITERAL_VERBS: readonly string[] = [
@@ -385,8 +392,17 @@ export function pathFlagsForRoute(route: Route, commandId: string): string[] {
   return segments.flatMap((segment, index) => {
     if (!isParameter(segment)) return [];
     const collection = toKebabCase(segments[index - 1] ?? "");
-    return [collection === resource ? "id" : singular(collection)];
+    if (collection === resource) return ["id"];
+    // On the Management API a parent parameter keeps its API name, `{projectId}` is
+    // `--project-id`: `--project` is the global flag that names a config file entry.
+    return [
+      isManagementPath(route.path) ? toKebabCase(segment.slice(1, -1)) : singular(collection),
+    ];
   });
+}
+
+function isManagementPath(path: string): boolean {
+  return path.startsWith("/api/v2/");
 }
 
 function resolveSchema(
