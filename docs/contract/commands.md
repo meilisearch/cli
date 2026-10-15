@@ -154,7 +154,7 @@ These commands are the only ones listed here; their `--help` defines their shape
 | `meili config add --project <name> --project-url <url> [--project-api-key <key>] [--project-cloud-id <id>]` | Add a project to the config file, creating it in mode `600`. `--project-api-key -` reads the key from stdin. Refuses a URL that is not HTTP(S) with `cli_usage`, and a name that already exists with `cli_config`. Nothing on stdout. |
 | `meili config update --project <name> [--project-url <url>] [--project-api-key <key>] [--project-cloud-id <id>]` | Change the fields given of a project of the config file. At least one, or `cli_usage`. Nothing on stdout. |
 | `meili config remove --project <name>` | Remove a project from the config file. Nothing on stdout. |
-| `meili config sync-with-cloud [--team-id <id>]` | List the Meilisearch Cloud projects the token sees and bring the config file up to date: `cloudId` on the entries that have the project's URL, a new entry for each other project, named after it, with its URL and `cloudId`. Never writes a key, never removes an entry. Prints `{"added", "updated", "unchanged", "missing"}`, lists of entry names; `missing` is empty with `--team-id`. See `config.md`. |
+| `meili config sync-with-cloud [--team-id <id>]` | List the Meilisearch Cloud projects the token sees and set `cloudId` on the config file entries that have a project's URL. Never writes a key, never adds or removes an entry. Prints `{"updated", "unchanged", "missing"}`, lists of entry names; `missing` is empty with `--team-id`. See `config.md`. |
 | `meili --version` | CLI version only. No network call. |
 
 ## Not in scope

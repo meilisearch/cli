@@ -45,7 +45,7 @@ meili update projects --project prod --name renamed   # a management command use
 
 With several projects in the file, `--project` is required: the CLI never guesses, and it refuses to run when the file and the `MEILI_PROJECT_URL` variable both define a project. `MEILI_CONFIG` names another file. For a coding agent, give it its own file through `MEILI_CONFIG`, read-only: the file is shared state, and an agent must not be able to change where another one's commands go. The file holds your keys: keep it readable by you alone, the CLI warns on stderr otherwise, and an agent changes nothing in it, neither a project nor its permissions, unless you asked for it explicitly. `meili config list`, `meili config add`, `meili config update` and `meili config remove` manage the file.
 
-`cloudId` is the project's id in Meilisearch Cloud, which the dashboard does not show. `meili config sync-with-cloud` fills it from the projects your token sees and adds the projects the file does not have, with their URL, never their key; `meili create projects --add-to-config` adds the project it creates.
+`cloudId` is the project's id in Meilisearch Cloud, which the dashboard does not show. `meili config sync-with-cloud` fills it on the entries whose URL is a project your token sees; `meili create projects --add-to-config` adds the project it creates, with its URL and `cloudId`. Neither writes a key.
 
 ## Documentation
 

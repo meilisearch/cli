@@ -1,14 +1,13 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { getApiV2Projects } from "../../lib/clients/management/generated/sdk.gen.js";
-import { assertNoProject, CONFIG_FILE_WARNING, writeConfigFile } from "../../lib/config.js";
-import { MeiliCliError } from "../../lib/errors.js";
+import { CONFIG_FILE_WARNING, writeConfigFile } from "../../lib/config.js";
 
 export default class ConfigSyncWithCloud extends BaseCommand {
   static api: Api = "management";
 
   static override description =
-    `Add the Meilisearch Cloud projects the token sees to the config file, and set the cloudId of the entries that already have their URL. Never writes a key, never removes an entry. Prints what changed.
+    `Set the cloudId of the config file entries whose URL is a Meilisearch Cloud project the token sees. Never writes a key, never adds or removes an entry. Prints what changed.
 
 ${CONFIG_FILE_WARNING}`;
 
@@ -33,12 +32,7 @@ ${CONFIG_FILE_WARNING}`;
     });
     const file = this.configFile();
     const entries = file.projects;
-    const report = {
-      added: [] as string[],
-      updated: [] as string[],
-      unchanged: [] as string[],
-      missing: [] as string[],
-    };
+    const report = { updated: [] as string[], unchanged: [] as string[], missing: [] as string[] };
 
     for (const project of projects) {
       const byId = Object.entries(entries).find(([, entry]) => entry.cloudId === project.id);
@@ -46,30 +40,15 @@ ${CONFIG_FILE_WARNING}`;
         report.unchanged.push(byId[0]);
         continue;
       }
-      if (project.url == null) {
-        throw new MeiliCliError(
-          "cli_config",
-          `Project \`${project.name}\` (${project.id}) has no URL yet: run this again once it has one.`,
-        );
-      }
       const url = project.url;
+      if (url == null) continue;
       const byUrl = Object.entries(entries).find(
         ([, entry]) => entry.cloudId === undefined && sameOrigin(entry.url, url),
       );
-      if (byUrl !== undefined) {
-        const [name, entry] = byUrl;
-        entries[name] = { ...entry, cloudId: project.id };
-        report.updated.push(name);
-        continue;
-      }
-      assertNoProject(
-        file,
-        project.name,
-        " with another URL: nothing was written.",
-        `Run \`meili config update --project ${project.name} --project-cloud-id ${project.id}\` if it is the same project, or rename the entry.`,
-      );
-      entries[project.name] = { url, cloudId: project.id };
-      report.added.push(project.name);
+      if (byUrl === undefined) continue;
+      const [name, entry] = byUrl;
+      entries[name] = { ...entry, cloudId: project.id };
+      report.updated.push(name);
     }
 
     if (flags["team-id"] === undefined) {
@@ -78,7 +57,7 @@ ${CONFIG_FILE_WARNING}`;
         if (entry.cloudId !== undefined && !ids.has(entry.cloudId)) report.missing.push(name);
       }
     }
-    if (report.added.length > 0 || report.updated.length > 0) writeConfigFile(file);
+    if (report.updated.length > 0) writeConfigFile(file);
     await this.output(report);
   }
 }
