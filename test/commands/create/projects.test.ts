@@ -1,8 +1,5 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import CreateProjects from "../../../src/commands/create/projects.js";
-import { writeConfigFile } from "../../../src/lib/config.js";
 import {
   managementEnv as env,
   MANAGEMENT_TOKEN,
@@ -11,7 +8,7 @@ import {
   type ReceivedRequest,
 } from "../../helpers/management-handlers.js";
 import { server, useMockServer } from "../../helpers/msw.js";
-import { runCli, runCommand, scrubbedHome } from "../../helpers/run-command.js";
+import { readJson, runCli, runCommand, tempConfig } from "../../helpers/run-command.js";
 
 useMockServer();
 
@@ -42,26 +39,17 @@ describe("meili create projects", () => {
 
   it("adds the project to the config file with --add-to-config: its URL and cloudId, never its key", async () => {
     server.use(managementHandlers.createProject());
-    const path = join(scrubbedHome, "add-to-config.json");
-    writeConfigFile({ path, projects: { local: { url: "http://localhost:7700" } } });
+    const { path, env: configEnv } = tempConfig("add-to-config.json", {
+      local: { url: "http://localhost:7700" },
+    });
     const result = await runCommand(
       CreateProjects,
-      [
-        "--name",
-        "demo",
-        "--team-id",
-        "12",
-        "--resource-id",
-        "3",
-        "--add-to-config",
-        "--output",
-        "json",
-      ],
-      { env: { ...env, MEILI_CONFIG: path } },
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--add-to-config"],
+      { env: { ...env, ...configEnv } },
     );
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout).id).toBe(343);
-    expect(JSON.parse(readFileSync(path, "utf8"))).toEqual({
+    expect(readJson(path)).toEqual({
       projects: {
         local: { url: "http://localhost:7700" },
         demo: { url: "https://ms-abc.sfo.meilisearch.io", cloudId: 343 },
@@ -70,12 +58,13 @@ describe("meili create projects", () => {
   });
 
   it("refuses --add-to-config for a name the file has, before any network call", async () => {
-    const path = join(scrubbedHome, "taken.json");
-    writeConfigFile({ path, projects: { demo: { url: "http://elsewhere" } } });
+    const { path, env: configEnv } = tempConfig("taken.json", {
+      demo: { url: "http://elsewhere" },
+    });
     const result = await runCommand(
       CreateProjects,
       ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--add-to-config"],
-      { env: { ...env, MEILI_CONFIG: path } },
+      { env: { ...env, ...configEnv } },
     );
     expect(result.exitCode).toBe(2);
     expect(JSON.parse(result.stderr).error).toMatchObject({

@@ -290,7 +290,7 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "New URL of the project.",
           "helpValue": "<url>",
           "name": "project-url",
           "required": false,

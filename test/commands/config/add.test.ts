@@ -1,15 +1,12 @@
-import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import ConfigAdd from "../../../src/commands/config/add.js";
 import { useMockServer } from "../../helpers/msw.js";
-import { runCli, runCommand, scrubbedHome } from "../../helpers/run-command.js";
+import { readJson as read, runCli, runCommand, scrubbedHome } from "../../helpers/run-command.js";
 
 vi.mock("../../../src/lib/input.js", () => ({ readStdin: () => "key-from-stdin" }));
 
 useMockServer();
-
-const read = (path: string) => JSON.parse(readFileSync(path, "utf8")) as unknown;
 
 describe("meili config add", () => {
   it("prints its help without any network call", async () => {

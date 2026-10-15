@@ -111,17 +111,14 @@ function parseProjects(parsed: unknown, path: string): Record<string, ProjectEnt
   const projects = isRecord(parsed) ? parsed.projects : undefined;
   if (!isRecord(projects)) throw shape();
   const result: Record<string, ProjectEntry> = {};
-  for (const [name, { url, apiKey, cloudId }] of Object.entries(projects).map(
-    ([name, entry]) => [name, isRecord(entry) ? entry : {}] as const,
-  )) {
-    if (typeof url !== "string") throw shape();
-    if (apiKey !== undefined && typeof apiKey !== "string") throw shape();
-    if (cloudId !== undefined && !(Number.isInteger(cloudId) && (cloudId as number) > 0))
-      throw shape();
+  for (const [name, entry] of Object.entries(projects)) {
+    if (!isRecord(entry) || typeof entry.url !== "string") throw shape();
+    if (entry.apiKey !== undefined && typeof entry.apiKey !== "string") throw shape();
+    if (entry.cloudId !== undefined && !Number.isInteger(entry.cloudId)) throw shape();
     result[name] = {
-      url,
-      ...(apiKey === undefined ? {} : { apiKey }),
-      ...(cloudId === undefined ? {} : { cloudId: cloudId as number }),
+      url: entry.url,
+      ...(entry.apiKey === undefined ? {} : { apiKey: entry.apiKey }),
+      ...(entry.cloudId === undefined ? {} : { cloudId: entry.cloudId as number }),
     };
   }
   return result;
@@ -218,20 +215,63 @@ export function parseProjectUrl(url: string): string {
   return url;
 }
 
-/** The `cloudId` of the named entry, or `cli_config` naming the ways to set it (config.md, "Cloud projects"). */
-export function cloudIdOf(file: ConfigFile, name: string): number {
-  const { cloudId } = projectOf(file, name);
+/**
+ * The Cloud project a management command acts on (config.md, "Cloud projects"):
+ * `--id` as given, or the `cloudId` of the entry named by `--project`. Both
+ * together contradict each other; neither is a usage error.
+ */
+export function resolveCloudProjectId(
+  flags: { id?: number | undefined; project?: string | undefined },
+  readFile: () => ConfigFile,
+): number {
+  if (flags.project !== undefined && flags.id !== undefined) {
+    throw new MeiliCliError(
+      "cli_usage",
+      "`--project` cannot be combined with `--id`: the name and the id contradict each other.",
+    );
+  }
+  if (flags.project === undefined) {
+    if (flags.id === undefined) {
+      throw new MeiliCliError(
+        "cli_usage",
+        "Name the project with `--id <id>` or `--project <name>`.",
+      );
+    }
+    return flags.id;
+  }
+  const file = readFile();
+  const { cloudId } = projectOf(file, flags.project);
   if (cloudId === undefined) {
     throw new MeiliCliError(
       "cli_config",
-      `Project \`${name}\` has no \`cloudId\` in ${file.path}: the management commands need the project's id.`,
+      `Project \`${flags.project}\` has no \`cloudId\` in ${file.path}: the management commands need the project's id.`,
       {
-        hint: `Run \`meili config sync-with-cloud\`, or \`meili config update --project ${name} --project-cloud-id <id>\`.`,
+        hint: `Run \`meili config sync-with-cloud\`, or \`meili config update --project ${flags.project} --project-cloud-id <id>\`.`,
       },
     );
   }
   return cloudId;
 }
+
+/** `cli_config` when the file already has an entry named `name`; `detail` follows the path. */
+export function assertNoProject(
+  file: ConfigFile,
+  name: string,
+  detail: string,
+  hint: string,
+): void {
+  if (file.projects[name] !== undefined) {
+    throw new MeiliCliError(
+      "cli_config",
+      `Project \`${name}\` already exists in ${file.path}${detail}`,
+      { hint },
+    );
+  }
+}
+
+/** In the help of every command that writes the config file (config.md, "Config file"). */
+export const CONFIG_FILE_WARNING =
+  "The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.";
 
 /** The named entry, or `cli_config` with the path and the names the file has. */
 export function projectOf(file: ConfigFile, name: string): ProjectEntry {

@@ -22,8 +22,7 @@ FLAGS
       --project-api-key=<key>   Project API key. \`-\` reads it from stdin.
       --project-cloud-id=<id>   Id of the project in Meilisearch Cloud, for the
                                 management commands.
-      --project-url=<url>       Project URL, the Meilisearch instance to talk
-                                to.
+      --project-url=<url>       New URL of the project.
 
 DESCRIPTION
   Change the URL, the key or the cloudId of a project of the config file.

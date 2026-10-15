@@ -1,10 +1,8 @@
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import DeleteProjects from "../../../src/commands/delete/projects.js";
-import { writeConfigFile } from "../../../src/lib/config.js";
 import { managementEnv as env, managementHandlers } from "../../helpers/management-handlers.js";
 import { server, useMockServer } from "../../helpers/msw.js";
-import { runCli, runCommand, scrubbedHome } from "../../helpers/run-command.js";
+import { runCli, runCommand, tempConfig } from "../../helpers/run-command.js";
 
 useMockServer();
 
@@ -23,11 +21,12 @@ describe("meili delete projects", () => {
   });
 
   it("takes the project's cloudId from the config file with --project", async () => {
-    const path = join(scrubbedHome, "projects.json");
-    writeConfigFile({ path, projects: { staging: { url: "https://s", cloudId: 343 } } });
+    const { env: configEnv } = tempConfig("projects.json", {
+      staging: { url: "https://s", cloudId: 343 },
+    });
     server.use(managementHandlers.deleteProject());
     const result = await runCommand(DeleteProjects, ["--project", "staging"], {
-      env: { ...env, MEILI_CONFIG: path },
+      env: { ...env, ...configEnv },
     });
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
   });

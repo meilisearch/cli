@@ -1,25 +1,24 @@
-import { chmodSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { chmodSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   type ConfigFile,
-  cloudIdOf,
   configFilePath,
   DEFAULT_MANAGEMENT_URL,
   ENV_VARS,
   maskSecret,
-  parseProjectUrl,
   readConfigFile,
   redactBody,
   redactHeaders,
+  resolveCloudProjectId,
   resolveManagementCredentials,
   resolveProjectConnection,
   writeConfigFile,
 } from "../../src/lib/config.js";
 import type { MeiliCliError } from "../../src/lib/errors.js";
 import { caught } from "../helpers/errors.js";
-import { scrubbedHome } from "../helpers/run-command.js";
+import { readJson, scrubbedHome } from "../helpers/run-command.js";
 
 /** A read that must not warn: an unexpected warning fails the test. */
 const noWarning = (warning: MeiliCliError): never => {
@@ -91,7 +90,6 @@ describe("readConfigFile", () => {
       ["entry.json", '{"projects":{"prod":{"apiKey":"k"}}}'],
       ["key.json", '{"projects":{"prod":{"url":"http://p","apiKey":1}}}'],
       ["cloud.json", '{"projects":{"prod":{"url":"http://p","cloudId":"343"}}}'],
-      ["cloud-zero.json", '{"projects":{"prod":{"url":"http://p","cloudId":0}}}'],
     ] as const) {
       const path = join(scrubbedHome, name);
       writeFileSync(path, content, { mode: 0o600 });
@@ -107,32 +105,37 @@ describe("writeConfigFile", () => {
     const path = join(scrubbedHome, "nested", "config.json");
     writeConfigFile({ path, projects: { prod } });
     expect(statSync(path).mode & 0o777).toBe(0o600);
-    expect(JSON.parse(readFileSync(path, "utf8"))).toEqual({ projects: { prod } });
+    expect(readJson(path)).toEqual({ projects: { prod } });
   });
 });
 
-describe("cloudIdOf", () => {
-  it("is the entry's cloudId, or cli_config naming the ways to set it", () => {
-    const entries = file("ids.json", { prod: { url: "http://prod", cloudId: 343 }, local });
-    expect(cloudIdOf(entries, "prod")).toBe(343);
-    const error = caught(() => cloudIdOf(entries, "local"));
+describe("resolveCloudProjectId", () => {
+  const entries = () => file("ids.json", { prod: { url: "http://prod", cloudId: 343 }, local });
+  const unread = () => {
+    throw new Error("the file must not be read");
+  };
+
+  it("takes --id as given, or the cloudId of the entry --project names", () => {
+    expect(resolveCloudProjectId({ id: 7 }, unread)).toBe(7);
+    expect(resolveCloudProjectId({ project: "prod" }, entries)).toBe(343);
+  });
+
+  it("fails with cli_usage on both flags or neither", () => {
+    expect(caught(() => resolveCloudProjectId({ id: 7, project: "prod" }, unread)).code).toBe(
+      "cli_usage",
+    );
+    const neither = caught(() => resolveCloudProjectId({}, unread));
+    expect(neither.code).toBe("cli_usage");
+    expect(neither.message).toBe("Name the project with `--id <id>` or `--project <name>`.");
+  });
+
+  it("fails with cli_config, naming the ways to set it, on an entry without cloudId", () => {
+    const error = caught(() => resolveCloudProjectId({ project: "local" }, entries));
     expect(error.code).toBe("cli_config");
     expect(error.message).toContain("`local` has no `cloudId`");
     expect(error.hint).toBe(
       "Run `meili config sync-with-cloud`, or `meili config update --project local --project-cloud-id <id>`.",
     );
-    expect(caught(() => cloudIdOf(entries, "nope")).message).toContain("No project `nope`");
-  });
-});
-
-describe("parseProjectUrl", () => {
-  it("accepts HTTP(S) only, with cli_usage otherwise", () => {
-    expect(parseProjectUrl("https://ms-abc.sfo.meilisearch.io")).toBe(
-      "https://ms-abc.sfo.meilisearch.io",
-    );
-    for (const url of ["not a url", "ftp://example.com", "localhost:7700"]) {
-      expect(caught(() => parseProjectUrl(url)).code, url).toBe("cli_usage");
-    }
   });
 });
 

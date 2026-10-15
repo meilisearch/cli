@@ -20,6 +20,7 @@ import {
   type OpenApiDocument,
   parseRoute,
   pathFlagsForRoute,
+  projectFlagForRoute,
   ROUTE_EXCEPTIONS,
   routeKey,
 } from "../../src/lib/api-naming.js";
@@ -72,12 +73,14 @@ const VERBS = ["get", "create", "update", "delete", ...LITERAL_VERBS];
 const listedCommands = tableRows(
   section(readDoc("docs/contract/commands.md"), "Commands that do not derive from a route"),
 )
-  .map(([command = ""]) => codeSpans(command)[0] ?? "")
-  .map((usage) => {
-    const words = usage.replace(/^meili /, "").split(" ");
-    const end = words.findIndex((word) => /^[-([]/.test(word));
-    return words.slice(0, end === -1 ? words.length : end).join(" ");
-  })
+  // The command words are the ones starting with a letter: `meili config add --project <name>`.
+  .map(([command = ""]) =>
+    (codeSpans(command)[0] ?? "")
+      .split(" ")
+      .slice(1)
+      .filter((word) => /^[a-z]/.test(word))
+      .join(" "),
+  )
   .filter((id) => id !== "");
 
 const hasRoutes = (command: CommandClass): boolean =>
@@ -113,11 +116,9 @@ describe("API commands derive from their routes", () => {
       expect(Object.keys(command.args ?? {}), "no positional argument").toEqual([]);
       const flags = command.flags ?? {};
       const pathFlags = routes.map((route) => pathFlagsForRoute(route, id));
-      // On the Management API, `--project <name>` may give the project's id from the config
-      // file: `--id` of the projects commands and `--project-id` of their sub-resources are optional.
+      // `--project <name>` may give a Cloud project's id from the config file (rule 4).
       const fromConfig = (flag: string): boolean =>
-        api === "management" &&
-        (flag === "project-id" || (flag === "id" && id.endsWith(" projects")));
+        routes.some((route) => projectFlagForRoute(route) === flag);
       for (const flag of new Set(pathFlags.flat())) {
         if (flag === "id") continue;
         expect(flags[flag], `--${flag} must exist`).toBeDefined();

@@ -1,7 +1,11 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { parseProjectUrl, writeConfigFile } from "../../lib/config.js";
-import { MeiliCliError } from "../../lib/errors.js";
+import {
+  assertNoProject,
+  CONFIG_FILE_WARNING,
+  parseProjectUrl,
+  writeConfigFile,
+} from "../../lib/config.js";
 
 export default class ConfigAdd extends BaseCommand {
   static api: Api = "none";
@@ -9,7 +13,7 @@ export default class ConfigAdd extends BaseCommand {
   static override description =
     `Add a project to the config file, creating it owner-only; refuses a name that exists.
 
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.`;
+${CONFIG_FILE_WARNING}`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700",
@@ -39,13 +43,12 @@ The file holds API keys and decides where every later command goes, for every pr
     const { flags } = await this.parse(ConfigAdd);
     const url = parseProjectUrl(flags["project-url"]);
     const file = this.configFile();
-    if (file.projects[flags.project] !== undefined) {
-      throw new MeiliCliError(
-        "cli_config",
-        `Project \`${flags.project}\` already exists in ${file.path}.`,
-        { hint: `Run \`meili config remove --project ${flags.project}\` first.` },
-      );
-    }
+    assertNoProject(
+      file,
+      flags.project,
+      ".",
+      `Run \`meili config remove --project ${flags.project}\` first.`,
+    );
     writeConfigFile({
       path: file.path,
       projects: {

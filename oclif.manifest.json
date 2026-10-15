@@ -610,7 +610,7 @@
       ],
       "flags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "New URL of the project.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",

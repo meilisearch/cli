@@ -1,6 +1,11 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { parseProjectUrl, projectOf, writeConfigFile } from "../../lib/config.js";
+import {
+  CONFIG_FILE_WARNING,
+  parseProjectUrl,
+  projectOf,
+  writeConfigFile,
+} from "../../lib/config.js";
 import { MeiliCliError } from "../../lib/errors.js";
 
 export default class ConfigUpdate extends BaseCommand {
@@ -9,7 +14,7 @@ export default class ConfigUpdate extends BaseCommand {
   static override description =
     `Change the URL, the key or the cloudId of a project of the config file.
 
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.`;
+${CONFIG_FILE_WARNING}`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --project-cloud-id 343",
@@ -23,6 +28,7 @@ The file holds API keys and decides where every later command goes, for every pr
       description: "Name of the project to change.",
       helpValue: "<name>",
     }),
+    "project-url": Flags.string({ description: "New URL of the project.", helpValue: "<url>" }),
     "project-cloud-id": Flags.integer({
       description: "Id of the project in Meilisearch Cloud, for the management commands.",
       helpValue: "<id>",
@@ -31,7 +37,7 @@ The file holds API keys and decides where every later command goes, for every pr
 
   async run(): Promise<void> {
     const { flags } = await this.parse(ConfigUpdate);
-    const url = this.globalFlags["project-url"];
+    const url = flags["project-url"];
     const apiKey = this.globalFlags["project-api-key"];
     const cloudId = flags["project-cloud-id"];
     if (url === undefined && apiKey === undefined && cloudId === undefined) {
@@ -47,10 +53,9 @@ The file holds API keys and decides where every later command goes, for every pr
       projects: {
         ...file.projects,
         [flags.project]: {
-          ...entry,
-          ...(url === undefined ? {} : { url: parseProjectUrl(url) }),
-          ...(apiKey === undefined ? {} : { apiKey }),
-          ...(cloudId === undefined ? {} : { cloudId }),
+          url: url === undefined ? entry.url : parseProjectUrl(url),
+          apiKey: apiKey ?? entry.apiKey,
+          cloudId: cloudId ?? entry.cloudId,
         },
       },
     });

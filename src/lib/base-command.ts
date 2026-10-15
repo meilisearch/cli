@@ -6,17 +6,18 @@
  */
 import { Command, Errors, Flags, type Interfaces } from "@oclif/core";
 import type { EnqueuedTask, Meilisearch } from "meilisearch";
+import { parseRoute, projectFlagForRoute } from "./api-naming.js";
 import { type BodyInputFlags, buildBody } from "./body.js";
 import { installHttpTrace } from "./clients/http-trace.js";
 import { createManagementClient, type ManagementClient } from "./clients/management.js";
 import { createMeilisearchClient } from "./clients/meilisearch.js";
 import {
   type ConfigFile,
-  cloudIdOf,
   configFilePath,
   DEFAULT_MANAGEMENT_URL,
   ENV,
   readConfigFile,
+  resolveCloudProjectId,
   resolveManagementCredentials,
   resolveProjectConnection,
 } from "./config.js";
@@ -159,7 +160,10 @@ export abstract class BaseCommand extends Command {
     }
 
     const routes = (this.constructor as typeof BaseCommand).routes;
-    if (this.globalFlags.project !== undefined && !routes.some((route) => route.includes("{"))) {
+    if (
+      this.globalFlags.project !== undefined &&
+      !routes.some((route) => projectFlagForRoute(parseRoute(route)) !== undefined)
+    ) {
       throw new MeiliCliError(
         "cli_usage",
         "`--project` has no use here: none of the routes of this command takes a project.",
@@ -203,29 +207,11 @@ export abstract class BaseCommand extends Command {
     this.exit(rendered.exitCode);
   }
 
-  /**
-   * The Cloud project a management command acts on: `--id` as given, or the
-   * `cloudId` of the config file entry named by `--project`. Both together
-   * contradict each other, neither is a usage error (config.md, "Cloud projects").
-   */
+  /** The Cloud project a management command acts on: `--id`, or the `cloudId` of the entry `--project` names. */
   protected cloudProjectId(id: number | undefined): number {
-    const name = this.globalFlags.project;
-    if (name === undefined) {
-      if (id === undefined) {
-        throw new MeiliCliError(
-          "cli_usage",
-          "Name the project with `--id <id>` or `--project <name>`.",
-        );
-      }
-      return id;
-    }
-    if (id !== undefined) {
-      throw new MeiliCliError(
-        "cli_usage",
-        "`--project` cannot be combined with `--id`: the name and the id contradict each other.",
-      );
-    }
-    return cloudIdOf(this.configFile(), name);
+    return resolveCloudProjectId({ id, project: this.globalFlags.project }, () =>
+      this.configFile(),
+    );
   }
 
   /** The config file of docs/contract/config.md, empty when it does not exist. */
