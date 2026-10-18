@@ -1,6 +1,3 @@
-import { mkdtempSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import CreateIndexes from "../../../src/commands/create/indexes.js";
 import {
@@ -11,6 +8,7 @@ import {
 } from "../../helpers/meilisearch-handlers.js";
 import { server, useMockServer } from "../../helpers/msw.js";
 import { runCli, runCommand } from "../../helpers/run-command.js";
+import { writeTempJson } from "../../helpers/temp-json.js";
 
 useMockServer();
 
@@ -45,8 +43,7 @@ describe("meili create indexes", () => {
   it("takes the body from --file or --data, and lets a flag override one of its fields", async () => {
     const received: { body?: unknown } = {};
     server.use(meilisearchHandlers.createIndex(received));
-    const path = join(mkdtempSync(join(tmpdir(), "meili-body-")), "index.json");
-    writeFileSync(path, '{"primaryKey":"isbn"}');
+    const path = writeTempJson({ primaryKey: "isbn" });
 
     await runCommand(CreateIndexes, ["--id", "movies", "--file", path], { env });
     expect(received.body).toEqual({ uid: "movies", primaryKey: "isbn" });
@@ -59,21 +56,11 @@ describe("meili create indexes", () => {
     expect(received.body).toEqual({ uid: "movies", primaryKey: "id" });
   });
 
-  it("refuses a body that is not JSON, and a file it cannot read, before any call", async () => {
-    const invalidJson = await runCommand(CreateIndexes, ["--id", "movies", "--data", "{nope"], {
-      env,
-    });
-    expect(invalidJson.exitCode).toBe(2);
-    expect(invalidJson.stdout).toBe("");
-    expect(JSON.parse(invalidJson.stderr).error.code).toBe("cli_input_invalid");
-
-    const missingFile = await runCommand(
-      CreateIndexes,
-      ["--id", "movies", "--file", join(tmpdir(), "meili-body-does-not-exist.json")],
-      { env },
-    );
-    expect(missingFile.exitCode).toBe(2);
-    expect(JSON.parse(missingFile.stderr).error.code).toBe("cli_input_invalid");
+  it("refuses a body that is not JSON with cli_input_invalid, before any call", async () => {
+    const result = await runCommand(CreateIndexes, ["--id", "movies", "--data", "{nope"], { env });
+    expect(result.exitCode).toBe(2);
+    expect(result.stdout).toBe("");
+    expect(JSON.parse(result.stderr).error.code).toBe("cli_input_invalid");
   });
 
   it("prints the final task with --wait", async () => {

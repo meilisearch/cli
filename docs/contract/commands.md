@@ -43,6 +43,7 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 | `POST /swap-indexes` | `meili swap indexes --indexes <a>,<b>` |
 | `POST /indexes/{index_uid}/documents/fetch` | `meili get documents --index <index> [--ids <ids>] [--filter <filter>]` |
 | `POST /indexes/{index_uid}/documents` | `meili create documents --index <index> --file <path>` |
+| `PUT /indexes/{index_uid}/documents` | `meili update documents --index <index> --file <path>` |
 | `POST …/documents/delete-batch`, `POST …/documents/delete`, `DELETE …/documents` | `meili delete documents --index <index> (--ids <ids> \| --filter <filter> \| --all) --yes` |
 | `POST /indexes/{index_uid}/search` | `meili search --index <index> --q <query>` |
 | `PATCH /indexes/{index_uid}/settings` | `meili update settings --index <index> --<setting> <value>` |

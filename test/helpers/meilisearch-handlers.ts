@@ -43,21 +43,16 @@ export const meilisearchHandlers = {
    * of the body. `received` keeps the body the command sent, so a test can
    * assert what travelled over the wire.
    */
-  createIndex: (received: { body?: unknown } = {}) =>
+  createIndex: (received: ReceivedRequest = {}) =>
     http.post(`${MEILISEARCH_URL}/indexes`, async ({ request }) => {
       const body = (await request.json()) as { uid: string };
       received.body = body;
-      return HttpResponse.json(
-        {
-          taskUid: 11,
-          indexUid: body.uid,
-          status: "enqueued",
-          type: "indexCreation",
-          enqueuedAt: "2026-09-24T10:00:00Z",
-        },
-        { status: 202 },
-      );
+      return HttpResponse.json(enqueuedTask(11, body.uid, "indexCreation"), { status: 202 });
     }),
+
+  /** `POST` and `PUT /indexes/{uid}/documents` answering the enqueued task. */
+  addDocuments: (received: ReceivedRequest = {}) => documentsHandler(http.post, received),
+  updateDocuments: (received: ReceivedRequest = {}) => documentsHandler(http.put, received),
 
   /** Any method on `path` answering a Meilisearch error body with `status`. */
   apiError: (path: string, status: number, body: MeilisearchErrorResponse) =>
@@ -86,7 +81,7 @@ export const invalidApiKeyError: MeilisearchErrorResponse = {
 };
 
 /** The error body Meilisearch returns for an index that does not exist. */
-function indexNotFoundError(uid: string): MeilisearchErrorResponse {
+export function indexNotFoundError(uid: string): MeilisearchErrorResponse {
   return {
     message: `Index \`${uid}\` not found.`,
     code: "index_not_found",
@@ -118,4 +113,26 @@ export function makeTask(overrides: Partial<Task> & Pick<Task, "uid" | "status">
     error: undefined,
     ...overrides,
   } as Task;
+}
+
+/** What a handler recorded of the request it answered. */
+export interface ReceivedRequest {
+  body?: unknown;
+  query?: Record<string, string>;
+}
+
+/** The 202 body of a write route, as `SummarizedTaskView` describes it. */
+function enqueuedTask(taskUid: number, indexUid: string, type: string): Record<string, unknown> {
+  return { taskUid, indexUid, status: "enqueued", type, enqueuedAt: "2026-09-24T10:00:00Z" };
+}
+
+function documentsHandler(method: typeof http.post, received: ReceivedRequest) {
+  return method(`${MEILISEARCH_URL}/indexes/:uid/documents`, async ({ request, params }) => {
+    const url = new URL(request.url);
+    received.body = await request.json();
+    received.query = Object.fromEntries(url.searchParams);
+    return HttpResponse.json(enqueuedTask(12, String(params.uid), "documentAdditionOrUpdate"), {
+      status: 202,
+    });
+  });
 }

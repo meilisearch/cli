@@ -45,6 +45,9 @@
       },
       "get": {
         "description": "Read a resource: the list, or one item with --id."
+      },
+      "update": {
+        "description": "Update a resource. The Meilisearch API answers with a task: --wait follows it to its final status."
       }
     }
   },

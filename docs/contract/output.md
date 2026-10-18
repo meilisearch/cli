@@ -100,6 +100,7 @@ Destructive commands are those of the verb `delete`, as `commands.md` derives th
 
 - `--file <path>` reads a body from a file. `--file -` reads from stdin. The CLI validates that the content is JSON before it sends anything, and fails with `cli_input_invalid` and exit 2 otherwise.
 - `--data <json>` passes a body inline.
+- A route whose body is the data itself, the documents of `create documents` for example, refuses to run without `--file` or `--data`: `cli_usage` and exit 2, before any network call. A body that is not the shape the route takes, an object where it expects an array of documents, is `cli_input_invalid` and exit 2, also before any call.
 - A body-field flag given together with `--file` or `--data` overrides that field in the body. A flag overrides its environment variable the same way.
 - The value `null` on a flag sends a JSON null: `--expires-at null`, `--stop-words null`.
 - A command never reads stdin unless `--file -` or `--project-api-key -` is given. This avoids hanging when an agent runs it in a pipeline.

@@ -65,6 +65,78 @@ The file holds API keys and decides where every later command goes, for every pr
     {
       "api": "meilisearch",
       "async": true,
+      "description": "Add documents to an index, replacing the stored document when one shares the same identifier.",
+      "examples": [
+        "meili create documents --index movies --file movies.json",
+        "meili create documents --index movies --file - --wait --output json",
+        "meili create documents --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
+      ],
+      "flags": [
+        {
+          "description": "The index the documents go to.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "The field that holds the identifier of each document. Only read the first time documents are added to the index.",
+          "helpValue": "<field>",
+          "name": "primary-key",
+          "type": "option",
+        },
+        {
+          "description": "Only update documents that already exist, and ignore the others.",
+          "name": "skip-creation",
+          "type": "boolean",
+        },
+        {
+          "description": "A string stored with the task, to recognize it later.",
+          "helpValue": "<text>",
+          "name": "custom-metadata",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+      ],
+      "id": "create documents",
+      "keyActions": [
+        "documents.add",
+      ],
+      "routes": [
+        "POST /indexes/{index_uid}/documents",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "async": true,
       "description": "Create an index, which the API answers with a task.",
       "examples": [
         "meili create indexes --id movies",
@@ -200,6 +272,78 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
       "id": "schema",
     },
+    {
+      "api": "meilisearch",
+      "async": true,
+      "description": "Update documents of an index, merging each one into the stored document that shares its identifier.",
+      "examples": [
+        "meili update documents --index movies --file patch.json",
+        "meili update documents --index movies --file - --wait --output json",
+        "meili update documents --index movies --data '[{"id":1,"rating":9}]'",
+      ],
+      "flags": [
+        {
+          "description": "The index the documents go to.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "The field that holds the identifier of each document. Only read the first time documents are added to the index.",
+          "helpValue": "<field>",
+          "name": "primary-key",
+          "type": "option",
+        },
+        {
+          "description": "Only update documents that already exist, and ignore the others.",
+          "name": "skip-creation",
+          "type": "boolean",
+        },
+        {
+          "description": "A string stored with the task, to recognize it later.",
+          "helpValue": "<text>",
+          "name": "custom-metadata",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+      ],
+      "id": "update documents",
+      "keyActions": [
+        "documents.add",
+      ],
+      "routes": [
+        "PUT /indexes/{index_uid}/documents",
+      ],
+    },
   ],
   "index": {
     "commands": [
@@ -214,6 +358,13 @@ The file holds API keys and decides where every later command goes, for every pr
       {
         "description": "Remove a project from the config file.",
         "id": "config remove",
+      },
+      {
+        "description": "Add documents to an index, replacing the stored document when one shares the same identifier.",
+        "id": "create documents",
+        "routes": [
+          "POST /indexes/{index_uid}/documents",
+        ],
       },
       {
         "description": "Create an index, which the API answers with a task.",
@@ -240,6 +391,13 @@ The file holds API keys and decides where every later command goes, for every pr
       {
         "description": "Print one line per command, or one command in full with --command, from the oclif manifest.",
         "id": "schema",
+      },
+      {
+        "description": "Update documents of an index, merging each one into the stored document that shares its identifier.",
+        "id": "update documents",
+        "routes": [
+          "PUT /indexes/{index_uid}/documents",
+        ],
       },
     ],
     "globalFlags": [

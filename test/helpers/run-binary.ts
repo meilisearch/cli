@@ -11,10 +11,17 @@ export interface BinaryResult {
   exitCode: number;
 }
 
-/** Spawns `node bin/run.js ...args` with a clean environment plus `env`. */
-export function runBinary(args: string[], env: Record<string, string> = {}): Promise<BinaryResult> {
+/**
+ * Spawns `node bin/run.js ...args` with a clean environment plus `env`. Stdin
+ * is always closed, so a command that does not read it never waits.
+ */
+export function runBinary(
+  args: string[],
+  env: Record<string, string> = {},
+  stdin = "",
+): Promise<BinaryResult> {
   return new Promise((resolve, reject) => {
-    execFile(
+    const child = execFile(
       process.execPath,
       [BIN, ...args],
       { env: scrubbedEnv({ NO_COLOR: "1", ...env }), encoding: "utf8" },
@@ -26,5 +33,6 @@ export function runBinary(args: string[], env: Record<string, string> = {}): Pro
         resolve({ stdout, stderr, exitCode: error === null ? 0 : (error.code as number) });
       },
     );
+    child.stdin?.end(stdin);
   });
 }

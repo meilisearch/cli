@@ -42,3 +42,23 @@ function readBodyFile(path: string): string {
     throw new MeiliCliError("cli_input_invalid", `Cannot read the body file ${path}.`);
   }
 }
+
+/**
+ * The JSON array of `--file` or `--data`, for a route whose body is the data
+ * itself: the documents to index, the identifiers to delete. No body at all is
+ * `cli_usage`, a body that is not an array is `cli_input_invalid`, both exit 2
+ * and before anything is sent (docs/contract/output.md, "Input").
+ */
+export function readBodyArrayInput(flags: BodyInputFlagValues): Record<string, unknown>[] {
+  const body = readBodyInput(flags);
+  if (body === undefined) {
+    throw new MeiliCliError(
+      "cli_usage",
+      "Give a JSON array with --file <path>, --file - to read it from stdin, or --data <json>.",
+    );
+  }
+  if (!Array.isArray(body)) {
+    throw new MeiliCliError("cli_input_invalid", "The body of this route must be a JSON array.");
+  }
+  return body as Record<string, unknown>[];
+}
