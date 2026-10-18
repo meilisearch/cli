@@ -23,7 +23,7 @@ They hit real local instances of both APIs, with no mock, through the built bina
 - `test/integration/meilisearch/`: against Meilisearch, started by the `docker-compose.yml` of this repository on `http://localhost:7700` with the master key `masterKey`.
 - `test/integration/management/`: against the Management API from the `meilisearch-cloud` repository. Known facts: it starts with `docker compose up` in that repository; its images are private, so CI needs a registry token to pull them; the seed creates no user and no personal access token, so the test bootstrap must create both before the suite runs (a script in `test/integration/management/bootstrap/`, run once by CI and by `pnpm test:integration`). The base URL, the bootstrap command and the token it produces are documented in `test/integration/management/README.md`, which is the only place where they live. Building this bootstrap is a task of its own, before the first management command.
 
-Integration tests create their own fixtures (an index, a team, a project) with a random suffix and delete them at the end. They never depend on pre-existing data, so they can run in parallel.
+Integration tests create their own fixtures (an index, a team, a project) with a random suffix and delete them at the end. They never depend on pre-existing data. They run one file at a time against the shared instance: a global list route, `GET /indexes`, cannot be scoped to the fixtures of one file, so paginating it while another file deletes its own indexes would skip entries.
 
 ## 3. Contract tests, `test/contract/`
 

@@ -32,6 +32,10 @@ export default defineConfig({
           include: ["test/integration/meilisearch/**/*.test.ts"],
           testTimeout: 30_000,
           hookTimeout: 60_000,
+          // One Meilisearch for every file: a global list route, `GET /indexes`,
+          // cannot be scoped to the fixtures of one file, so paginating it while
+          // another file creates or deletes its own indexes skips entries.
+          fileParallelism: false,
         },
       },
     ],

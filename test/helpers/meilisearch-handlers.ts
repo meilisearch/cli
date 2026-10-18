@@ -100,6 +100,33 @@ export const meilisearchHandlers = {
       });
     }),
 
+  /**
+   * `POST /indexes/{uid}/documents/fetch`, the POST that lists: it paginates
+   * over `all` with the `offset` and `limit` of its body, and keeps only the
+   * documents of `ids` when the body carries some. `received` keeps the body.
+   */
+  fetchDocuments: (all: Array<Record<string, unknown>>, received: { body?: unknown } = {}) =>
+    http.post(`${MEILISEARCH_URL}/indexes/:uid/documents/fetch`, async ({ request }) => {
+      const body = (await request.json()) as {
+        offset?: number;
+        limit?: number;
+        ids?: Array<string | number>;
+      };
+      received.body = body;
+      const selected =
+        body.ids === undefined
+          ? all
+          : all.filter((document) => body.ids?.map(String).includes(String(document.id)));
+      const offset = body.offset ?? 0;
+      const limit = body.limit ?? 20;
+      return HttpResponse.json({
+        results: selected.slice(offset, offset + limit),
+        offset,
+        limit,
+        total: selected.length,
+      });
+    }),
+
   /** Any method on `path` answering a Meilisearch error body with `status`. */
   apiError: (path: string, status: number, body: MeilisearchErrorResponse) =>
     http.all(`${MEILISEARCH_URL}${path}`, () => HttpResponse.json(body, { status })),

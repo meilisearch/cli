@@ -125,6 +125,93 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
+      "description": "List the documents of an index, or the ones --ids or --filter selects.",
+      "examples": [
+        "meili get documents --index movies --limit 5 --output json",
+        "meili get documents --index movies --ids 1,2",
+        "meili get documents --index movies --filter 'year > 1920' --fields id,title",
+        "meili get documents --index movies --all --output ndjson",
+      ],
+      "flags": [
+        {
+          "description": "The index to read the documents from.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "Identifiers of the documents to return.",
+          "helpValue": "<ids>",
+          "name": "ids",
+          "type": "option",
+        },
+        {
+          "description": "A filter expression, on the filterable attributes of the index.",
+          "helpValue": "<filter>",
+          "name": "filter",
+          "type": "option",
+        },
+        {
+          "description": "Attributes to keep in each document.",
+          "helpValue": "<attributes>",
+          "name": "fields",
+          "type": "option",
+        },
+        {
+          "description": "Attributes to sort by, each one as attribute:asc or attribute:desc.",
+          "helpValue": "<attributes>",
+          "name": "sort",
+          "type": "option",
+        },
+        {
+          "description": "Add the embeddings of each document under _vectors.",
+          "name": "retrieve-vectors",
+          "type": "boolean",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "name": "all",
+          "type": "boolean",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "get documents",
+      "keyActions": [
+        "documents.get",
+      ],
+      "routes": [
+        "POST /indexes/{index_uid}/documents/fetch",
+      ],
+    },
+    {
+      "api": "meilisearch",
       "description": "Check that the Meilisearch instance is available.",
       "examples": [
         "meili get health",
@@ -456,6 +543,13 @@ The file holds API keys and decides where every later command goes, for every pr
         "id": "create indexes",
         "routes": [
           "POST /indexes",
+        ],
+      },
+      {
+        "description": "List the documents of an index, or the ones --ids or --filter selects.",
+        "id": "get documents",
+        "routes": [
+          "POST /indexes/{index_uid}/documents/fetch",
         ],
       },
       {

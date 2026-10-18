@@ -1160,6 +1160,261 @@
         "indexes.js"
       ]
     },
+    "get:documents": {
+      "aliases": [],
+      "args": {},
+      "description": "List the documents of an index, or the ones --ids or --filter selects.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %> --index movies --limit 5 --output json",
+        "<%= config.bin %> <%= command.id %> --index movies --ids 1,2",
+        "<%= config.bin %> <%= command.id %> --index movies --filter 'year > 1920' --fields id,title",
+        "<%= config.bin %> <%= command.id %> --index movies --all --output ndjson"
+      ],
+      "flags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "name": "project-url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "name": "project-api-key",
+          "hasDynamicHelp": false,
+          "helpValue": "<key>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "name": "project",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "index": {
+          "description": "The index to read the documents from.",
+          "name": "index",
+          "required": true,
+          "hasDynamicHelp": false,
+          "helpValue": "<index>",
+          "multiple": false,
+          "type": "option"
+        },
+        "ids": {
+          "aliases": [
+            "id"
+          ],
+          "description": "Identifiers of the documents to return.",
+          "name": "ids",
+          "hasDynamicHelp": false,
+          "helpValue": "<ids>",
+          "multiple": false,
+          "type": "option"
+        },
+        "filter": {
+          "description": "A filter expression, on the filterable attributes of the index.",
+          "name": "filter",
+          "hasDynamicHelp": false,
+          "helpValue": "<filter>",
+          "multiple": false,
+          "type": "option"
+        },
+        "fields": {
+          "description": "Attributes to keep in each document.",
+          "name": "fields",
+          "hasDynamicHelp": false,
+          "helpValue": "<attributes>",
+          "multiple": false,
+          "type": "option"
+        },
+        "sort": {
+          "description": "Attributes to sort by, each one as attribute:asc or attribute:desc.",
+          "name": "sort",
+          "hasDynamicHelp": false,
+          "helpValue": "<attributes>",
+          "multiple": false,
+          "type": "option"
+        },
+        "retrieve-vectors": {
+          "description": "Add the embeddings of each document under _vectors.",
+          "name": "retrieve-vectors",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "limit": {
+          "description": "Passed to the API.",
+          "name": "limit",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "name": "offset",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "name": "all",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "exclusive": [
+            "data"
+          ],
+          "name": "file",
+          "hasDynamicHelp": false,
+          "helpValue": "<path>",
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "name": "data",
+          "hasDynamicHelp": false,
+          "helpValue": "<json>",
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "get:documents",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "meilisearch",
+      "routes": [
+        "POST /indexes/{index_uid}/documents/fetch"
+      ],
+      "keyActions": [
+        "documents.get"
+      ],
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "get",
+        "documents.js"
+      ]
+    },
     "get:health": {
       "aliases": [],
       "args": {},
