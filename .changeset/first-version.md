@@ -4,7 +4,7 @@
 
 First version of `meili`, the Meilisearch CLI built for coding agents.
 
-- Commands derive from the routes of the Meilisearch API and of the Management API, verb first and resource plural: `meili get health`, `meili get indexes`, `meili get indexes --id movies`, `meili create indexes --id movies`, `meili search --index movies --q vampire`.
+- Commands derive from the routes of the Meilisearch API and of the Management API, verb first and resource plural: `meili get health`, `meili get indexes`, `meili get indexes --id movies`, `meili create indexes --id movies`, `meili search --index movies --q vampire`, `meili get tasks --ids 42`.
 - `meili schema` prints the index of the command tree as JSON, one entry per command with its routes, and `meili schema --command "get indexes"` prints one command in full, with its key actions and whether it returns a task.
 - Connection through `--project-url` and `--project-api-key`, or `MEILI_PROJECT_URL` and `MEILI_PROJECT_API_KEY`; `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL` for the Management API.
 - Several projects in a config file, `~/.config/meili/config.json` or `MEILI_CONFIG`, chosen with `--project` on the command line and never deduced; `meili config list`, `config add` and `config remove` manage the file.

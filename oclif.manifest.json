@@ -112,6 +112,27 @@
           "type": "boolean"
         }
       },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -389,6 +410,27 @@
           "type": "boolean"
         }
       },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -518,6 +560,27 @@
         "offset": {
           "description": "Passed to the API.",
           "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "helpValue": "<uid>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -666,6 +729,27 @@
           "type": "boolean"
         }
       },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -804,181 +888,7 @@
           "type": "boolean"
         }
       },
-      "bodyInputFlags": {
-        "file": {
-          "description": "Read the body from a file. `-` reads from stdin.",
-          "helpValue": "<path>",
-          "exclusive": [
-            "data"
-          ],
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "data": {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "confirmFlags": {
-        "yes": {
-          "required": true,
-          "description": "Confirm the deletion. Nothing is sent to the API without it.",
-          "allowNo": false,
-          "type": "boolean"
-        }
-      },
-      "isESM": true,
-      "relativePath": [
-        "dist",
-        "commands",
-        "config",
-        "remove.js"
-      ]
-    },
-    "create:indexes": {
-      "aliases": [],
-      "args": {},
-      "description": "Create an index, which the API answers with a task.",
-      "examples": [
-        "<%= config.bin %> <%= command.id %> --id movies",
-        "<%= config.bin %> <%= command.id %> --id movies --primary-key id --output json",
-        "<%= config.bin %> <%= command.id %> --id movies --wait"
-      ],
-      "flags": {
-        "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
-          "name": "project-url",
-          "hasDynamicHelp": false,
-          "helpValue": "<url>",
-          "multiple": false,
-          "type": "option"
-        },
-        "project-api-key": {
-          "description": "Project API key. `-` reads it from stdin.",
-          "name": "project-api-key",
-          "hasDynamicHelp": false,
-          "helpValue": "<key>",
-          "multiple": false,
-          "type": "option"
-        },
-        "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
-          "name": "project",
-          "hasDynamicHelp": false,
-          "helpValue": "<name>",
-          "multiple": false,
-          "type": "option"
-        },
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
-        "debug": {
-          "description": "Print every HTTP request and response on stderr, secrets redacted.",
-          "name": "debug",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "id": {
-          "description": "The index to create.",
-          "name": "id",
-          "required": true,
-          "hasDynamicHelp": false,
-          "helpValue": "<index>",
-          "multiple": false,
-          "type": "option"
-        },
-        "primary-key": {
-          "description": "The field that holds the identifier of each document.",
-          "name": "primary-key",
-          "hasDynamicHelp": false,
-          "helpValue": "<field>",
-          "multiple": false,
-          "type": "option"
-        },
-        "file": {
-          "description": "Read the body from a file. `-` reads from stdin.",
-          "exclusive": [
-            "data"
-          ],
-          "name": "file",
-          "hasDynamicHelp": false,
-          "helpValue": "<path>",
-          "multiple": false,
-          "type": "option"
-        },
-        "data": {
-          "description": "Inline JSON body.",
-          "name": "data",
-          "hasDynamicHelp": false,
-          "helpValue": "<json>",
-          "multiple": false,
-          "type": "option"
-        },
-        "wait": {
-          "description": "Poll the task until it reaches a final status, then print the final task.",
-          "name": "wait",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "timeout": {
-          "dependsOn": [
-            "wait"
-          ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
-          "name": "timeout",
-          "hasDynamicHelp": false,
-          "helpValue": "<duration>",
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "hasDynamicHelp": false,
-      "hiddenAliases": [],
-      "id": "create:indexes",
-      "pluginAlias": "@meilisearch/cli",
-      "pluginName": "@meilisearch/cli",
-      "pluginType": "core",
-      "strict": true,
-      "enableJsonFlag": false,
-      "api": "meilisearch",
-      "routes": [
-        "POST /indexes"
-      ],
-      "keyActions": [
-        "indexes.create"
-      ],
-      "waitFlags": {
-        "wait": {
-          "description": "Poll the task until it reaches a final status, then print the final task.",
-          "allowNo": false,
-          "type": "boolean"
-        },
-        "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
-          "helpValue": "<duration>",
-          "dependsOn": [
-            "wait"
-          ],
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "paginationFlags": {
+      "fromPaginationFlags": {
         "limit": {
           "description": "Passed to the API.",
           "helpValue": "<n>",
@@ -986,9 +896,9 @@
           "multiple": false,
           "type": "option"
         },
-        "offset": {
-          "description": "Passed to the API.",
-          "helpValue": "<n>",
+        "from": {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "helpValue": "<uid>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -1030,8 +940,8 @@
       "relativePath": [
         "dist",
         "commands",
-        "create",
-        "indexes.js"
+        "config",
+        "remove.js"
       ]
     },
     "get:health": {
@@ -1129,6 +1039,27 @@
         "offset": {
           "description": "Passed to the API.",
           "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "helpValue": "<uid>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -1314,6 +1245,27 @@
           "type": "boolean"
         }
       },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -1346,6 +1298,520 @@
         "dist",
         "commands",
         "get",
+        "indexes.js"
+      ]
+    },
+    "get:tasks": {
+      "aliases": [],
+      "args": {},
+      "description": "List the tasks of the instance, which every write command enqueues, and filter them with the flags.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %> --ids 42 --output json",
+        "<%= config.bin %> <%= command.id %> --statuses failed --limit 5",
+        "<%= config.bin %> <%= command.id %> --index-ids movies --types documentAdditionOrUpdate",
+        "<%= config.bin %> <%= command.id %> --all --output ndjson"
+      ],
+      "flags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "name": "project-url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "name": "project-api-key",
+          "hasDynamicHelp": false,
+          "helpValue": "<key>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "name": "project",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "ids": {
+          "aliases": [
+            "id",
+            "uids"
+          ],
+          "description": "Identifiers of the tasks to return.",
+          "name": "ids",
+          "hasDynamicHelp": false,
+          "helpValue": "<uids>",
+          "multiple": false,
+          "type": "option"
+        },
+        "statuses": {
+          "description": "Statuses to keep: enqueued, processing, succeeded, failed or canceled, comma-separated.",
+          "name": "statuses",
+          "hasDynamicHelp": false,
+          "helpValue": "<statuses>",
+          "multiple": false,
+          "type": "option"
+        },
+        "types": {
+          "description": "Task types to keep, as the API spells them, comma-separated.",
+          "name": "types",
+          "hasDynamicHelp": false,
+          "helpValue": "<types>",
+          "multiple": false,
+          "type": "option"
+        },
+        "index-ids": {
+          "aliases": [
+            "index-uids"
+          ],
+          "description": "Keep the tasks of these indexes.",
+          "name": "index-ids",
+          "hasDynamicHelp": false,
+          "helpValue": "<indexes>",
+          "multiple": false,
+          "type": "option"
+        },
+        "batch-ids": {
+          "aliases": [
+            "batch-uids"
+          ],
+          "description": "Keep the tasks of these batches.",
+          "name": "batch-ids",
+          "hasDynamicHelp": false,
+          "helpValue": "<uids>",
+          "multiple": false,
+          "type": "option"
+        },
+        "canceled-by": {
+          "description": "Keep the tasks canceled by these task identifiers.",
+          "name": "canceled-by",
+          "hasDynamicHelp": false,
+          "helpValue": "<uids>",
+          "multiple": false,
+          "type": "option"
+        },
+        "reverse": {
+          "description": "Return the oldest tasks first.",
+          "name": "reverse",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "after-enqueued-at": {
+          "description": "Keep the tasks enqueued after this date, as RFC 3339.",
+          "name": "after-enqueued-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "before-enqueued-at": {
+          "description": "Keep the tasks enqueued before this date, as RFC 3339.",
+          "name": "before-enqueued-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "after-started-at": {
+          "description": "Keep the tasks started after this date, as RFC 3339.",
+          "name": "after-started-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "before-started-at": {
+          "description": "Keep the tasks started before this date, as RFC 3339.",
+          "name": "before-started-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "after-finished-at": {
+          "description": "Keep the tasks finished after this date, as RFC 3339.",
+          "name": "after-finished-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "before-finished-at": {
+          "description": "Keep the tasks finished before this date, as RFC 3339.",
+          "name": "before-finished-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "limit": {
+          "description": "Passed to the API.",
+          "name": "limit",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "name": "from",
+          "hasDynamicHelp": false,
+          "helpValue": "<uid>",
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "name": "all",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "get:tasks",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "meilisearch",
+      "routes": [
+        "GET /tasks"
+      ],
+      "keyActions": [
+        "tasks.get"
+      ],
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "get",
+        "tasks.js"
+      ]
+    },
+    "create:indexes": {
+      "aliases": [],
+      "args": {},
+      "description": "Create an index, which the API answers with a task.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %> --id movies",
+        "<%= config.bin %> <%= command.id %> --id movies --primary-key id --output json",
+        "<%= config.bin %> <%= command.id %> --id movies --wait"
+      ],
+      "flags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "name": "project-url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "name": "project-api-key",
+          "hasDynamicHelp": false,
+          "helpValue": "<key>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "name": "project",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The index to create.",
+          "name": "id",
+          "required": true,
+          "hasDynamicHelp": false,
+          "helpValue": "<index>",
+          "multiple": false,
+          "type": "option"
+        },
+        "primary-key": {
+          "description": "The field that holds the identifier of each document.",
+          "name": "primary-key",
+          "hasDynamicHelp": false,
+          "helpValue": "<field>",
+          "multiple": false,
+          "type": "option"
+        },
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "exclusive": [
+            "data"
+          ],
+          "name": "file",
+          "hasDynamicHelp": false,
+          "helpValue": "<path>",
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "name": "data",
+          "hasDynamicHelp": false,
+          "helpValue": "<json>",
+          "multiple": false,
+          "type": "option"
+        },
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "dependsOn": [
+            "wait"
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "name": "timeout",
+          "hasDynamicHelp": false,
+          "helpValue": "<duration>",
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "create:indexes",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "meilisearch",
+      "routes": [
+        "POST /indexes"
+      ],
+      "keyActions": [
+        "indexes.create"
+      ],
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "create",
         "indexes.js"
       ]
     }

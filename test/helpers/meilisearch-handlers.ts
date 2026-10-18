@@ -77,6 +77,29 @@ export const meilisearchHandlers = {
       });
     }),
 
+  /**
+   * `GET /tasks` paginating over `all` the way the API does: `from` is the uid
+   * of the first task of the page, `next` the one of the page after it, null
+   * at the end. `received` keeps the query string the command sent.
+   */
+  tasks: (all: Task[], received: { query?: Record<string, string> } = {}) =>
+    http.get(`${MEILISEARCH_URL}/tasks`, ({ request }) => {
+      const params = new URL(request.url).searchParams;
+      received.query = Object.fromEntries(params);
+      const limit = Number(params.get("limit") ?? 20);
+      const from = params.get("from");
+      const start = from === null ? 0 : all.findIndex((task) => task.uid === Number(from));
+      const results = all.slice(start, start + limit);
+      const after = all[start + limit];
+      return HttpResponse.json({
+        results,
+        total: all.length,
+        limit,
+        from: results[0]?.uid ?? null,
+        next: after?.uid ?? null,
+      });
+    }),
+
   /** Any method on `path` answering a Meilisearch error body with `status`. */
   apiError: (path: string, status: number, body: MeilisearchErrorResponse) =>
     http.all(`${MEILISEARCH_URL}${path}`, () => HttpResponse.json(body, { status })),

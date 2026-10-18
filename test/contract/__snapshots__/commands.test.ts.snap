@@ -182,6 +182,119 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
     },
     {
+      "api": "meilisearch",
+      "description": "List the tasks of the instance, which every write command enqueues, and filter them with the flags.",
+      "examples": [
+        "meili get tasks --ids 42 --output json",
+        "meili get tasks --statuses failed --limit 5",
+        "meili get tasks --index-ids movies --types documentAdditionOrUpdate",
+        "meili get tasks --all --output ndjson",
+      ],
+      "flags": [
+        {
+          "description": "Identifiers of the tasks to return.",
+          "helpValue": "<uids>",
+          "name": "ids",
+          "type": "option",
+        },
+        {
+          "description": "Statuses to keep: enqueued, processing, succeeded, failed or canceled, comma-separated.",
+          "helpValue": "<statuses>",
+          "name": "statuses",
+          "type": "option",
+        },
+        {
+          "description": "Task types to keep, as the API spells them, comma-separated.",
+          "helpValue": "<types>",
+          "name": "types",
+          "type": "option",
+        },
+        {
+          "description": "Keep the tasks of these indexes.",
+          "helpValue": "<indexes>",
+          "name": "index-ids",
+          "type": "option",
+        },
+        {
+          "description": "Keep the tasks of these batches.",
+          "helpValue": "<uids>",
+          "name": "batch-ids",
+          "type": "option",
+        },
+        {
+          "description": "Keep the tasks canceled by these task identifiers.",
+          "helpValue": "<uids>",
+          "name": "canceled-by",
+          "type": "option",
+        },
+        {
+          "description": "Return the oldest tasks first.",
+          "name": "reverse",
+          "type": "boolean",
+        },
+        {
+          "description": "Keep the tasks enqueued after this date, as RFC 3339.",
+          "helpValue": "<date>",
+          "name": "after-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Keep the tasks enqueued before this date, as RFC 3339.",
+          "helpValue": "<date>",
+          "name": "before-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Keep the tasks started after this date, as RFC 3339.",
+          "helpValue": "<date>",
+          "name": "after-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Keep the tasks started before this date, as RFC 3339.",
+          "helpValue": "<date>",
+          "name": "before-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Keep the tasks finished after this date, as RFC 3339.",
+          "helpValue": "<date>",
+          "name": "after-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Keep the tasks finished before this date, as RFC 3339.",
+          "helpValue": "<date>",
+          "name": "before-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Identifier of the first item of the page. Passed to the API.",
+          "helpValue": "<uid>",
+          "name": "from",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "name": "all",
+          "type": "boolean",
+        },
+      ],
+      "id": "get tasks",
+      "keyActions": [
+        "tasks.get",
+      ],
+      "routes": [
+        "GET /tasks",
+      ],
+    },
+    {
       "api": "none",
       "description": "Print one line per command, or one command in full with --command, from the oclif manifest.",
       "examples": [
@@ -358,6 +471,13 @@ The file holds API keys and decides where every later command goes, for every pr
         "routes": [
           "GET /indexes",
           "GET /indexes/{index_uid}",
+        ],
+      },
+      {
+        "description": "List the tasks of the instance, which every write command enqueues, and filter them with the flags.",
+        "id": "get tasks",
+        "routes": [
+          "GET /tasks",
         ],
       },
       {

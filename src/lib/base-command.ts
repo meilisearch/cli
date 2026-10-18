@@ -19,7 +19,7 @@ import {
 import { MeiliCliError, toRenderedError, writeError, writeWarning } from "./errors.js";
 import { readStdin } from "./input.js";
 import { type OutputMode, resolveOutputMode, writeData } from "./output.js";
-import { iteratePages, type ListPage, mergePages, type OffsetQuery } from "./pagination.js";
+import { iteratePages, type ListPage, mergePages } from "./pagination.js";
 import { DEFAULT_TIMEOUT, isTaskFailure, parseDuration, waitForTask } from "./tasks.js";
 
 /** The API a command talks to. `none` commands work offline. */
@@ -105,6 +105,19 @@ export abstract class BaseCommand extends Command {
     all: Flags.boolean({
       description: "Fetch every page. Streams with ndjson, buffers into one array with json.",
     }),
+  };
+
+  /**
+   * Shared group for the list routes that paginate with `from`, tasks and
+   * batches: the same group with `--from` in place of `--offset`.
+   */
+  static fromPaginationFlags = {
+    limit: BaseCommand.paginationFlags.limit,
+    from: Flags.integer({
+      description: "Identifier of the first item of the page. Passed to the API.",
+      helpValue: "<uid>",
+    }),
+    all: BaseCommand.paginationFlags.all,
   };
 
   /** Shared group for commands that send a JSON body. */
@@ -199,12 +212,15 @@ export abstract class BaseCommand extends Command {
   /**
    * Writes one page, or every page with `--all`. `json` prints the envelope,
    * `ndjson` one item per line, streamed with `--all`. List routes end with
-   * this call. `fetchPage` is one API call, returning the API body as it is.
+   * this call. `fetchPage` is one API call, returning the API body as it is,
+   * and `advance` is how that route paginates: `nextOffsetQuery` or
+   * `nextFromQuery` of `src/lib/pagination.ts`.
    */
-  protected async outputList(
-    fetchPage: (query: OffsetQuery) => Promise<ListPage>,
-    query: OffsetQuery,
+  protected async outputList<Q>(
+    fetchPage: (query: Q) => Promise<ListPage>,
+    query: Q,
     all: boolean,
+    advance: (query: Q, page: ListPage) => Q | undefined,
   ): Promise<void> {
     if (!all) {
       const page = await fetchPage(query);
@@ -214,13 +230,13 @@ export abstract class BaseCommand extends Command {
       return;
     }
     if (this.outputMode === "ndjson") {
-      for await (const page of iteratePages(fetchPage, query)) {
+      for await (const page of iteratePages(fetchPage, query, advance)) {
         await this.output(page.results, { supportsNdjson: true });
       }
       return;
     }
     const pages: ListPage[] = [];
-    for await (const page of iteratePages(fetchPage, query)) pages.push(page);
+    for await (const page of iteratePages(fetchPage, query, advance)) pages.push(page);
     await this.output(mergePages(pages));
   }
 

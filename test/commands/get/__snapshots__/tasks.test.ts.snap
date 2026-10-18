@@ -1,0 +1,89 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili get tasks > passes an authentication error through and exits 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili get tasks > prints its help without any network call 1`] = `
+"List the tasks of the instance, which every write command enqueues, and filter them with the flags.
+
+USAGE
+  $ meili get tasks [--project-url <url>] [--project-api-key <key>]
+    [--project <name>] [-o <mode>] [--debug] [--ids <uids>] [--statuses
+    <statuses>] [--types <types>] [--index-ids <indexes>] [--batch-ids <uids>]
+    [--canceled-by <uids>] [--reverse] [--after-enqueued-at <date>]
+    [--before-enqueued-at <date>] [--after-started-at <date>]
+    [--before-started-at <date>] [--after-finished-at <date>]
+    [--before-finished-at <date>] [--limit <n>] [--from <uid>] [--all]
+
+FLAGS
+  -o, --output=<mode>              json (default): one document, the API body as
+                                   it is, indented in a terminal, compact when
+                                   piped. ndjson: one item per line, list
+                                   commands only, streams with --all.
+      --after-enqueued-at=<date>   Keep the tasks enqueued after this date, as
+                                   RFC 3339.
+      --after-finished-at=<date>   Keep the tasks finished after this date, as
+                                   RFC 3339.
+      --after-started-at=<date>    Keep the tasks started after this date, as
+                                   RFC 3339.
+      --all                        Fetch every page. Streams with ndjson,
+                                   buffers into one array with json.
+      --batch-ids=<uids>           Keep the tasks of these batches.
+      --before-enqueued-at=<date>  Keep the tasks enqueued before this date, as
+                                   RFC 3339.
+      --before-finished-at=<date>  Keep the tasks finished before this date, as
+                                   RFC 3339.
+      --before-started-at=<date>   Keep the tasks started before this date, as
+                                   RFC 3339.
+      --canceled-by=<uids>         Keep the tasks canceled by these task
+                                   identifiers.
+      --debug                      Print every HTTP request and response on
+                                   stderr, secrets redacted.
+      --from=<uid>                 Identifier of the first item of the page.
+                                   Passed to the API.
+      --ids=<uids>                 Identifiers of the tasks to return.
+      --index-ids=<indexes>        Keep the tasks of these indexes.
+      --limit=<n>                  Passed to the API.
+      --project=<name>             A project of the config file. Cannot be
+                                   combined with --project-url. Required when
+                                   the file has several projects.
+      --project-api-key=<key>      Project API key. \`-\` reads it from stdin.
+      --project-url=<url>          Project URL, the Meilisearch instance to talk
+                                   to.
+      --reverse                    Return the oldest tasks first.
+      --statuses=<statuses>        Statuses to keep: enqueued, processing,
+                                   succeeded, failed or canceled,
+                                   comma-separated.
+      --types=<types>              Task types to keep, as the API spells them,
+                                   comma-separated.
+
+DESCRIPTION
+  List the tasks of the instance, which every write command enqueues, and filter
+  them with the flags.
+
+EXAMPLES
+  $ meili get tasks --ids 42 --output json
+
+  $ meili get tasks --statuses failed --limit 5
+
+  $ meili get tasks --index-ids movies --types documentAdditionOrUpdate
+
+  $ meili get tasks --all --output ndjson
+
+"
+`;
+
+exports[`meili get tasks > prints the API envelope as it is 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"results":[{"indexUid":"movies","type":"indexCreation","enqueuedAt":"2026-09-24T10:00:00Z","startedAt":null,"finishedAt":null,"duration":null,"batchUid":null,"canceledBy":null,"uid":12,"status":"succeeded"},{"indexUid":"movies","type":"indexCreation","enqueuedAt":"2026-09-24T10:00:00Z","startedAt":null,"finishedAt":null,"duration":null,"batchUid":null,"canceledBy":null,"uid":11,"status":"failed"}],"total":2,"limit":20,"from":12,"next":null}
+",
+}
+`;
