@@ -42,3 +42,14 @@ function readBodyFile(path: string): string {
     throw new MeiliCliError("cli_input_invalid", `Cannot read the body file ${path}.`);
   }
 }
+
+/**
+ * The body of a route whose fields are also flags: what `--file` or `--data`
+ * carries, with the fields the agent gave on the command line written over it.
+ * A flag the agent left out never erases the field of the body
+ * (docs/contract/output.md, "Input").
+ */
+export function bodyFrom<T extends object>(flags: BodyInputFlagValues, fields: Partial<T>): T {
+  const given = Object.entries(fields).filter(([, value]) => value !== undefined);
+  return { ...readBodyInput<T>(flags), ...Object.fromEntries(given) } as T;
+}

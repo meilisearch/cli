@@ -200,6 +200,129 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
       "id": "schema",
     },
+    {
+      "api": "meilisearch",
+      "description": "Search an index, and get the hits with the API envelope around them.",
+      "examples": [
+        "meili search --index movies --q nosferatu",
+        "meili search --index movies --q vampire --limit 5 --output json",
+        "meili search --index movies --filter 'year > 1920' --sort year:asc",
+        "meili search --index movies --data '{"q":"vampire","hybrid":{"embedder":"default"}}'",
+      ],
+      "flags": [
+        {
+          "description": "The index to search.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "The search terms.",
+          "helpValue": "<query>",
+          "name": "q",
+          "type": "option",
+        },
+        {
+          "description": "A filter expression, on the filterable attributes of the index.",
+          "helpValue": "<filter>",
+          "name": "filter",
+          "type": "option",
+        },
+        {
+          "description": "Attributes to sort by, each one as attribute:asc or attribute:desc.",
+          "helpValue": "<attributes>",
+          "name": "sort",
+          "type": "option",
+        },
+        {
+          "description": "Maximum number of hits.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Number of hits to skip.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Page of hits to return. The envelope then carries totalHits and totalPages instead of estimatedTotalHits.",
+          "helpValue": "<n>",
+          "name": "page",
+          "type": "option",
+        },
+        {
+          "description": "Hits per page.",
+          "helpValue": "<n>",
+          "name": "hits-per-page",
+          "type": "option",
+        },
+        {
+          "description": "Attributes to return facet counts for.",
+          "helpValue": "<attributes>",
+          "name": "facets",
+          "type": "option",
+        },
+        {
+          "description": "Attributes to keep in each hit.",
+          "helpValue": "<attributes>",
+          "name": "attributes-to-retrieve",
+          "type": "option",
+        },
+        {
+          "description": "Attributes to search in, among the searchable ones.",
+          "helpValue": "<attributes>",
+          "name": "attributes-to-search-on",
+          "type": "option",
+        },
+        {
+          "description": "Return one hit per distinct value of this attribute.",
+          "helpValue": "<attribute>",
+          "name": "distinct",
+          "type": "option",
+        },
+        {
+          "description": "How the engine drops query terms when a document matches none of them.",
+          "helpValue": "<strategy>",
+          "name": "matching-strategy",
+          "options": [
+            "last",
+            "all",
+            "frequency",
+          ],
+          "type": "option",
+        },
+        {
+          "description": "Add _rankingScore to every hit.",
+          "name": "show-ranking-score",
+          "type": "boolean",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "search",
+      "keyActions": [
+        "search",
+      ],
+      "routes": [
+        "POST /indexes/{index_uid}/search",
+      ],
+    },
   ],
   "index": {
     "commands": [
@@ -240,6 +363,13 @@ The file holds API keys and decides where every later command goes, for every pr
       {
         "description": "Print one line per command, or one command in full with --command, from the oclif manifest.",
         "id": "schema",
+      },
+      {
+        "description": "Search an index, and get the hits with the API envelope around them.",
+        "id": "search",
+        "routes": [
+          "POST /indexes/{index_uid}/search",
+        ],
       },
     ],
     "globalFlags": [

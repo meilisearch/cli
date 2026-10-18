@@ -1,0 +1,92 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili search > passes the 404 of an unknown index through and exits 4 1`] = `
+{
+  "exitCode": 4,
+  "stderr": "{"error":{"code":"index_not_found","type":"invalid_request","message":"Index \`nope\` not found.","link":"https://docs.meilisearch.com/errors#index_not_found"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili search > prints its help without any network call 1`] = `
+"Search an index, and get the hits with the API envelope around them.
+
+USAGE
+  $ meili search --index <index> [--project-url <url>]
+    [--project-api-key <key>] [--project <name>] [-o <mode>] [--debug] [--q
+    <query>] [--filter <filter>] [--sort <attributes>] [--limit <n>] [--offset
+    <n>] [--page <n>] [--hits-per-page <n>] [--facets <attributes>]
+    [--attributes-to-retrieve <attributes>] [--attributes-to-search-on
+    <attributes>] [--distinct <attribute>] [--matching-strategy <strategy>]
+    [--show-ranking-score] [--file <path> | --data <json>]
+
+FLAGS
+  -o, --output=<mode>                         json (default): one document, the
+                                              API body as it is, indented in a
+                                              terminal, compact when piped.
+                                              ndjson: one item per line, list
+                                              commands only, streams with --all.
+      --attributes-to-retrieve=<attributes>   Attributes to keep in each hit.
+      --attributes-to-search-on=<attributes>  Attributes to search in, among the
+                                              searchable ones.
+      --data=<json>                           Inline JSON body.
+      --debug                                 Print every HTTP request and
+                                              response on stderr, secrets
+                                              redacted.
+      --distinct=<attribute>                  Return one hit per distinct value
+                                              of this attribute.
+      --facets=<attributes>                   Attributes to return facet counts
+                                              for.
+      --file=<path>                           Read the body from a file. \`-\`
+                                              reads from stdin.
+      --filter=<filter>                       A filter expression, on the
+                                              filterable attributes of the
+                                              index.
+      --hits-per-page=<n>                     Hits per page.
+      --index=<index>                         (required) The index to search.
+      --limit=<n>                             Maximum number of hits.
+      --matching-strategy=<strategy>          How the engine drops query terms
+                                              when a document matches none of
+                                              them.
+      --offset=<n>                            Number of hits to skip.
+      --page=<n>                              Page of hits to return. The
+                                              envelope then carries totalHits
+                                              and totalPages instead of
+                                              estimatedTotalHits.
+      --project=<name>                        A project of the config file.
+                                              Cannot be combined with
+                                              --project-url. Required when the
+                                              file has several projects.
+      --project-api-key=<key>                 Project API key. \`-\` reads it from
+                                              stdin.
+      --project-url=<url>                     Project URL, the Meilisearch
+                                              instance to talk to.
+      --q=<query>                             The search terms.
+      --show-ranking-score                    Add _rankingScore to every hit.
+      --sort=<attributes>                     Attributes to sort by, each one as
+                                              attribute:asc or attribute:desc.
+
+DESCRIPTION
+  Search an index, and get the hits with the API envelope around them.
+
+EXAMPLES
+  $ meili search --index movies --q nosferatu
+
+  $ meili search --index movies --q vampire --limit 5 --output json
+
+  $ meili search --index movies --filter 'year > 1920' --sort year:asc
+
+  $ meili search --index movies --data '{"q":"vampire","hybrid":{"embedder":"default"}}'
+
+"
+`;
+
+exports[`meili search > prints the search envelope of the API as it is 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"hits":[{"id":1,"title":"Nosferatu"}],"query":"vampire","processingTimeMs":1,"limit":20,"offset":0,"estimatedTotalHits":1}
+",
+}
+`;

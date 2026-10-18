@@ -1,6 +1,6 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { readBodyInput } from "../../lib/input.js";
+import { bodyFrom } from "../../lib/input.js";
 
 export default class CreateIndexes extends BaseCommand {
   static api: Api = "meilisearch";
@@ -33,8 +33,9 @@ export default class CreateIndexes extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(CreateIndexes);
-    const body = readBodyInput<{ primaryKey?: string }>(flags);
-    const primaryKey = flags["primary-key"] ?? body?.primaryKey;
+    const { primaryKey } = bodyFrom<{ primaryKey?: string }>(flags, {
+      primaryKey: flags["primary-key"],
+    });
     const task = await this.meilisearch.createIndex(flags.id, { primaryKey });
     await this.outputTask(task, flags);
   }

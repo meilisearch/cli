@@ -59,6 +59,24 @@ export const meilisearchHandlers = {
       );
     }),
 
+  /**
+   * `POST /indexes/{uid}/search` answering `hits` in the envelope of the API,
+   * and recording the body the command sent.
+   */
+  search: (hits: Array<Record<string, unknown>>, received: { body?: unknown } = {}) =>
+    http.post(`${MEILISEARCH_URL}/indexes/:uid/search`, async ({ request }) => {
+      const body = (await request.json()) as { q?: string; limit?: number; offset?: number };
+      received.body = body;
+      return HttpResponse.json({
+        hits,
+        query: body.q ?? "",
+        processingTimeMs: 1,
+        limit: body.limit ?? 20,
+        offset: body.offset ?? 0,
+        estimatedTotalHits: hits.length,
+      });
+    }),
+
   /** Any method on `path` answering a Meilisearch error body with `status`. */
   apiError: (path: string, status: number, body: MeilisearchErrorResponse) =>
     http.all(`${MEILISEARCH_URL}${path}`, () => HttpResponse.json(body, { status })),
@@ -86,7 +104,7 @@ export const invalidApiKeyError: MeilisearchErrorResponse = {
 };
 
 /** The error body Meilisearch returns for an index that does not exist. */
-function indexNotFoundError(uid: string): MeilisearchErrorResponse {
+export function indexNotFoundError(uid: string): MeilisearchErrorResponse {
   return {
     message: `Index \`${uid}\` not found.`,
     code: "index_not_found",
