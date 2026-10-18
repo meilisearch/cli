@@ -41,6 +41,11 @@ export interface WaitFlagValues {
   timeout?: string | undefined;
 }
 
+export interface BodyInputFlagValues {
+  file?: string | undefined;
+  data?: string | undefined;
+}
+
 export abstract class BaseCommand extends Command {
   /** Which API this command uses. Every command sets it. */
   static api: Api = "none";

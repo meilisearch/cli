@@ -38,6 +38,27 @@ export const meilisearchHandlers = {
         : HttpResponse.json(found);
     }),
 
+  /**
+   * `POST /indexes` answering the enqueued task of Meilisearch, with the index
+   * of the body. `received` keeps the body the command sent, so a test can
+   * assert what travelled over the wire.
+   */
+  createIndex: (received: { body?: unknown } = {}) =>
+    http.post(`${MEILISEARCH_URL}/indexes`, async ({ request }) => {
+      const body = (await request.json()) as { uid: string };
+      received.body = body;
+      return HttpResponse.json(
+        {
+          taskUid: 11,
+          indexUid: body.uid,
+          status: "enqueued",
+          type: "indexCreation",
+          enqueuedAt: "2026-09-24T10:00:00Z",
+        },
+        { status: 202 },
+      );
+    }),
+
   /** Any method on `path` answering a Meilisearch error body with `status`. */
   apiError: (path: string, status: number, body: MeilisearchErrorResponse) =>
     http.all(`${MEILISEARCH_URL}${path}`, () => HttpResponse.json(body, { status })),

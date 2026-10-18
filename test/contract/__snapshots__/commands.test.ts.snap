@@ -135,6 +135,67 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
+      "async": true,
+      "description": "Create an index, which the API answers with a task.",
+      "examples": [
+        "meili create indexes --id movies",
+        "meili create indexes --id movies --primary-key id --output json",
+        "meili create indexes --id movies --wait",
+      ],
+      "flags": [
+        {
+          "description": "The index to create.",
+          "helpValue": "<index>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "The field that holds the identifier of each document.",
+          "helpValue": "<field>",
+          "name": "primary-key",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+      ],
+      "id": "create indexes",
+      "keyActions": [
+        "indexes.create",
+      ],
+      "routes": [
+        "POST /indexes",
+      ],
+    },
+    {
+      "api": "meilisearch",
       "description": "Check that the Meilisearch instance is available.",
       "examples": [
         "meili get health",
@@ -277,6 +338,13 @@ The file holds API keys and decides where every later command goes, for every pr
       {
         "description": "Remove a project from the config file.",
         "id": "config remove",
+      },
+      {
+        "description": "Create an index, which the API answers with a task.",
+        "id": "create indexes",
+        "routes": [
+          "POST /indexes",
+        ],
       },
       {
         "description": "Check that the Meilisearch instance is available.",

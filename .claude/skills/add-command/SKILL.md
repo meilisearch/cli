@@ -58,7 +58,7 @@ Find the SDK method in `node_modules/meilisearch/dist/meilisearch.d.ts` or `node
 |---|---|---|
 | read, one route, one result | `src/commands/get/health.ts` | `await this.output(result)` |
 | read with a list route and a unit route | `src/commands/get/indexes.ts` | `outputList({...})` or `output(...)` by route |
-| write returning a task (the response is a task) | `src/commands/create/indexes.ts` when it exists, else `get/health.ts` | `await this.outputTask(task, flags)` |
+| write returning a task (the response is a task) | `src/commands/create/indexes.ts` | `await this.outputTask(task, flags)` |
 | offline (`schema`) | `src/commands/schema.ts` | `await this.output(result)` |
 
 Then fill the class:

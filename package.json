@@ -43,6 +43,9 @@
       "config": {
         "description": "Projects of the config file, which holds API keys and decides where every command goes. An agent works with the file it was given and changes nothing in it unless the human asked for it explicitly."
       },
+      "create": {
+        "description": "Create a resource. The Meilisearch API answers with a task: --wait follows it to its final status."
+      },
       "get": {
         "description": "Read a resource: the list, or one item with --id."
       }
