@@ -64,6 +64,7 @@ Then fill the class:
 
 - `static api: Api = "meilisearch" | "management" | "none"`. The type annotation is required by strict TypeScript. `BaseCommand` resolves the credentials of that API and builds the client; the command never does.
 - `static routes = ["GET /indexes", "GET /indexes/{index_uid}"]`: every route of the command, as written in the OpenAPI document. `test/contract/api.test.ts` checks that each exists, that the command name derives from them, that no route of the document is missing, and that each route is reachable by a distinct set of flags.
+- `static keyActions = ["indexes.get"]`: the key actions the routes require, the specific one of each. Read the `security` of each route in the OpenAPI document, `GET /indexes` carries `["indexes.get", "indexes.*", "*"]`, and keep the first entry, the most specific one. Leave it out when every route declares `security: []` (`GET /health`) and on the Management API, whose personal access token carries no scope. `test/contract/api.test.ts` checks it against the document, so a wrong action fails the tests, it does not reach an agent.
 - `static override description`: one sentence, ends with a period. It says what each flag combination does: "List the indexes of the instance, or get one with --id."
 - `static override examples`: at least two, one of them with `--output json`, and one per route. Use `<%= config.bin %> <%= command.id %>`.
 - `static override flags`: the path flags first (`index: Flags.string({ required: true, ... })` for a parent, `id: Flags.string(...)` for the resource itself, required only when every route takes it), then the query parameters and body fields in kebab-case of the API name, plus the shared groups. Identifier parameters are `id`, `ids`, `batch-ids`, `index-ids`, `task-ids` by what they identify, with the API spelling as `aliases: ["uids"]`; `id` is an alias of `ids` when the command has no unit route. Flags that call for different routes are `exclusive` of each other (`ids`, `filter`, `all` on `delete documents`), so that giving two is a usage error. Reuse the shared groups by spreading them: `BaseCommand.paginationFlags` (`--limit`, `--offset`, `--all`), `BaseCommand.waitFlags` (`--wait`, `--timeout`), `BaseCommand.bodyInputFlags` (`--file`, `--data`), `BaseCommand.confirmFlags` (`--yes`) on every command of the verb `delete`. A route that paginates with `from` (tasks, batches) needs its own group, added to `BaseCommand` with the first such command. Never give a flag a function as `default`: oclif would then load the class to render `--help`.
@@ -123,7 +124,7 @@ Report to the user: what shipped, which shared pieces you had to add, and the ac
 
 So that a red `pnpm test` reads as a message, not as flakiness:
 
-- every API command declares `static routes`, each route exists in the OpenAPI document, the name derives from them, no route of the verb and resource is missing, every flag and alias belongs to a route or to the CLI, and each route is reachable by a distinct set of flags; or a recorded exception says otherwise
+- every API command declares `static routes` and `static keyActions` that match the document, each route exists in the OpenAPI document, the name derives from them, no route of the verb and resource is missing, every flag and alias belongs to a route or to the CLI, and each route is reachable by a distinct set of flags; or a recorded exception says otherwise
 - the exceptions table of `commands.md` equals `ROUTE_EXCEPTIONS` in the code, and every exception matches a route of the documents
 - a command without API is not named after an API command or verb
 - every command class exports `static api` in `meilisearch | management | none`
@@ -131,7 +132,7 @@ So that a red `pnpm test` reads as a message, not as flakiness:
 - every command in `src/commands/` has its test file in `test/commands/`
 - every path, `pnpm` script and `BaseCommand` member the guides cite exists; a path cited before it exists is listed as planned in `test/contract/docs.test.ts`, and the test asks to remove it from the list once it exists
 - every command exposes the global flags of `commands.md`; a parent path parameter is a required flag; no command has a positional argument
-- the `meili schema` output is a snapshot
+- the `meili schema` index is a snapshot, and so is one command in full
 - a variable that doubles a flag is named `MEILI_` plus the flag name (rule 14)
 - no `MEILI_*` literal in `src/` outside the table of `config.md`
 - the codes of `errors.ts` are exactly those of `output.md`, with their exit codes

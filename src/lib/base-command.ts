@@ -44,6 +44,15 @@ export abstract class BaseCommand extends Command {
    */
   static routes: readonly string[] = [];
 
+  /**
+   * The Meilisearch key actions the routes require, the specific one of each,
+   * `["indexes.get"]`, as the `security` of the OpenAPI document declares it.
+   * `meili schema --command` prints them so that a 403 names what the key
+   * lacks. Empty when no key action is required (`GET /health`), and on the
+   * Management API, whose token carries no scope.
+   */
+  static keyActions: readonly string[] = [];
+
   /** The global flags of docs/contract/commands.md, in the same order. */
   static override baseFlags = {
     "project-url": Flags.string({
