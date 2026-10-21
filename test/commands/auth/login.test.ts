@@ -101,8 +101,18 @@ describe("meili auth login", () => {
     expect(JSON.parse(result.stderr).error.message).toContain("together");
   });
 
-  it("refuses to start without an application, before any network call", async () => {
-    const result = await runCommand(AuthLogin, ["--no-browser"], { env: sessionHome() });
+  it("refuses another Cloud without its application, before any network call", async () => {
+    const result = await runCommand(
+      AuthLogin,
+      [
+        "--management-url",
+        "https://api.example.com",
+        "--management-dashboard-url",
+        "https://cloud.example.com",
+        "--no-browser",
+      ],
+      { env: sessionHome() },
+    );
     expect(result).toMatchSnapshot();
   });
 

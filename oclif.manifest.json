@@ -5,9 +5,9 @@
       "args": {},
       "description": "Log in to Meilisearch Cloud with a browser, and store the token for the management commands.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --management-client-id <uid>",
-        "<%= config.bin %> <%= command.id %> --management-client-id <uid> --output json",
-        "<%= config.bin %> <%= command.id %> --management-client-id <uid> --no-browser"
+        "<%= config.bin %> <%= command.id %>",
+        "<%= config.bin %> <%= command.id %> --output json",
+        "<%= config.bin %> <%= command.id %> --no-browser"
       ],
       "flags": {
         "output": {
@@ -30,7 +30,7 @@
           "type": "boolean"
         },
         "management-client-id": {
-          "description": "The OAuth application of this CLI. Also MEILI_MANAGEMENT_CLIENT_ID.",
+          "description": "The OAuth application to log in with, on a Cloud that is not Meilisearch Cloud. Also MEILI_MANAGEMENT_CLIENT_ID.",
           "name": "management-client-id",
           "hasDynamicHelp": false,
           "helpValue": "<uid>",

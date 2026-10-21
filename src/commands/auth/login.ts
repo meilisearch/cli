@@ -20,14 +20,15 @@ export default class AuthLogin extends BaseCommand {
     "Log in to Meilisearch Cloud with a browser, and store the token for the management commands.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --management-client-id <uid>",
-    "<%= config.bin %> <%= command.id %> --management-client-id <uid> --output json",
-    "<%= config.bin %> <%= command.id %> --management-client-id <uid> --no-browser",
+    "<%= config.bin %> <%= command.id %>",
+    "<%= config.bin %> <%= command.id %> --output json",
+    "<%= config.bin %> <%= command.id %> --no-browser",
   ];
 
   static override flags = {
     "management-client-id": Flags.string({
-      description: "The OAuth application of this CLI. Also MEILI_MANAGEMENT_CLIENT_ID.",
+      description:
+        "The OAuth application to log in with, on a Cloud that is not Meilisearch Cloud. Also MEILI_MANAGEMENT_CLIENT_ID.",
       helpValue: "<uid>",
     }),
     "management-url": Flags.string({
