@@ -19,6 +19,7 @@ export default class GetIndexes extends BaseCommand {
   ];
 
   static override flags = {
+    ...BaseCommand.connectionFlags,
     id: Flags.string({
       description: "The index to get. Without it, the command lists the indexes.",
       helpValue: "<index>",

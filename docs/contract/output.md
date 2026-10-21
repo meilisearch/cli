@@ -7,6 +7,7 @@ This file defines what `meili` writes, where, and in which format. Agents build 
 - stdout carries data only. One command, one JSON document (or one NDJSON stream). Nothing else, ever.
 - stderr carries everything else: errors, warnings, progress, debug traces, deprecation notices.
 - A command that produces no data (for example a delete that the API answers with 204) writes nothing on stdout in `json` mode and exits with code 0. It may write one line on stderr when stderr is a TTY.
+- A command that waits for a human, `auth login`, writes on stderr what that human has to act on, TTY or not: the URL to approve has to reach a person even when the output is piped.
 
 ## Output modes
 
@@ -23,7 +24,7 @@ There is no human-oriented mode and no color: the indented JSON of a terminal is
 
 The CLI returns the API response body without a wrapper and without renaming. What the API documentation shows is what the agent gets. Fields the CLI adds to a response are forbidden.
 
-One exception, documented in `commands.md`: commands that do not call an API (`schema`) define their own shape in their `--help`.
+One exception, documented in `commands.md`: commands that do not call an API (`schema`, `config list`, `auth status`) define their own shape in their `--help`.
 
 Three consequences of pass-through:
 
@@ -49,7 +50,7 @@ Errors go to stderr, as one JSON document: compact when stderr is not a TTY, ind
 
 - API errors keep the API fields as they are: `code`, `type`, `message`, `link`. The CLI never rewrites an API message.
 - `hint` is optional and CLI owned. It names the next command to run. It is a full sentence, without markdown other than backticks around commands. On an unknown command, the hint names the closest existing command, "Did you mean `meili delete indexes`?", computed from the manifest: the CLI suggests, it never asks.
-- Errors that come from the CLI itself use codes prefixed with `cli_` and `type` set to `cli`. Current list: `cli_usage`, `cli_config`, `cli_auth_missing`, `cli_timeout`, `cli_network`, `cli_task_failed`, `cli_input_invalid`, `cli_internal`. `cli_internal` is an unexpected error inside the CLI itself, a bug to report, and exits 1. Adding a code is a contract change.
+- Errors that come from the CLI itself use codes prefixed with `cli_` and `type` set to `cli`. Current list: `cli_usage`, `cli_config`, `cli_auth_missing`, `cli_auth_failed`, `cli_timeout`, `cli_network`, `cli_task_failed`, `cli_input_invalid`, `cli_internal`. `cli_auth_missing` is a credential the CLI does not have, `cli_auth_failed` one the authorization server refused to give or to accept. `cli_internal` is an unexpected error inside the CLI itself, a bug to report, and exits 1. Adding a code is a contract change.
 - The Management API does not define an error body in its spec, and the running API answers with `{"error": "Forbidden"}`: a message, no code. For its errors the CLI builds the object itself: `type` is `management`, `code` comes from the HTTP status (`management_unauthorized` 401, `management_forbidden` 403, `management_not_found` 404, `management_unprocessable` 422, `management_error` otherwise), `message` is the API's `error` field when the body has one and the spec's response description otherwise, `link` is absent. When the spec gains an error schema with codes, this rule is replaced by pass-through.
 - Stack traces appear only with `--debug`.
 

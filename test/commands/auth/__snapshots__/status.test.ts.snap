@@ -1,0 +1,26 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili auth status > prints its help without any network call 1`] = `
+"Say whether a session of \`auth login\` exists and whether the authorization server still accepts it.
+
+USAGE
+  $ meili auth status [-o <mode>] [--debug]
+
+FLAGS
+  -o, --output=<mode>  json (default): one document, the API body as it is,
+                       indented in a terminal, compact when piped. ndjson: one
+                       item per line, list commands only, streams with --all.
+      --debug          Print every HTTP request and response on stderr, secrets
+                       redacted.
+
+DESCRIPTION
+  Say whether a session of \`auth login\` exists and whether the authorization
+  server still accepts it.
+
+EXAMPLES
+  $ meili auth status
+
+  $ meili auth status --output json
+
+"
+`;

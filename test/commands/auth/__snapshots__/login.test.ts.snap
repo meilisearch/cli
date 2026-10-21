@@ -1,0 +1,49 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili auth login > prints its help without any network call 1`] = `
+"Log in to Meilisearch Cloud with a browser, and store the token for the management commands.
+
+USAGE
+  $ meili auth login [-o <mode>] [--debug] [--management-client-id
+    <uid>] [--management-url <url>] [--management-dashboard-url <url>]
+    [--browser]
+
+FLAGS
+  -o, --output=<mode>                   json (default): one document, the API
+                                        body as it is, indented in a terminal,
+                                        compact when piped. ndjson: one item per
+                                        line, list commands only, streams with
+                                        --all.
+      --[no-]browser                    Open the consent page in a browser.
+                                        --no-browser only prints the URL.
+      --debug                           Print every HTTP request and response on
+                                        stderr, secrets redacted.
+      --management-client-id=<uid>      The OAuth application of this CLI. Also
+                                        MEILI_MANAGEMENT_CLIENT_ID.
+      --management-dashboard-url=<url>  Dashboard URL, which hosts the consent
+                                        page.
+      --management-url=<url>            Management API base URL, which holds the
+                                        token endpoint.
+
+DESCRIPTION
+  Log in to Meilisearch Cloud with a browser, and store the token for the
+  management commands.
+
+EXAMPLES
+  $ meili auth login --management-client-id <uid>
+
+  $ meili auth login --management-client-id <uid> --output json
+
+  $ meili auth login --management-client-id <uid> --no-browser
+
+"
+`;
+
+exports[`meili auth login > refuses to start without an application, before any network call 1`] = `
+{
+  "exitCode": 2,
+  "stderr": "{"error":{"code":"cli_usage","type":"cli","message":"No OAuth application. Pass \`--management-client-id\` or set the \`MEILI_MANAGEMENT_CLIENT_ID\` environment variable.","hint":"The \`uid\` of a public OAuth application registered on that Cloud, with \`http://127.0.0.1/callback\` as its redirect URI."}}
+",
+  "stdout": "",
+}
+`;

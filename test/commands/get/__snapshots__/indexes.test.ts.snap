@@ -31,8 +31,8 @@ exports[`meili get indexes > prints its help without any network call 1`] = `
 "List the indexes of the instance, or get one with --id.
 
 USAGE
-  $ meili get indexes [--project-url <url>] [--project-api-key <key>]
-    [--project <name>] [-o <mode>] [--debug] [--id <index>] [--limit <n>]
+  $ meili get indexes [-o <mode>] [--debug] [--project-url <url>]
+    [--project-api-key <key>] [--project <name>] [--id <index>] [--limit <n>]
     [--offset <n>] [--all]
 
 FLAGS

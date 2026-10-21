@@ -5,13 +5,11 @@ import { describe, expect, it } from "vitest";
 import {
   type ConfigFile,
   configFilePath,
-  DEFAULT_MANAGEMENT_URL,
   ENV_VARS,
   maskSecret,
   readConfigFile,
   redactBody,
   redactHeaders,
-  resolveManagementCredentials,
   resolveProjectConnection,
   writeConfigFile,
 } from "../../src/lib/config.js";
@@ -199,30 +197,6 @@ describe("resolveProjectConnection", () => {
   });
 });
 
-describe("resolveManagementCredentials", () => {
-  it("reads the token and the URL, with the production URL by default", () => {
-    expect(resolveManagementCredentials({ MEILI_MANAGEMENT_TOKEN: "envToken" })).toEqual({
-      token: "envToken",
-      url: DEFAULT_MANAGEMENT_URL,
-    });
-    expect(
-      resolveManagementCredentials({
-        MEILI_MANAGEMENT_TOKEN: "envToken",
-        MEILI_MANAGEMENT_URL: "http://mgmt.test",
-      }),
-    ).toEqual({ token: "envToken", url: "http://mgmt.test" });
-  });
-
-  it("fails before any network call with cli_auth_missing and exit 3", () => {
-    const error = caught(() => resolveManagementCredentials({}));
-    expect(error.code).toBe("cli_auth_missing");
-    expect(error.exitCode).toBe(3);
-    expect(error.message).toContain("`MEILI_MANAGEMENT_TOKEN`");
-    expect(error.message).not.toContain("MEILI_PROJECT_URL");
-    expect(error.hint).toContain("personal access token");
-  });
-});
-
 describe("redaction", () => {
   it("masks all but the last four characters", () => {
     expect(maskSecret("supersecretkey1a2b")).toBe("****1a2b");
@@ -272,6 +246,8 @@ describe("ENV_VARS", () => {
       "MEILI_CONFIG",
       "MEILI_MANAGEMENT_TOKEN",
       "MEILI_MANAGEMENT_URL",
+      "MEILI_MANAGEMENT_CLIENT_ID",
+      "MEILI_MANAGEMENT_DASHBOARD_URL",
       "MEILI_OUTPUT",
       "MEILI_TIMEOUT",
     ]);

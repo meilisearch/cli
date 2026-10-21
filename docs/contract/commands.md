@@ -97,21 +97,28 @@ A route whose derived name is wrong, ambiguous or collides with another one gets
 
 ## Global flags
 
-These flags work on every command.
+These two flags work on every command, whatever it talks to.
+
+| Flag | Meaning |
+|---|---|
+| `-o, --output <mode>` | `json` (default) or `ndjson`. See `output.md`. |
+| `--debug` | Print every HTTP request and response on stderr, secrets redacted. |
+
+`--management-token <pat>` and `--management-url <url>`, the pairs of `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL`, join the management commands with the first of them.
+
+## Shared flag groups
+
+Commands reuse these groups. A command that matches a group uses the whole group, with the same names.
+
+**Connection** (every command that talks to a Meilisearch project, and no other: a command that resolves no project offers no way to name one):
 
 | Flag | Meaning |
 |---|---|
 | `--project-url <url>` | Project URL, the Meilisearch instance to talk to. |
 | `--project-api-key <key>` | Project API key. `-` reads it from stdin. |
 | `--project <name>` | A project of the config file. Cannot be combined with `--project-url`. Required when the file has several projects. See `config.md`. |
-| `-o, --output <mode>` | `json` (default) or `ndjson`. See `output.md`. |
-| `--debug` | Print every HTTP request and response on stderr, secrets redacted. |
 
-`--management-token <pat>` and `--management-url <url>`, the pairs of `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL`, join this table with the first management command.
-
-## Shared flag groups
-
-Commands reuse these groups. A command that matches a group uses the whole group, with the same names.
+`meili config add` writes these three values rather than connecting with them, so it declares its own, with its own descriptions. See ADR 0010.
 
 **Write commands** (any command whose API response is a task):
 
@@ -143,7 +150,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 
 ## Commands without an API
 
-These commands call no API. They are the only ones listed here; their `--help` defines their shape. Their name is never the name of an API resource. The `config` commands are for humans: an agent works with the file it was given, see `config.md`.
+These commands call neither of the two APIs of this contract, so no route derives them. They are the only ones listed here; their `--help` defines their shape. Their name is never the name of an API resource. The `config` and `auth` commands are for humans: an agent works with the file and the token it was given, see `config.md`. The four `auth` commands do speak HTTP, to the authorization server of Meilisearch Cloud, which no OpenAPI document of this repository describes; ADR 0009 says why they live here.
 
 | Command | Effect |
 |---|---|
@@ -151,6 +158,10 @@ These commands call no API. They are the only ones listed here; their `--help` d
 | `meili config list` | Print the config file path and its projects as JSON, keys masked. |
 | `meili config add --project <name> --project-url <url> [--project-api-key <key>]` | Add a project to the config file, creating it in mode `600`. `--project-api-key -` reads the key from stdin. Refuses a URL that is not HTTP(S) with `cli_usage`, and a name that already exists with `cli_config`. Nothing on stdout. |
 | `meili config remove --project <name>` | Remove a project from the config file. Nothing on stdout. |
+| `meili auth login --management-client-id <uid>` | Run the OAuth2 flow with PKCE against Meilisearch Cloud: print the consent URL on stderr, open it in a browser unless `--no-browser`, receive the code on a loopback server, and write the session to the credentials file in mode `600`. Nothing on stdout: the session is the data and it goes to the file, like `config add`. One line on stderr when stderr is a TTY. The one command that waits for a human: five minutes, then `cli_timeout` and exit 5. See `config.md`. |
+| `meili auth status` | Say whether a session exists and whether the authorization server still accepts it, through `GET /oauth/token/info`. On a live session, exit 0 and the Cloud it was issued by, the `scope`, the `expiresAt` the server reports and the path of the credentials file on stdout. Otherwise one error and nothing on stdout, as everywhere else: `cli_auth_missing` when nobody is logged in, `cli_auth_failed` when the server no longer accepts the session, both exit 3. A spent access token is refreshed first, like any management command would. |
+| `meili auth refresh` | Trade the refresh token of the stored session for a new access token and write it back, without waiting for the old one to expire. Nothing on stdout, one line on stderr when stderr is a TTY. `cli_auth_missing` when nobody is logged in, `cli_auth_failed` when the session carries no refresh token or the server refuses it, both exit 3. |
+| `meili auth logout` | Revoke both tokens of the session at the authorization server and remove the credentials file. Nothing on stdout, one line on stderr when stderr is a TTY; exit 0 when nobody is logged in, and the code of what failed when the revocation did not go through, see `config.md`. |
 | `meili --version` | CLI version only. No network call. |
 
 ## Not in scope

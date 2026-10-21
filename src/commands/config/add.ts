@@ -2,6 +2,7 @@ import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { writeConfigFile } from "../../lib/config.js";
 import { MeiliCliError } from "../../lib/errors.js";
+import { readStdin } from "../../lib/input.js";
 
 export default class ConfigAdd extends BaseCommand {
   static api: Api = "none";
@@ -27,6 +28,11 @@ The file holds API keys and decides where every later command goes, for every pr
       required: true,
       description: "URL of the project.",
       helpValue: "<url>",
+    }),
+    "project-api-key": Flags.string({
+      description: "API key of the project. `-` reads it from stdin, out of the shell history.",
+      helpValue: "<key>",
+      parse: async (value) => (value === "-" ? readStdin() : value),
     }),
   };
 

@@ -31,6 +31,7 @@ describe("exit codes", () => {
       cli_usage: 2,
       cli_config: 2,
       cli_auth_missing: 3,
+      cli_auth_failed: 3,
       cli_timeout: 5,
       cli_network: 6,
       cli_task_failed: 7,

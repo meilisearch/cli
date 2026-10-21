@@ -5,6 +5,71 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
   "commands": [
     {
       "api": "none",
+      "description": "Log in to Meilisearch Cloud with a browser, and store the token for the management commands.",
+      "examples": [
+        "meili auth login --management-client-id <uid>",
+        "meili auth login --management-client-id <uid> --output json",
+        "meili auth login --management-client-id <uid> --no-browser",
+      ],
+      "flags": [
+        {
+          "description": "The OAuth application of this CLI. Also MEILI_MANAGEMENT_CLIENT_ID.",
+          "helpValue": "<uid>",
+          "name": "management-client-id",
+          "type": "option",
+        },
+        {
+          "description": "Management API base URL, which holds the token endpoint.",
+          "helpValue": "<url>",
+          "name": "management-url",
+          "type": "option",
+        },
+        {
+          "description": "Dashboard URL, which hosts the consent page.",
+          "helpValue": "<url>",
+          "name": "management-dashboard-url",
+          "type": "option",
+        },
+        {
+          "description": "Open the consent page in a browser. --no-browser only prints the URL.",
+          "name": "browser",
+          "type": "boolean",
+        },
+      ],
+      "id": "auth login",
+    },
+    {
+      "api": "none",
+      "description": "Revoke the token of \`auth login\` and forget it. Does nothing when nobody is logged in.",
+      "examples": [
+        "meili auth logout",
+        "meili auth logout --output json",
+      ],
+      "flags": [],
+      "id": "auth logout",
+    },
+    {
+      "api": "none",
+      "description": "Trade the refresh token of the stored session for a new access token, before it expires.",
+      "examples": [
+        "meili auth refresh",
+        "meili auth refresh --output json",
+      ],
+      "flags": [],
+      "id": "auth refresh",
+    },
+    {
+      "api": "none",
+      "description": "Say whether a session of \`auth login\` exists and whether the authorization server still accepts it.",
+      "examples": [
+        "meili auth status",
+        "meili auth status --output json",
+      ],
+      "flags": [],
+      "id": "auth status",
+    },
+    {
+      "api": "none",
       "description": "Add a project to the config file, creating it owner-only; refuses a name that exists.
 
 The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
@@ -26,6 +91,12 @@ The file holds API keys and decides where every later command goes, for every pr
           "helpValue": "<url>",
           "name": "project-url",
           "required": true,
+          "type": "option",
+        },
+        {
+          "description": "API key of the project. \`-\` reads it from stdin, out of the shell history.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
           "type": "option",
         },
       ],
@@ -70,7 +141,26 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili get health --output json",
         "MEILI_PROJECT_URL=http://localhost:7700 meili get health",
       ],
-      "flags": [],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+      ],
       "id": "get health",
       "routes": [
         "GET /health",
@@ -87,6 +177,24 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili get indexes --all --output ndjson",
       ],
       "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
         {
           "description": "The index to get. Without it, the command lists the indexes.",
           "helpValue": "<index>",
@@ -143,6 +251,22 @@ The file holds API keys and decides where every later command goes, for every pr
   "index": {
     "commands": [
       {
+        "description": "Log in to Meilisearch Cloud with a browser, and store the token for the management commands.",
+        "id": "auth login",
+      },
+      {
+        "description": "Revoke the token of \`auth login\` and forget it. Does nothing when nobody is logged in.",
+        "id": "auth logout",
+      },
+      {
+        "description": "Trade the refresh token of the stored session for a new access token, before it expires.",
+        "id": "auth refresh",
+      },
+      {
+        "description": "Say whether a session of \`auth login\` exists and whether the authorization server still accepts it.",
+        "id": "auth status",
+      },
+      {
         "description": "Add a project to the config file, creating it owner-only; refuses a name that exists.",
         "id": "config add",
       },
@@ -175,24 +299,6 @@ The file holds API keys and decides where every later command goes, for every pr
       },
     ],
     "globalFlags": [
-      {
-        "description": "Project URL, the Meilisearch instance to talk to.",
-        "helpValue": "<url>",
-        "name": "project-url",
-        "type": "option",
-      },
-      {
-        "description": "Project API key. \`-\` reads it from stdin.",
-        "helpValue": "<key>",
-        "name": "project-api-key",
-        "type": "option",
-      },
-      {
-        "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
-        "helpValue": "<name>",
-        "name": "project",
-        "type": "option",
-      },
       {
         "char": "o",
         "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",

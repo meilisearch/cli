@@ -31,6 +31,7 @@ export const CLI_ERROR_CODES = {
   cli_usage: EXIT_CODES.usage,
   cli_config: EXIT_CODES.usage,
   cli_auth_missing: EXIT_CODES.auth,
+  cli_auth_failed: EXIT_CODES.auth,
   cli_timeout: EXIT_CODES.timeout,
   cli_network: EXIT_CODES.network,
   cli_task_failed: EXIT_CODES.taskFailed,
@@ -268,7 +269,8 @@ function networkMessage(error: MeilisearchRequestError): string {
     : `Cannot connect to ${where}: ${reason}.`;
 }
 
-function deepestCauseMessage(cause: unknown): string | undefined {
+/** The innermost reason of a wrapped error: `fetch failed` hides `ECONNREFUSED`. */
+export function deepestCauseMessage(cause: unknown): string | undefined {
   let current = cause;
   let message: string | undefined;
   for (let depth = 0; depth < 5 && current instanceof Error; depth += 1) {
@@ -302,6 +304,14 @@ export function writeError(rendered: RenderedError, options: RenderErrorOptions)
  * Writes a warning on stderr, `{ "warning": ... }` in the shape of an error,
  * and the command goes on. Indented when stderr is a TTY, like errors.
  */
+/**
+ * One line for the human, on stderr, and only when a human is there to read it
+ * (docs/contract/output.md, "Streams"). Data never goes through here.
+ */
+export function writeNotice(line: string): void {
+  if (process.stderr.isTTY === true) process.stderr.write(`${line}\n`);
+}
+
 export function writeWarning(warning: MeiliCliError): void {
   const document = { warning: warning.toBody() };
   const pretty = process.stderr.isTTY === true;

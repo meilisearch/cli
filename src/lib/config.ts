@@ -5,6 +5,7 @@
  * This file, output.ts and errors.ts implement the contract. They change only
  * through a contract pull request.
  */
+import { randomBytes } from "node:crypto";
 import { mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
@@ -19,11 +20,14 @@ export const ENV = {
   CONFIG: "MEILI_CONFIG",
   MANAGEMENT_TOKEN: "MEILI_MANAGEMENT_TOKEN",
   MANAGEMENT_URL: "MEILI_MANAGEMENT_URL",
+  MANAGEMENT_CLIENT_ID: "MEILI_MANAGEMENT_CLIENT_ID",
+  MANAGEMENT_DASHBOARD_URL: "MEILI_MANAGEMENT_DASHBOARD_URL",
   OUTPUT: "MEILI_OUTPUT",
   TIMEOUT: "MEILI_TIMEOUT",
 } as const;
 
 export const DEFAULT_MANAGEMENT_URL = "https://api.meilisearch.com";
+export const DEFAULT_MANAGEMENT_DASHBOARD_URL = "https://cloud.meilisearch.com";
 
 /**
  * The table of docs/contract/config.md, in the same order. Rendered in `meili --help`.
@@ -46,6 +50,14 @@ export const ENV_VARS: ReadonlyArray<{ name: string; description: string; flag?:
   {
     name: ENV.MANAGEMENT_URL,
     description: `Management API base URL. Default ${DEFAULT_MANAGEMENT_URL}.`,
+  },
+  {
+    name: ENV.MANAGEMENT_CLIENT_ID,
+    description: "OAuth application the `auth login` command identifies itself with.",
+  },
+  {
+    name: ENV.MANAGEMENT_DASHBOARD_URL,
+    description: `Dashboard URL, which hosts the consent page of \`auth login\`. Default ${DEFAULT_MANAGEMENT_DASHBOARD_URL}.`,
   },
   { name: ENV.OUTPUT, description: "Default output mode: json or ndjson.", flag: "output" },
   { name: ENV.TIMEOUT, description: "Default --timeout for --wait.", flag: "timeout" },
@@ -77,18 +89,11 @@ export function configFilePath(env: Env): string {
  * file is read anyway. Windows has no file modes, so no check there.
  */
 export function readConfigFile(path: string, warn: (warning: MeiliCliError) => void): ConfigFile {
-  const stat = statSync(path, { throwIfNoEntry: false });
-  if (stat === undefined) return { path, projects: {} };
-  if (process.platform !== "win32" && (stat.mode & 0o077) !== 0) {
-    warn(
-      new MeiliCliError("cli_config", `The config file ${path} is readable by others.`, {
-        hint: `Run \`chmod 600 ${path}\`.`,
-      }),
-    );
-  }
+  const text = readOwnerOnly(path, "config", warn);
+  if (text === undefined) return { path, projects: {} };
   let parsed: unknown;
   try {
-    parsed = JSON.parse(readFileSync(path, "utf8"));
+    parsed = JSON.parse(text);
   } catch (cause) {
     throw new MeiliCliError("cli_config", `The config file ${path} is not valid JSON.`, { cause });
   }
@@ -113,20 +118,44 @@ function parseProjects(parsed: unknown, path: string): Record<string, ProjectEnt
   return result;
 }
 
-/**
- * Writes the file owner-only and atomically: a command reading it meanwhile
- * sees the previous file or the new one, never a half-written one. The
- * temporary file is created exclusively: a pre-existing file or symlink at
- * that path, in a shared directory, would receive the keys.
- */
 export function writeConfigFile(file: ConfigFile): void {
-  mkdirSync(dirname(file.path), { recursive: true, mode: 0o700 });
-  const temporary = `${file.path}.${process.pid}.tmp`;
-  writeFileSync(temporary, `${JSON.stringify({ projects: file.projects }, null, 2)}\n`, {
-    flag: "wx",
-    mode: 0o600,
-  });
-  renameSync(temporary, file.path);
+  writeSecretFile(file.path, { projects: file.projects });
+}
+
+/**
+ * Writes a file of secrets owner-only and atomically: a command reading it
+ * meanwhile sees the previous file or the new one, never a half-written one.
+ * The temporary file is created exclusively, under an unpredictable name: a
+ * pre-existing file or symlink at that path, in a shared directory, would
+ * receive the secrets and keep its own permissions.
+ */
+export function writeSecretFile(path: string, content: unknown): void {
+  mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
+  const temporary = `${path}.${randomBytes(6).toString("hex")}.tmp`;
+  writeFileSync(temporary, `${JSON.stringify(content, null, 2)}\n`, { flag: "wx", mode: 0o600 });
+  renameSync(temporary, path);
+}
+
+/**
+ * The file, or undefined when it does not exist. A file readable by others
+ * holds secrets that others can read: `warn` receives it, and the file is read
+ * anyway. Windows has no file modes, so no check there.
+ */
+export function readOwnerOnly(
+  path: string,
+  what: string,
+  warn: (warning: MeiliCliError) => void,
+): string | undefined {
+  const stat = statSync(path, { throwIfNoEntry: false });
+  if (stat === undefined) return undefined;
+  if (process.platform !== "win32" && (stat.mode & 0o077) !== 0) {
+    warn(
+      new MeiliCliError("cli_config", `The ${what} file ${path} is readable by others.`, {
+        hint: `Run \`chmod 600 ${path}\`.`,
+      }),
+    );
+  }
+  return readFileSync(path, "utf8");
 }
 
 // Project connection
@@ -207,32 +236,6 @@ export function projectOf(file: ConfigFile, name: string): ProjectEntry {
   return entry;
 }
 
-// Management API credentials
-
-export interface ManagementCredentials {
-  token: string;
-  url: string;
-}
-
-/**
- * `MEILI_MANAGEMENT_TOKEN`, and `MEILI_MANAGEMENT_URL` with its default. Fails
- * before any network call when the token is missing. The `--management-token`
- * and `--management-url` flags arrive with the first management command.
- */
-export function resolveManagementCredentials(env: Env): ManagementCredentials {
-  const token = nonEmpty(env[ENV.MANAGEMENT_TOKEN]);
-  if (token === undefined) {
-    throw new MeiliCliError(
-      "cli_auth_missing",
-      "No Management API token configured. Set the `MEILI_MANAGEMENT_TOKEN` environment variable.",
-      {
-        hint: "Create a personal access token in the Meilisearch Cloud dashboard and set `MEILI_MANAGEMENT_TOKEN`.",
-      },
-    );
-  }
-  return { token, url: nonEmpty(env[ENV.MANAGEMENT_URL]) ?? DEFAULT_MANAGEMENT_URL };
-}
-
 // Secrets
 
 /** `****1a2b`: the last four characters only. Shorter values are fully masked. */
@@ -241,9 +244,21 @@ export function maskSecret(value: string): string {
 }
 
 /** Body fields whose value is a secret, as listed in config.md. `apikey` is the Management API's spelling. */
-export const REDACTED_FIELDS: ReadonlySet<string> = new Set(["apiKey", "apikey", "key", "token"]);
+export const REDACTED_FIELDS: ReadonlySet<string> = new Set([
+  "apiKey",
+  "apikey",
+  "key",
+  "token",
+  "access_token",
+  "refresh_token",
+]);
 
-const REDACTED_HEADERS: ReadonlySet<string> = new Set(["authorization", "x-meili-api-key"]);
+const REDACTED_HEADERS: ReadonlySet<string> = new Set([
+  "authorization",
+  "x-meili-api-key",
+  "cookie",
+  "set-cookie",
+]);
 
 /** Masks the `Authorization` header (and the legacy `X-Meili-API-Key`) in a header map. */
 export function redactHeaders(headers: Iterable<[string, string]>): Record<string, string> {
@@ -277,10 +292,10 @@ export function redactBody(value: unknown): unknown {
   return result;
 }
 
-function nonEmpty(value: string | undefined): string | undefined {
+export function nonEmpty(value: string | undefined): string | undefined {
   return value === undefined || value === "" ? undefined : value;
 }
 
-function isRecord(value: unknown): value is Record<string, unknown> {
+export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }

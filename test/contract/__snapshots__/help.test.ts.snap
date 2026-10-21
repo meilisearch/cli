@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`--help > lays out a topic: the usage, the global flags, then the commands 1`] = `
+"Read a resource: the list, or one item with --id.
+
+USAGE
+  $ meili get COMMAND
+
+GLOBAL FLAGS
+  -o, --output=<mode>  json (default): one document, the API body as it is,
+                       indented in a terminal, compact when piped. ndjson: one
+                       item per line, list commands only, streams with --all.
+  --debug              Print every HTTP request and response on stderr, secrets
+                       redacted.
+
+COMMANDS
+  get health   Check that the Meilisearch instance is available.
+  get indexes  List the indexes of the instance, or get one with --id.
+
+"
+`;
