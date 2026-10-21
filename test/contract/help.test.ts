@@ -28,6 +28,12 @@ describe("--help", () => {
     }
   });
 
+  it("lays out a topic: the usage, the global flags, then the commands", async () => {
+    const result = await runCli(["get", "--help"]);
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toMatchSnapshot();
+  });
+
   it("documents every environment variable of config.md in the root help", async () => {
     const result = await runCli(["--help"]);
     expect(result.stdout).toContain("ENVIRONMENT VARIABLES");
