@@ -67,7 +67,10 @@ const commands = await Promise.all(
   })),
 );
 
-const globalFlags = Object.keys(BaseCommand.baseFlags);
+const globalFlags = [
+  ...Object.keys(BaseCommand.baseFlags),
+  ...Object.keys(BaseCommand.connectionFlags),
+];
 const VERBS = ["get", "create", "update", "delete", ...LITERAL_VERBS];
 
 describe("API commands derive from their routes", () => {

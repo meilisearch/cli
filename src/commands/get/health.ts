@@ -13,6 +13,8 @@ export default class GetHealth extends BaseCommand {
     "MEILI_PROJECT_URL=http://localhost:7700 <%= config.bin %> <%= command.id %>",
   ];
 
+  static override flags = { ...BaseCommand.connectionFlags };
+
   async run(): Promise<void> {
     const health = await this.meilisearch.health();
     await this.output(health);

@@ -13,8 +13,8 @@ exports[`meili get health > prints its help without any network call 1`] = `
 "Check that the Meilisearch instance is available.
 
 USAGE
-  $ meili get health [--project-url <url>] [--project-api-key <key>]
-    [--project <name>] [-o <mode>] [--debug]
+  $ meili get health [-o <mode>] [--debug] [--project-url <url>]
+    [--project-api-key <key>] [--project <name>]
 
 FLAGS
   -o, --output=<mode>          json (default): one document, the API body as it

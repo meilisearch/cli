@@ -93,6 +93,12 @@ The file holds API keys and decides where every later command goes, for every pr
           "required": true,
           "type": "option",
         },
+        {
+          "description": "API key of the project. \`-\` reads it from stdin, out of the shell history.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
       ],
       "id": "config add",
     },
@@ -135,7 +141,26 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili get health --output json",
         "MEILI_PROJECT_URL=http://localhost:7700 meili get health",
       ],
-      "flags": [],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+      ],
       "id": "get health",
       "routes": [
         "GET /health",
@@ -152,6 +177,24 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili get indexes --all --output ndjson",
       ],
       "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
         {
           "description": "The index to get. Without it, the command lists the indexes.",
           "helpValue": "<index>",
@@ -256,24 +299,6 @@ The file holds API keys and decides where every later command goes, for every pr
       },
     ],
     "globalFlags": [
-      {
-        "description": "Project URL, the Meilisearch instance to talk to.",
-        "helpValue": "<url>",
-        "name": "project-url",
-        "type": "option",
-      },
-      {
-        "description": "Project API key. \`-\` reads it from stdin.",
-        "helpValue": "<key>",
-        "name": "project-api-key",
-        "type": "option",
-      },
-      {
-        "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
-        "helpValue": "<name>",
-        "name": "project",
-        "type": "option",
-      },
       {
         "char": "o",
         "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",

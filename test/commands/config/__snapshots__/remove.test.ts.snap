@@ -4,19 +4,15 @@ exports[`meili config remove > prints its help without any network call 1`] = `
 "Remove a project from the config file.
 
 USAGE
-  $ meili config remove --project <name> [--project-url <url>]
-    [--project-api-key <key>] [-o <mode>] [--debug]
+  $ meili config remove --project <name> [-o <mode>] [--debug]
 
 FLAGS
-  -o, --output=<mode>          json (default): one document, the API body as it
-                               is, indented in a terminal, compact when piped.
-                               ndjson: one item per line, list commands only,
-                               streams with --all.
-      --debug                  Print every HTTP request and response on stderr,
-                               secrets redacted.
-      --project=<name>         (required) Name of the project to remove.
-      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
-      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+  -o, --output=<mode>   json (default): one document, the API body as it is,
+                        indented in a terminal, compact when piped. ndjson: one
+                        item per line, list commands only, streams with --all.
+      --debug           Print every HTTP request and response on stderr, secrets
+                        redacted.
+      --project=<name>  (required) Name of the project to remove.
 
 DESCRIPTION
   Remove a project from the config file.

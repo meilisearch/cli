@@ -4,8 +4,8 @@ exports[`meili config add > prints its help without any network call 1`] = `
 "Add a project to the config file, creating it owner-only; refuses a name that exists.
 
 USAGE
-  $ meili config add --project-url <url> --project <name>
-    [--project-api-key <key>] [-o <mode>] [--debug]
+  $ meili config add --project <name> --project-url <url> [-o <mode>]
+    [--debug] [--project-api-key <key>]
 
 FLAGS
   -o, --output=<mode>          json (default): one document, the API body as it
@@ -15,7 +15,8 @@ FLAGS
       --debug                  Print every HTTP request and response on stderr,
                                secrets redacted.
       --project=<name>         (required) Name of the project to add.
-      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+      --project-api-key=<key>  API key of the project. \`-\` reads it from stdin,
+                               out of the shell history.
       --project-url=<url>      (required) URL of the project.
 
 DESCRIPTION

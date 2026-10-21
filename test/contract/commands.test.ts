@@ -152,4 +152,23 @@ describe("global flags", () => {
       }
     }
   });
+
+  it("the connection flags are on the commands that talk to a project, and on no other", async () => {
+    const connection = Object.keys(BaseCommand.connectionFlags);
+    for await (const file of glob("src/commands/**/*.ts", { cwd: PROJECT_ROOT })) {
+      const id = file.slice("src/commands/".length, -".ts".length).replaceAll("/", ":");
+      const { default: command } = (await import(join(PROJECT_ROOT, file))) as {
+        default: { api?: unknown };
+      };
+      const flags = Object.keys(manifest.commands[id]?.flags ?? {});
+      // `config add` writes a project rather than connecting to one: it declares its own.
+      const connects = command.api === "meilisearch" || id === "config:add";
+      // `--project-url` is the unambiguous one: `config remove --project` names an
+      // entry of the file, not a connection.
+      expect(flags.includes("project-url"), `${id} and --project-url`).toBe(connects);
+      if (connects) {
+        for (const name of connection) expect(flags, `${id} lacks --${name}`).toContain(name);
+      }
+    }
+  });
 });

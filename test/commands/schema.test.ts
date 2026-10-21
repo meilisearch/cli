@@ -52,7 +52,7 @@ describe("meili schema", () => {
       description: string;
       flags: Array<{ name: string }>;
     };
-    // `config add` redefines two global flags as required, with its own descriptions.
+    // `config add` declares the three values it writes, with its own descriptions.
     expect(command.flags).toEqual([
       {
         name: "project",
@@ -67,6 +67,12 @@ describe("meili schema", () => {
         required: true,
         description: "URL of the project.",
         helpValue: "<url>",
+      },
+      {
+        name: "project-api-key",
+        type: "option",
+        description: "API key of the project. `-` reads it from stdin, out of the shell history.",
+        helpValue: "<key>",
       },
     ]);
     expect(command.description).toContain("\n\n");
