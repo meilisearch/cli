@@ -34,6 +34,8 @@ export interface RunResult {
 export interface RunOptions {
   /** Added on top of a scrubbed environment: no MEILI_*, HOME in a temp dir. */
   env?: Record<string, string | undefined>;
+  /** Called with every chunk written to stderr while the command runs, for a command that waits. */
+  onStderr?: (chunk: string) => void;
 }
 
 interface RunnableCommand {
@@ -47,7 +49,7 @@ export async function runCommand(
   options: RunOptions = {},
 ): Promise<RunResult> {
   const config = await loadConfig();
-  return capture(options.env, () => command.run(argv, config));
+  return capture(options.env, () => command.run(argv, config), options.onStderr);
 }
 
 /**
@@ -57,7 +59,7 @@ export async function runCommand(
  */
 export async function runCli(argv: string[], options: RunOptions = {}): Promise<RunResult> {
   const config = await Config.load({ root: PROJECT_ROOT });
-  return capture(options.env, () => oclifRun(argv, config));
+  return capture(options.env, () => oclifRun(argv, config), options.onStderr);
 }
 
 /** A temporary home per test file, where tests may write config files. */
@@ -87,6 +89,7 @@ export function scrubbedEnv(
 async function capture(
   env: Record<string, string | undefined> | undefined,
   fn: () => Promise<unknown>,
+  onStderr?: (chunk: string) => void,
 ): Promise<RunResult> {
   const stdout: string[] = [];
   const stderr: string[] = [];
@@ -97,6 +100,7 @@ async function capture(
     }),
     vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
       stderr.push(String(chunk));
+      onStderr?.(String(chunk));
       return true;
     }),
     // oclif prints help through console.log and its own errors through console.error.
@@ -108,6 +112,9 @@ async function capture(
     }),
   ];
   const savedEnv = process.env;
+  // `--debug` wraps the global fetch for the rest of the process: put it back,
+  // so one command's trace never follows the next test.
+  const savedFetch = globalThis.fetch;
   process.env = scrubbedEnv(env);
   let exitCode = 0;
   try {
@@ -117,6 +124,7 @@ async function capture(
     exitCode = error.oclif.exit ?? 1;
   } finally {
     process.env = savedEnv;
+    globalThis.fetch = savedFetch;
     for (const spy of spies) spy.mockRestore();
   }
   return { stdout: stdout.join(""), stderr: stderr.join(""), exitCode };
