@@ -118,7 +118,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 | `--project-api-key <key>` | Project API key. `-` reads it from stdin. |
 | `--project <name>` | A project of the config file. Cannot be combined with `--project-url`. Required when the file has several projects. See `config.md`. |
 
-`meili config add` writes these three values rather than connecting with them, so it declares its own, with its own descriptions.
+`meili config add` writes these three values rather than connecting with them, so it declares its own, with its own descriptions. See ADR 0010.
 
 **Write commands** (any command whose API response is a task):
 
