@@ -143,7 +143,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 
 ## Commands without an API
 
-These commands call neither of the two APIs of this contract, so no route derives them. They are the only ones listed here; their `--help` defines their shape. Their name is never the name of an API resource. The `config` and `auth` commands are for humans: an agent works with the file and the token it was given, see `config.md`. `auth login` and `auth logout` do speak HTTP, to the authorization server of Meilisearch Cloud, which no OpenAPI document of this repository describes; ADR 0009 says why they live here.
+These commands call neither of the two APIs of this contract, so no route derives them. They are the only ones listed here; their `--help` defines their shape. Their name is never the name of an API resource. The `config` and `auth` commands are for humans: an agent works with the file and the token it was given, see `config.md`. The four `auth` commands do speak HTTP, to the authorization server of Meilisearch Cloud, which no OpenAPI document of this repository describes; ADR 0009 says why they live here.
 
 | Command | Effect |
 |---|---|

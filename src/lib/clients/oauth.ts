@@ -287,11 +287,20 @@ function postForm(
   });
 }
 
-/** Every request of this file, with the one network failure they share. */
+/** How long a request of this file waits for an answer before giving up. */
+const REQUEST_TIMEOUT_MS = 30_000;
+
+/** Every request of this file, with the two failures they share. */
 async function send(url: string, init: RequestInit): Promise<Response> {
   try {
-    return await fetch(url, init);
+    return await fetch(url, { ...init, signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
   } catch (error) {
+    if (error instanceof Error && error.name === "TimeoutError") {
+      throw new MeiliCliError(
+        "cli_timeout",
+        `The authorization server at ${url} did not answer within ${REQUEST_TIMEOUT_MS / 1000}s.`,
+      );
+    }
     const reason = deepestCauseMessage(error) ?? String(error);
     throw new MeiliCliError(
       "cli_network",
