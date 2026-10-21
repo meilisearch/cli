@@ -21,7 +21,11 @@ export default class MeiliHelp extends Help {
   }
 
   protected override formatTopic(topic: Interfaces.Topic): string {
-    return [super.formatTopic(topic), this.section("GLOBAL FLAGS", globalFlagRows())].join("\n\n");
+    // `super` ends with a blank line, and oclif prints the commands of the topic
+    // right after this: the section is joined to the trimmed text and keeps the
+    // one trailing newline that separates it from them.
+    const topicHelp = super.formatTopic(topic).trimEnd();
+    return `${topicHelp}\n\n${this.section("GLOBAL FLAGS", globalFlagRows())}\n`;
   }
 }
 
