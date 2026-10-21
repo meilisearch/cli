@@ -32,7 +32,9 @@ import { DEFAULT_TIMEOUT, isTaskFailure, parseDuration, waitForTask } from "./ta
 /** The API a command talks to. `none` commands work offline. */
 export type Api = "meilisearch" | "management" | "none";
 
-export type GlobalFlags = Interfaces.InferredFlags<typeof BaseCommand.baseFlags>;
+export type GlobalFlags = Interfaces.InferredFlags<
+  typeof BaseCommand.baseFlags & typeof BaseCommand.connectionFlags
+>;
 
 export interface WaitFlagValues {
   wait?: boolean | undefined;
@@ -60,8 +62,28 @@ export abstract class BaseCommand extends Command {
    */
   static keyActions: readonly string[] = [];
 
-  /** The global flags of docs/contract/commands.md, in the same order. */
+  /** The global flags of docs/contract/commands.md, in the same order: on every command. */
   static override baseFlags = {
+    output: Flags.option({
+      char: "o",
+      options: ["json", "ndjson"] as const,
+      description:
+        "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+      helpValue: "<mode>",
+    })(),
+    debug: Flags.boolean({
+      description: "Print every HTTP request and response on stderr, secrets redacted.",
+    }),
+  };
+
+  /**
+   * How a command reaches a Meilisearch project, the group of
+   * docs/contract/commands.md. Spread by the commands that talk to one, and by
+   * no other: `auth`, `schema` and the `config` commands resolve no project, so
+   * they offer no way to name one. In the command's own flags rather than in
+   * `baseFlags`, so that `meili schema --command` shows them.
+   */
+  static connectionFlags = {
     "project-url": Flags.string({
       description: "Project URL, the Meilisearch instance to talk to.",
       helpValue: "<url>",
@@ -75,16 +97,6 @@ export abstract class BaseCommand extends Command {
       description:
         "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
       helpValue: "<name>",
-    }),
-    output: Flags.option({
-      char: "o",
-      options: ["json", "ndjson"] as const,
-      description:
-        "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
-      helpValue: "<mode>",
-    })(),
-    debug: Flags.boolean({
-      description: "Print every HTTP request and response on stderr, secrets redacted.",
     }),
   };
 

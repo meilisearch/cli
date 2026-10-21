@@ -97,21 +97,28 @@ A route whose derived name is wrong, ambiguous or collides with another one gets
 
 ## Global flags
 
-These flags work on every command.
+These two flags work on every command, whatever it talks to.
+
+| Flag | Meaning |
+|---|---|
+| `-o, --output <mode>` | `json` (default) or `ndjson`. See `output.md`. |
+| `--debug` | Print every HTTP request and response on stderr, secrets redacted. |
+
+`--management-token <pat>` and `--management-url <url>`, the pairs of `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL`, join the management commands with the first of them.
+
+## Shared flag groups
+
+Commands reuse these groups. A command that matches a group uses the whole group, with the same names.
+
+**Connection** (every command that talks to a Meilisearch project, and no other: a command that resolves no project offers no way to name one):
 
 | Flag | Meaning |
 |---|---|
 | `--project-url <url>` | Project URL, the Meilisearch instance to talk to. |
 | `--project-api-key <key>` | Project API key. `-` reads it from stdin. |
 | `--project <name>` | A project of the config file. Cannot be combined with `--project-url`. Required when the file has several projects. See `config.md`. |
-| `-o, --output <mode>` | `json` (default) or `ndjson`. See `output.md`. |
-| `--debug` | Print every HTTP request and response on stderr, secrets redacted. |
 
-`--management-token <pat>` and `--management-url <url>`, the pairs of `MEILI_MANAGEMENT_TOKEN` and `MEILI_MANAGEMENT_URL`, join this table with the first management command.
-
-## Shared flag groups
-
-Commands reuse these groups. A command that matches a group uses the whole group, with the same names.
+`meili config add` writes these three values rather than connecting with them, so it declares its own, with its own descriptions.
 
 **Write commands** (any command whose API response is a task):
 
