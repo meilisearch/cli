@@ -24,6 +24,7 @@
 ## Docs
 
 - [ ] `docs/contract/` updated for every name, flag, variable or code this change adds or renames, or nothing to update
+- [ ] The ADRs that touch this change were read; what they decide still holds, or a new ADR says what changed
 - [ ] No accepted ADR was edited. A new ADR was added if a decision changed.
 
 ## Housekeeping

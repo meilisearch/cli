@@ -16,6 +16,7 @@ Work through the steps in order. Every check below is enforced by `pnpm test` th
 - `docs/contract/commands.md`: the grammar, the eleven naming rules, the exceptions table, the shared flag groups and the commands without an API.
 - `docs/contract/output.md`: output modes, pass-through, errors, exit codes, asynchronous operations, destructive commands, input, pagination. The sections that match your routes are the specification of your command.
 - `docs/contract/testing.md`: what the three test levels must contain.
+- `docs/adr/`: skim the titles, read the ones your change touches. The contract says what the CLI promises; the ADRs say what was already decided, and which alternatives were refused and why. Contradicting one is a new ADR, not a silent change.
 
 Then get the OpenAPI document:
 
