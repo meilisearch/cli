@@ -17,7 +17,7 @@ Package: `@meilisearch/cli` on npm. Binary: `meili`.
 
 1. Data goes to stdout. Everything else (logs, progress, warnings, debug) goes to stderr. Never print a message like "Done" on stdout.
 2. Only `src/lib/output.ts` writes to stdout. Commands never call `console.log`, `process.stdout.write` or `this.log` directly.
-3. Only the generated Management API client and `meilisearch-js` make HTTP calls. Never write `fetch` in a command.
+3. Only `src/lib/clients/` makes HTTP calls: the generated Management API client, `meilisearch-js`, and the OAuth client of `meili auth login`. Never write `fetch` in a command.
 4. Never prompt and never ask a question. Every command runs as written; a command of the verb `delete` requires `--yes` on the command line first, the shared group `BaseCommand.confirmFlags`. See ADR 0007.
 5. Never open `$EDITOR`. Every input comes from a flag, an environment variable, a file (`--file`), stdin (`--file -`) or the config file of `docs/contract/config.md`, from which nothing is deduced.
 6. Command and flag names derive from the API routes by the rules of `docs/contract/commands.md`: verb first, resource plural, `meili get indexes --id movies`. The resource's own identifier is `--id`, or `--ids` when the list route filters by identifiers; a parent in the path is a flag named after its collection, `--index`; a query or body parameter keeps its API name in kebab-case, `primaryKey` is `--primary-key`. No positional argument, and no synonym beyond the aliases the contract lists.

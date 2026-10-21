@@ -7,19 +7,26 @@
 import { Command, Errors, Flags, type Interfaces } from "@oclif/core";
 import type { EnqueuedTask, Meilisearch } from "meilisearch";
 import { createMeilisearchClient } from "./clients/meilisearch.js";
+import { installHttpTrace } from "./clients/trace.js";
 import {
   type ConfigFile,
   configFilePath,
   ENV,
-  type ManagementCredentials,
+  type Env,
   readConfigFile,
-  resolveManagementCredentials,
   resolveProjectConnection,
 } from "./config.js";
-import { MeiliCliError, toRenderedError, writeError, writeWarning } from "./errors.js";
+import { MeiliCliError, toRenderedError, writeError, writeNotice, writeWarning } from "./errors.js";
 import { readStdin } from "./input.js";
 import { type OutputMode, resolveOutputMode, writeData } from "./output.js";
 import { iteratePages, type ListPage, mergePages, type OffsetQuery } from "./pagination.js";
+import {
+  credentialsFilePath,
+  type ManagementCredentials,
+  readCredentialsFile,
+  resolveManagementCredentials,
+  type Session,
+} from "./session.js";
 import { DEFAULT_TIMEOUT, isTaskFailure, parseDuration, waitForTask } from "./tasks.js";
 
 /** The API a command talks to. `none` commands work offline. */
@@ -127,6 +134,11 @@ export abstract class BaseCommand extends Command {
   /** Set when `static api` is `management`. The client is built here once it is generated. */
   protected management: ManagementCredentials | undefined;
 
+  /** The process environment, the one place `src/` reads it from outside `config.ts`. */
+  protected get env(): Env {
+    return process.env;
+  }
+
   protected get api(): Api {
     return (this.constructor as typeof BaseCommand).api;
   }
@@ -140,7 +152,9 @@ export abstract class BaseCommand extends Command {
       strict: this.ctor.strict,
     });
     this.globalFlags = flags as GlobalFlags;
-    this.outputMode = resolveOutputMode({ flag: this.globalFlags.output, env: process.env });
+    this.outputMode = resolveOutputMode({ flag: this.globalFlags.output, env: this.env });
+    // Before any client: `auth login` talks to the authorization server with no client at all.
+    if (this.globalFlags.debug) installHttpTrace();
 
     if (this.api === "none") return;
 
@@ -151,19 +165,18 @@ export abstract class BaseCommand extends Command {
           apiKey: this.globalFlags["project-api-key"],
           project: this.globalFlags.project,
         },
-        process.env,
+        this.env,
         () => this.configFile(),
       );
       this.meilisearch = createMeilisearchClient({
         url: connection.url,
         apiKey: connection.apiKey,
-        debug: this.globalFlags.debug,
         version: this.config.version,
       });
       return;
     }
 
-    this.management = resolveManagementCredentials(process.env);
+    this.management = await resolveManagementCredentials(this.env, writeWarning);
   }
 
   /** Renders every error as the contract says, then exits with its code. */
@@ -179,7 +192,13 @@ export abstract class BaseCommand extends Command {
 
   /** The config file of docs/contract/config.md, empty when it does not exist. */
   protected configFile(): ConfigFile {
-    return readConfigFile(configFilePath(process.env), writeWarning);
+    return readConfigFile(configFilePath(this.env), writeWarning);
+  }
+
+  /** The credentials file of `auth login`, and the session in it when there is one. */
+  protected credentialsFile(): { path: string; session: Session | undefined } {
+    const path = credentialsFilePath(this.env);
+    return { path, session: readCredentialsFile(path, writeWarning) };
   }
 
   /** Writes the API response as it is. Read commands end with this call. */
@@ -229,13 +248,11 @@ export abstract class BaseCommand extends Command {
       await this.output(task);
       return;
     }
-    const timeoutMs = parseDuration(flags.timeout ?? process.env[ENV.TIMEOUT] ?? DEFAULT_TIMEOUT);
+    const timeoutMs = parseDuration(flags.timeout ?? this.env[ENV.TIMEOUT] ?? DEFAULT_TIMEOUT);
     const finalTask = await waitForTask(this.meilisearch, task.taskUid, {
       timeoutMs,
       onProgress: (current) => {
-        if (process.stderr.isTTY === true) {
-          process.stderr.write(`waiting for task ${current.uid}, status ${current.status}\n`);
-        }
+        writeNotice(`waiting for task ${current.uid}, status ${current.status}`);
       },
     });
     await this.output(finalTask);

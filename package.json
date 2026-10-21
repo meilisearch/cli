@@ -37,6 +37,9 @@
     "topicSeparator": " ",
     "helpClass": "./dist/lib/help",
     "topics": {
+      "auth": {
+        "description": "Log in to Meilisearch Cloud, check the session, refresh it and log out. These commands are for humans: an agent uses MEILI_MANAGEMENT_TOKEN, or the credentials file a human logged in with."
+      },
       "config": {
         "description": "Projects of the config file, which holds API keys and decides where every command goes. An agent works with the file it was given and changes nothing in it unless the human asked for it explicitly."
       },
