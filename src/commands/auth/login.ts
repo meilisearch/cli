@@ -73,12 +73,13 @@ export default class AuthLogin extends BaseCommand {
 
 /** Hands the URL to the desktop. A failure is not one: the URL is on stderr. */
 function openInBrowser(url: string): void {
-  // An argument array and no shell: a hostile URL cannot become a command.
+  // An argument array and no shell, on every platform: a consent URL always
+  // carries `&`, which `cmd` would read as a command separator.
   const [command, args]: [string, string[]] =
     process.platform === "darwin"
       ? ["open", [url]]
       : process.platform === "win32"
-        ? ["cmd", ["/c", "start", "", url]]
+        ? ["rundll32", ["url.dll,FileProtocolHandler", url]]
         : ["xdg-open", [url]];
   const child = spawn(command, args, { stdio: "ignore", detached: true });
   child.on("error", () => {});

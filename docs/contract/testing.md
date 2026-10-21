@@ -16,6 +16,8 @@ Commands run in a scrubbed environment: no `MEILI_*` variable but the ones the t
 
 A snapshot change is an interface change. It is accepted only when the pull request says so.
 
+A command whose output carries a path or a date, as the `auth` commands do, snapshots its `--help` and its errors and asserts the rest field by field: a snapshot of a temporary directory or of an expiry would change on every run. Those commands also need a real server rather than `msw`, which patches `fetch` and cannot carry a redirect to a loopback port.
+
 ## 2. Integration tests, `test/integration/`
 
 They hit real local instances of both APIs, with no mock, through the built binary and the same scrubbed environment as the unit tests.

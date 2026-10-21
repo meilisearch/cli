@@ -9,6 +9,7 @@ import {
   readCredentialsFile,
   removeCredentialsFile,
   resolveManagementCredentials,
+  resolveOauthClient,
   writeCredentialsFile,
 } from "../../src/lib/session.js";
 import { makeSession, sessionHome, storeSession } from "../helpers/session.js";
@@ -69,6 +70,37 @@ describe("the credentials file", () => {
     removeCredentialsFile(path);
     removeCredentialsFile(path);
     expect(existsSync(path)).toBe(false);
+  });
+});
+
+describe("resolveOauthClient", () => {
+  const client = { clientId: "uid" };
+
+  it("takes a loopback address in plain HTTP, including IPv6", () => {
+    for (const url of ["http://localhost:3000", "http://127.0.0.1:8888", "http://[::1]:8888"]) {
+      expect(
+        resolveOauthClient({ ...client, managementUrl: url, dashboardUrl: url }, {}),
+      ).toMatchObject({ managementUrl: url });
+    }
+  });
+
+  it("refuses plain HTTP anywhere else, which would send the token in the clear", () => {
+    expect(() =>
+      resolveOauthClient(
+        {
+          ...client,
+          managementUrl: "http://api.example.com",
+          dashboardUrl: "http://api.example.com",
+        },
+        {},
+      ),
+    ).toThrowError(/HTTPS/);
+  });
+
+  it("refuses one URL without the other: a Cloud is named by both", () => {
+    expect(() =>
+      resolveOauthClient({ ...client, managementUrl: "https://api.example.com" }, {}),
+    ).toThrowError(/together/);
   });
 });
 

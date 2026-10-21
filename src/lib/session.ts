@@ -37,7 +37,8 @@ function requireSecureUrl(url: string, what: string): void {
   } catch {
     throw new MeiliCliError("cli_usage", `${what} is not a URL: ${url}`);
   }
-  const loopback = ["localhost", "127.0.0.1", "[::1]"].includes(parsed.host.split(":")[0] ?? "");
+  // `hostname` keeps the brackets of an IPv6 address and drops the port, `host` does not.
+  const loopback = ["localhost", "127.0.0.1", "[::1]"].includes(parsed.hostname);
   if (parsed.protocol !== "https:" && !loopback) {
     throw new MeiliCliError(
       "cli_usage",
