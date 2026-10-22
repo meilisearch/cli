@@ -1,4 +1,5 @@
 import { Flags } from "@oclif/core";
+import type { IndexOptions } from "meilisearch";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { readBodyInput } from "../../lib/input.js";
 
@@ -33,9 +34,12 @@ export default class CreateIndexes extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(CreateIndexes);
-    const body = readBodyInput<{ primaryKey?: string }>(flags);
+    const body = readBodyInput<IndexOptions>(flags);
     const primaryKey = flags["primary-key"] ?? body?.primaryKey;
-    const task = await this.meilisearch.createIndex(flags.id, { primaryKey });
+    // The whole body goes out: createIndex posts `{ ...options, uid }`, so a
+    // field this command declares no flag for reaches the API and the API
+    // refuses it. Reading `primaryKey` alone would drop a typo in silence.
+    const task = await this.meilisearch.createIndex(flags.id, { ...body, primaryKey });
     await this.outputTask(task, flags);
   }
 }

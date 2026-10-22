@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { Meilisearch } from "meilisearch";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { runBinary } from "../../helpers/run-binary.js";
 import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
@@ -9,12 +9,17 @@ const meilisearchUp = await meilisearchAvailable();
 const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
 const suffix = randomUUID().slice(0, 8);
 const uid = `meili-cli-test-${suffix}`;
+const existing = `meili-cli-test-${suffix}-existing`;
 
 describe.skipIf(!meilisearchUp)("meili create indexes against a real Meilisearch", () => {
   const client = new Meilisearch({ host: MEILISEARCH_URL, apiKey: MASTER_KEY });
 
+  beforeAll(async () => {
+    await client.createIndex(existing).waitTask();
+  });
+
   afterAll(async () => {
-    await client.deleteIndex(uid).waitTask();
+    await Promise.all([uid, existing].map((name) => client.deleteIndex(name).waitTask()));
   });
 
   it("enqueues the creation and prints the task the API returned", async () => {
@@ -32,7 +37,7 @@ describe.skipIf(!meilisearchUp)("meili create indexes against a real Meilisearch
 
   it("exits 7 with the failed task when --wait sees the index already exist", async () => {
     const result = await runBinary(
-      ["create", "indexes", "--id", uid, "--wait", "--output", "json"],
+      ["create", "indexes", "--id", existing, "--wait", "--output", "json"],
       env,
     );
     expect(result.exitCode).toBe(7);

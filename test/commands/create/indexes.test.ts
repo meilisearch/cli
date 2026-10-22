@@ -59,6 +59,13 @@ describe("meili create indexes", () => {
     expect(received.body).toEqual({ uid: "movies", primaryKey: "id" });
   });
 
+  it("sends a body field it declares no flag for, so the API is the one that refuses it", async () => {
+    const received: { body?: unknown } = {};
+    server.use(meilisearchHandlers.createIndex(received));
+    await runCommand(CreateIndexes, ["--id", "movies", "--data", '{"primarykey":"id"}'], { env });
+    expect(received.body).toEqual({ uid: "movies", primarykey: "id" });
+  });
+
   it("refuses a body that is not JSON, and a file it cannot read, before any call", async () => {
     const invalidJson = await runCommand(CreateIndexes, ["--id", "movies", "--data", "{nope"], {
       env,
@@ -74,6 +81,11 @@ describe("meili create indexes", () => {
     );
     expect(missingFile.exitCode).toBe(2);
     expect(JSON.parse(missingFile.stderr).error.code).toBe("cli_input_invalid");
+
+    const scalar = await runCommand(CreateIndexes, ["--id", "movies", "--data", "42"], { env });
+    expect(scalar.exitCode).toBe(2);
+    expect(scalar.stdout).toBe("");
+    expect(JSON.parse(scalar.stderr).error.code).toBe("cli_input_invalid");
   });
 
   it("prints the final task with --wait", async () => {

@@ -16,22 +16,29 @@ export function readStdin(): string {
 
 /**
  * The JSON body of `--file` or `--data`, undefined when neither is given. A
- * file the CLI cannot read, or text that is not JSON, is `cli_input_invalid`
- * and exit 2, before anything is sent (docs/contract/output.md, "Input"). The
- * body fields a command declares as flags override what this returns.
+ * file the CLI cannot read, text that is not JSON, or a scalar where a body is
+ * expected is `cli_input_invalid` and exit 2, before anything is sent
+ * (docs/contract/output.md, "Input"). The type parameter says what the route
+ * takes, it does not check it: the fields a command declares no flag for travel
+ * to the API, which is the one that refuses them.
  * Commands call it from `run()`, once: nothing here is memoized.
  */
 export function readBodyInput<T = unknown>(flags: BodyInputFlagValues): T | undefined {
   const text = flags.data ?? (flags.file === undefined ? undefined : readBodyFile(flags.file));
   if (text === undefined) return undefined;
+  let body: unknown;
   try {
-    return JSON.parse(text) as T;
+    body = JSON.parse(text);
   } catch (error) {
     throw new MeiliCliError(
       "cli_input_invalid",
       `The body is not valid JSON: ${error instanceof Error ? error.message : String(error)}`,
     );
   }
+  if (body === null || typeof body !== "object") {
+    throw new MeiliCliError("cli_input_invalid", "The body must be a JSON object or array.");
+  }
+  return body as T;
 }
 
 function readBodyFile(path: string): string {
