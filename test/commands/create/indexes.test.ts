@@ -1,5 +1,4 @@
-import { mkdtempSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import CreateIndexes from "../../../src/commands/create/indexes.js";
@@ -10,7 +9,7 @@ import {
   meilisearchHandlers,
 } from "../../helpers/meilisearch-handlers.js";
 import { server, useMockServer } from "../../helpers/msw.js";
-import { runCli, runCommand } from "../../helpers/run-command.js";
+import { runCli, runCommand, scrubbedHome } from "../../helpers/run-command.js";
 
 useMockServer();
 
@@ -30,22 +29,10 @@ describe("meili create indexes", () => {
     expect(result).toMatchSnapshot();
   });
 
-  it("sends the uid and the primary key as the body of the route", async () => {
-    const received: { body?: unknown } = {};
-    server.use(meilisearchHandlers.createIndex(received));
-    const result = await runCommand(
-      CreateIndexes,
-      ["--id", "movies", "--primary-key", "id", "--output", "json"],
-      { env },
-    );
-    expect(result.exitCode).toBe(0);
-    expect(received.body).toEqual({ uid: "movies", primaryKey: "id" });
-  });
-
   it("takes the body from --file or --data, and lets a flag override one of its fields", async () => {
     const received: { body?: unknown } = {};
     server.use(meilisearchHandlers.createIndex(received));
-    const path = join(mkdtempSync(join(tmpdir(), "meili-body-")), "index.json");
+    const path = join(scrubbedHome, "body.json");
     writeFileSync(path, '{"primaryKey":"isbn"}');
 
     await runCommand(CreateIndexes, ["--id", "movies", "--file", path], { env });
@@ -76,7 +63,7 @@ describe("meili create indexes", () => {
 
     const missingFile = await runCommand(
       CreateIndexes,
-      ["--id", "movies", "--file", join(tmpdir(), "meili-body-does-not-exist.json")],
+      ["--id", "movies", "--file", join(scrubbedHome, "missing-body.json")],
       { env },
     );
     expect(missingFile.exitCode).toBe(2);

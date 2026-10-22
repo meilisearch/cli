@@ -37,9 +37,9 @@ export default class CreateIndexes extends BaseCommand {
     const { flags } = await this.parse(CreateIndexes);
     const body = readBodyInput<IndexOptions>(flags);
     const primaryKey = flags["primary-key"] ?? body?.primaryKey;
-    // The whole body goes out: createIndex posts `{ ...options, uid }`, so a
-    // field this command declares no flag for reaches the API and the API
-    // refuses it. Reading `primaryKey` alone would drop a typo in silence.
+    // The whole body goes out: `createIndex` posts `{ ...options, uid }`, so a
+    // field this command declares no flag for reaches the API, which refuses it
+    // instead of the CLI dropping a typo in silence.
     const task = await this.meilisearch.createIndex(flags.id, { ...body, primaryKey });
     await this.outputTask(task, flags);
   }

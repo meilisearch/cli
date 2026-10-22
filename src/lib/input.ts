@@ -1,6 +1,11 @@
 import { readFileSync } from "node:fs";
-import type { BodyInputFlagValues } from "./base-command.js";
 import { MeiliCliError } from "./errors.js";
+
+/** The values of `BaseCommand.bodyInputFlags`, the group `readBodyInput` reads. */
+export interface BodyInputFlagValues {
+  file?: string | undefined;
+  data?: string | undefined;
+}
 
 let stdin: string | undefined;
 
@@ -21,9 +26,8 @@ export function readStdin(): string {
  * (docs/contract/output.md, "Input"). The type parameter says what the route
  * takes, it does not check it: the fields a command declares no flag for travel
  * to the API, which is the one that refuses them.
- * Commands call it from `run()`, once: nothing here is memoized.
  */
-export function readBodyInput<T = unknown>(flags: BodyInputFlagValues): T | undefined {
+export function readBodyInput<T>(flags: BodyInputFlagValues): T | undefined {
   const text = flags.data ?? (flags.file === undefined ? undefined : readBodyFile(flags.file));
   if (text === undefined) return undefined;
   let body: unknown;
@@ -45,7 +49,9 @@ function readBodyFile(path: string): string {
   if (path === "-") return readStdin();
   try {
     return readFileSync(path, "utf8");
-  } catch {
-    throw new MeiliCliError("cli_input_invalid", `Cannot read the body file ${path}.`);
+  } catch (error) {
+    throw new MeiliCliError("cli_input_invalid", `Cannot read the body file ${path}.`, {
+      cause: error,
+    });
   }
 }
