@@ -68,7 +68,7 @@ The base URL comes from `--management-url`, then `MEILI_MANAGEMENT_URL`, and def
 
 ```json
 {
-  "clientId": "…",
+  "clientId": "0sZKkuuaL3xcitNgKUchid3Vz4sHPslxQNFn_d_9rck",
   "managementUrl": "https://api.meilisearch.com",
   "dashboardUrl": "https://cloud.meilisearch.com",
   "accessToken": "…",
@@ -83,7 +83,7 @@ The base URL comes from `--management-url`, then `MEILI_MANAGEMENT_URL`, and def
 - An access token lives one hour. A management command whose token is expired, or about to be, trades the refresh token for a new pair and writes it back before calling the API; `meili auth refresh` does the same on demand, before the old one is spent. A session without a refresh token, or whose refresh is refused, is `cli_auth_failed` and exit 3, with a hint to log in again.
 - `meili auth logout` revokes both tokens of the session at the authorization server, each with its `token_type_hint`, and removes the file. When the revocation does not go through, the file is removed anyway and the command exits with the code of what failed, see below: the local session is gone either way, but a live token out there is not something to report as success.
 - `auth login` and the refresh above are the only writers of this file, and it is the only place on disk the CLI reads a token from.
-- The client id has no default: it is the OAuth application registered for the CLI on that Cloud, and a missing one is `cli_usage`, exit 2, like any missing flag.
+- The client id defaults to `0sZKkuuaL3xcitNgKUchid3Vz4sHPslxQNFn_d_9rck`, the OAuth application of this CLI on Meilisearch Cloud. A client id is public by definition: it is the name the consent page shows, not a secret, and the CLI holds none. An application belongs to the Cloud that registered it, so the two URLs below move the default away: name another Cloud and `--management-client-id` names its application, a missing one being `cli_usage`, exit 2, like any missing flag.
 - The two URLs name the same Cloud and travel together: one without the other is `cli_usage`, because the human would approve on one Cloud and the code would be exchanged on another. Neither of them means Meilisearch Cloud, which is what a user of the published CLI gives: nothing.
 - Every URL of the flow must be HTTPS, unless its host is `localhost`, `127.0.0.1` or `::1`, where nothing leaves the machine: anything else would send the token in the clear. A URL that is neither is `cli_usage`.
 - A session names the Cloud that issued it. A `MEILI_MANAGEMENT_URL` that names another one is `cli_config`: a token is never sent to a Cloud that did not issue it. Log in again against that URL, or unset the variable.
@@ -116,7 +116,7 @@ A command cannot build a client by itself. Commands with `api = "none"` (`schema
 | `MEILI_CONFIG` | Config file path. Default `~/.config/meili/config.json`. Give each agent its own file, read-only. |
 | `MEILI_MANAGEMENT_TOKEN` | Management API personal access token. |
 | `MEILI_MANAGEMENT_URL` | Management API base URL. Default `https://api.meilisearch.com`. |
-| `MEILI_MANAGEMENT_CLIENT_ID` | OAuth application the `auth login` command identifies itself with. |
+| `MEILI_MANAGEMENT_CLIENT_ID` | OAuth application the `auth login` command identifies itself with. Default: the one of this CLI on Meilisearch Cloud. |
 | `MEILI_MANAGEMENT_DASHBOARD_URL` | Dashboard URL, which hosts the consent page of `auth login`. Default `https://cloud.meilisearch.com`. |
 | `MEILI_OUTPUT` | Default output mode: `json` or `ndjson`. |
 | `MEILI_TIMEOUT` | Default `--timeout` for `--wait`. |

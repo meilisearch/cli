@@ -10,6 +10,7 @@ import { dirname, join } from "node:path";
 import { type OauthClient, type OauthSession, refreshAccessToken } from "./clients/oauth.js";
 import {
   configFilePath,
+  DEFAULT_MANAGEMENT_CLIENT_ID,
   DEFAULT_MANAGEMENT_DASHBOARD_URL,
   DEFAULT_MANAGEMENT_URL,
   ENV,
@@ -55,20 +56,11 @@ export interface OauthFlags {
 
 /**
  * The OAuth application `auth login` identifies itself with: the flags, then
- * the environment, then the defaults. The client id has no default, it is the
- * application registered for this CLI on that Cloud.
+ * the environment, then the application of this CLI, which exists on
+ * Meilisearch Cloud alone. An OAuth application belongs to the Cloud that
+ * registered it, so naming another Cloud means naming its application too.
  */
 export function resolveOauthClient(flags: OauthFlags, env: Env): OauthClient {
-  const clientId = nonEmpty(flags.clientId) ?? nonEmpty(env[ENV.MANAGEMENT_CLIENT_ID]);
-  if (clientId === undefined) {
-    throw new MeiliCliError(
-      "cli_usage",
-      "No OAuth application. Pass `--management-client-id` or set the `MEILI_MANAGEMENT_CLIENT_ID` environment variable.",
-      {
-        hint: "The `uid` of a public OAuth application registered on that Cloud, with `http://127.0.0.1/callback` as its redirect URI.",
-      },
-    );
-  }
   // The two URLs name the same Cloud: one alone would send the human to the consent
   // page of a Cloud and the code to the token endpoint of another.
   const managementUrl = nonEmpty(flags.managementUrl) ?? nonEmpty(env[ENV.MANAGEMENT_URL]);
@@ -77,6 +69,24 @@ export function resolveOauthClient(flags: OauthFlags, env: Env): OauthClient {
     throw new MeiliCliError(
       "cli_usage",
       "A Cloud is named by both of its URLs. Give `--management-url` and `--management-dashboard-url` together, or neither to use Meilisearch Cloud.",
+    );
+  }
+  // The built-in application is registered on Meilisearch Cloud and nowhere else,
+  // so it is the default of that Cloud, whether it was named or left unsaid.
+  const meilisearchCloud =
+    (managementUrl ?? DEFAULT_MANAGEMENT_URL) === DEFAULT_MANAGEMENT_URL &&
+    (dashboardUrl ?? DEFAULT_MANAGEMENT_DASHBOARD_URL) === DEFAULT_MANAGEMENT_DASHBOARD_URL;
+  const clientId =
+    nonEmpty(flags.clientId) ??
+    nonEmpty(env[ENV.MANAGEMENT_CLIENT_ID]) ??
+    (meilisearchCloud ? DEFAULT_MANAGEMENT_CLIENT_ID : undefined);
+  if (clientId === undefined) {
+    throw new MeiliCliError(
+      "cli_usage",
+      "No OAuth application on that Cloud. Pass `--management-client-id` or set the `MEILI_MANAGEMENT_CLIENT_ID` environment variable.",
+      {
+        hint: "The `uid` of a public OAuth application registered on that Cloud, with `http://127.0.0.1/callback` as its redirect URI. Only Meilisearch Cloud has a built-in one.",
+      },
     );
   }
   const client = {

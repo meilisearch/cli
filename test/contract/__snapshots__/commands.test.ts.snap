@@ -7,13 +7,13 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
       "api": "none",
       "description": "Log in to Meilisearch Cloud with a browser, and store the token for the management commands.",
       "examples": [
-        "meili auth login --management-client-id <uid>",
-        "meili auth login --management-client-id <uid> --output json",
-        "meili auth login --management-client-id <uid> --no-browser",
+        "meili auth login",
+        "meili auth login --output json",
+        "meili auth login --no-browser",
       ],
       "flags": [
         {
-          "description": "The OAuth application of this CLI. Also MEILI_MANAGEMENT_CLIENT_ID.",
+          "description": "The OAuth application to log in with, on a Cloud that is not Meilisearch Cloud. Also MEILI_MANAGEMENT_CLIENT_ID.",
           "helpValue": "<uid>",
           "name": "management-client-id",
           "type": "option",

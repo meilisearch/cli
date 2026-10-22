@@ -18,8 +18,9 @@ FLAGS
                                         --no-browser only prints the URL.
       --debug                           Print every HTTP request and response on
                                         stderr, secrets redacted.
-      --management-client-id=<uid>      The OAuth application of this CLI. Also
-                                        MEILI_MANAGEMENT_CLIENT_ID.
+      --management-client-id=<uid>      The OAuth application to log in with, on
+                                        a Cloud that is not Meilisearch Cloud.
+                                        Also MEILI_MANAGEMENT_CLIENT_ID.
       --management-dashboard-url=<url>  Dashboard URL, which hosts the consent
                                         page.
       --management-url=<url>            Management API base URL, which holds the
@@ -30,19 +31,19 @@ DESCRIPTION
   management commands.
 
 EXAMPLES
-  $ meili auth login --management-client-id <uid>
+  $ meili auth login
 
-  $ meili auth login --management-client-id <uid> --output json
+  $ meili auth login --output json
 
-  $ meili auth login --management-client-id <uid> --no-browser
+  $ meili auth login --no-browser
 
 "
 `;
 
-exports[`meili auth login > refuses to start without an application, before any network call 1`] = `
+exports[`meili auth login > refuses another Cloud without its application, before any network call 1`] = `
 {
   "exitCode": 2,
-  "stderr": "{"error":{"code":"cli_usage","type":"cli","message":"No OAuth application. Pass \`--management-client-id\` or set the \`MEILI_MANAGEMENT_CLIENT_ID\` environment variable.","hint":"The \`uid\` of a public OAuth application registered on that Cloud, with \`http://127.0.0.1/callback\` as its redirect URI."}}
+  "stderr": "{"error":{"code":"cli_usage","type":"cli","message":"No OAuth application on that Cloud. Pass \`--management-client-id\` or set the \`MEILI_MANAGEMENT_CLIENT_ID\` environment variable.","hint":"The \`uid\` of a public OAuth application registered on that Cloud, with \`http://127.0.0.1/callback\` as its redirect URI. Only Meilisearch Cloud has a built-in one."}}
 ",
   "stdout": "",
 }

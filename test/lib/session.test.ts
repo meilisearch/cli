@@ -2,7 +2,11 @@
 import { chmodSync, existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { DEFAULT_MANAGEMENT_URL } from "../../src/lib/config.js";
+import {
+  DEFAULT_MANAGEMENT_CLIENT_ID,
+  DEFAULT_MANAGEMENT_DASHBOARD_URL,
+  DEFAULT_MANAGEMENT_URL,
+} from "../../src/lib/config.js";
 import type { MeiliCliError } from "../../src/lib/errors.js";
 import {
   credentialsFilePath,
@@ -75,6 +79,32 @@ describe("the credentials file", () => {
 
 describe("resolveOauthClient", () => {
   const client = { clientId: "uid" };
+
+  it("logs in to Meilisearch Cloud, with the application of this CLI, when given nothing", () => {
+    expect(resolveOauthClient({}, {})).toEqual({
+      clientId: DEFAULT_MANAGEMENT_CLIENT_ID,
+      managementUrl: DEFAULT_MANAGEMENT_URL,
+      dashboardUrl: DEFAULT_MANAGEMENT_DASHBOARD_URL,
+    });
+  });
+
+  it("still takes it when Meilisearch Cloud is the one named, URLs and all", () => {
+    expect(
+      resolveOauthClient(
+        { managementUrl: DEFAULT_MANAGEMENT_URL, dashboardUrl: DEFAULT_MANAGEMENT_DASHBOARD_URL },
+        {},
+      ),
+    ).toMatchObject({ clientId: DEFAULT_MANAGEMENT_CLIENT_ID });
+  });
+
+  it("asks another Cloud for its own application: the built-in one is not registered there", () => {
+    expect(() =>
+      resolveOauthClient(
+        { managementUrl: "https://api.example.com", dashboardUrl: "https://cloud.example.com" },
+        {},
+      ),
+    ).toThrowError(/No OAuth application/);
+  });
 
   it("takes a loopback address in plain HTTP, including IPv6", () => {
     for (const url of ["http://localhost:3000", "http://127.0.0.1:8888", "http://[::1]:8888"]) {
