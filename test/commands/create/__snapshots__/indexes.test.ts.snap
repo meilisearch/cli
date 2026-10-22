@@ -23,10 +23,9 @@ exports[`meili create indexes > prints its help without any network call 1`] = `
 "Create an index, which the API answers with a task.
 
 USAGE
-  $ meili create indexes --id <index> [--project-url <url>]
-    [--project-api-key <key>] [--project <name>] [-o <mode>] [--debug]
-    [--primary-key <field>] [--file <path> | --data <json>] [--timeout
-    <duration> --wait]
+  $ meili create indexes --id <index> [-o <mode>] [--debug] [--project-url
+    <url>] [--project-api-key <key>] [--project <name>] [--primary-key <field>]
+    [--file <path> | --data <json>] [--timeout <duration> --wait]
 
 FLAGS
   -o, --output=<mode>          json (default): one document, the API body as it

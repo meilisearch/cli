@@ -19,6 +19,7 @@ export default class CreateIndexes extends BaseCommand {
   ];
 
   static override flags = {
+    ...BaseCommand.connectionFlags,
     id: Flags.string({
       required: true,
       description: "The index to create.",

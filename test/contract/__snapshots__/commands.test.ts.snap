@@ -144,6 +144,24 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
       "flags": [
         {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
           "description": "The index to create.",
           "helpValue": "<index>",
           "name": "id",
