@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import type { MeiliCliError } from "../../src/lib/errors.js";
-import { isJsonObject, readJsonBody } from "../../src/lib/input.js";
+import { isJsonObject, readJsonBody, readJsonObjectBody } from "../../src/lib/input.js";
 
 vi.mock("node:fs", async (importOriginal) => {
   const actual = await importOriginal<typeof import("node:fs")>();
@@ -54,6 +54,25 @@ describe("readJsonBody", () => {
     expect(() => readJsonBody({ file: join(directory, "absent.json") })).toThrow(
       expect.objectContaining({ code: "cli_input_invalid" }) as MeiliCliError,
     );
+  });
+});
+
+describe("readJsonObjectBody", () => {
+  it("returns an empty object when neither --file nor --data is given", () => {
+    expect(readJsonObjectBody({})).toEqual({});
+  });
+
+  it("returns the object of --data and of --file", () => {
+    expect(readJsonObjectBody({ data: '{"primaryKey":"id"}' })).toEqual({ primaryKey: "id" });
+    expect(readJsonObjectBody({ file })).toEqual({ from: "file" });
+  });
+
+  it("rejects a body that is not an object with cli_input_invalid", () => {
+    for (const flags of [{ data: "42" }, { data: '["movies"]' }, { data: "null" }]) {
+      expect(() => readJsonObjectBody(flags), JSON.stringify(flags)).toThrow(
+        expect.objectContaining({ code: "cli_input_invalid" }) as MeiliCliError,
+      );
+    }
   });
 });
 
