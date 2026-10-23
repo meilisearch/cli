@@ -2,7 +2,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import CreateDocuments from "../../../src/commands/create/documents.js";
+import AddDocuments from "../../../src/commands/add/documents.js";
 import {
   MEILISEARCH_URL,
   makeEnqueuedTask,
@@ -16,13 +16,13 @@ useMockServer();
 
 const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
 const documents = '[{"id":1,"title":"Nosferatu"},{"id":2,"title":"Alien"}]';
-const directory = mkdtempSync(join(tmpdir(), "meili-create-documents-"));
+const directory = mkdtempSync(join(tmpdir(), "meili-add-documents-"));
 const file = join(directory, "movies.json");
 writeFileSync(file, documents);
 
-describe("meili create documents", () => {
+describe("meili add documents", () => {
   it("prints its help without any network call", async () => {
-    const result = await runCli(["create", "documents", "--help"]);
+    const result = await runCli(["add", "documents", "--help"]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     expect(result.stdout).toMatchSnapshot();
@@ -31,7 +31,7 @@ describe("meili create documents", () => {
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.documentsAdd(makeEnqueuedTask()));
     const result = await runCommand(
-      CreateDocuments,
+      AddDocuments,
       ["--index", "movies", "--data", documents, "--output", "json"],
       { env },
     );
@@ -42,7 +42,7 @@ describe("meili create documents", () => {
     server.use(meilisearchHandlers.documentsAdd(makeEnqueuedTask()));
     const requests = await recordRequests(async () => {
       await runCommand(
-        CreateDocuments,
+        AddDocuments,
         [
           "--index",
           "movies",
@@ -71,7 +71,7 @@ describe("meili create documents", () => {
   it("sends no query parameter when no option is given", async () => {
     server.use(meilisearchHandlers.documentsAdd(makeEnqueuedTask()));
     const requests = await recordRequests(async () => {
-      await runCommand(CreateDocuments, ["--index", "movies", "--data", documents], { env });
+      await runCommand(AddDocuments, ["--index", "movies", "--data", documents], { env });
     });
     expect(requests[0]?.url.search).toBe("");
   });
@@ -79,7 +79,7 @@ describe("meili create documents", () => {
   it("refuses to run without documents, before any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(CreateDocuments, ["--index", "movies"], { env });
+      result = await runCommand(AddDocuments, ["--index", "movies"], { env });
     });
     expect(requests).toBe(0);
     expect(result?.exitCode).toBe(2);
@@ -90,7 +90,7 @@ describe("meili create documents", () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
       result = await runCommand(
-        CreateDocuments,
+        AddDocuments,
         ["--index", "movies", "--file", join(directory, "absent.json")],
         { env },
       );
@@ -109,7 +109,7 @@ describe("meili create documents", () => {
       ]),
     );
     const result = await runCommand(
-      CreateDocuments,
+      AddDocuments,
       ["--index", "movies", "--data", documents, "--wait", "--output", "json"],
       { env },
     );
@@ -123,7 +123,7 @@ describe("meili create documents", () => {
       meilisearchHandlers.taskSequence(42, [makeTask({ uid: 42, status: "failed" })]),
     );
     const result = await runCommand(
-      CreateDocuments,
+      AddDocuments,
       ["--index", "movies", "--data", documents, "--wait", "--output", "json"],
       { env },
     );
@@ -142,7 +142,7 @@ describe("meili create documents", () => {
       }),
     );
     const result = await runCommand(
-      CreateDocuments,
+      AddDocuments,
       ["--index", "nope", "--data", documents, "--output", "json"],
       { env },
     );

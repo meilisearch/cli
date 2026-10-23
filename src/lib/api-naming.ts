@@ -32,7 +32,7 @@ export const LITERAL_VERBS: readonly string[] = [
 
 const METHOD_VERBS: Record<Method, string> = {
   GET: "get",
-  POST: "create",
+  POST: "add",
   PUT: "update",
   PATCH: "update",
   DELETE: "delete",

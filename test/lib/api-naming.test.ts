@@ -115,15 +115,15 @@ describe("deriveCommandId", () => {
     expect(derive("GET /health")).toBe("get health");
     expect(derive("GET /indexes")).toBe("get indexes");
     expect(derive("GET /indexes/{index_uid}")).toBe("get indexes");
-    expect(derive("POST /indexes")).toBe("create indexes");
+    expect(derive("POST /indexes")).toBe("add indexes");
     expect(derive("PATCH /indexes/{index_uid}")).toBe("update indexes");
     expect(derive("DELETE /indexes/{index_uid}")).toBe("delete indexes");
     expect(derive("GET /indexes/{index_uid}/stats")).toBe("get stats");
-    expect(derive("POST /indexes/{index_uid}/documents")).toBe("create documents");
+    expect(derive("POST /indexes/{index_uid}/documents")).toBe("add documents");
     expect(derive("PUT /indexes/{index_uid}/documents")).toBe("update documents");
     expect(derive("DELETE /indexes/{index_uid}/documents")).toBe("delete documents");
     expect(derive("GET /tasks/{task_id}/documents")).toBe("get documents");
-    expect(derive("POST /dumps")).toBe("create dumps");
+    expect(derive("POST /dumps")).toBe("add dumps");
     expect(derive("GET /api/v2/me")).toBe("get me");
     expect(derive("GET /api/v2/projects/{id}")).toBe("get projects");
     expect(derive("DELETE /api/v2/team-members")).toBe("delete team-members");
@@ -136,7 +136,7 @@ describe("deriveCommandId", () => {
     expect(derive("POST /indexes/{index_uid}/search")).toBe("search indexes");
     expect(derive("POST /multi-search")).toBe("multi-search");
     expect(derive("POST /export")).toBe("export");
-    expect(derive("POST /swap-indexes")).toBe("create swap-indexes");
+    expect(derive("POST /swap-indexes")).toBe("add swap-indexes");
   });
 });
 
@@ -219,7 +219,7 @@ describe("flagsForRoute", () => {
   });
 
   it("unwraps a body made of one object named after the resource", () => {
-    expect(flags("POST /api/v2/projects", "create projects")).toEqual([
+    expect(flags("POST /api/v2/projects", "add projects")).toEqual([
       "name",
       "resource-id",
       "team-id",
@@ -227,7 +227,7 @@ describe("flagsForRoute", () => {
   });
 
   it("names identifiers by what they identify, with the API spelling as an alias", () => {
-    expect(flags("POST /indexes", "create indexes")).toEqual(["id", "primary-key", "uid"]);
+    expect(flags("POST /indexes", "add indexes")).toEqual(["id", "primary-key", "uid"]);
     expect(flags("GET /tasks", "get tasks")).toEqual([
       "batch-ids",
       "batch-uids",

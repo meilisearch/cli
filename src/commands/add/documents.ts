@@ -4,7 +4,7 @@ import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { MeiliCliError } from "../../lib/errors.js";
 import { readJsonBody } from "../../lib/input.js";
 
-export default class CreateDocuments extends BaseCommand {
+export default class AddDocuments extends BaseCommand {
   static api: Api = "meilisearch";
 
   static routes = ["POST /indexes/{index_uid}/documents"];
@@ -45,7 +45,7 @@ export default class CreateDocuments extends BaseCommand {
   };
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(CreateDocuments);
+    const { flags } = await this.parse(AddDocuments);
     const documents = readJsonBody(flags);
     if (documents === undefined) {
       throw new MeiliCliError("cli_usage", "The documents to add are missing.", {

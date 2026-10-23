@@ -17,7 +17,7 @@ export MEILI_PROJECT_API_KEY=masterKey   # only if the instance has a master key
 meili get health
 ```
 
-**Management API**, for the commands that manage Meilisearch Cloud, `meili get projects` or `meili create teams` (not shipped yet):
+**Management API**, for the commands that manage Meilisearch Cloud, `meili get projects` or `meili add teams` (not shipped yet):
 
 ```sh
 export MEILI_MANAGEMENT_TOKEN=...       # a personal access token from the Meilisearch Cloud dashboard

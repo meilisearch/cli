@@ -8,7 +8,7 @@ argument-hint: <command, for example: get stats>
 
 You ship exactly one command in this change: `meili $ARGUMENTS`, with every route of its verb and resource. One file for the command, one test file, one integration test, the regenerated manifest, one changeset line. Nothing else, unless a shared piece of `src/lib/` is missing for this kind of command (say so in the report).
 
-When `$ARGUMENTS` names several commands of the same resource, `get create update delete documents`, rule 10 of `CLAUDE.md` allows them in one change: run every step below once per command, and ship them complete or not at all. Commands of different resources stay in different changes.
+When `$ARGUMENTS` names several commands of the same resource, `get add update delete documents`, rule 10 of `CLAUDE.md` allows them in one change: run every step below once per command, and ship them complete or not at all. Commands of different resources stay in different changes.
 
 Work through the steps in order. Every check below is enforced by `pnpm test` through `test/contract/`, so a shortcut only moves the failure later.
 
@@ -50,7 +50,7 @@ The command id is the file path. `meili get stats` gives:
 | integration test | `test/integration/meilisearch/get-stats.test.ts` |
 | snapshot (generated) | `test/commands/get/__snapshots__/stats.test.ts.snap` |
 
-The class name is the command id in PascalCase (`GetStats`). The first command of a new verb (`create`, `update`, `delete`, `cancel`, ...) also needs the topic description in `package.json`, under `oclif.topics.<verb>.description`, otherwise `meili --help` does not list the verb. A verb-only command (`search`, `export`) is a file at the root of `src/commands/`.
+The class name is the command id in PascalCase (`GetStats`). The first command of a new verb (`add`, `update`, `delete`, `cancel`, ...) also needs the topic description in `package.json`, under `oclif.topics.<verb>.description`, otherwise `meili --help` does not list the verb. A verb-only command (`search`, `export`) is a file at the root of `src/commands/`.
 
 Find the SDK method in `node_modules/meilisearch/dist/meilisearch.d.ts` or `node_modules/meilisearch/dist/indexes.d.ts`. Prefer the variant that returns the API body unchanged: `getRawIndexes` over `getIndexes`, `getRawIndex` over `getIndex`. If the SDK has no method for a route, stop and ask: ADR 0003 forbids hand-written HTTP.
 
@@ -60,7 +60,7 @@ Find the SDK method in `node_modules/meilisearch/dist/meilisearch.d.ts` or `node
 |---|---|---|
 | read, one route, one result | `src/commands/get/health.ts` | `await this.output(result)` |
 | read with a list route and a unit route | `src/commands/get/indexes.ts` | `outputList({...})` or `output(...)` by route |
-| write returning a task (the response is a task) | `src/commands/create/documents.ts` | `await this.outputTask(task, flags)` |
+| write returning a task (the response is a task) | `src/commands/add/documents.ts` | `await this.outputTask(task, flags)` |
 | write with several routes, one per selector | `src/commands/delete/documents.ts` | `await this.outputTask(task, flags)` |
 | offline (`schema`) | `src/commands/schema.ts` | `await this.output(result)` |
 

@@ -71,7 +71,7 @@ const globalFlags = [
   ...Object.keys(BaseCommand.baseFlags),
   ...Object.keys(BaseCommand.connectionFlags),
 ];
-const VERBS = ["get", "create", "update", "delete", ...LITERAL_VERBS];
+const VERBS = ["get", "add", "update", "delete", ...LITERAL_VERBS];
 
 describe("API commands derive from their routes", () => {
   for (const { id, file, command } of commands) {

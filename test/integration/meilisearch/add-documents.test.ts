@@ -10,11 +10,11 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 const meilisearchUp = await meilisearchAvailable();
 
 const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
-const uid = `meili-cli-test-create-documents-${randomUUID().slice(0, 8)}`;
+const uid = `meili-cli-test-add-documents-${randomUUID().slice(0, 8)}`;
 const file = join(mkdtempSync(join(tmpdir(), "meili-cli-test-")), "movies.json");
 writeFileSync(file, JSON.stringify([{ id: 1, title: "Nosferatu" }]));
 
-describe.skipIf(!meilisearchUp)("meili create documents against a real Meilisearch", () => {
+describe.skipIf(!meilisearchUp)("meili add documents against a real Meilisearch", () => {
   const client = new Meilisearch({ host: MEILISEARCH_URL, apiKey: MASTER_KEY });
 
   beforeAll(async () => {
@@ -27,7 +27,7 @@ describe.skipIf(!meilisearchUp)("meili create documents against a real Meilisear
 
   it("enqueues a task and returns at once, without --wait", async () => {
     const result = await runBinary(
-      ["create", "documents", "--index", uid, "--file", file, "--output", "json"],
+      ["add", "documents", "--index", uid, "--file", file, "--output", "json"],
       env,
     );
     expect(result.exitCode).toBe(0);
@@ -39,7 +39,7 @@ describe.skipIf(!meilisearchUp)("meili create documents against a real Meilisear
 
   it("reads the documents from stdin with --file -, and --wait prints the final task", async () => {
     const result = await runBinary(
-      ["create", "documents", "--index", uid, "--file", "-", "--wait", "--output", "json"],
+      ["add", "documents", "--index", uid, "--file", "-", "--wait", "--output", "json"],
       env,
       JSON.stringify([{ id: 2, title: "Alien" }]),
     );
@@ -51,7 +51,7 @@ describe.skipIf(!meilisearchUp)("meili create documents against a real Meilisear
   it("replaces a document that has the same primary key", async () => {
     const result = await runBinary(
       [
-        "create",
+        "add",
         "documents",
         "--index",
         uid,
@@ -70,7 +70,7 @@ describe.skipIf(!meilisearchUp)("meili create documents against a real Meilisear
   it("prints the failed task and exits 7 when --wait sees the task fail", async () => {
     const result = await runBinary(
       [
-        "create",
+        "add",
         "documents",
         "--index",
         uid,
