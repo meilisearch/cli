@@ -1,10 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`meili config remove > prints its help without any network call 1`] = `
+exports[`meili config unset > prints its help without any network call 1`] = `
 "Remove a project from the config file.
 
 USAGE
-  $ meili config remove --project <name> [-o <mode>] [--debug]
+  $ meili config unset --project <name> [-o <mode>] [--debug]
 
 FLAGS
   -o, --output=<mode>   json (default): one document, the API body as it is,
@@ -22,9 +22,9 @@ DESCRIPTION
   explicitly.
 
 EXAMPLES
-  $ meili config remove --project prod
+  $ meili config unset --project prod
 
-  $ meili config remove --project prod --output json
+  $ meili config unset --project prod --output json
 
 "
 `;

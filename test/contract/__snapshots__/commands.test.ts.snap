@@ -162,17 +162,28 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
     },
     {
       "api": "none",
-      "description": "Add a project to the config file, creating it owner-only; refuses a name that exists.
+      "description": "Print the config file path and its projects as JSON, keys masked.",
+      "examples": [
+        "meili config list",
+        "meili config list --output json",
+        "MEILI_CONFIG=./meili.json meili config list",
+      ],
+      "flags": [],
+      "id": "config list",
+    },
+    {
+      "api": "none",
+      "description": "Set a project in the config file, creating the file owner-only; refuses a name that exists.
 
 The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
       "examples": [
-        "meili config add --project local --project-url http://localhost:7700",
-        "meili config add --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
-        "meili config add --project local --project-url http://localhost:7700 --output json",
+        "meili config set --project local --project-url http://localhost:7700",
+        "meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
+        "meili config set --project local --project-url http://localhost:7700 --output json",
       ],
       "flags": [
         {
-          "description": "Name of the project to add.",
+          "description": "Name of the project to set.",
           "helpValue": "<name>",
           "name": "project",
           "required": true,
@@ -192,18 +203,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
       ],
-      "id": "config add",
-    },
-    {
-      "api": "none",
-      "description": "Print the config file path and its projects as JSON, keys masked.",
-      "examples": [
-        "meili config list",
-        "meili config list --output json",
-        "MEILI_CONFIG=./meili.json meili config list",
-      ],
-      "flags": [],
-      "id": "config list",
+      "id": "config set",
     },
     {
       "api": "none",
@@ -211,8 +211,8 @@ The file holds API keys and decides where every later command goes, for every pr
 
 The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
       "examples": [
-        "meili config remove --project prod",
-        "meili config remove --project prod --output json",
+        "meili config unset --project prod",
+        "meili config unset --project prod --output json",
       ],
       "flags": [
         {
@@ -223,7 +223,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
       ],
-      "id": "config remove",
+      "id": "config unset",
     },
     {
       "api": "meilisearch",
@@ -684,16 +684,16 @@ The file holds API keys and decides where every later command goes, for every pr
         "id": "auth status",
       },
       {
-        "description": "Add a project to the config file, creating it owner-only; refuses a name that exists.",
-        "id": "config add",
-      },
-      {
         "description": "Print the config file path and its projects as JSON, keys masked.",
         "id": "config list",
       },
       {
+        "description": "Set a project in the config file, creating the file owner-only; refuses a name that exists.",
+        "id": "config set",
+      },
+      {
         "description": "Remove a project from the config file.",
-        "id": "config remove",
+        "id": "config unset",
       },
       {
         "description": "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.",

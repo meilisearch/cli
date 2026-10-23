@@ -1,16 +1,16 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import ConfigRemove from "../../../src/commands/config/remove.js";
+import ConfigUnset from "../../../src/commands/config/unset.js";
 import { writeConfigFile } from "../../../src/lib/config.js";
 import { useMockServer } from "../../helpers/msw.js";
 import { runCli, runCommand, scrubbedHome } from "../../helpers/run-command.js";
 
 useMockServer();
 
-describe("meili config remove", () => {
+describe("meili config unset", () => {
   it("prints its help without any network call", async () => {
-    const result = await runCli(["config", "remove", "--help"]);
+    const result = await runCli(["config", "unset", "--help"]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     expect(result.stdout).toMatchSnapshot();
@@ -19,7 +19,7 @@ describe("meili config remove", () => {
   it("removes the project and prints nothing", async () => {
     const path = join(scrubbedHome, "projects.json");
     writeConfigFile({ path, projects: { a: { url: "http://a" }, b: { url: "http://b" } } });
-    const result = await runCommand(ConfigRemove, ["--project", "a", "--output", "json"], {
+    const result = await runCommand(ConfigUnset, ["--project", "a", "--output", "json"], {
       env: { MEILI_CONFIG: path },
     });
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
@@ -31,7 +31,7 @@ describe("meili config remove", () => {
   it("fails with cli_config when the project or the file does not exist", async () => {
     const path = join(scrubbedHome, "unknown.json");
     writeConfigFile({ path, projects: { b: { url: "http://b" } } });
-    const unknown = await runCommand(ConfigRemove, ["--project", "nope"], {
+    const unknown = await runCommand(ConfigUnset, ["--project", "nope"], {
       env: { MEILI_CONFIG: path },
     });
     expect(unknown.exitCode).toBe(2);
@@ -40,7 +40,7 @@ describe("meili config remove", () => {
     );
 
     const missing = join(scrubbedHome, "missing.json");
-    const noFile = await runCommand(ConfigRemove, ["--project", "b"], {
+    const noFile = await runCommand(ConfigUnset, ["--project", "b"], {
       env: { MEILI_CONFIG: missing },
     });
     expect(noFile.exitCode).toBe(2);
