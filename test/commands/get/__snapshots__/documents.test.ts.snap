@@ -1,0 +1,75 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili get documents > passes an authentication error through with a hint and exits 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili get documents > prints its help without any network call 1`] = `
+"List the documents of an index, narrowed by --ids or by --filter.
+
+USAGE
+  $ meili get documents --index <index> [-o <mode>] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [--project <name>] [--ids
+    <ids>] [--filter <filter>] [--fields <fields>] [--sort <sort>]
+    [--retrieve-vectors] [--limit <n>] [--offset <n>] [--all] [--file <path> |
+    --data <json>]
+
+FLAGS
+  -o, --output=<mode>          json (default): one document, the API body as it
+                               is, indented in a terminal, compact when piped.
+                               ndjson: one item per line, list commands only,
+                               streams with --all.
+      --all                    Fetch every page. Streams with ndjson, buffers
+                               into one array with json.
+      --data=<json>            Inline JSON body.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --fields=<fields>        Document attributes to return, comma-separated.
+                               Defaults to all of them.
+      --file=<path>            Read the body from a file. \`-\` reads from stdin.
+      --filter=<filter>        Filter expression, for example \`rating > 4\`. Its
+                               array-of-arrays form goes through --data.
+      --ids=<ids>              Document identifiers to return, comma-separated.
+      --index=<index>          (required) The index to read the documents from.
+      --limit=<n>              Passed to the API.
+      --offset=<n>             Passed to the API.
+      --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. Required when the file has
+                               several projects.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+      --retrieve-vectors       Include the vector embeddings of the documents
+                               that have them.
+      --sort=<sort>            Attributes to sort on, comma-separated, each as
+                               \`attribute:asc\` or \`:desc\`.
+
+DESCRIPTION
+  List the documents of an index, narrowed by --ids or by --filter.
+
+EXAMPLES
+  $ meili get documents --index movies
+
+  $ meili get documents --index movies --output json
+
+  $ meili get documents --index movies --ids 42,1344 --fields id,title
+
+  $ meili get documents --index movies --filter 'rating > 4' --sort rating:desc
+
+  $ meili get documents --index movies --all --output ndjson
+
+"
+`;
+
+exports[`meili get documents > prints the API envelope as it is in JSON 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"results":[{"id":1,"title":"Nosferatu","rating":4.5},{"id":2,"title":"Alien","rating":5},{"id":3,"title":"Solaris","rating":4}],"offset":0,"limit":20,"total":3}
+",
+}
+`;

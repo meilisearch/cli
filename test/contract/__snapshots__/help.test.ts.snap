@@ -14,8 +14,10 @@ GLOBAL FLAGS
                        redacted.
 
 COMMANDS
-  get health   Check that the Meilisearch instance is available.
-  get indexes  List the indexes of the instance, or get one with --id.
+  get documents  List the documents of an index, narrowed by --ids or by
+                 --filter.
+  get health     Check that the Meilisearch instance is available.
+  get indexes    List the indexes of the instance, or get one with --id.
 
 "
 `;
