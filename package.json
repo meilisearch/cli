@@ -46,8 +46,8 @@
       "get": {
         "description": "Read a resource: the list, or one item with --id."
       },
-      "create": {
-        "description": "Create a resource, or add to it. The Meilisearch API answers with a task: the command prints it and returns at once, and --wait polls it to a final status instead."
+      "add": {
+        "description": "Add a resource, or content to one that exists. The Meilisearch API answers with a task: the command prints it and returns at once, and --wait polls it to a final status instead."
       },
       "update": {
         "description": "Change a resource, merging what is given into what is there. The Meilisearch API answers with a task: the command prints it and returns at once, and --wait polls it to a final status instead."

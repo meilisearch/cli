@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`meili create documents > passes the 404 of an unknown index through and exits 4 1`] = `
+exports[`meili add documents > passes the 404 of an unknown index through and exits 4 1`] = `
 {
   "exitCode": 4,
   "stderr": "{"error":{"code":"index_not_found","type":"invalid_request","message":"Index \`nope\` not found.","link":"https://docs.meilisearch.com/errors#index_not_found"}}
@@ -9,11 +9,11 @@ exports[`meili create documents > passes the 404 of an unknown index through and
 }
 `;
 
-exports[`meili create documents > prints its help without any network call 1`] = `
+exports[`meili add documents > prints its help without any network call 1`] = `
 "Add documents to an index, replacing the ones that already have the same primary key.
 
 USAGE
-  $ meili create documents --index <index> [-o <mode>] [--debug]
+  $ meili add documents --index <index> [-o <mode>] [--debug]
     [--project-url <url>] [--project-api-key <key>] [--project <name>]
     [--primary-key <field>] [--custom-metadata <string>] [--skip-creation]
     [--file <path> | --data <json>] [--timeout <duration> --wait]
@@ -51,20 +51,20 @@ DESCRIPTION
   primary key.
 
 EXAMPLES
-  $ meili create documents --index movies --file movies.json
+  $ meili add documents --index movies --file movies.json
 
-  $ meili create documents --index movies --file movies.json --output json
+  $ meili add documents --index movies --file movies.json --output json
 
-  cat movies.json | meili create documents --index movies --file -
+  cat movies.json | meili add documents --index movies --file -
 
-  $ meili create documents --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id
+  $ meili add documents --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id
 
-  $ meili create documents --index movies --file movies.json --wait
+  $ meili add documents --index movies --file movies.json --wait
 
 "
 `;
 
-exports[`meili create documents > prints the enqueued task as the API returned it, without waiting 1`] = `
+exports[`meili add documents > prints the enqueued task as the API returned it, without waiting 1`] = `
 {
   "exitCode": 0,
   "stderr": "",

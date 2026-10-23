@@ -17,7 +17,7 @@ A command needs exactly one of the two. If the CLI resolved both on every call, 
 - `BaseCommand` owns credential resolution and client construction. It resolves only the declared API, builds only that client, and produces errors that name only that API's sources.
 - The resolution order is the same for both APIs and has two levels: the flag, then the environment variable. A flag and its variable share their name, `MEILI_` plus the flag name in upper snake case (CLAUDE.md, rule 14). The sources are documented in `docs/contract/config.md`.
 - Connections come from flags and environment variables. A config file is not decided; if one comes, it comes with its own ADR.
-- Management commands carry no prefix. The resource says which API a command talks to, `get projects`, `create teams`, and `static api` says which credentials it needs. No resource name collides between the two documents today; a collision would be an exception in `commands.md`.
+- Management commands carry no prefix. The resource says which API a command talks to, `get projects`, `add teams`, and `static api` says which credentials it needs. No resource name collides between the two documents today; a collision would be an exception in `commands.md`.
 
 ## Consequences
 
