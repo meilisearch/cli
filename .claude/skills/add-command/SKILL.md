@@ -8,6 +8,8 @@ argument-hint: <command, for example: get stats>
 
 You ship exactly one command in this change: `meili $ARGUMENTS`, with every route of its verb and resource. One file for the command, one test file, one integration test, the regenerated manifest, one changeset line. Nothing else, unless a shared piece of `src/lib/` is missing for this kind of command (say so in the report).
 
+When `$ARGUMENTS` names several commands of the same resource, `get create update delete documents`, rule 10 of `CLAUDE.md` allows them in one change: run every step below once per command, and ship them complete or not at all. Commands of different resources stay in different changes.
+
 Work through the steps in order. Every check below is enforced by `pnpm test` through `test/contract/`, so a shortcut only moves the failure later.
 
 ## 1. Read before you write
@@ -58,7 +60,8 @@ Find the SDK method in `node_modules/meilisearch/dist/meilisearch.d.ts` or `node
 |---|---|---|
 | read, one route, one result | `src/commands/get/health.ts` | `await this.output(result)` |
 | read with a list route and a unit route | `src/commands/get/indexes.ts` | `outputList({...})` or `output(...)` by route |
-| write returning a task (the response is a task) | `src/commands/create/indexes.ts` when it exists, else `get/health.ts` | `await this.outputTask(task, flags)` |
+| write returning a task (the response is a task) | `src/commands/create/documents.ts` | `await this.outputTask(task, flags)` |
+| write with several routes, one per selector | `src/commands/delete/documents.ts` | `await this.outputTask(task, flags)` |
 | offline (`schema`) | `src/commands/schema.ts` | `await this.output(result)` |
 
 Then fill the class:

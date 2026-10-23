@@ -135,6 +135,324 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
+      "async": true,
+      "description": "Add documents to an index, replacing the ones that already have the same primary key.",
+      "examples": [
+        "meili create documents --index movies --file movies.json",
+        "meili create documents --index movies --file movies.json --output json",
+        "cat movies.json | meili create documents --index movies --file -",
+        "meili create documents --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
+        "meili create documents --index movies --file movies.json --wait",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to add the documents to.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "Primary key of the index. Only taken into account on its first documents.",
+          "helpValue": "<field>",
+          "name": "primary-key",
+          "type": "option",
+        },
+        {
+          "description": "String attached to the task, returned in the task object.",
+          "helpValue": "<string>",
+          "name": "custom-metadata",
+          "type": "option",
+        },
+        {
+          "description": "Only update documents that already exist, ignore the new ones.",
+          "name": "skip-creation",
+          "type": "boolean",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+      ],
+      "id": "create documents",
+      "keyActions": [
+        "documents.add",
+      ],
+      "routes": [
+        "POST /indexes/{index_uid}/documents",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "async": true,
+      "description": "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.",
+      "examples": [
+        "meili delete documents --index movies --ids 42,1344 --yes",
+        "meili delete documents --index movies --ids 42 --yes --output json",
+        "meili delete documents --index movies --filter 'rating < 2' --yes",
+        "meili delete documents --index movies --file ids.json --yes",
+        "meili delete documents --index movies --all --yes --wait",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to delete the documents from.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "Document identifiers to delete, comma-separated.",
+          "exclusive": [
+            "filter",
+            "all",
+          ],
+          "helpValue": "<ids>",
+          "name": "ids",
+          "type": "option",
+        },
+        {
+          "description": "Delete the documents matching this filter expression, for example \`rating < 2\`.",
+          "exclusive": [
+            "ids",
+            "all",
+          ],
+          "helpValue": "<filter>",
+          "name": "filter",
+          "type": "option",
+        },
+        {
+          "description": "Delete every document of the index.",
+          "exclusive": [
+            "ids",
+            "filter",
+            "file",
+            "data",
+          ],
+          "name": "all",
+          "type": "boolean",
+        },
+        {
+          "description": "String attached to the task, returned in the task object.",
+          "helpValue": "<string>",
+          "name": "custom-metadata",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+        {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "type": "boolean",
+        },
+      ],
+      "id": "delete documents",
+      "keyActions": [
+        "documents.delete",
+      ],
+      "routes": [
+        "DELETE /indexes/{index_uid}/documents",
+        "POST /indexes/{index_uid}/documents/delete",
+        "POST /indexes/{index_uid}/documents/delete-batch",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "List the documents of an index, narrowed by --ids or by --filter.",
+      "examples": [
+        "meili get documents --index movies",
+        "meili get documents --index movies --output json",
+        "meili get documents --index movies --ids 42,1344 --fields id,title",
+        "meili get documents --index movies --filter 'rating > 4' --sort rating:desc",
+        "meili get documents --index movies --all --output ndjson",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to read the documents from.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "Document identifiers to return, comma-separated.",
+          "helpValue": "<ids>",
+          "name": "ids",
+          "type": "option",
+        },
+        {
+          "description": "Filter expression, for example \`rating > 4\`. Its array-of-arrays form goes through --data.",
+          "helpValue": "<filter>",
+          "name": "filter",
+          "type": "option",
+        },
+        {
+          "description": "Document attributes to return, comma-separated. Defaults to all of them.",
+          "helpValue": "<fields>",
+          "name": "fields",
+          "type": "option",
+        },
+        {
+          "description": "Attributes to sort on, comma-separated, each as \`attribute:asc\` or \`:desc\`.",
+          "helpValue": "<sort>",
+          "name": "sort",
+          "type": "option",
+        },
+        {
+          "description": "Include the vector embeddings of the documents that have them.",
+          "name": "retrieve-vectors",
+          "type": "boolean",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "name": "all",
+          "type": "boolean",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "get documents",
+      "keyActions": [
+        "documents.get",
+      ],
+      "routes": [
+        "POST /indexes/{index_uid}/documents/fetch",
+      ],
+    },
+    {
+      "api": "meilisearch",
       "description": "Check that the Meilisearch instance is available.",
       "examples": [
         "meili get health",
@@ -247,6 +565,98 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
       "id": "schema",
     },
+    {
+      "api": "meilisearch",
+      "async": true,
+      "description": "Add documents to an index, merging their fields into the ones that already have the same primary key.",
+      "examples": [
+        "meili update documents --index movies --file changes.json",
+        "meili update documents --index movies --file changes.json --output json",
+        "cat changes.json | meili update documents --index movies --file -",
+        "meili update documents --index movies --data '[{"id":1,"rating":4}]'",
+        "meili update documents --index movies --file changes.json --wait",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to update the documents of.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "Primary key of the index. Only taken into account on its first documents.",
+          "helpValue": "<field>",
+          "name": "primary-key",
+          "type": "option",
+        },
+        {
+          "description": "String attached to the task, returned in the task object.",
+          "helpValue": "<string>",
+          "name": "custom-metadata",
+          "type": "option",
+        },
+        {
+          "description": "Only update documents that already exist, ignore the new ones.",
+          "name": "skip-creation",
+          "type": "boolean",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+      ],
+      "id": "update documents",
+      "keyActions": [
+        "documents.add",
+      ],
+      "routes": [
+        "PUT /indexes/{index_uid}/documents",
+      ],
+    },
   ],
   "index": {
     "commands": [
@@ -279,6 +689,29 @@ The file holds API keys and decides where every later command goes, for every pr
         "id": "config remove",
       },
       {
+        "description": "Add documents to an index, replacing the ones that already have the same primary key.",
+        "id": "create documents",
+        "routes": [
+          "POST /indexes/{index_uid}/documents",
+        ],
+      },
+      {
+        "description": "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.",
+        "id": "delete documents",
+        "routes": [
+          "DELETE /indexes/{index_uid}/documents",
+          "POST /indexes/{index_uid}/documents/delete",
+          "POST /indexes/{index_uid}/documents/delete-batch",
+        ],
+      },
+      {
+        "description": "List the documents of an index, narrowed by --ids or by --filter.",
+        "id": "get documents",
+        "routes": [
+          "POST /indexes/{index_uid}/documents/fetch",
+        ],
+      },
+      {
         "description": "Check that the Meilisearch instance is available.",
         "id": "get health",
         "routes": [
@@ -296,6 +729,13 @@ The file holds API keys and decides where every later command goes, for every pr
       {
         "description": "Print one line per command, or one command in full with --command, from the oclif manifest.",
         "id": "schema",
+      },
+      {
+        "description": "Add documents to an index, merging their fields into the ones that already have the same primary key.",
+        "id": "update documents",
+        "routes": [
+          "PUT /indexes/{index_uid}/documents",
+        ],
       },
     ],
     "globalFlags": [

@@ -2,7 +2,13 @@
  * msw handlers for the Meilisearch API. The host is fake: msw intercepts fetch before
  * any DNS lookup, and an unhandled request is an error.
  */
-import type { IndexObject, MeilisearchErrorResponse, Task } from "meilisearch";
+import type {
+  EnqueuedTask,
+  IndexObject,
+  MeilisearchErrorResponse,
+  RecordAny,
+  Task,
+} from "meilisearch";
 import { HttpResponse, http } from "msw";
 
 export const MEILISEARCH_URL = "http://meili.test:7700";
@@ -37,6 +43,49 @@ export const meilisearchHandlers = {
         ? HttpResponse.json(indexNotFoundError(String(params.uid)), { status: 404 })
         : HttpResponse.json(found);
     }),
+
+  /**
+   * `POST /indexes/{uid}/documents/fetch` paginating over `all` like the API
+   * does: `limit` defaults to 20, `offset` to 0, and `ids` narrows the list.
+   */
+  documentsFetch: (all: RecordAny[]) =>
+    http.post(`${MEILISEARCH_URL}/indexes/:uid/documents/fetch`, async ({ request }) => {
+      const query = (await request.json()) as { limit?: number; offset?: number; ids?: string[] };
+      const matching =
+        query.ids === undefined
+          ? all
+          : all.filter((document) => query.ids?.includes(String(document.id)));
+      const limit = query.limit ?? 20;
+      const offset = query.offset ?? 0;
+      return HttpResponse.json({
+        results: matching.slice(offset, offset + limit),
+        offset,
+        limit,
+        total: matching.length,
+      });
+    }),
+
+  /** `POST /indexes/{uid}/documents`, the addition route. */
+  documentsAdd: (task: EnqueuedTask) =>
+    http.post(`${MEILISEARCH_URL}/indexes/:uid/documents`, () => HttpResponse.json(task)),
+
+  /** `PUT /indexes/{uid}/documents`, the update route. */
+  documentsUpdate: (task: EnqueuedTask) =>
+    http.put(`${MEILISEARCH_URL}/indexes/:uid/documents`, () => HttpResponse.json(task)),
+
+  /** `DELETE /indexes/{uid}/documents`, which deletes every document. */
+  documentsDeleteAll: (task: EnqueuedTask) =>
+    http.delete(`${MEILISEARCH_URL}/indexes/:uid/documents`, () => HttpResponse.json(task)),
+
+  /** `POST /indexes/{uid}/documents/delete`, the deletion by filter. */
+  documentsDeleteByFilter: (task: EnqueuedTask) =>
+    http.post(`${MEILISEARCH_URL}/indexes/:uid/documents/delete`, () => HttpResponse.json(task)),
+
+  /** `POST /indexes/{uid}/documents/delete-batch`, the deletion by identifiers. */
+  documentsDeleteBatch: (task: EnqueuedTask) =>
+    http.post(`${MEILISEARCH_URL}/indexes/:uid/documents/delete-batch`, () =>
+      HttpResponse.json(task),
+    ),
 
   /** Any method on `path` answering a Meilisearch error body with `status`. */
   apiError: (path: string, status: number, body: MeilisearchErrorResponse) =>
@@ -80,6 +129,18 @@ export function makeIndex(uid: string, primaryKey?: string): IndexObject {
     ...(primaryKey === undefined ? {} : { primaryKey }),
     createdAt: "2026-09-24T10:00:00.000000Z",
     updatedAt: "2026-09-24T10:00:00.000000Z",
+  };
+}
+
+/** The task body a write route answers with, before anything has run. */
+export function makeEnqueuedTask(overrides: Partial<EnqueuedTask> = {}): EnqueuedTask {
+  return {
+    taskUid: 42,
+    indexUid: "movies",
+    status: "enqueued",
+    type: "documentAdditionOrUpdate",
+    enqueuedAt: "2026-09-24T10:00:00Z",
+    ...overrides,
   };
 }
 

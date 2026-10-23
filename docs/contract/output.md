@@ -95,7 +95,7 @@ Destructive commands are those of the verb `delete`, as `commands.md` derives th
 
 - A command of the verb `delete` requires `--yes`. Without it the command refuses to run, with `cli_usage` and exit 2, before any network call, like any missing required flag.
 - `--yes` is a flag, never a question: the CLI does not ask, does not wait and does not read stdin for an answer. No environment variable stands for it, so an environment can never confirm a deletion in the agent's place; the confirmation is in the command line or it does not exist.
-- A deletion that needs a selector refuses to run without one: `delete documents --index movies --yes` alone is a usage error, exit 2; `--all` is the explicit way to delete every document.
+- A deletion that needs a selector refuses to run without one: `delete documents --index movies --yes` alone is a usage error, exit 2; `--all` is the explicit way to delete every document. The selector may come from `--file` or `--data`, whose shape then selects the route, and two selectors that call for two different routes are a usage error, exit 2, before any network call.
 
 ## Input
 
