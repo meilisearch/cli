@@ -27,12 +27,31 @@ export interface BodyInputFlagValues {
 export function readJsonBody(flags: BodyInputFlagValues): unknown {
   const text = flags.data ?? (flags.file === undefined ? undefined : readBodyFile(flags.file));
   if (text === undefined) return undefined;
-  const source = flags.data === undefined ? `\`${flags.file}\`` : "--data";
   try {
     return JSON.parse(text);
   } catch (cause) {
-    throw new MeiliCliError("cli_input_invalid", `${source} is not valid JSON.`, { cause });
+    throw new MeiliCliError("cli_input_invalid", `${bodySource(flags)} is not valid JSON.`, {
+      cause,
+    });
   }
+}
+
+/**
+ * The same body, for a route whose body is an object of named fields. A body
+ * that is not an object is `cli_input_invalid`, exit 2, before anything is sent.
+ */
+export function readJsonObjectBody(flags: BodyInputFlagValues): Record<string, unknown> {
+  const body = readJsonBody(flags);
+  if (body === undefined) return {};
+  if (!isJsonObject(body)) {
+    throw new MeiliCliError("cli_input_invalid", `${bodySource(flags)} must be a JSON object.`);
+  }
+  return body;
+}
+
+/** Which of the two flags carried the body, for the message of an error about it. */
+function bodySource(flags: BodyInputFlagValues): string {
+  return flags.data === undefined ? `\`${flags.file}\`` : "--data";
 }
 
 function readBodyFile(path: string): string {
