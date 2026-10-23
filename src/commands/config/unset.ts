@@ -2,7 +2,7 @@ import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { projectOf, writeConfigFile } from "../../lib/config.js";
 
-export default class ConfigRemove extends BaseCommand {
+export default class ConfigUnset extends BaseCommand {
   static api: Api = "none";
 
   static override description = `Remove a project from the config file.
@@ -23,7 +23,7 @@ The file holds API keys and decides where every later command goes, for every pr
   };
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(ConfigRemove);
+    const { flags } = await this.parse(ConfigUnset);
     const file = this.configFile();
     projectOf(file, flags.project);
     const { [flags.project]: _removed, ...projects } = file.projects;

@@ -36,7 +36,7 @@ Alternatives considered:
 
 - **A URL and its key travel together.** With `--project-url`, the key comes from `--project-api-key` or from nowhere, never from the environment or the file: a configured key is never sent to a URL it was not configured with. `--project-api-key` alone, or with `--project`, replaces the key of the configured project: an explicit key for a configured URL is the way to hand an agent a restricted key.
 
-- **Three commands without an API manage the file**, for humans: `config list` prints the path and the projects with keys masked; `config add` creates the file in mode `600`, validates the URL, reads the key from stdin with `--project-api-key -` to keep it out of the shell history, and refuses a name that already exists; `config remove` deletes an entry. They are a convenience, not a protection.
+- **Three commands without an API manage the file**, for humans: `config list` prints the path and the projects with keys masked; `config set` creates the file in mode `600`, validates the URL, reads the key from stdin with `--project-api-key -` to keep it out of the shell history, and refuses a name that already exists; `config unset` deletes an entry. They are a convenience, not a protection.
 
 - **The file is shared state.** An agent gets its own file through `MEILI_CONFIG`, prepared by a human and mounted read-only in its sandbox, never the human's file. An agent changes nothing in the file, neither a project nor its permissions, unless the human asked for it explicitly. `--help`, `meili schema` and the README say so, because those are what an agent reads.
 
@@ -46,7 +46,7 @@ Alternatives considered:
 
 - An agent works on two projects in one session, `--project staging` then `--project prod`, with no key on any command line and no state that another process can switch under it.
 - A forgotten variable cannot choose the target silently: the environment pair next to a file is an error, not a precedence. The price is that a script which exports the pair on a machine that has a file must point `MEILI_CONFIG` at a file that does not exist, or unset the pair.
-- What the CLI cannot protect against: another writer of the same file. Removing `staging` and adding it back with other credentials redirects every later `--project staging` of whoever shares the file, and a process with a file tool does not need `config add` to do it. Isolation, one file per agent, is the protection; `config add` refusing an existing name only prevents a replacement by mistake.
+- What the CLI cannot protect against: another writer of the same file. Unsetting `staging` and setting it again with other credentials redirects every later `--project staging` of whoever shares the file, and a process with a file tool does not need `config set` to do it. Isolation, one file per agent, is the protection; `config set` refusing an existing name only prevents a replacement by mistake.
 - `config.md` changes one promise: the CLI reads keys from the config file, and from nowhere else on disk, and warns when the file is readable by others. `output.md` gains the warning format.
 - Unit and integration tests point `MEILI_CONFIG` at a file that does not exist, so a developer's own file never leaks into a test.
 - `config.md` gains the file format and the resolution rules, `commands.md` the `--project` global flag and the three `config` commands.

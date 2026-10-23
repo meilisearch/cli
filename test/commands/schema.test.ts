@@ -45,20 +45,20 @@ describe("meili schema", () => {
   });
 
   it("prints the flags a command declares itself, not the global ones it inherits", async () => {
-    const result = await runCommand(Schema, ["--command", "config add", "--output", "json"]);
+    const result = await runCommand(Schema, ["--command", "config set", "--output", "json"]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const command = JSON.parse(result.stdout) as {
       description: string;
       flags: Array<{ name: string }>;
     };
-    // `config add` declares the three values it writes, with its own descriptions.
+    // `config set` declares the three values it writes, with its own descriptions.
     expect(command.flags).toEqual([
       {
         name: "project",
         type: "option",
         required: true,
-        description: "Name of the project to add.",
+        description: "Name of the project to set.",
         helpValue: "<name>",
       },
       {

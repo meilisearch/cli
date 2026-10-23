@@ -1,10 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`meili config add > prints its help without any network call 1`] = `
-"Add a project to the config file, creating it owner-only; refuses a name that exists.
+exports[`meili config set > prints its help without any network call 1`] = `
+"Set a project in the config file, creating the file owner-only; refuses a name that exists.
 
 USAGE
-  $ meili config add --project <name> --project-url <url> [-o <mode>]
+  $ meili config set --project <name> --project-url <url> [-o <mode>]
     [--debug] [--project-api-key <key>]
 
 FLAGS
@@ -14,25 +14,25 @@ FLAGS
                                streams with --all.
       --debug                  Print every HTTP request and response on stderr,
                                secrets redacted.
-      --project=<name>         (required) Name of the project to add.
+      --project=<name>         (required) Name of the project to set.
       --project-api-key=<key>  API key of the project. \`-\` reads it from stdin,
                                out of the shell history.
       --project-url=<url>      (required) URL of the project.
 
 DESCRIPTION
-  Add a project to the config file, creating it owner-only; refuses a name that
-  exists.
+  Set a project in the config file, creating the file owner-only; refuses a name
+  that exists.
 
   The file holds API keys and decides where every later command goes, for every
   process that reads it: an agent runs this only when the human asked for it
   explicitly.
 
 EXAMPLES
-  $ meili config add --project local --project-url http://localhost:7700
+  $ meili config set --project local --project-url http://localhost:7700
 
-  $ meili config add --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt
+  $ meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt
 
-  $ meili config add --project local --project-url http://localhost:7700 --output json
+  $ meili config set --project local --project-url http://localhost:7700 --output json
 
 "
 `;

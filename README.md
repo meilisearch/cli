@@ -40,7 +40,7 @@ The URL, the key and the token also exist as flags with the same name: `--projec
 meili get indexes --project prod
 ```
 
-With several projects in the file, `--project` is required: the CLI never guesses, and it refuses to run when the file and the `MEILI_PROJECT_URL` variable both define a project. `MEILI_CONFIG` names another file. For a coding agent, give it its own file through `MEILI_CONFIG`, read-only: the file is shared state, and an agent must not be able to change where another one's commands go. The file holds your keys: keep it readable by you alone, the CLI warns on stderr otherwise, and an agent changes nothing in it, neither a project nor its permissions, unless you asked for it explicitly. `meili config list`, `meili config add` and `meili config remove` manage the file.
+With several projects in the file, `--project` is required: the CLI never guesses, and it refuses to run when the file and the `MEILI_PROJECT_URL` variable both define a project. `MEILI_CONFIG` names another file. For a coding agent, give it its own file through `MEILI_CONFIG`, read-only: the file is shared state, and an agent must not be able to change where another one's commands go. The file holds your keys: keep it readable by you alone, the CLI warns on stderr otherwise, and an agent changes nothing in it, neither a project nor its permissions, unless you asked for it explicitly. `meili config list`, `meili config set` and `meili config unset` manage the file.
 
 ## Documentation
 

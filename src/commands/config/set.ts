@@ -4,11 +4,11 @@ import { writeConfigFile } from "../../lib/config.js";
 import { MeiliCliError } from "../../lib/errors.js";
 import { readStdin } from "../../lib/input.js";
 
-export default class ConfigAdd extends BaseCommand {
+export default class ConfigSet extends BaseCommand {
   static api: Api = "none";
 
   static override description =
-    `Add a project to the config file, creating it owner-only; refuses a name that exists.
+    `Set a project in the config file, creating the file owner-only; refuses a name that exists.
 
 The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.`;
 
@@ -21,7 +21,7 @@ The file holds API keys and decides where every later command goes, for every pr
   static override flags = {
     project: Flags.string({
       required: true,
-      description: "Name of the project to add.",
+      description: "Name of the project to set.",
       helpValue: "<name>",
     }),
     "project-url": Flags.string({
@@ -37,7 +37,7 @@ The file holds API keys and decides where every later command goes, for every pr
   };
 
   async run(): Promise<void> {
-    const { flags } = await this.parse(ConfigAdd);
+    const { flags } = await this.parse(ConfigSet);
     // A Meilisearch instance answers over HTTP(S) only; the SDK mangles any other scheme.
     const url = URL.parse(flags["project-url"]);
     if (url === null || (url.protocol !== "http:" && url.protocol !== "https:")) {
@@ -48,7 +48,7 @@ The file holds API keys and decides where every later command goes, for every pr
       throw new MeiliCliError(
         "cli_config",
         `Project \`${flags.project}\` already exists in ${file.path}.`,
-        { hint: `Run \`meili config remove --project ${flags.project}\` first.` },
+        { hint: `Run \`meili config unset --project ${flags.project}\` first.` },
       );
     }
     writeConfigFile({
