@@ -44,6 +44,18 @@ export const meilisearchHandlers = {
         : HttpResponse.json(found);
     }),
 
+  /** `POST /indexes`, the creation route. */
+  indexCreate: (task: EnqueuedTask) =>
+    http.post(`${MEILISEARCH_URL}/indexes`, () => HttpResponse.json(task)),
+
+  /** `PATCH /indexes/{uid}`, the update route. */
+  indexUpdate: (task: EnqueuedTask) =>
+    http.patch(`${MEILISEARCH_URL}/indexes/:uid`, () => HttpResponse.json(task)),
+
+  /** `DELETE /indexes/{uid}`, the deletion route. */
+  indexDelete: (task: EnqueuedTask) =>
+    http.delete(`${MEILISEARCH_URL}/indexes/:uid`, () => HttpResponse.json(task)),
+
   /**
    * `POST /indexes/{uid}/documents/fetch` paginating over `all` like the API
    * does: `limit` defaults to 20, `offset` to 0, and `ids` narrows the list.
