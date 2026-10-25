@@ -307,98 +307,6 @@ The file holds API keys and decides where every later command goes, for every pr
     {
       "api": "meilisearch",
       "async": true,
-      "description": "Add documents to an index, replacing the ones that already have the same primary key.",
-      "examples": [
-        "meili create documents --index movies --file movies.json",
-        "meili create documents --index movies --file movies.json --output json",
-        "cat movies.json | meili create documents --index movies --file -",
-        "meili create documents --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
-        "meili create documents --index movies --file movies.json --wait",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "The index to add the documents to.",
-          "helpValue": "<index>",
-          "name": "index",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "Primary key of the index. Only taken into account on its first documents.",
-          "helpValue": "<field>",
-          "name": "primary-key",
-          "type": "option",
-        },
-        {
-          "description": "String attached to the task, returned in the task object.",
-          "helpValue": "<string>",
-          "name": "custom-metadata",
-          "type": "option",
-        },
-        {
-          "description": "Only update documents that already exist, ignore the new ones.",
-          "name": "skip-creation",
-          "type": "boolean",
-        },
-        {
-          "description": "Read the body from a file. \`-\` reads from stdin.",
-          "exclusive": [
-            "data",
-          ],
-          "helpValue": "<path>",
-          "name": "file",
-          "type": "option",
-        },
-        {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "name": "data",
-          "type": "option",
-        },
-        {
-          "description": "Poll the task until it reaches a final status, then print the final task.",
-          "name": "wait",
-          "type": "boolean",
-        },
-        {
-          "dependsOn": [
-            "wait",
-          ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
-          "helpValue": "<duration>",
-          "name": "timeout",
-          "type": "option",
-        },
-      ],
-      "id": "create documents",
-      "keyActions": [
-        "documents.add",
-      ],
-      "routes": [
-        "POST /indexes/{index_uid}/documents",
-      ],
-    },
-    {
-      "api": "meilisearch",
-      "async": true,
       "description": "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.",
       "examples": [
         "meili delete documents --index movies --ids 42,1344 --yes",
@@ -1022,13 +930,6 @@ The file holds API keys and decides where every later command goes, for every pr
       {
         "description": "Remove a project from the config file.",
         "id": "config unset",
-      },
-      {
-        "description": "Add documents to an index, replacing the ones that already have the same primary key.",
-        "id": "create documents",
-        "routes": [
-          "POST /indexes/{index_uid}/documents",
-        ],
       },
       {
         "description": "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.",
