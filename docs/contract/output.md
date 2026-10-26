@@ -104,6 +104,8 @@ Destructive commands are those of the verb `delete`, as `commands.md` derives th
 - A body-field flag given together with `--file` or `--data` overrides that field in the body. A flag overrides its environment variable the same way.
 - The value `null` on a flag sends a JSON null: `--expires-at null`, `--stop-words null`.
 - A command never reads stdin unless `--file -` or `--project-api-key -` is given. This avoids hanging when an agent runs it in a pipeline.
+- The CLI refuses an input only when it can say what is wrong without the API. A body has to be parsed before the flags can be merged into it, so `--file` and `--data` fail as above with `cli_input_invalid`. A flag that `--help` types, an integer or one of a closed list of values, is refused with `cli_usage` and exit 2 before any call.
+- Every other value travels as it is, and the API refuses it with its own code and its own message. The command converts what the route types as a fractional number or as an object, `--ranking-score-threshold`, `--vector`, `--hybrid`: text that spells the value becomes it, text that does not is sent as that text, so `meili search --ranking-score-threshold abc` answers `invalid_search_ranking_score_threshold` and exits 1. The CLI never re-checks what the API checks, and never invents a message or a code for it. Converting more than that would change the value in silence: `Number` reads `0x1` as 1 and writes an overflow as `null`, which an API that reads a null as "no value" answers 0 and the wrong data for.
 
 ## Pagination
 
