@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import Search from "../../src/commands/search.js";
 import { MEILISEARCH_URL, meilisearchHandlers } from "../helpers/meilisearch-handlers.js";
-import { countRequests, recordRequests, server, useMockServer } from "../helpers/msw.js";
+import { recordRequests, server, useMockServer } from "../helpers/msw.js";
 import { runCli, runCommand } from "../helpers/run-command.js";
 
 useMockServer();
@@ -18,20 +18,6 @@ async function bodiesOf(argv: string[]): Promise<unknown[]> {
     await runCommand(Search, argv, { env });
   });
   return requests.map((request) => JSON.parse(request.body));
-}
-
-/** Runs the command and asserts that nothing was sent. */
-async function usageErrorOf(argv: string[]): Promise<{ code: string; exitCode: number }> {
-  let result: Awaited<ReturnType<typeof runCommand>> | undefined;
-  const requests = await countRequests(async () => {
-    result = await runCommand(Search, argv, { env });
-  });
-  expect(requests).toBe(0);
-  expect(result?.stdout).toBe("");
-  return {
-    code: (JSON.parse(result?.stderr ?? "") as { error: { code: string } }).error.code,
-    exitCode: result?.exitCode ?? 0,
-  };
 }
 
 describe("meili search", () => {
@@ -114,15 +100,20 @@ describe("meili search", () => {
     ).toEqual([{ q: "alien" }]);
   });
 
-  it("refuses a flag value the route types as a number or an object, before any network call", async () => {
-    expect(await usageErrorOf(["--index", "movies", "--vector", "0.1,nope"])).toEqual({
-      code: "cli_usage",
-      exitCode: 2,
-    });
-    expect(await usageErrorOf(["--index", "movies", "--hybrid", "{nope}"])).toEqual({
-      code: "cli_usage",
-      exitCode: 2,
-    });
+  it("sends a value that does not convert as the text it was given, for the API to refuse", async () => {
+    server.use(meilisearchHandlers.search(hits));
+    expect(
+      await bodiesOf([
+        "--index",
+        "movies",
+        "--vector",
+        "0.1,nope",
+        "--ranking-score-threshold",
+        "abc",
+        "--hybrid",
+        "{nope}",
+      ]),
+    ).toEqual([{ vector: [0.1, "nope"], rankingScoreThreshold: "abc", hybrid: "{nope}" }]);
   });
 
   it("refuses --output ndjson: the response is hits, not a list envelope", async () => {

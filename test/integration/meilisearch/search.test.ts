@@ -110,6 +110,16 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
     expect(body.hits).toHaveLength(1);
   });
 
+  it("lets the API refuse a flag value that does not convert, with its own code", async () => {
+    const result = await runBinary(
+      ["search", "--index", uid, "--ranking-score-threshold", "abc", "--output", "json"],
+      env,
+    );
+    expect(result.exitCode).toBe(1);
+    expect(result.stdout).toBe("");
+    expect(JSON.parse(result.stderr).error.code).toBe("invalid_search_ranking_score_threshold");
+  });
+
   it("exits 4 with the API error when the index does not exist", async () => {
     const result = await runBinary(
       ["search", "--index", `${uid}-missing`, "--q", "nosferatu", "--output", "json"],

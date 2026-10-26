@@ -1,7 +1,6 @@
 import { Flags } from "@oclif/core";
 import type { HybridSearch, SearchParams } from "meilisearch";
 import { type Api, BaseCommand } from "../lib/base-command.js";
-import { MeiliCliError } from "../lib/errors.js";
 import { readJsonObjectBody } from "../lib/input.js";
 
 export default class Search extends BaseCommand {
@@ -165,13 +164,10 @@ export default class Search extends BaseCommand {
       facets: flags.facets?.split(","),
       matchingStrategy: flags["matching-strategy"],
       attributesToSearchOn: flags["attributes-to-search-on"]?.split(","),
-      rankingScoreThreshold:
-        flags["ranking-score-threshold"] === undefined
-          ? undefined
-          : toNumber(flags["ranking-score-threshold"], "ranking-score-threshold"),
+      rankingScoreThreshold: asNumber(flags["ranking-score-threshold"]) as number | undefined,
       locales: flags.locales?.split(","),
-      hybrid: flags.hybrid === undefined ? undefined : toJson<HybridSearch>(flags.hybrid, "hybrid"),
-      vector: flags.vector?.split(",").map((part) => toNumber(part, "vector")),
+      hybrid: asJson(flags.hybrid) as HybridSearch | undefined,
+      vector: flags.vector?.split(",").map(asNumber) as number[] | undefined,
       retrieveVectors: flags["retrieve-vectors"] ? true : undefined,
       showRankingScore: flags["show-ranking-score"] ? true : undefined,
       showRankingScoreDetails: flags["show-ranking-score-details"] ? true : undefined,
@@ -190,20 +186,25 @@ export default class Search extends BaseCommand {
   }
 }
 
-/** A flag the route types as a number: the API refuses the string a flag carries. */
-function toNumber(value: string, flag: string): number {
+/**
+ * The two conversions a flag needs before it can be a body field (rule 7): the
+ * text of a number, and the JSON text of an object. Text that does not convert
+ * is sent as it is, so that the API names the value it refused, with its own
+ * code, rather than the CLI judging a value the API owns. The CLI only refuses
+ * what it cannot send at all, as `--data` and `--file`, which it has to parse
+ * before it can merge them.
+ */
+function asNumber(value: string | undefined): number | string | undefined {
+  if (value === undefined) return undefined;
   const parsed = Number(value);
-  if (value.trim() === "" || !Number.isFinite(parsed)) {
-    throw new MeiliCliError("cli_usage", `--${flag} must be a number, got \`${value}\`.`);
-  }
-  return parsed;
+  return value.trim() === "" || !Number.isFinite(parsed) ? value : parsed;
 }
 
-/** A flag the route types as an object: it travels as JSON text (rule 7). The API checks its shape. */
-function toJson<T>(value: string, flag: string): T {
+function asJson(value: string | undefined): unknown {
+  if (value === undefined) return undefined;
   try {
-    return JSON.parse(value) as T;
-  } catch (cause) {
-    throw new MeiliCliError("cli_usage", `--${flag} must be JSON text.`, { cause });
+    return JSON.parse(value);
+  } catch {
+    return value;
   }
 }
