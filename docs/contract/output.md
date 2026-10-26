@@ -110,7 +110,7 @@ Destructive commands are those of the verb `delete`, as `commands.md` derives th
 ## Pagination
 
 - `--limit` and `--offset` (or `--from` for tasks and batches) are passed to the API as they are. When `--id` selects a unit route, they are ignored and not sent.
-- `--all` follows the API pagination until the end. With `ndjson` the items stream. With `json` the CLI returns the last page envelope with `results` replaced by the full list and `limit`, `offset` removed.
+- `--all` follows the API pagination until the end. With `ndjson` the items stream. With `json` the CLI returns the last page envelope with `results` replaced by the full list and the fields that describe one page removed: `limit` and `offset`, or `limit` and `from` on the routes that page with a cursor.
 
 ## Help
 

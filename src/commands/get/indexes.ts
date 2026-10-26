@@ -1,5 +1,6 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
+import { nextOffsetQuery } from "../../lib/pagination.js";
 
 export default class GetIndexes extends BaseCommand {
   static api: Api = "meilisearch";
@@ -37,6 +38,7 @@ export default class GetIndexes extends BaseCommand {
       (query) => this.meilisearch.getRawIndexes(query),
       { limit: flags.limit, offset: flags.offset },
       flags.all,
+      nextOffsetQuery,
     );
   }
 }

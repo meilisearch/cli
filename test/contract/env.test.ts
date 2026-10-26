@@ -40,6 +40,7 @@ describe("flags and environment variables share their name (CLAUDE.md, rule 14)"
     BaseCommand.connectionFlags,
     BaseCommand.waitFlags,
     BaseCommand.paginationFlags,
+    BaseCommand.fromPaginationFlags,
     BaseCommand.bodyInputFlags,
     BaseCommand.confirmFlags,
   ];

@@ -82,6 +82,8 @@ describe("waitForTask", () => {
     expect((error as MeiliCliError).code).toBe("cli_timeout");
     expect((error as MeiliCliError).exitCode).toBe(5);
     expect((error as MeiliCliError).message).toContain("Task 9");
-    expect((error as MeiliCliError).hint).toBe("Run `meili task get 9` to check its status.");
+    expect((error as MeiliCliError).hint).toBe(
+      "Run `meili get tasks --ids 9` to check its status.",
+    );
   });
 });

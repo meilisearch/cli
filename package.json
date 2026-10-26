@@ -54,6 +54,9 @@
       },
       "delete": {
         "description": "Remove a resource. Every command of this topic requires --yes on the command line: a flag the agent writes, never a question the CLI asks."
+      },
+      "cancel": {
+        "description": "Stop a resource that is still running. The Meilisearch API answers with a task: the command prints it and returns at once, and --wait polls it to a final status instead."
       }
     }
   },

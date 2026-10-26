@@ -16,7 +16,7 @@ export function isTaskFinal(task: Pick<Task, "status">): boolean {
   return FINAL_STATUSES.has(task.status);
 }
 
-/** True when the task ended with `failed` or `canceled`: exit code 8. */
+/** True when the task ended with `failed` or `canceled`: exit code 7. */
 export function isTaskFailure(task: Pick<Task, "status">): boolean {
   return FAILURE_STATUSES.has(task.status);
 }
@@ -75,7 +75,7 @@ export async function waitForTask(
       throw new MeiliCliError(
         "cli_timeout",
         `Task ${uid} did not reach a final status within ${formatDuration(options.timeoutMs)}. It keeps running on the server.`,
-        { hint: `Run \`meili task get ${uid}\` to check its status.` },
+        { hint: `Run \`meili get tasks --ids ${uid}\` to check its status.` },
       );
     }
     await sleep(Math.min(interval, remaining));
