@@ -99,6 +99,24 @@ export const meilisearchHandlers = {
       HttpResponse.json(task),
     ),
 
+  /**
+   * `POST /indexes/{uid}/search` answering the envelope of the API at its
+   * default pagination, with the `q` it was sent. `search` has no `--all`, and
+   * the tests that pass `--limit` assert the request body, not the response.
+   */
+  search: (hits: RecordAny[]) =>
+    http.post(`${MEILISEARCH_URL}/indexes/:uid/search`, async ({ request }) => {
+      const { q } = (await request.json()) as { q?: string };
+      return HttpResponse.json({
+        hits,
+        query: q ?? "",
+        processingTimeMs: 1,
+        limit: 20,
+        offset: 0,
+        estimatedTotalHits: hits.length,
+      });
+    }),
+
   /** Any method on `path` answering a Meilisearch error body with `status`. */
   apiError: (path: string, status: number, body: MeilisearchErrorResponse) =>
     http.all(`${MEILISEARCH_URL}${path}`, () => HttpResponse.json(body, { status })),
