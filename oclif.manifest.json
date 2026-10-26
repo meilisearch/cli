@@ -2705,6 +2705,410 @@
         "schema.js"
       ]
     },
+    "search": {
+      "aliases": [],
+      "args": {},
+      "description": "Search the documents of an index, with --q and the search parameters of the route.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %> --index movies --q nosferatu",
+        "<%= config.bin %> <%= command.id %> --index movies --q nosferatu --output json",
+        "<%= config.bin %> <%= command.id %> --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
+        "<%= config.bin %> <%= command.id %> --index movies --facets genres --attributes-to-retrieve id,title",
+        "<%= config.bin %> <%= command.id %> --index movies --data '{\"q\":\"nosferatu\",\"hybrid\":{\"embedder\":\"default\",\"semanticRatio\":0.5}}'"
+      ],
+      "flags": {
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "name": "project-url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "name": "project-api-key",
+          "hasDynamicHelp": false,
+          "helpValue": "<key>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "name": "project",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "index": {
+          "description": "The index to search in.",
+          "name": "index",
+          "required": true,
+          "hasDynamicHelp": false,
+          "helpValue": "<index>",
+          "multiple": false,
+          "type": "option"
+        },
+        "q": {
+          "description": "The search terms. Omit it for a placeholder search, which returns everything.",
+          "name": "q",
+          "hasDynamicHelp": false,
+          "helpValue": "<query>",
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Number of documents to skip. Ignored when --page or --hits-per-page is given.",
+          "name": "offset",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "limit": {
+          "description": "Maximum number of documents to return, 20 by default. Ignored when --page or --hits-per-page is given.",
+          "name": "limit",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Page to return, 1-indexed. The response then carries totalHits and totalPages instead of estimatedTotalHits.",
+          "name": "page",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "hits-per-page": {
+          "description": "Number of documents per page, used with --page. 0 counts without returning any.",
+          "name": "hits-per-page",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "attributes-to-retrieve": {
+          "description": "Document attributes to return, comma-separated. Defaults to the displayed ones.",
+          "name": "attributes-to-retrieve",
+          "hasDynamicHelp": false,
+          "helpValue": "<fields>",
+          "multiple": false,
+          "type": "option"
+        },
+        "attributes-to-crop": {
+          "description": "Attributes to crop in _formatted, comma-separated, each optionally as `attribute:length`.",
+          "name": "attributes-to-crop",
+          "hasDynamicHelp": false,
+          "helpValue": "<fields>",
+          "multiple": false,
+          "type": "option"
+        },
+        "crop-length": {
+          "description": "Maximum number of words in a cropped value, 10 by default.",
+          "name": "crop-length",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "crop-marker": {
+          "description": "String marking where a cropped value was cut, `…` by default.",
+          "name": "crop-marker",
+          "hasDynamicHelp": false,
+          "helpValue": "<string>",
+          "multiple": false,
+          "type": "option"
+        },
+        "attributes-to-highlight": {
+          "description": "Attributes to highlight in _formatted, comma-separated.",
+          "name": "attributes-to-highlight",
+          "hasDynamicHelp": false,
+          "helpValue": "<fields>",
+          "multiple": false,
+          "type": "option"
+        },
+        "highlight-pre-tag": {
+          "description": "String inserted before each highlighted term, `<em>` by default.",
+          "name": "highlight-pre-tag",
+          "hasDynamicHelp": false,
+          "helpValue": "<string>",
+          "multiple": false,
+          "type": "option"
+        },
+        "highlight-post-tag": {
+          "description": "String inserted after each highlighted term, `</em>` by default.",
+          "name": "highlight-post-tag",
+          "hasDynamicHelp": false,
+          "helpValue": "<string>",
+          "multiple": false,
+          "type": "option"
+        },
+        "show-matches-position": {
+          "description": "Add _matchesPosition to each hit, the byte offset of every matched term.",
+          "name": "show-matches-position",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "filter": {
+          "description": "Filter expression, for example `rating > 4`. Its array-of-arrays form goes through --data.",
+          "name": "filter",
+          "hasDynamicHelp": false,
+          "helpValue": "<filter>",
+          "multiple": false,
+          "type": "option"
+        },
+        "sort": {
+          "description": "Attributes to sort on, comma-separated, each as `attribute:asc` or `:desc`.",
+          "name": "sort",
+          "hasDynamicHelp": false,
+          "helpValue": "<sort>",
+          "multiple": false,
+          "type": "option"
+        },
+        "distinct": {
+          "description": "Return one document per value of this attribute, which must be filterable.",
+          "name": "distinct",
+          "hasDynamicHelp": false,
+          "helpValue": "<attribute>",
+          "multiple": false,
+          "type": "option"
+        },
+        "facets": {
+          "description": "Attributes to count in facetDistribution, comma-separated. Patterns such as `*` are accepted.",
+          "name": "facets",
+          "hasDynamicHelp": false,
+          "helpValue": "<facets>",
+          "multiple": false,
+          "type": "option"
+        },
+        "matching-strategy": {
+          "description": "How query terms are relaxed when there are not enough results.",
+          "name": "matching-strategy",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "options": [
+            "last",
+            "all",
+            "frequency"
+          ],
+          "type": "option"
+        },
+        "attributes-to-search-on": {
+          "description": "Restrict the search to these searchable attributes, comma-separated.",
+          "name": "attributes-to-search-on",
+          "hasDynamicHelp": false,
+          "helpValue": "<fields>",
+          "multiple": false,
+          "type": "option"
+        },
+        "ranking-score-threshold": {
+          "description": "Drop the hits whose ranking score is below this value, between 0.0 and 1.0.",
+          "name": "ranking-score-threshold",
+          "hasDynamicHelp": false,
+          "helpValue": "<number>",
+          "multiple": false,
+          "type": "option"
+        },
+        "locales": {
+          "description": "ISO-639 locales of the query, comma-separated, instead of auto-detection.",
+          "name": "locales",
+          "hasDynamicHelp": false,
+          "helpValue": "<locales>",
+          "multiple": false,
+          "type": "option"
+        },
+        "hybrid": {
+          "description": "Hybrid search as JSON, for example `{\"embedder\":\"default\",\"semanticRatio\":0.5}`.",
+          "name": "hybrid",
+          "hasDynamicHelp": false,
+          "helpValue": "<json>",
+          "multiple": false,
+          "type": "option"
+        },
+        "vector": {
+          "description": "Query vector for a user-provided embedder, comma-separated numbers.",
+          "name": "vector",
+          "hasDynamicHelp": false,
+          "helpValue": "<numbers>",
+          "multiple": false,
+          "type": "option"
+        },
+        "retrieve-vectors": {
+          "description": "Add _vectors to each hit, the embeddings of the document.",
+          "name": "retrieve-vectors",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "show-ranking-score": {
+          "description": "Add _rankingScore to each hit, between 0.0 and 1.0.",
+          "name": "show-ranking-score",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "show-ranking-score-details": {
+          "description": "Add _rankingScoreDetails to each hit, the score of every ranking rule.",
+          "name": "show-ranking-score-details",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "show-performance-details": {
+          "description": "Add performanceDetails to the response, a timing breakdown of the query.",
+          "name": "show-performance-details",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "exclusive": [
+            "data"
+          ],
+          "name": "file",
+          "hasDynamicHelp": false,
+          "helpValue": "<path>",
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "name": "data",
+          "hasDynamicHelp": false,
+          "helpValue": "<json>",
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "search",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "meilisearch",
+      "routes": [
+        "POST /indexes/{index_uid}/search"
+      ],
+      "keyActions": [
+        "search"
+      ],
+      "connectionFlags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "helpValue": "<key>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "search.js"
+      ]
+    },
     "update:documents": {
       "aliases": [],
       "args": {},
