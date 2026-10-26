@@ -116,6 +116,23 @@ describe("meili search", () => {
     ).toEqual([{ vector: [0.1, "nope"], rankingScoreThreshold: "abc", hybrid: "{nope}" }]);
   });
 
+  it("converts the text that spells a decimal number, and only that text", async () => {
+    server.use(meilisearchHandlers.search(hits));
+    for (const [text, sent] of [
+      ["0.5", 0.5],
+      [".5", 0.5],
+      ["-1e-3", -0.001],
+      // `Number` would read these as 1 and Infinity, another value than the one typed.
+      ["0x1", "0x1"],
+      ["1e999", "1e999"],
+    ] as const) {
+      expect(
+        await bodiesOf(["--index", "movies", "--ranking-score-threshold", text]),
+        `--ranking-score-threshold ${text}`,
+      ).toEqual([{ rankingScoreThreshold: sent }]);
+    }
+  });
+
   it("refuses --output ndjson: the response is hits, not a list envelope", async () => {
     server.use(meilisearchHandlers.search(hits));
     const result = await runCommand(Search, ["--index", "movies", "--output", "ndjson"], { env });

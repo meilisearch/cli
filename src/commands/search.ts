@@ -196,9 +196,14 @@ export default class Search extends BaseCommand {
  */
 function asNumber(value: string | undefined): number | string | undefined {
   if (value === undefined) return undefined;
-  const parsed = Number(value);
-  return value.trim() === "" || !Number.isFinite(parsed) ? value : parsed;
+  const text = value.trim();
+  // `Number` alone would not do: it reads `0x1` as 1 and `1e999` as Infinity,
+  // which JSON writes as null. Both turn what the agent typed into another
+  // value, silently. Only text that spells a decimal number becomes one.
+  return DECIMAL.test(text) && Number.isFinite(Number(text)) ? Number(text) : value;
 }
+
+const DECIMAL = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/;
 
 function asJson(value: string | undefined): unknown {
   if (value === undefined) return undefined;
