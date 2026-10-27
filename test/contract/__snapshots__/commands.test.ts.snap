@@ -1184,6 +1184,41 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
+      "description": "Get the version of the Meilisearch instance, with the commit it was built from.",
+      "examples": [
+        "meili get version",
+        "meili get version --output json",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+      ],
+      "id": "get version",
+      "keyActions": [
+        "version",
+      ],
+      "routes": [
+        "GET /version",
+      ],
+    },
+    {
+      "api": "meilisearch",
       "description": "Run several search queries in one request, each naming its index in --queries, returned side by side or merged into one ranked list with --federation.",
       "examples": [
         "meili multi-search --queries '[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]'",
@@ -1987,6 +2022,13 @@ The file holds API keys and decides where every later command goes, for every pr
         "id": "get tasks",
         "routes": [
           "GET /tasks",
+        ],
+      },
+      {
+        "description": "Get the version of the Meilisearch instance, with the commit it was built from.",
+        "id": "get version",
+        "routes": [
+          "GET /version",
         ],
       },
       {
