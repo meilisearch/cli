@@ -131,6 +131,14 @@ export const meilisearchHandlers = {
     }),
 
   /**
+   * `POST /multi-search` answering `response`, whatever shape it is given: the
+   * route answers one envelope per query, or the merged hits of every query
+   * when the body carries a `federation`, and the CLI prints either as it is.
+   */
+  multiSearch: (response: RecordAny) =>
+    http.post(`${MEILISEARCH_URL}/multi-search`, () => HttpResponse.json(response)),
+
+  /**
    * `GET /tasks` paging over `all` like the API does: `limit` defaults to 20,
    * the newest uid first, `from` names the uid the page starts at, and the
    * envelope carries `from`, `limit`, `total` and the `next` cursor.

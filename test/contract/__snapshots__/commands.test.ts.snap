@@ -1183,6 +1183,70 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
     },
     {
+      "api": "meilisearch",
+      "description": "Run several search queries in one request, each naming its index in --queries, returned side by side or merged into one ranked list with --federation.",
+      "examples": [
+        "meili multi-search --queries '[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]'",
+        "meili multi-search --queries '[{"indexUid":"movies","q":"nosferatu"}]' --output json",
+        "meili multi-search --queries '[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]' --federation '{"limit":5}'",
+        "cat queries.json | meili multi-search --file -",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The search queries as a JSON array, each one an index to search and its search parameters: \`[{"indexUid":"movies","q":"nosferatu"}]\`.",
+          "helpValue": "<json>",
+          "name": "queries",
+          "type": "option",
+        },
+        {
+          "description": "Merge the hits of every query into one ranked list, as JSON: \`{}\` for the defaults, \`{"limit":5}\` to narrow it. Without it each query answers its own envelope.",
+          "helpValue": "<json>",
+          "name": "federation",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "multi-search",
+      "keyActions": [
+        "search",
+      ],
+      "routes": [
+        "POST /multi-search",
+      ],
+    },
+    {
       "api": "none",
       "description": "Print one line per command, or one command in full with --command, from the oclif manifest.",
       "examples": [
@@ -1923,6 +1987,13 @@ The file holds API keys and decides where every later command goes, for every pr
         "id": "get tasks",
         "routes": [
           "GET /tasks",
+        ],
+      },
+      {
+        "description": "Run several search queries in one request, each naming its index in --queries, returned side by side or merged into one ranked list with --federation.",
+        "id": "multi-search",
+        "routes": [
+          "POST /multi-search",
         ],
       },
       {
