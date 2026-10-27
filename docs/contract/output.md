@@ -48,10 +48,10 @@ Errors go to stderr, as one JSON document: compact when stderr is not a TTY, ind
 }
 ```
 
-- API errors keep the API fields as they are: `code`, `type`, `message`, `link`. The CLI never rewrites an API message.
+- API errors keep the API fields as they are: `code`, `type`, `message`, `link`. The CLI never rewrites an API message. Both APIs answer that shape, so both are passed through alike, and the CLI invents no code for either.
 - `hint` is optional and CLI owned. It names the next command to run. It is a full sentence, without markdown other than backticks around commands. On an unknown command, the hint names the closest existing command, "Did you mean `meili delete indexes`?", computed from the manifest: the CLI suggests, it never asks.
 - Errors that come from the CLI itself use codes prefixed with `cli_` and `type` set to `cli`. Current list: `cli_usage`, `cli_config`, `cli_auth_missing`, `cli_auth_failed`, `cli_timeout`, `cli_network`, `cli_task_failed`, `cli_input_invalid`, `cli_internal`. `cli_auth_missing` is a credential the CLI does not have, `cli_auth_failed` one the authorization server refused to give or to accept. `cli_internal` is an unexpected error inside the CLI itself, a bug to report, and exits 1. Adding a code is a contract change.
-- The Management API does not define an error body in its spec, and the running API answers with `{"error": "Forbidden"}`: a message, no code. For its errors the CLI builds the object itself: `type` is `management`, `code` comes from the HTTP status (`management_unauthorized` 401, `management_forbidden` 403, `management_not_found` 404, `management_unprocessable` 422, `management_error` otherwise), `message` is the API's `error` field when the body has one, the spec's response description otherwise, and the status with the request (`HTTP 404 to POST https://…`) when the spec describes neither, `link` is absent. When the spec gains an error schema with codes, this rule is replaced by pass-through.
+- An HTTP error that carries no error body is not the API speaking: a proxy or a wrong URL answered. It is `cli_network`, exit 6, naming the server and the status, for either API.
 - Stack traces appear only with `--debug`.
 
 ## Warnings
@@ -109,8 +109,8 @@ Destructive commands are those of the verb `delete`, as `commands.md` derives th
 
 ## Pagination
 
-- `--limit` and `--offset` (or `--from` for tasks and batches) are passed to the API as they are. When `--id` selects a unit route, they are ignored and not sent.
-- `--all` follows the API pagination until the end. With `ndjson` the items stream. With `json` the CLI returns the last page envelope with `results` replaced by the full list and the fields that describe one page removed: `limit` and `offset`, or `limit` and `from` on the routes that page with a cursor.
+- `--limit` with `--offset`, with `--from` for tasks and batches, or with `--page` for the Management API lists, are passed to the API as they are. The name is the API parameter name for that route. When `--id` selects a unit route, they are ignored and not sent.
+- `--all` follows the API pagination until the end. With `ndjson` the items stream. With `json` the CLI returns the last page envelope with `results` replaced by the full list and the fields that describe one page removed: `limit` with `offset`, with `from`, or with `page` and `totalPages`. The fields that describe the whole list, `total`, stay.
 
 ## Help
 

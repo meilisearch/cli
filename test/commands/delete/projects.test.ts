@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import DeleteProjects from "../../../src/commands/delete/projects.js";
-import { managementEnv as env, managementHandlers } from "../../helpers/management-handlers.js";
+import {
+  managementEnv as env,
+  forbidden,
+  managementHandlers,
+} from "../../helpers/management-handlers.js";
 import { server, useMockServer } from "../../helpers/msw.js";
 import { runCli, runCommand, tempConfig } from "../../helpers/run-command.js";
 
@@ -33,18 +37,18 @@ describe("meili delete projects", () => {
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
   });
 
-  it("maps a 403 to management_forbidden and exit 3", async () => {
-    server.use(managementHandlers.apiError("/api/v2/projects/343", 403, { error: "Forbidden" }));
+  it("passes the API's error body through on a 403, with exit 3", async () => {
+    server.use(managementHandlers.apiError("/api/v2/projects/343", 403, forbidden));
     const result = await runCommand(DeleteProjects, ["--id", "343", "--yes", "--output", "json"], {
       env,
     });
     expect(result).toMatchSnapshot();
   });
 
-  it("describes a 403 without a body with the document's description", async () => {
+  it("calls a 403 without an error body a network error, not the API speaking", async () => {
     server.use(managementHandlers.apiError("/api/v2/projects/343", 403));
     const result = await runCommand(DeleteProjects, ["--id", "343", "--yes"], { env });
-    expect(result.exitCode).toBe(3);
-    expect(JSON.parse(result.stderr).error.message).toBe("project not accessible");
+    expect(result.exitCode).toBe(6);
+    expect(JSON.parse(result.stderr).error.code).toBe("cli_network");
   });
 });

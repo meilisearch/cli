@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import UpdateProjects from "../../../src/commands/update/projects.js";
 import {
   managementEnv as env,
+  forbidden,
   MANAGEMENT_URL,
   managementHandlers,
   type ReceivedRequest,
@@ -28,7 +29,7 @@ describe("meili update projects", () => {
       { env },
     );
     expect(result).toMatchSnapshot();
-    expect(received[0]?.body).toEqual({ project: { name: "renamed" } });
+    expect(received[0]?.body).toEqual({ name: "renamed" });
   });
 
   it("takes the project's cloudId from the config file with --project, not with --id too", async () => {
@@ -52,8 +53,8 @@ describe("meili update projects", () => {
     expect(JSON.parse(both.stderr).error.code).toBe("cli_usage");
   });
 
-  it("maps a 403 to management_forbidden and exit 3", async () => {
-    server.use(managementHandlers.apiError("/api/v2/projects/343", 403, { error: "Forbidden" }));
+  it("passes the API's error body through on a 403, with exit 3", async () => {
+    server.use(managementHandlers.apiError("/api/v2/projects/343", 403, forbidden));
     const result = await runCommand(
       UpdateProjects,
       ["--id", "343", "--name", "x", "--output", "json"],

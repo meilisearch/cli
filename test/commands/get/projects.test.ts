@@ -22,7 +22,7 @@ describe("meili get projects", () => {
     expect(result.stdout).toMatchSnapshot();
   });
 
-  it("lists the projects as the API returns them, a bare array", async () => {
+  it("lists the projects in the envelope the API returns, pagination included", async () => {
     server.use(managementHandlers.listProjects([project, staging]));
     const result = await runCommand(GetProjects, ["--output", "json"], { env });
     expect(result).toMatchSnapshot();
@@ -39,6 +39,24 @@ describe("meili get projects", () => {
     expect(result.stdout).toBe(`${JSON.stringify(project)}\n${JSON.stringify(staging)}\n`);
   });
 
+  it("follows every page with --all, and merges them into one envelope", async () => {
+    const received: ReceivedRequest[] = [];
+    server.use(managementHandlers.listProjects([project, staging], received));
+    const result = await runCommand(GetProjects, ["--limit", "1", "--all", "--output", "json"], {
+      env,
+    });
+    expect(result.exitCode).toBe(0);
+    expect(received.map((request) => request.url)).toEqual([
+      `${MANAGEMENT_URL}/api/v2/projects?limit=1`,
+      `${MANAGEMENT_URL}/api/v2/projects?limit=1&page=2`,
+    ]);
+    // The fields that describe one page are dropped, `total` stays (output.md).
+    expect(JSON.parse(result.stdout)).toEqual({
+      total: 2,
+      results: [project, staging],
+    });
+  });
+
   it("gets one project with --id, or with --project and its cloudId", async () => {
     server.use(managementHandlers.getProject([project, staging]));
     const byId = await runCommand(GetProjects, ["--id", "344", "--output", "json"], { env });
@@ -53,7 +71,7 @@ describe("meili get projects", () => {
     expect(byName.stdout).toBe(`${JSON.stringify(project)}\n`);
   });
 
-  it("maps a 403 on an unknown id to management_forbidden and exit 3", async () => {
+  it("passes the API's error body through on an unknown id, with exit 3", async () => {
     server.use(managementHandlers.getProject([project]));
     const result = await runCommand(GetProjects, ["--id", "999", "--output", "json"], { env });
     expect(result).toMatchSnapshot();

@@ -245,6 +245,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -502,6 +523,27 @@
         "from": {
           "description": "Passed to the API: the uid the page starts at, going down.",
           "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -773,6 +815,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -986,6 +1049,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -1158,6 +1242,27 @@
         "from": {
           "description": "Passed to the API: the uid the page starts at, going down.",
           "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -1350,6 +1455,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -1522,6 +1648,27 @@
         "from": {
           "description": "Passed to the API: the uid the page starts at, going down.",
           "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -1867,6 +2014,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -2040,6 +2208,27 @@
         "from": {
           "description": "Passed to the API: the uid the page starts at, going down.",
           "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -2268,6 +2457,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -2475,6 +2685,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -2656,6 +2887,27 @@
         "from": {
           "description": "Passed to the API: the uid the page starts at, going down.",
           "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -2980,6 +3232,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -3224,6 +3497,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -3438,6 +3732,27 @@
         "from": {
           "description": "Passed to the API: the uid the page starts at, going down.",
           "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -3790,6 +4105,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -4094,6 +4430,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -4293,6 +4650,27 @@
         "from": {
           "description": "Passed to the API: the uid the page starts at, going down.",
           "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -4547,6 +4925,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -4592,7 +4991,7 @@
         "<%= config.bin %> <%= command.id %> --team-id 12",
         "<%= config.bin %> <%= command.id %> --id 343",
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --output ndjson"
+        "<%= config.bin %> <%= command.id %> --all --output ndjson"
       ],
       "flags": {
         "output": {
@@ -4653,6 +5052,28 @@
           "helpValue": "<id>",
           "multiple": false,
           "type": "option"
+        },
+        "limit": {
+          "description": "Passed to the API.",
+          "name": "limit",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "name": "page",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "name": "all",
+          "allowNo": false,
+          "type": "boolean"
         }
       },
       "hasDynamicHelp": false,
@@ -4766,6 +5187,27 @@
         "from": {
           "description": "Passed to the API: the uid the page starts at, going down.",
           "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -5124,6 +5566,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -5306,6 +5769,27 @@
         "from": {
           "description": "Passed to the API: the uid the page starts at, going down.",
           "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -5766,6 +6250,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -6035,6 +6540,27 @@
         "from": {
           "description": "Passed to the API: the uid the page starts at, going down.",
           "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -6321,6 +6847,27 @@
           "type": "boolean"
         }
       },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
       "bodyInputFlags": {
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -6556,6 +7103,27 @@
         "from": {
           "description": "Passed to the API: the uid the page starts at, going down.",
           "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "pagePaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "page": {
+          "description": "Passed to the API: the page to return, starting at 1.",
+          "helpValue": "<n>",
           "input": [],
           "multiple": false,
           "type": "option"

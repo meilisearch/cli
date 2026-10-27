@@ -4,6 +4,43 @@ export type ClientOptions = {
     baseUrl: 'https://{defaultHost}' | (string & {});
 };
 
+/**
+ * Error body returned by every non-2xx response. Switch on `code`, never on `message`.
+ */
+export type Error = {
+    message: string;
+    /**
+     * Stable snake_case identifier of the error.
+     */
+    code: string;
+    type: 'invalid_request' | 'auth' | 'internal';
+    /**
+     * Documentation of this error code.
+     */
+    link: string;
+    /**
+     * Per-field details, only present on `validation_failed`.
+     */
+    errors?: Array<{
+        field: string;
+        code: string;
+        message: string;
+    }>;
+};
+
+/**
+ * Envelope of every list response, the items being in `results`.
+ */
+export type Pagination = {
+    page: number;
+    limit: number;
+    /**
+     * Number of items matching the request, all pages included.
+     */
+    total: number;
+    totalPages: number;
+};
+
 export type Organization = {
     id: number;
     name: string;
@@ -88,7 +125,10 @@ export type Project = {
     name: string;
     projectUid: string;
     url?: string | null;
-    masterKey: string;
+    /**
+     * Only returned on project creation and master key rotation.
+     */
+    masterKey?: string;
     teamId: number;
     resourceId: number;
     msVersion: string;
@@ -161,6 +201,16 @@ export type ProjectCost = {
     items: Array<ProjectCostItem>;
 };
 
+/**
+ * Page to return, starting at 1.
+ */
+export type Page = number;
+
+/**
+ * Number of items per page. Values above the maximum are capped to it.
+ */
+export type Limit = number;
+
 export type GetApiV2MeData = {
     body?: never;
     path?: never;
@@ -190,7 +240,16 @@ export type GetApiV2MeResponse = GetApiV2MeResponses[keyof GetApiV2MeResponses];
 export type GetApiV2MeilisearchVersionsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Page to return, starting at 1.
+         */
+        page?: number;
+        /**
+         * Number of items per page. Values above the maximum are capped to it.
+         */
+        limit?: number;
+    };
     url: '/api/v2/meilisearch-versions';
 };
 
@@ -205,7 +264,9 @@ export type GetApiV2MeilisearchVersionsResponses = {
     /**
      * meilisearch versions list
      */
-    200: Array<MeilisearchVersion>;
+    200: Pagination & {
+        results: Array<MeilisearchVersion>;
+    };
 };
 
 export type GetApiV2MeilisearchVersionsResponse = GetApiV2MeilisearchVersionsResponses[keyof GetApiV2MeilisearchVersionsResponses];
@@ -213,7 +274,16 @@ export type GetApiV2MeilisearchVersionsResponse = GetApiV2MeilisearchVersionsRes
 export type GetApiV2OrganizationsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Page to return, starting at 1.
+         */
+        page?: number;
+        /**
+         * Number of items per page. Values above the maximum are capped to it.
+         */
+        limit?: number;
+    };
     url: '/api/v2/organizations';
 };
 
@@ -228,7 +298,9 @@ export type GetApiV2OrganizationsResponses = {
     /**
      * organizations list
      */
-    200: Array<Organization>;
+    200: Pagination & {
+        results: Array<Organization>;
+    };
 };
 
 export type GetApiV2OrganizationsResponse = GetApiV2OrganizationsResponses[keyof GetApiV2OrganizationsResponses];
@@ -248,10 +320,12 @@ export type DeleteApiV2OrganizationsByIdErrors = {
      */
     403: unknown;
     /**
-     * organization still has active projects
+     * Organization deletion has project
      */
-    422: unknown;
+    422: Error;
 };
+
+export type DeleteApiV2OrganizationsByIdError = DeleteApiV2OrganizationsByIdErrors[keyof DeleteApiV2OrganizationsByIdErrors];
 
 export type DeleteApiV2OrganizationsByIdResponses = {
     /**
@@ -289,9 +363,7 @@ export type GetApiV2OrganizationsByIdResponse = GetApiV2OrganizationsByIdRespons
 
 export type PatchApiV2OrganizationsByIdData = {
     body?: {
-        organization?: {
-            name?: string;
-        };
+        name?: string;
     };
     path: {
         id: number;
@@ -305,7 +377,13 @@ export type PatchApiV2OrganizationsByIdErrors = {
      * not the organization owner
      */
     403: unknown;
+    /**
+     * Validation failed
+     */
+    422: Error;
 };
+
+export type PatchApiV2OrganizationsByIdError = PatchApiV2OrganizationsByIdErrors[keyof PatchApiV2OrganizationsByIdErrors];
 
 export type PatchApiV2OrganizationsByIdResponses = {
     /**
@@ -511,6 +589,14 @@ export type GetApiV2ProjectsData = {
     body?: never;
     path?: never;
     query?: {
+        /**
+         * Page to return, starting at 1.
+         */
+        page?: number;
+        /**
+         * Number of items per page. Values above the maximum are capped to it.
+         */
+        limit?: number;
         teamId?: number;
     };
     url: '/api/v2/projects';
@@ -527,7 +613,9 @@ export type GetApiV2ProjectsResponses = {
     /**
      * projects list
      */
-    200: Array<Project>;
+    200: Pagination & {
+        results: Array<Project>;
+    };
 };
 
 export type GetApiV2ProjectsResponse = GetApiV2ProjectsResponses[keyof GetApiV2ProjectsResponses];
@@ -616,9 +704,7 @@ export type GetApiV2ProjectsByIdResponse = GetApiV2ProjectsByIdResponses[keyof G
 
 export type PatchApiV2ProjectsByIdData = {
     body?: {
-        project: {
-            name?: string;
-        };
+        name: string;
     };
     path: {
         id: number;
@@ -650,22 +736,39 @@ export type PatchApiV2ProjectsByIdResponse = PatchApiV2ProjectsByIdResponses[key
 export type GetApiV2RegionsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Page to return, starting at 1.
+         */
+        page?: number;
+        /**
+         * Number of items per page. Values above the maximum are capped to it.
+         */
+        limit?: number;
+    };
     url: '/api/v2/regions';
 };
 
 export type GetApiV2RegionsErrors = {
+    /**
+     * Invalid limit
+     */
+    400: Error;
     /**
      * unauthorized
      */
     401: unknown;
 };
 
+export type GetApiV2RegionsError = GetApiV2RegionsErrors[keyof GetApiV2RegionsErrors];
+
 export type GetApiV2RegionsResponses = {
     /**
      * regions list
      */
-    200: Array<Region>;
+    200: Pagination & {
+        results: Array<Region>;
+    };
 };
 
 export type GetApiV2RegionsResponse = GetApiV2RegionsResponses[keyof GetApiV2RegionsResponses];
@@ -674,6 +777,14 @@ export type GetApiV2ResourcesData = {
     body?: never;
     path?: never;
     query?: {
+        /**
+         * Page to return, starting at 1.
+         */
+        page?: number;
+        /**
+         * Number of items per page. Values above the maximum are capped to it.
+         */
+        limit?: number;
         regionId?: number;
     };
     url: '/api/v2/resources';
@@ -690,7 +801,9 @@ export type GetApiV2ResourcesResponses = {
     /**
      * resources list
      */
-    200: Array<Resource>;
+    200: Pagination & {
+        results: Array<Resource>;
+    };
 };
 
 export type GetApiV2ResourcesResponse = GetApiV2ResourcesResponses[keyof GetApiV2ResourcesResponses];
@@ -729,6 +842,14 @@ export type GetApiV2TeamMembersData = {
     body?: never;
     path?: never;
     query?: {
+        /**
+         * Page to return, starting at 1.
+         */
+        page?: number;
+        /**
+         * Number of items per page. Values above the maximum are capped to it.
+         */
+        limit?: number;
         teamId?: number;
     };
     url: '/api/v2/team-members';
@@ -745,7 +866,9 @@ export type GetApiV2TeamMembersResponses = {
     /**
      * team members list
      */
-    200: Array<TeamMember>;
+    200: Pagination & {
+        results: Array<TeamMember>;
+    };
 };
 
 export type GetApiV2TeamMembersResponse = GetApiV2TeamMembersResponses[keyof GetApiV2TeamMembersResponses];
@@ -783,22 +906,35 @@ export type PostApiV2TeamMembersResponse = PostApiV2TeamMembersResponses[keyof P
 export type GetApiV2TeamsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Page to return, starting at 1.
+         */
+        page?: number;
+        /**
+         * Number of items per page. Values above the maximum are capped to it.
+         */
+        limit?: number;
+    };
     url: '/api/v2/teams';
 };
 
 export type GetApiV2TeamsErrors = {
     /**
-     * unauthorized
+     * Missing authorization header
      */
-    401: unknown;
+    401: Error;
 };
+
+export type GetApiV2TeamsError = GetApiV2TeamsErrors[keyof GetApiV2TeamsErrors];
 
 export type GetApiV2TeamsResponses = {
     /**
      * teams list
      */
-    200: Array<Team>;
+    200: Pagination & {
+        results: Array<Team>;
+    };
 };
 
 export type GetApiV2TeamsResponse = GetApiV2TeamsResponses[keyof GetApiV2TeamsResponses];
@@ -817,10 +953,12 @@ export type PostApiV2TeamsData = {
 
 export type PostApiV2TeamsErrors = {
     /**
-     * not the organization owner
+     * Forbidden
      */
-    403: unknown;
+    403: Error;
 };
+
+export type PostApiV2TeamsError = PostApiV2TeamsErrors[keyof PostApiV2TeamsErrors];
 
 export type PostApiV2TeamsResponses = {
     /**
@@ -842,14 +980,16 @@ export type DeleteApiV2TeamsByIdData = {
 
 export type DeleteApiV2TeamsByIdErrors = {
     /**
-     * not the team or organization owner
+     * Team not found
      */
-    403: unknown;
+    404: Error;
     /**
-     * team still has active projects
+     * Team deletion has project
      */
-    422: unknown;
+    422: Error;
 };
+
+export type DeleteApiV2TeamsByIdError = DeleteApiV2TeamsByIdErrors[keyof DeleteApiV2TeamsByIdErrors];
 
 export type DeleteApiV2TeamsByIdResponses = {
     /**
@@ -871,10 +1011,12 @@ export type GetApiV2TeamsByIdData = {
 
 export type GetApiV2TeamsByIdErrors = {
     /**
-     * team not accessible
+     * Team not found
      */
-    403: unknown;
+    404: Error;
 };
+
+export type GetApiV2TeamsByIdError = GetApiV2TeamsByIdErrors[keyof GetApiV2TeamsByIdErrors];
 
 export type GetApiV2TeamsByIdResponses = {
     /**
@@ -887,13 +1029,11 @@ export type GetApiV2TeamsByIdResponse = GetApiV2TeamsByIdResponses[keyof GetApiV
 
 export type PatchApiV2TeamsByIdData = {
     body?: {
-        team?: {
-            name?: string;
-            /**
-             * New owner's uuid, must already be a team member
-             */
-            ownerId?: string;
-        };
+        name?: string;
+        /**
+         * New owner's uuid, must already be a team member
+         */
+        ownerId?: string;
     };
     path: {
         id: number;
@@ -904,14 +1044,16 @@ export type PatchApiV2TeamsByIdData = {
 
 export type PatchApiV2TeamsByIdErrors = {
     /**
-     * not the team or organization owner
+     * Team not found
      */
-    403: unknown;
+    404: Error;
     /**
-     * new owner is not a team member
+     * Team user is not member
      */
-    422: unknown;
+    422: Error;
 };
+
+export type PatchApiV2TeamsByIdError = PatchApiV2TeamsByIdErrors[keyof PatchApiV2TeamsByIdErrors];
 
 export type PatchApiV2TeamsByIdResponses = {
     /**

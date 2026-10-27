@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import AddProjects from "../../../src/commands/add/projects.js";
 import {
   managementEnv as env,
+  forbidden,
   MANAGEMENT_TOKEN,
   MANAGEMENT_URL,
   managementHandlers,
@@ -110,8 +111,8 @@ describe("meili add projects", () => {
     expect(received[0]?.authorization).toBe("Bearer flagToken");
   });
 
-  it("maps a 403 with the API's error field to management_forbidden and exit 3", async () => {
-    server.use(managementHandlers.apiError("/api/v2/projects", 403, { error: "Forbidden" }));
+  it("passes the API's error body through on a 403, with exit 3", async () => {
+    server.use(managementHandlers.apiError("/api/v2/projects", 403, forbidden));
     const result = await runCommand(AddProjects, ["--name", "demo", "--output", "json"], {
       env,
     });
