@@ -808,6 +808,134 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
+      "description": "Search the values of one facet attribute of an index, counted on the documents --q and --filter keep.",
+      "examples": [
+        "meili facet-search --index movies --facet-name genres --facet-query ac",
+        "meili facet-search --index movies --facet-name genres --facet-query ac --output json",
+        "meili facet-search --index movies --facet-name genres --q horror --filter 'rating > 4'",
+        "meili facet-search --index movies --data '{"facetName":"genres","facetQuery":"ac"}'",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to search the facet values in.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "The facet attribute to search in. It must be one of the filterable attributes of the index.",
+          "helpValue": "<attribute>",
+          "name": "facet-name",
+          "type": "option",
+        },
+        {
+          "description": "The terms the facet values are matched against, the first word only. Omit it to return every value, up to 100.",
+          "helpValue": "<query>",
+          "name": "facet-query",
+          "type": "option",
+        },
+        {
+          "description": "The search terms that narrow the documents the facet values are computed on, not the values themselves.",
+          "helpValue": "<query>",
+          "name": "q",
+          "type": "option",
+        },
+        {
+          "description": "Filter expression, for example \`rating > 4\`. Its array-of-arrays form goes through --data.",
+          "helpValue": "<filter>",
+          "name": "filter",
+          "type": "option",
+        },
+        {
+          "description": "How the terms of --q are relaxed when there are not enough results.",
+          "name": "matching-strategy",
+          "options": [
+            "last",
+            "all",
+            "frequency",
+          ],
+          "type": "option",
+        },
+        {
+          "description": "Restrict the search of --q to these searchable attributes, comma-separated.",
+          "helpValue": "<fields>",
+          "name": "attributes-to-search-on",
+          "type": "option",
+        },
+        {
+          "description": "Count only the documents whose ranking score reaches this value, between 0.0 and 1.0.",
+          "helpValue": "<number>",
+          "name": "ranking-score-threshold",
+          "type": "option",
+        },
+        {
+          "description": "ISO-639 locales of the query, comma-separated, instead of auto-detection.",
+          "helpValue": "<locales>",
+          "name": "locales",
+          "type": "option",
+        },
+        {
+          "description": "Hybrid search as JSON, for example \`{"embedder":"default","semanticRatio":0.5}\`.",
+          "helpValue": "<json>",
+          "name": "hybrid",
+          "type": "option",
+        },
+        {
+          "description": "Query vector for a user-provided embedder, comma-separated numbers.",
+          "helpValue": "<numbers>",
+          "name": "vector",
+          "type": "option",
+        },
+        {
+          "description": "Count the facet values exhaustively instead of estimating the counts.",
+          "name": "exhaustive-facet-count",
+          "type": "boolean",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "facet-search",
+      "keyActions": [
+        "search",
+      ],
+      "routes": [
+        "POST /indexes/{index_uid}/facet-search",
+      ],
+    },
+    {
+      "api": "meilisearch",
       "description": "List the documents of an index, narrowed by --ids or by --filter.",
       "examples": [
         "meili get documents --index movies",
@@ -2072,6 +2200,13 @@ The file holds API keys and decides where every later command goes, for every pr
         "id": "delete tasks",
         "routes": [
           "DELETE /tasks",
+        ],
+      },
+      {
+        "description": "Search the values of one facet attribute of an index, counted on the documents --q and --filter keep.",
+        "id": "facet-search",
+        "routes": [
+          "POST /indexes/{index_uid}/facet-search",
         ],
       },
       {
