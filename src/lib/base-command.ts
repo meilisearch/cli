@@ -173,16 +173,6 @@ export abstract class BaseCommand extends Command {
     all: ALL_FLAG,
   };
 
-  /** The same group again for the Management API lists, which number their pages. */
-  static pagePaginationFlags = {
-    limit: LIMIT_FLAG,
-    page: Flags.integer({
-      description: "Passed to the API: the page to return, starting at 1.",
-      helpValue: "<n>",
-    }),
-    all: ALL_FLAG,
-  };
-
   /** Shared group for commands that send a JSON body. */
   static bodyInputFlags = {
     file: Flags.string({

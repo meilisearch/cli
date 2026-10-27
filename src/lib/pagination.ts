@@ -1,6 +1,6 @@
 /**
- * Pagination for list routes: `--limit` with `--offset`, `--from` or `--page`,
- * and `--all`. See docs/contract/output.md, section Pagination.
+ * Pagination for list routes: `--limit`, `--offset` or `--from`, and `--all`.
+ * See docs/contract/output.md, section Pagination.
  */
 
 /** What every list route of either API returns: `results` plus pagination fields. */
@@ -17,14 +17,8 @@ export interface FromQuery {
   from?: number | undefined;
 }
 
-/** The query of a route that pages by page number: the Management API lists. */
-export interface PageQuery {
-  limit?: number | undefined;
-  page?: number | undefined;
-}
-
 /** The envelope fields that describe one page rather than the whole list. */
-const PAGE_FIELDS = ["limit", "offset", "from", "page", "totalPages"];
+const PAGE_FIELDS = ["limit", "offset", "from"];
 
 function numberField(page: ListPage, name: string): number {
   const value = page[name];
@@ -48,15 +42,6 @@ export function nextFromQuery(query: FromQuery, page: ListPage): FromQuery | und
   return typeof next === "number" ? { ...query, from: next } : undefined;
 }
 
-/**
- * The query of the page after `page` on a route that numbers its pages: the
- * API answers which page it served and how many there are.
- */
-export function nextPageQuery(query: PageQuery, page: ListPage): PageQuery | undefined {
-  const current = numberField(page, "page");
-  return current >= numberField(page, "totalPages") ? undefined : { ...query, page: current + 1 };
-}
-
 /** Fetches page after page until `nextQuery` says there is no page left. */
 export async function* iteratePages<Q, P extends ListPage>(
   fetchPage: (query: Q) => Promise<P>,
@@ -74,7 +59,7 @@ export async function* iteratePages<Q, P extends ListPage>(
 /**
  * The envelope of the last page with `results` replaced by every item and the
  * fields that describe one page removed. The others, like `total`, stay. A
- * route carries one group or another, so dropping them all drops its own.
+ * route carries one pair or the other, so dropping all three is dropping its.
  */
 export function mergePages(pages: readonly ListPage[]): ListPage {
   const last = { ...(pages.at(-1) ?? { results: [] }) };

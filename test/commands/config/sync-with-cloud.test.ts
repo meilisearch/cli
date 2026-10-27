@@ -51,6 +51,32 @@ describe("meili config sync-with-cloud", () => {
     expect(readFileSync(path, "utf8")).not.toContain(project.masterKey);
   });
 
+  it("reads every page, so a project the first page misses is still matched", async () => {
+    const second = { ...project, id: 344, url: "https://ms-def.sfo.meilisearch.io" };
+    const { path, env } = tempConfig("sync-pages.json", {
+      demo: { url: "https://ms-abc.sfo.meilisearch.io" },
+      late: { url: "https://ms-def.sfo.meilisearch.io" },
+    });
+    const received: ReceivedRequest[] = [];
+    server.use(managementHandlers.listProjects([project, second], received, 1));
+    const result = await runCommand(ConfigSyncWithCloud, [], {
+      env: { ...managementEnv, ...env },
+    });
+    expect(result.exitCode).toBe(0);
+    expect(received).toHaveLength(2);
+    expect(JSON.parse(result.stdout)).toEqual({
+      updated: ["demo", "late"],
+      unchanged: [],
+      missing: [],
+    });
+    expect(readJson(path)).toEqual({
+      projects: {
+        demo: { url: "https://ms-abc.sfo.meilisearch.io", cloudId: 343 },
+        late: { url: "https://ms-def.sfo.meilisearch.io", cloudId: 344 },
+      },
+    });
+  });
+
   it("passes --team-id to the API and does not report missing entries then", async () => {
     const { path, env } = tempConfig("sync-team.json", {
       other: { url: "https://o", cloudId: 9 },
@@ -62,7 +88,7 @@ describe("meili config sync-with-cloud", () => {
       env: { ...managementEnv, ...env },
     });
     expect(result.exitCode).toBe(0);
-    expect(received[0]?.url).toBe(`${MANAGEMENT_URL}/api/v2/projects?teamId=12`);
+    expect(received[0]?.url).toBe(`${MANAGEMENT_URL}/api/v2/projects?teamId=12&page=1`);
     expect(JSON.parse(result.stdout)).toEqual({ updated: ["demo"], unchanged: [], missing: [] });
     expect(readJson(path)).toEqual({
       projects: {

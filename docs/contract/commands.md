@@ -52,7 +52,7 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 | `DELETE /tasks` | `meili delete tasks --ids <uids> --yes` |
 | `GET /keys`, `GET /keys/{key}` | `meili get keys [--id <uid>]` |
 | `POST /dumps` | `meili add dumps` |
-| `GET /api/v2/projects`, `GET /api/v2/projects/{id}` | `meili get projects [--id <id> \| --project <name>] [--team-id <id>] [--page <n>] [--limit <n>] [--all]` |
+| `GET /api/v2/projects`, `GET /api/v2/projects/{id}` | `meili get projects [--id <id> \| --project <name>] [--team-id <id>]` |
 | `POST /api/v2/projects` | `meili add projects --name <name> --team-id <id> --resource-id <id> [--ms-version <version>] [--add-to-config]` |
 | `PATCH /api/v2/projects/{id}` | `meili update projects (--id <id> \| --project <name>) --name <name>` |
 | `DELETE /api/v2/projects/{id}` | `meili delete projects (--id <id> \| --project <name>) --yes` |
@@ -149,7 +149,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 | Flag | Meaning |
 |---|---|
 | `--limit <n>` | Passed to the API. |
-| `--offset <n>`, `--from <uid>` or `--page <n>` | Passed to the API. The name is the API parameter name for that route: the Management API lists number their pages. |
+| `--offset <n>` or `--from <uid>` | Passed to the API. The name is the API parameter name for that route. |
 | `--all` | Fetch every page. Streams with `ndjson`, buffers into one array with `json`. On `delete documents`, selects the route that deletes every document. |
 
 **Body input** (commands that send a JSON body):

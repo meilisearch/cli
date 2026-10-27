@@ -3,7 +3,6 @@ import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { getApiV2Projects } from "../../lib/clients/management/generated/sdk.gen.js";
 import type { Project } from "../../lib/clients/management/generated/types.gen.js";
 import { CONFIG_FILE_WARNING, writeConfigFile } from "../../lib/config.js";
-import { iteratePages, nextPageQuery, type PageQuery } from "../../lib/pagination.js";
 
 export default class ConfigSyncWithCloud extends BaseCommand {
   static api: Api = "management";
@@ -29,15 +28,15 @@ ${CONFIG_FILE_WARNING}`;
 
   async run(): Promise<void> {
     const { flags } = await this.parse(ConfigSyncWithCloud);
-    // Every page: an entry the first page does not carry is not a missing project.
-    const query: PageQuery & { teamId?: number | undefined } = { teamId: flags["team-id"] };
+    // Every page, so that an entry the first page misses is not reported missing.
     const projects: Project[] = [];
-    for await (const page of iteratePages(
-      (current) => getApiV2Projects({ client: this.managementClient, query: current }),
-      query,
-      nextPageQuery,
-    )) {
-      projects.push(...page.results);
+    for (let page = 1; ; page += 1) {
+      const answer = await getApiV2Projects({
+        client: this.managementClient,
+        query: { teamId: flags["team-id"], page },
+      });
+      projects.push(...answer.results);
+      if (page >= answer.totalPages) break;
     }
     const file = this.configFile();
     const entries = file.projects;

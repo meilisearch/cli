@@ -1110,7 +1110,7 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili get projects --team-id 12",
         "meili get projects --id 343",
         "meili get projects --project prod",
-        "meili get projects --all --output ndjson",
+        "meili get projects --output ndjson",
       ],
       "flags": [
         {
@@ -1142,23 +1142,6 @@ The file holds API keys and decides where every later command goes, for every pr
           "helpValue": "<id>",
           "name": "team-id",
           "type": "option",
-        },
-        {
-          "description": "Passed to the API.",
-          "helpValue": "<n>",
-          "name": "limit",
-          "type": "option",
-        },
-        {
-          "description": "Passed to the API: the page to return, starting at 1.",
-          "helpValue": "<n>",
-          "name": "page",
-          "type": "option",
-        },
-        {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
-          "name": "all",
-          "type": "boolean",
         },
       ],
       "id": "get projects",

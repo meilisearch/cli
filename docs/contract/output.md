@@ -109,8 +109,9 @@ Destructive commands are those of the verb `delete`, as `commands.md` derives th
 
 ## Pagination
 
-- `--limit` with `--offset`, with `--from` for tasks and batches, or with `--page` for the Management API lists, are passed to the API as they are. The name is the API parameter name for that route. When `--id` selects a unit route, they are ignored and not sent.
-- `--all` follows the API pagination until the end. With `ndjson` the items stream. With `json` the CLI returns the last page envelope with `results` replaced by the full list and the fields that describe one page removed: `limit` with `offset`, with `from`, or with `page` and `totalPages`. The fields that describe the whole list, `total`, stay.
+- `--limit` and `--offset` (or `--from` for tasks and batches) are passed to the API as they are. When `--id` selects a unit route, they are ignored and not sent.
+- `--all` follows the API pagination until the end. With `ndjson` the items stream. With `json` the CLI returns the last page envelope with `results` replaced by the full list and the fields that describe one page removed: `limit` and `offset`, or `limit` and `from` on the routes that page with a cursor.
+- `meili get projects` offers none of them yet: the Management API numbers its pages instead of counting an offset, and the flags wait for the two APIs to page the same way. Its first page goes out as the API sends it, envelope included, and `ndjson` streams the `results` of that page.
 
 ## Help
 
