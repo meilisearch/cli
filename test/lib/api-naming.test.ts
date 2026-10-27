@@ -11,6 +11,7 @@ import {
   type OpenApiDocument,
   parseRoute,
   pathFlagsForRoute,
+  projectFlagForRoute,
   routeKey,
   singular,
   toKebabCase,
@@ -63,14 +64,17 @@ const spec: OpenApiDocument = {
     "/dumps": { post: {} },
     "/api/v2/me": { get: {} },
     "/api/v2/projects": {
-      get: query("teamId"),
-      post: body({ project: { properties: { name: {}, teamId: {}, resourceId: {} } } }),
+      get: {
+        parameters: [{ $ref: "#/components/parameters/Page" }, ...query("teamId").parameters],
+      },
+      post: body({ name: {}, teamId: {}, resourceId: {} }),
     },
     "/api/v2/projects/{id}": { get: {}, delete: {} },
     "/api/v2/team-members": { get: query("teamId"), post: {}, delete: {} },
   },
   components: {
     schemas: { IndexCreateRequest: { properties: { uid: {}, primaryKey: {} } } },
+    parameters: { Page: { name: "page", in: "query" } },
   },
 };
 
@@ -178,6 +182,18 @@ describe("exceptions", () => {
   });
 });
 
+describe("projectFlagForRoute", () => {
+  it("names the flag --project can fill: id on projects, project-id under a project, nothing else", () => {
+    expect(projectFlagForRoute(parseRoute("PATCH /api/v2/projects/{id}"))).toBe("id");
+    expect(projectFlagForRoute(parseRoute("PATCH /api/v2/projects/{projectId}/version"))).toBe(
+      "project-id",
+    );
+    expect(projectFlagForRoute(parseRoute("POST /api/v2/projects"))).toBeUndefined();
+    expect(projectFlagForRoute(parseRoute("PATCH /api/v2/teams/{id}"))).toBeUndefined();
+    expect(projectFlagForRoute(parseRoute("GET /indexes/{index_uid}"))).toBeUndefined();
+  });
+});
+
 describe("pathFlagsForRoute", () => {
   it("names --id for the command's own resource and the singular collection for a parent", () => {
     expect(pathFlagsForRoute(parseRoute("GET /health"), "get health")).toEqual([]);
@@ -205,6 +221,10 @@ describe("pathFlagsForRoute", () => {
     expect(
       pathFlagsForRoute(parseRoute("GET /tasks/{task_id}/documents"), "get documents"),
     ).toEqual(["task"]);
+    // A parent parameter of the Management API keeps its API name: `--project` is the global flag.
+    expect(
+      pathFlagsForRoute(parseRoute("PATCH /api/v2/projects/{projectId}/version"), "update version"),
+    ).toEqual(["project-id"]);
     expect(pathFlagsForRoute(parseRoute("GET /api/v2/projects/{id}"), "get projects")).toEqual([
       "id",
     ]);
@@ -215,10 +235,10 @@ describe("flagsForRoute", () => {
   it("takes the query parameters and the first-level body fields, in kebab-case", () => {
     expect(flags("GET /indexes", "get indexes")).toEqual(["limit", "offset"]);
     expect(flags("GET /health", "get health")).toEqual([]);
-    expect(flags("GET /api/v2/projects", "get projects")).toEqual(["team-id"]);
+    expect(flags("GET /api/v2/projects", "get projects")).toEqual(["page", "team-id"]);
   });
 
-  it("unwraps a body made of one object named after the resource", () => {
+  it("resolves a shared parameter, which the Management API uses for its paging", () => {
     expect(flags("POST /api/v2/projects", "add projects")).toEqual([
       "name",
       "resource-id",

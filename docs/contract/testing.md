@@ -20,12 +20,11 @@ A command whose output carries a path or a date, as the `auth` commands do, snap
 
 ## 2. Integration tests, `test/integration/`
 
-They hit real local instances of both APIs, with no mock, through the built binary and the same scrubbed environment as the unit tests.
+They hit a real local Meilisearch, with no mock, through the built binary and the same scrubbed environment as the unit tests: `test/integration/meilisearch/`, against the instance started by the `docker-compose.yml` of this repository on `http://localhost:7700` with the master key `masterKey`.
 
-- `test/integration/meilisearch/`: against Meilisearch, started by the `docker-compose.yml` of this repository on `http://localhost:7700` with the master key `masterKey`.
-- `test/integration/management/`: against the Management API from the `meilisearch-cloud` repository. Known facts: it starts with `docker compose up` in that repository; its images are private, so CI needs a registry token to pull them; the seed creates no user and no personal access token, so the test bootstrap must create both before the suite runs (a script in `test/integration/management/bootstrap/`, run once by CI and by `pnpm test:integration`). The base URL, the bootstrap command and the token it produces are documented in `test/integration/management/README.md`, which is the only place where they live. Building this bootstrap is a task of its own, before the first management command.
+The Management API has no integration test. Meilisearch Cloud does not run locally, and `openapi/management.json` is the source of truth of what the API does: the unit tests mock it from that document, `test/contract/api.test.ts` checks every declared route against it, and the client is generated from it. What the document does not say, a required field, a status, an error body, is a documentation gap reported to the Cloud team, never guessed in the CLI.
 
-Integration tests create their own fixtures (an index, a team, a project) with a random suffix and delete them at the end. They never depend on pre-existing data, so they can run in parallel.
+Integration tests create their own fixtures (an index, documents) with a random suffix and delete them at the end. They never depend on pre-existing data, so they can run in parallel.
 
 ## 3. Contract tests, `test/contract/`
 
@@ -35,7 +34,7 @@ Not per command. They protect the promises of `docs/contract/`:
 - every command declares `static api`
 - every command has a description and at least two examples; every flag has a description, and a flag with a value documents it
 - every command in `src/commands/` has its test file in `test/commands/`
-- exit codes match the table in `output.md` for each `cli_` and `management_` code
+- exit codes match the table in `output.md` for each `cli_` code, and the CLI invents none for either API
 - `--help` never opens a network connection
 - redaction removes every secret from `--debug` traces
 
@@ -58,6 +57,5 @@ They read the OpenAPI documents in `openapi/`, downloaded by `pnpm openapi` and 
 | Unit | yes | yes |
 | Contract | yes | yes |
 | Integration Meilisearch | when Meilisearch is up on :7700, skipped otherwise with a visible notice | yes |
-| Integration management | when the Management API is up locally, skipped otherwise with a visible notice | yes |
 
 Skipped is printed, never silent. A test that passes because the server is absent is a bug.

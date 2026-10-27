@@ -1,0 +1,60 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili update projects > passes the API's error body through on a 403, with exit 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible","hint":"Provide a personal access token with \`--management-token <pat>\` or \`MEILI_MANAGEMENT_TOKEN\`."}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili update projects > prints its help without any network call 1`] = `
+"Rename a Meilisearch Cloud project.
+
+USAGE
+  $ meili update projects [-o <mode>] [--debug] [--management-token <pat>]
+    [--management-url <url>] [--project <name>] [--id <id>] [--name <name>]
+    [--file <path> | --data <json>]
+
+FLAGS
+  -o, --output=<mode>           json (default): one document, the API body as it
+                                is, indented in a terminal, compact when piped.
+                                ndjson: one item per line, list commands only,
+                                streams with --all.
+      --data=<json>             Inline JSON body.
+      --debug                   Print every HTTP request and response on stderr,
+                                secrets redacted.
+      --file=<path>             Read the body from a file. \`-\` reads from stdin.
+      --id=<id>                 The project to update, or give --project <name>
+                                and its cloudId from the config file.
+      --management-token=<pat>  Management API personal access token.
+      --management-url=<url>    Management API base URL. Default
+                                https://api.meilisearch.com.
+      --name=<name>             New name of the project.
+      --project=<name>          A project of the config file, whose cloudId
+                                names the Cloud project, in place of --id.
+
+DESCRIPTION
+  Rename a Meilisearch Cloud project.
+
+EXAMPLES
+  $ meili update projects --id 343 --name renamed
+
+  $ meili update projects --id 343 --name renamed --output json
+
+  $ meili update projects --project prod --name renamed
+
+  $ meili update projects --id 343 --data '{"name":"renamed"}'
+
+"
+`;
+
+exports[`meili update projects > sends the new name for the project of --id, and prints the project updated 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"id":343,"name":"renamed","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","masterKey":"projectmasterkey9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","plan":"build","regionId":1}}
+",
+}
+`;

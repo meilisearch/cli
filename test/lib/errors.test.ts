@@ -6,15 +6,55 @@ import {
 } from "meilisearch";
 import { describe, expect, it } from "vitest";
 import {
+  apiExitCode,
   CLI_ERROR_CODES,
   EXIT_CODES,
   formatError,
-  MANAGEMENT_ERROR_CODES,
+  ManagementApiError,
   MeiliCliError,
-  managementErrorCode,
-  meilisearchExitCode,
   toRenderedError,
 } from "../../src/lib/errors.js";
+
+describe("ManagementApiError", () => {
+  const forbidden = {
+    message: "You cannot access this project.",
+    code: "project_not_accessible",
+    type: "auth",
+    link: "https://docs.meilisearch.com/errors#project_not_accessible",
+  };
+
+  it("passes the API's error body through, like a Meilisearch one", () => {
+    const rendered = toRenderedError(
+      new ManagementApiError(403, forbidden, "https://m/api/v2/projects/343"),
+    );
+    expect(rendered.body).toEqual({
+      ...forbidden,
+      hint: expect.stringContaining("--management-token"),
+    });
+    expect(rendered.exitCode).toBe(3);
+  });
+
+  it("maps the status to an exit code, as it does for Meilisearch", () => {
+    const at = (status: number) =>
+      toRenderedError(new ManagementApiError(status, { ...forbidden }, "https://m/x")).exitCode;
+    expect(at(404)).toBe(4);
+    expect(at(422)).toBe(1);
+    expect(at(500)).toBe(1);
+  });
+
+  it("calls an answer without an error body a network error, not the API speaking", () => {
+    const rendered = toRenderedError(
+      new ManagementApiError(502, "<html>bad gateway</html>", "https://m/api/v2/projects"),
+    );
+    expect(rendered.body).toEqual({
+      code: "cli_network",
+      type: "cli",
+      message:
+        "The server at https://m/api/v2/projects answered HTTP 502 without a Management API error body.",
+    });
+    expect(rendered.exitCode).toBe(6);
+  });
+});
 
 const apiBody = {
   message: "Index `movies` not found.",
@@ -172,20 +212,10 @@ describe("formatError", () => {
 });
 
 describe("code tables", () => {
-  it("maps Management API statuses to codes and exit codes", () => {
-    expect(managementErrorCode(401)).toBe("management_unauthorized");
-    expect(managementErrorCode(403)).toBe("management_forbidden");
-    expect(managementErrorCode(404)).toBe("management_not_found");
-    expect(managementErrorCode(422)).toBe("management_unprocessable");
-    expect(managementErrorCode(500)).toBe("management_error");
-    expect(MANAGEMENT_ERROR_CODES.management_unauthorized).toBe(3);
-    expect(MANAGEMENT_ERROR_CODES.management_not_found).toBe(4);
-  });
-
-  it("maps Meilisearch API statuses to exit codes", () => {
-    expect(meilisearchExitCode(401)).toBe(3);
-    expect(meilisearchExitCode(403)).toBe(3);
-    expect(meilisearchExitCode(404)).toBe(4);
-    expect(meilisearchExitCode(409)).toBe(1);
+  it("maps an API status to an exit code, the same way for both APIs", () => {
+    expect(apiExitCode(401)).toBe(3);
+    expect(apiExitCode(403)).toBe(3);
+    expect(apiExitCode(404)).toBe(4);
+    expect(apiExitCode(409)).toBe(1);
   });
 });

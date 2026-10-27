@@ -37,8 +37,8 @@ Package: `@meilisearch/cli` on npm. Binary: `meili`.
 - TypeScript, strict mode, `noUncheckedIndexedAccess` on. Node 22 or newer.
 - oclif v5 (`@oclif/core` 5) for the command tree, topic separator is a space (`meili get indexes`). See ADR 0001.
 - `meilisearch-js` for the Meilisearch API.
-- `@hey-api/openapi-ts` generates the Management API client from `openapi/management.json`, downloaded by `pnpm openapi:management` and never committed, into `src/lib/clients/management/generated/`. Never edit generated files. Run `pnpm gen:management` to refresh them (the generator and the script arrive with the first management command). In code, commands, flags and environment variables, `management` is the name for everything that touches the Management API. `Cloud` only appears in prose, as the product name.
-- vitest for tests, with snapshots. `msw` mocks HTTP in unit tests. Integration tests run against a local Meilisearch and a local Management API, see `docs/contract/testing.md`.
+- `@hey-api/openapi-ts` generates the Management API client from `openapi/management.json`, downloaded by `pnpm openapi:management` and never committed, into `src/lib/clients/management/generated/`. Never edit generated files. Run `pnpm gen:management` to refresh them: it runs the generator through `pnpm dlx` with TypeScript 5 beside it, which the generator needs, from `openapi-ts.config.mjs`, and CI fails when the committed files differ. In code, flags and environment variables, `management` names the Management API itself, `--management-token`; `cloud` names the product, Meilisearch Cloud, where a command or a field speaks of it, `config sync-with-cloud`, `cloudId`.
+- vitest for tests, with snapshots. `msw` mocks HTTP in unit tests. Integration tests run against a local Meilisearch; the Management API has none, see `docs/contract/testing.md`.
 - Biome for lint and format.
 - changesets for versioning and the changelog.
 - pnpm as the package manager.
@@ -63,7 +63,7 @@ Use the skill: `/add-command <command>`, for example `/add-command get stats`. I
 4. Call the client. Read commands end with `await this.output(result)`. Write commands end with `await this.outputTask(task, flags)`.
 5. Map errors. Do nothing for API errors, `BaseCommand` maps them. Add a `hint` only when you know the next command the user should run.
 6. Create `test/commands/<same path>.test.ts` from the sibling test. It must snapshot the `--help` output and the JSON output for one success case and one error case, with `msw` mocks.
-7. Add one integration test in `test/integration/meilisearch/` or `test/integration/management/`. Meilisearch runs locally from the `docker compose` file of this repository. The Management API needs the bootstrap described in `docs/contract/testing.md`, which does not exist yet: build it in its own pull request before the first management command. Unit tests still mock HTTP with `msw`; integration tests hit the real thing.
+7. For a Meilisearch command, add one integration test in `test/integration/meilisearch/`: Meilisearch runs locally from the `docker compose` file of this repository. A management command has none: Meilisearch Cloud does not run locally, its OpenAPI document is the source of truth, and the unit tests mock it from that document (`docs/contract/testing.md`). What the document does not say is a gap to report to the Cloud team, not something to guess.
 8. Run `pnpm gen:manifest` so `oclif.manifest.json` and `meili schema` know the command.
 9. Add the command to the changeset. Until the first release, `.changeset/first-version.md` is the only one and describes everything: add your line to it. After it, write a new file in `.changeset/` by hand with type `minor`: `pnpm changeset` is interactive.
 10. Run the "Before you finish" list.
@@ -95,9 +95,9 @@ Then read the diff of your pull request twice. Once for simplicity: in Claude Co
 
 ## Where to read more
 
-- `docs/contract/commands.md`: the naming rules that turn an API route into a command, the exceptions, the global and shared flags, the commands without an API
+- `docs/contract/commands.md`: the naming rules that turn an API route into a command, the exceptions, the global and shared flags, the commands that do not derive from a route
 - `docs/contract/output.md`: output modes, error format, exit codes, async tasks, pagination
-- `docs/contract/config.md`: projects, the config file, connection resolution, environment variables, secrets
+- `docs/contract/config.md`: projects, the config file, connection resolution, Cloud projects, environment variables, secrets
 - `openapi/`: the OpenAPI documents downloaded by `pnpm openapi`, the reference for every command name
 - `docs/contract/testing.md`: test levels, how the two local APIs start, what runs in pull request CI
 - `docs/adr/`: the decisions and the reasons
