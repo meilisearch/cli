@@ -4,7 +4,10 @@
  * request is an error.
  */
 import { HttpResponse, http } from "msw";
-import type { Project } from "../../src/lib/clients/management/generated/types.gen.js";
+import type {
+  Error as ApiError,
+  Project,
+} from "../../src/lib/clients/management/generated/types.gen.js";
 
 export const MANAGEMENT_URL = "https://management.test";
 export const MANAGEMENT_TOKEN = "mspat_testtoken1a2b";
@@ -32,6 +35,14 @@ export const project: Project = {
   resource: { id: 3, name: "build", plan: "build", regionId: 1 },
 };
 
+/** An error body as the document describes it: the same shape as a Meilisearch one. */
+export const forbidden: ApiError = {
+  message: "You cannot access this project.",
+  code: "project_not_accessible",
+  type: "auth",
+  link: "https://www.meilisearch.com/docs/reference/errors#project_not_accessible",
+};
+
 /** What a handler saw: the URL, the `Authorization` header and the parsed body. */
 export interface ReceivedRequest {
   url: string;
@@ -47,11 +58,23 @@ async function record(received: ReceivedRequest[], request: Request): Promise<un
 }
 
 export const managementHandlers = {
-  /** `GET /api/v2/projects` answering `all`, as the API lists what the token sees. */
+  /**
+   * `GET /api/v2/projects` paging `all` as the API does: `limit` items of the
+   * page asked for, in the envelope of the document.
+   */
   listProjects: (all: Project[], received: ReceivedRequest[] = []) =>
     http.get(`${MANAGEMENT_URL}/api/v2/projects`, async ({ request }) => {
       await record(received, request);
-      return HttpResponse.json(all);
+      const query = new URL(request.url).searchParams;
+      const limit = Number(query.get("limit") ?? 20);
+      const page = Number(query.get("page") ?? 1);
+      return HttpResponse.json({
+        page,
+        limit,
+        total: all.length,
+        totalPages: Math.max(1, Math.ceil(all.length / limit)),
+        results: all.slice((page - 1) * limit, page * limit),
+      });
     }),
 
   /** `POST /api/v2/projects` answering 201 with `project` carrying the attributes received. */
@@ -66,15 +89,15 @@ export const managementHandlers = {
     http.get(`${MANAGEMENT_URL}/api/v2/projects/:id`, ({ params }) => {
       const found = all.find((project) => String(project.id) === params.id);
       return found === undefined
-        ? HttpResponse.json({ error: "Forbidden" }, { status: 403 })
+        ? HttpResponse.json(forbidden, { status: 403 })
         : HttpResponse.json(found);
     }),
 
   /** `PATCH /api/v2/projects/{id}` answering 200 with `project` carrying the attributes received. */
   updateProject: (received: ReceivedRequest[] = []) =>
     http.patch(`${MANAGEMENT_URL}/api/v2/projects/:id`, async ({ request }) => {
-      const body = (await record(received, request)) as { project?: Record<string, unknown> };
-      return HttpResponse.json({ ...project, ...body.project });
+      const body = (await record(received, request)) as Record<string, unknown>;
+      return HttpResponse.json({ ...project, ...body });
     }),
 
   /** `DELETE /api/v2/projects/{id}` answering 204. */

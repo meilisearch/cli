@@ -34,7 +34,7 @@ Not per command. They protect the promises of `docs/contract/`:
 - every command declares `static api`
 - every command has a description and at least two examples; every flag has a description, and a flag with a value documents it
 - every command in `src/commands/` has its test file in `test/commands/`
-- exit codes match the table in `output.md` for each `cli_` and `management_` code
+- exit codes match the table in `output.md` for each `cli_` code, and the CLI invents none for either API
 - `--help` never opens a network connection
 - redaction removes every secret from `--debug` traces
 

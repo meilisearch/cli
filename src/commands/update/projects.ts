@@ -34,15 +34,15 @@ export default class UpdateProjects extends BaseCommand {
     const { flags } = await this.parse(UpdateProjects);
     // The body goes out whole, so a field this command declares no flag for
     // reaches the API, which refuses it rather than the CLI dropping it.
-    const project = { ...readJsonObjectBody(flags) } as NonNullable<
+    const body = { ...readJsonObjectBody(flags) } as NonNullable<
       PatchApiV2ProjectsByIdData["body"]
-    >["project"];
-    if (flags.name !== undefined) project.name = flags.name;
+    >;
+    if (flags.name !== undefined) body.name = flags.name;
     await this.output(
       await patchApiV2ProjectsById({
         client: this.managementClient,
         path: { id: this.cloudProjectId(flags.id) },
-        body: { project },
+        body,
       }),
     );
   }

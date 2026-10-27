@@ -5,7 +5,6 @@
  */
 import { cannotConnectMessage, ManagementApiError, MeiliCliError } from "../errors.js";
 import { type Client, createClient } from "./management/generated/client/index.js";
-import { RESPONSES } from "./management/generated/responses.gen.js";
 
 export type ManagementClient = Client;
 
@@ -17,9 +16,9 @@ export interface ManagementClientOptions {
 }
 
 /**
- * A non-2xx answer becomes a ManagementApiError carrying the body and the
- * document's description of that status for that route (output.md, "Errors");
- * no answer at all is `cli_network`. The SDK functions then return the body.
+ * A non-2xx answer becomes a ManagementApiError carrying the error body the
+ * API sent, which the contract passes through (output.md, "Errors"); no answer
+ * at all is `cli_network`. The SDK functions then return the body.
  */
 export function createManagementClient(options: ManagementClientOptions): ManagementClient {
   const client = createClient({
@@ -37,12 +36,7 @@ export function createManagementClient(options: ManagementClientOptions): Manage
             cause: error,
           },
         )
-      : new ManagementApiError(
-          response.status,
-          error,
-          RESPONSES[`${options.method} ${options.url}`]?.[String(response.status)],
-          `${options.method} ${request?.url ?? options.url}`,
-        ),
+      : new ManagementApiError(response.status, error, request?.url ?? options.url),
   );
   return client;
 }

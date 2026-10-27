@@ -1,9 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`meili add projects > maps a 403 with the API's error field to management_forbidden and exit 3 1`] = `
+exports[`meili add projects > passes the API's error body through on a 403, with exit 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"management_forbidden","type":"management","message":"Forbidden"}}
+  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible","hint":"Provide a personal access token with \`--management-token <pat>\` or \`MEILI_MANAGEMENT_TOKEN\`."}}
 ",
   "stdout": "",
 }
