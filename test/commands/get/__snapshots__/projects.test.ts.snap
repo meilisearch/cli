@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`meili get projects > lists the projects in the envelope the API returns, pagination included 1`] = `
+exports[`meili get projects > lists the projects in the envelope the API returns, with no paging flag yet 1`] = `
 {
   "exitCode": 0,
   "stderr": "",
@@ -24,26 +24,20 @@ exports[`meili get projects > prints its help without any network call 1`] = `
 USAGE
   $ meili get projects [-o <mode>] [--debug] [--management-token <pat>]
     [--management-url <url>] [--project <name>] [--id <id>] [--team-id <id>]
-    [--limit <n>] [--page <n>] [--all]
 
 FLAGS
   -o, --output=<mode>           json (default): one document, the API body as it
                                 is, indented in a terminal, compact when piped.
                                 ndjson: one item per line, list commands only,
                                 streams with --all.
-      --all                     Fetch every page. Streams with ndjson, buffers
-                                into one array with json.
       --debug                   Print every HTTP request and response on stderr,
                                 secrets redacted.
       --id=<id>                 The project to get, or give --project <name> and
                                 its cloudId from the config file. Without
                                 either, the command lists the projects.
-      --limit=<n>               Passed to the API.
       --management-token=<pat>  Management API personal access token.
       --management-url=<url>    Management API base URL. Default
                                 https://api.meilisearch.com.
-      --page=<n>                Passed to the API: the page to return, starting
-                                at 1.
       --project=<name>          A project of the config file, whose cloudId
                                 names the Cloud project, in place of --id.
       --team-id=<id>            Only the projects of this team. Ignored with
@@ -64,7 +58,7 @@ EXAMPLES
 
   $ meili get projects --project prod
 
-  $ meili get projects --all --output ndjson
+  $ meili get projects --output ndjson
 
 "
 `;

@@ -60,13 +60,14 @@ async function record(received: ReceivedRequest[], request: Request): Promise<un
 export const managementHandlers = {
   /**
    * `GET /api/v2/projects` paging `all` as the API does: `limit` items of the
-   * page asked for, in the envelope of the document.
+   * page asked for, in the envelope of the document. `pageSize` stands in for
+   * the API's own default, to put a handful of projects on several pages.
    */
-  listProjects: (all: Project[], received: ReceivedRequest[] = []) =>
+  listProjects: (all: Project[], received: ReceivedRequest[] = [], pageSize = 20) =>
     http.get(`${MANAGEMENT_URL}/api/v2/projects`, async ({ request }) => {
       await record(received, request);
       const query = new URL(request.url).searchParams;
-      const limit = Number(query.get("limit") ?? 20);
+      const limit = Number(query.get("limit") ?? pageSize);
       const page = Number(query.get("page") ?? 1);
       return HttpResponse.json({
         page,

@@ -1731,7 +1731,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
         "meili get projects --team-id 12",
         "meili get projects --id 343",
         "meili get projects --project prod",
-        "meili get projects --all --output ndjson",
+        "meili get projects --output ndjson",
       ],
       "flags": [
         {
@@ -1763,23 +1763,6 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "helpValue": "<id>",
           "name": "team-id",
           "type": "option",
-        },
-        {
-          "description": "Passed to the API.",
-          "helpValue": "<n>",
-          "name": "limit",
-          "type": "option",
-        },
-        {
-          "description": "Passed to the API: the page to return, starting at 1.",
-          "helpValue": "<n>",
-          "name": "page",
-          "type": "option",
-        },
-        {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
-          "name": "all",
-          "type": "boolean",
         },
       ],
       "id": "get projects",

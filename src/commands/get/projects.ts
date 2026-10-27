@@ -4,7 +4,6 @@ import {
   getApiV2Projects,
   getApiV2ProjectsById,
 } from "../../lib/clients/management/generated/sdk.gen.js";
-import { nextPageQuery, type PageQuery } from "../../lib/pagination.js";
 
 export default class GetProjects extends BaseCommand {
   static api: Api = "management";
@@ -20,7 +19,7 @@ export default class GetProjects extends BaseCommand {
     "<%= config.bin %> <%= command.id %> --team-id 12",
     "<%= config.bin %> <%= command.id %> --id 343",
     "<%= config.bin %> <%= command.id %> --project prod",
-    "<%= config.bin %> <%= command.id %> --all --output ndjson",
+    "<%= config.bin %> <%= command.id %> --output ndjson",
   ];
 
   static override flags = {
@@ -35,23 +34,21 @@ export default class GetProjects extends BaseCommand {
       description: "Only the projects of this team. Ignored with --id.",
       helpValue: "<id>",
     }),
-    ...BaseCommand.pagePaginationFlags,
   };
 
   async run(): Promise<void> {
     const { flags } = await this.parse(GetProjects);
     if (flags.id === undefined && this.globalFlags.project === undefined) {
-      const query: PageQuery & { teamId?: number | undefined } = {
-        teamId: flags["team-id"],
-        limit: flags.limit,
-        page: flags.page,
-      };
-      await this.outputList(
-        (current) => getApiV2Projects({ client: this.managementClient, query: current }),
-        query,
-        flags.all === true,
-        nextPageQuery,
-      );
+      // The list route pages, but by page number rather than by offset as every
+      // Meilisearch list does. The paging flags wait for the two to agree; the
+      // envelope goes out as it is, and `ndjson` streams its `results`.
+      const page = await getApiV2Projects({
+        client: this.managementClient,
+        query: { teamId: flags["team-id"] },
+      });
+      await this.output(this.outputMode === "ndjson" ? page.results : page, {
+        supportsNdjson: true,
+      });
       return;
     }
     await this.output(
