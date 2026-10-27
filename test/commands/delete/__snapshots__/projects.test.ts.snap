@@ -1,0 +1,47 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili delete projects > maps a 403 to management_forbidden and exit 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"management_forbidden","type":"management","message":"Forbidden"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili delete projects > prints its help without any network call 1`] = `
+"Delete a Meilisearch Cloud project, with its data. Prints nothing on success.
+
+USAGE
+  $ meili delete projects --yes [-o <mode>] [--debug] [--management-token
+    <pat>] [--management-url <url>] [--project <name>] [--id <id>]
+
+FLAGS
+  -o, --output=<mode>           json (default): one document, the API body as it
+                                is, indented in a terminal, compact when piped.
+                                ndjson: one item per line, list commands only,
+                                streams with --all.
+      --debug                   Print every HTTP request and response on stderr,
+                                secrets redacted.
+      --id=<id>                 The project to delete, or give --project <name>
+                                and its cloudId from the config file.
+      --management-token=<pat>  Management API personal access token.
+      --management-url=<url>    Management API base URL. Default
+                                https://api.meilisearch.com.
+      --project=<name>          A project of the config file, whose cloudId
+                                names the Cloud project, in place of --id.
+      --yes                     (required) Confirm the deletion. Nothing is sent
+                                to the API without it.
+
+DESCRIPTION
+  Delete a Meilisearch Cloud project, with its data. Prints nothing on success.
+
+EXAMPLES
+  $ meili delete projects --id 343 --yes
+
+  $ meili delete projects --id 343 --yes --output json
+
+  $ meili delete projects --project staging --yes
+
+"
+`;

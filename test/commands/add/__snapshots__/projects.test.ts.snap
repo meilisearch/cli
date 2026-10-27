@@ -1,0 +1,69 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili add projects > maps a 403 with the API's error field to management_forbidden and exit 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"management_forbidden","type":"management","message":"Forbidden"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili add projects > prints its help without any network call 1`] = `
+"Create a Meilisearch Cloud project in a team, on a resource.
+
+USAGE
+  $ meili add projects [-o <mode>] [--debug] [--management-token <pat>]
+    [--management-url <url>] [--name <name>] [--team-id <id>] [--resource-id
+    <id>] [--ms-version <version>] [--add-to-config] [--file <path> | --data
+    <json>]
+
+FLAGS
+  -o, --output=<mode>           json (default): one document, the API body as it
+                                is, indented in a terminal, compact when piped.
+                                ndjson: one item per line, list commands only,
+                                streams with --all.
+      --add-to-config           Add the project to the config file, as an entry
+                                named after it with its URL, its master key and
+                                its cloudId.
+      --data=<json>             Inline JSON body.
+      --debug                   Print every HTTP request and response on stderr,
+                                secrets redacted.
+      --file=<path>             Read the body from a file. \`-\` reads from stdin.
+      --management-token=<pat>  Management API personal access token.
+      --management-url=<url>    Management API base URL. Default
+                                https://api.meilisearch.com.
+      --ms-version=<version>    Meilisearch version of the project, the latest
+                                by default.
+      --name=<name>             Name of the project.
+      --resource-id=<id>        Resource of the project: its plan and its
+                                region.
+      --team-id=<id>            Team that owns the project.
+
+DESCRIPTION
+  Create a Meilisearch Cloud project in a team, on a resource.
+
+EXAMPLES
+  $ meili add projects --name demo --team-id 12 --resource-id 3
+
+  $ meili add projects --name demo --team-id 12 --resource-id 3 --output json
+
+  $ meili add projects --name demo --team-id 12 --resource-id 3 --add-to-config
+
+  $ meili add projects --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0
+
+  $ meili add projects --data '{"name":"demo","teamId":12,"resourceId":3}'
+
+  $ meili add projects --file project.json --name other-name
+
+"
+`;
+
+exports[`meili add projects > sends the flags as the project body with the token, and prints the project created 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"id":343,"name":"demo","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","masterKey":"projectmasterkey9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","plan":"build","regionId":1}}
+",
+}
+`;

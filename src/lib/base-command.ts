@@ -6,14 +6,17 @@
  */
 import { Command, Errors, Flags, type Interfaces } from "@oclif/core";
 import type { EnqueuedTask, Meilisearch } from "meilisearch";
+import { createManagementClient, type ManagementClient } from "./clients/management.js";
 import { createMeilisearchClient } from "./clients/meilisearch.js";
 import { installHttpTrace } from "./clients/trace.js";
 import {
   type ConfigFile,
   configFilePath,
+  DEFAULT_MANAGEMENT_URL,
   ENV,
   type Env,
   readConfigFile,
+  resolveCloudProjectId,
   resolveProjectConnection,
 } from "./config.js";
 import { MeiliCliError, toRenderedError, writeError, writeNotice, writeWarning } from "./errors.js";
@@ -22,7 +25,6 @@ import { type OutputMode, resolveOutputMode, writeData } from "./output.js";
 import { iteratePages, type ListPage, mergePages } from "./pagination.js";
 import {
   credentialsFilePath,
-  type ManagementCredentials,
   readCredentialsFile,
   resolveManagementCredentials,
   type Session,
@@ -33,7 +35,10 @@ import { DEFAULT_TIMEOUT, isTaskFailure, parseDuration, waitForTask } from "./ta
 export type Api = "meilisearch" | "management" | "none";
 
 export type GlobalFlags = Interfaces.InferredFlags<
-  typeof BaseCommand.baseFlags & typeof BaseCommand.connectionFlags
+  typeof BaseCommand.baseFlags &
+    typeof BaseCommand.connectionFlags &
+    typeof BaseCommand.managementFlags &
+    typeof BaseCommand.cloudProjectFlags
 >;
 
 /** The two flags a list route declares whichever way it pages, shared by both groups below. */
@@ -106,6 +111,35 @@ export abstract class BaseCommand extends Command {
     }),
   };
 
+  /**
+   * How a command reaches the Management API, the group of
+   * docs/contract/commands.md. Spread by the commands that talk to it, and by
+   * no other.
+   */
+  static managementFlags = {
+    "management-token": Flags.string({
+      description: "Management API personal access token.",
+      helpValue: "<pat>",
+    }),
+    "management-url": Flags.string({
+      description: `Management API base URL. Default ${DEFAULT_MANAGEMENT_URL}.`,
+      helpValue: "<url>",
+    }),
+  };
+
+  /**
+   * The Cloud project a management command acts on, when it acts on one:
+   * `--project` names an entry of the config file for its `cloudId` here,
+   * rather than for its URL and key (ADR 0006). Spread next to `--id`.
+   */
+  static cloudProjectFlags = {
+    project: Flags.string({
+      description:
+        "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+      helpValue: "<name>",
+    }),
+  };
+
   /** Shared group for write commands whose API response is a task. */
   static waitFlags = {
     wait: Flags.boolean({
@@ -161,8 +195,8 @@ export abstract class BaseCommand extends Command {
   protected outputMode!: OutputMode;
   /** Set when `static api` is `meilisearch`. */
   protected meilisearch!: Meilisearch;
-  /** Set when `static api` is `management`. The client is built here once it is generated. */
-  protected management: ManagementCredentials | undefined;
+  /** Set when `static api` is `management`. Passed to the generated SDK functions, which throw contract errors. */
+  protected managementClient!: ManagementClient;
 
   /** The process environment, the one place `src/` reads it from outside `config.ts`. */
   protected get env(): Env {
@@ -201,12 +235,25 @@ export abstract class BaseCommand extends Command {
       this.meilisearch = createMeilisearchClient({
         url: connection.url,
         apiKey: connection.apiKey,
-        version: this.config.version,
+        userAgent: this.userAgent,
       });
       return;
     }
 
-    this.management = await resolveManagementCredentials(this.env, writeWarning);
+    const credentials = await resolveManagementCredentials(
+      { token: this.globalFlags["management-token"], url: this.globalFlags["management-url"] },
+      this.env,
+      writeWarning,
+    );
+    this.managementClient = createManagementClient({
+      ...credentials,
+      userAgent: this.userAgent,
+    });
+  }
+
+  /** What both APIs see in their client header: `meili-cli (v1.2.3)`. */
+  private get userAgent(): string {
+    return `meili-cli (v${this.config.version})`;
   }
 
   /** Renders every error as the contract says, then exits with its code. */
@@ -218,6 +265,13 @@ export abstract class BaseCommand extends Command {
       debug: this.globalFlags?.debug ?? this.argv.includes("--debug"),
     });
     this.exit(rendered.exitCode);
+  }
+
+  /** The Cloud project a management command acts on: `--id`, or the `cloudId` of the entry `--project` names. */
+  protected cloudProjectId(id: number | undefined): number {
+    return resolveCloudProjectId({ id, project: this.globalFlags.project }, () =>
+      this.configFile(),
+    );
   }
 
   /** The config file of docs/contract/config.md, empty when it does not exist. */

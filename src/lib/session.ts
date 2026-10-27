@@ -15,12 +15,11 @@ import {
   DEFAULT_MANAGEMENT_URL,
   ENV,
   type Env,
-  isRecord,
   nonEmpty,
   readOwnerOnly,
   writeSecretFile,
 } from "./config.js";
-import { MeiliCliError } from "./errors.js";
+import { isRecord, MeiliCliError } from "./errors.js";
 
 export interface ManagementCredentials {
   token: string;
@@ -156,19 +155,24 @@ export function removeCredentialsFile(path: string): void {
 /** A token with less than this left is refreshed before the command runs. */
 const EXPIRY_MARGIN_MS = 30_000;
 
+export interface ManagementFlags {
+  token?: string | undefined;
+  url?: string | undefined;
+}
+
 /**
- * `MEILI_MANAGEMENT_TOKEN`, then the session of `auth login`, with
- * `MEILI_MANAGEMENT_URL` and its default. Fails before any network call when
- * neither exists. An access token that is about to expire is refreshed here,
- * and the new one is written back. The `--management-token` and
- * `--management-url` flags arrive with the first management command.
+ * `--management-token`, then `MEILI_MANAGEMENT_TOKEN`, then the session of
+ * `auth login`, with `--management-url`, `MEILI_MANAGEMENT_URL` and its
+ * default. Fails before any network call when none exists. An access token
+ * that is about to expire is refreshed here, and the new one is written back.
  */
 export async function resolveManagementCredentials(
+  flags: ManagementFlags,
   env: Env,
   warn: (warning: MeiliCliError) => void,
 ): Promise<ManagementCredentials> {
-  const chosen = nonEmpty(env[ENV.MANAGEMENT_URL]);
-  const token = nonEmpty(env[ENV.MANAGEMENT_TOKEN]);
+  const chosen = nonEmpty(flags.url) ?? nonEmpty(env[ENV.MANAGEMENT_URL]);
+  const token = nonEmpty(flags.token) ?? nonEmpty(env[ENV.MANAGEMENT_TOKEN]);
   if (token !== undefined) return { token, url: chosen ?? DEFAULT_MANAGEMENT_URL };
 
   const path = credentialsFilePath(env);
@@ -176,15 +180,17 @@ export async function resolveManagementCredentials(
   if (session === undefined) {
     throw new MeiliCliError(
       "cli_auth_missing",
-      "No Management API credentials. Run `meili auth login`, or set the `MEILI_MANAGEMENT_TOKEN` environment variable.",
+      "No Management API credentials. Run `meili auth login`, pass `--management-token`, or set the `MEILI_MANAGEMENT_TOKEN` environment variable.",
       { hint: "Run `meili auth login` to log in with a browser." },
     );
   }
   if (chosen !== undefined && chosen !== session.managementUrl) {
     throw new MeiliCliError(
       "cli_config",
-      `The session of \`meili auth login\` was issued by ${session.managementUrl}, but \`${ENV.MANAGEMENT_URL}\` points at ${chosen}. A token is never sent to another Cloud.`,
-      { hint: "Run `meili auth login` against that URL, or unset the variable." },
+      `The session of \`meili auth login\` was issued by ${session.managementUrl}, but the Management API URL given is ${chosen}. A token is never sent to another Cloud.`,
+      {
+        hint: "Run `meili auth login` against that URL, or drop `--management-url` and `MEILI_MANAGEMENT_URL`.",
+      },
     );
   }
   const fresh = await ensureFreshSession(path, session);

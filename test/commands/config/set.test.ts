@@ -1,15 +1,12 @@
-import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import ConfigSet from "../../../src/commands/config/set.js";
 import { useMockServer } from "../../helpers/msw.js";
-import { runCli, runCommand, scrubbedHome } from "../../helpers/run-command.js";
+import { readJson as read, runCli, runCommand, scrubbedHome } from "../../helpers/run-command.js";
 
 vi.mock("../../../src/lib/input.js", () => ({ readStdin: () => "key-from-stdin" }));
 
 useMockServer();
-
-const read = (path: string) => JSON.parse(readFileSync(path, "utf8")) as unknown;
 
 describe("meili config set", () => {
   it("prints its help without any network call", async () => {
@@ -28,6 +25,17 @@ describe("meili config set", () => {
     );
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
     expect(read(path)).toEqual({ projects: { local: { url: "http://localhost:7700" } } });
+  });
+
+  it("stores the Cloud id given with --project-cloud-id", async () => {
+    const path = join(scrubbedHome, "cloud.json");
+    const result = await runCommand(
+      ConfigSet,
+      ["--project", "prod", "--project-url", "https://p", "--project-cloud-id", "343"],
+      { env: { MEILI_CONFIG: path } },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(read(path)).toEqual({ projects: { prod: { url: "https://p", cloudId: 343 } } });
   });
 
   it("reads the key from stdin with -", async () => {
