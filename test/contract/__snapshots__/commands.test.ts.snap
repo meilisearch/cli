@@ -240,6 +240,130 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
       "id": "auth status",
     },
     {
+      "api": "meilisearch",
+      "async": true,
+      "description": "Cancel the enqueued and processing tasks matched by --ids, --statuses, --types and the other filters of the route.",
+      "examples": [
+        "meili cancel tasks --ids 42,1344",
+        "meili cancel tasks --ids 42 --output json",
+        "meili cancel tasks --statuses enqueued --index-ids movies",
+        "meili cancel tasks --statuses processing --wait",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "Task uids to match, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these batch uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "batch-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these indexes, comma-separated. \`*\` matches every one.",
+          "helpValue": "<indexes>",
+          "name": "index-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "canceled-by",
+          "type": "option",
+        },
+        {
+          "description": "Task types to match, comma-separated, as the \`type\` field of a task spells them, for example \`documentAdditionOrUpdate\`. \`*\` matches every one.",
+          "helpValue": "<types>",
+          "name": "types",
+          "type": "option",
+        },
+        {
+          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. \`*\` matches every one.",
+          "helpValue": "<statuses>",
+          "name": "statuses",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+      ],
+      "id": "cancel tasks",
+      "keyActions": [
+        "tasks.cancel",
+      ],
+      "routes": [
+        "POST /tasks/cancel",
+      ],
+    },
+    {
       "api": "none",
       "description": "Print the config file path and its projects as JSON, keys masked.",
       "examples": [
@@ -490,6 +614,136 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
+      "async": true,
+      "description": "Delete the finished tasks matched by --ids, --statuses, --types and the other filters of the route.",
+      "examples": [
+        "meili delete tasks --ids 42,1344 --yes",
+        "meili delete tasks --ids 42 --yes --output json",
+        "meili delete tasks --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
+        "meili delete tasks --index-ids movies --yes --wait",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "Task uids to match, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these batch uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "batch-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these indexes, comma-separated. \`*\` matches every one.",
+          "helpValue": "<indexes>",
+          "name": "index-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "canceled-by",
+          "type": "option",
+        },
+        {
+          "description": "Task types to match, comma-separated, as the \`type\` field of a task spells them, for example \`documentAdditionOrUpdate\`. \`*\` matches every one.",
+          "helpValue": "<types>",
+          "name": "types",
+          "type": "option",
+        },
+        {
+          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. \`*\` matches every one.",
+          "helpValue": "<statuses>",
+          "name": "statuses",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+        {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "type": "boolean",
+        },
+      ],
+      "id": "delete tasks",
+      "keyActions": [
+        "tasks.delete",
+      ],
+      "routes": [
+        "DELETE /tasks",
+      ],
+    },
+    {
+      "api": "meilisearch",
       "description": "List the documents of an index, narrowed by --ids or by --filter.",
       "examples": [
         "meili get documents --index movies",
@@ -687,6 +941,139 @@ The file holds API keys and decides where every later command goes, for every pr
       "routes": [
         "GET /indexes",
         "GET /indexes/{index_uid}",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "List the tasks of the instance, narrowed by --ids, --statuses, --types and the other filters of the route.",
+      "examples": [
+        "meili get tasks",
+        "meili get tasks --output json",
+        "meili get tasks --ids 42",
+        "meili get tasks --statuses failed,canceled --limit 5",
+        "meili get tasks --index-ids movies --types documentAdditionOrUpdate",
+        "meili get tasks --all --output ndjson",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "Task uids to match, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these batch uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "batch-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these indexes, comma-separated. \`*\` matches every one.",
+          "helpValue": "<indexes>",
+          "name": "index-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "canceled-by",
+          "type": "option",
+        },
+        {
+          "description": "Task types to match, comma-separated, as the \`type\` field of a task spells them, for example \`documentAdditionOrUpdate\`. \`*\` matches every one.",
+          "helpValue": "<types>",
+          "name": "types",
+          "type": "option",
+        },
+        {
+          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. \`*\` matches every one.",
+          "helpValue": "<statuses>",
+          "name": "statuses",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Return the tasks from the oldest uid up, instead of the newest down.",
+          "name": "reverse",
+          "type": "boolean",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "name": "from",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "name": "all",
+          "type": "boolean",
+        },
+      ],
+      "id": "get tasks",
+      "keyActions": [
+        "tasks.get",
+      ],
+      "routes": [
+        "GET /tasks",
       ],
     },
     {
@@ -1141,6 +1528,13 @@ The file holds API keys and decides where every later command goes, for every pr
         "id": "auth status",
       },
       {
+        "description": "Cancel the enqueued and processing tasks matched by --ids, --statuses, --types and the other filters of the route.",
+        "id": "cancel tasks",
+        "routes": [
+          "POST /tasks/cancel",
+        ],
+      },
+      {
         "description": "Print the config file path and its projects as JSON, keys masked.",
         "id": "config list",
       },
@@ -1169,6 +1563,13 @@ The file holds API keys and decides where every later command goes, for every pr
         ],
       },
       {
+        "description": "Delete the finished tasks matched by --ids, --statuses, --types and the other filters of the route.",
+        "id": "delete tasks",
+        "routes": [
+          "DELETE /tasks",
+        ],
+      },
+      {
         "description": "List the documents of an index, narrowed by --ids or by --filter.",
         "id": "get documents",
         "routes": [
@@ -1188,6 +1589,13 @@ The file holds API keys and decides where every later command goes, for every pr
         "routes": [
           "GET /indexes",
           "GET /indexes/{index_uid}",
+        ],
+      },
+      {
+        "description": "List the tasks of the instance, narrowed by --ids, --statuses, --types and the other filters of the route.",
+        "id": "get tasks",
+        "routes": [
+          "GET /tasks",
         ],
       },
       {

@@ -4,6 +4,7 @@ import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { fetchDocuments } from "../../lib/clients/meilisearch.js";
 import { MeiliCliError } from "../../lib/errors.js";
 import { isJsonObject, readJsonBody } from "../../lib/input.js";
+import { nextOffsetQuery } from "../../lib/pagination.js";
 
 export default class GetDocuments extends BaseCommand {
   static api: Api = "meilisearch";
@@ -79,6 +80,7 @@ export default class GetDocuments extends BaseCommand {
       (page) => fetchDocuments(this.meilisearch, flags.index, { ...rest, ...page }),
       { limit, offset },
       flags.all,
+      nextOffsetQuery,
     );
   }
 }

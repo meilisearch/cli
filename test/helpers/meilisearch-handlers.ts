@@ -117,6 +117,40 @@ export const meilisearchHandlers = {
       });
     }),
 
+  /**
+   * `GET /tasks` paging over `all` like the API does: `limit` defaults to 20,
+   * the newest uid first, `from` names the uid the page starts at, and the
+   * envelope carries `from`, `limit`, `total` and the `next` cursor.
+   */
+  tasks: (all: Task[]) =>
+    http.get(`${MEILISEARCH_URL}/tasks`, ({ request }) => {
+      const params = new URL(request.url).searchParams;
+      const limit = Number(params.get("limit") ?? 20);
+      const from = params.get("from");
+      const uids = params.get("uids")?.split(",");
+      const matching = all
+        .filter((task) => uids === undefined || uids.includes(String(task.uid)))
+        .sort((a, b) => b.uid - a.uid);
+      const start =
+        from === null ? 0 : matching.findIndex((task) => task.uid === Number.parseInt(from, 10));
+      const results = matching.slice(start, start + limit);
+      return HttpResponse.json({
+        results,
+        total: matching.length,
+        limit,
+        from: results[0]?.uid ?? null,
+        next: matching[start + limit]?.uid ?? null,
+      });
+    }),
+
+  /** `POST /tasks/cancel`, the cancelation route. */
+  tasksCancel: (task: EnqueuedTask) =>
+    http.post(`${MEILISEARCH_URL}/tasks/cancel`, () => HttpResponse.json(task)),
+
+  /** `DELETE /tasks`, the deletion route. */
+  tasksDelete: (task: EnqueuedTask) =>
+    http.delete(`${MEILISEARCH_URL}/tasks`, () => HttpResponse.json(task)),
+
   /** Any method on `path` answering a Meilisearch error body with `status`. */
   apiError: (path: string, status: number, body: MeilisearchErrorResponse) =>
     http.all(`${MEILISEARCH_URL}${path}`, () => HttpResponse.json(body, { status })),

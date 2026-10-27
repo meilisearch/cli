@@ -18,6 +18,8 @@ COMMANDS
                  --filter.
   get health     Check that the Meilisearch instance is available.
   get indexes    List the indexes of the instance, or get one with --id.
+  get tasks      List the tasks of the instance, narrowed by --ids, --statuses,
+                 --types and the other filters of the route.
 
 "
 `;
