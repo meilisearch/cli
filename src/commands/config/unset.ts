@@ -1,13 +1,13 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { projectOf, writeConfigFile } from "../../lib/config.js";
+import { CONFIG_FILE_WARNING, projectOf, writeConfigFile } from "../../lib/config.js";
 
 export default class ConfigUnset extends BaseCommand {
   static api: Api = "none";
 
   static override description = `Remove a project from the config file.
 
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.`;
+${CONFIG_FILE_WARNING}`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod",
