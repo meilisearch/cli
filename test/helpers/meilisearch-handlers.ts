@@ -7,6 +7,7 @@ import type {
   IndexObject,
   MeilisearchErrorResponse,
   RecordAny,
+  Settings,
   Task,
 } from "meilisearch";
 import { HttpResponse, http } from "msw";
@@ -98,6 +99,18 @@ export const meilisearchHandlers = {
     http.post(`${MEILISEARCH_URL}/indexes/:uid/documents/delete-batch`, () =>
       HttpResponse.json(task),
     ),
+
+  /** `GET /indexes/{uid}/settings` answering the settings of the index. */
+  settings: (settings: Settings) =>
+    http.get(`${MEILISEARCH_URL}/indexes/:uid/settings`, () => HttpResponse.json(settings)),
+
+  /** `PATCH /indexes/{uid}/settings`, the update route. */
+  settingsUpdate: (task: EnqueuedTask) =>
+    http.patch(`${MEILISEARCH_URL}/indexes/:uid/settings`, () => HttpResponse.json(task)),
+
+  /** `DELETE /indexes/{uid}/settings`, which resets every setting. */
+  settingsDelete: (task: EnqueuedTask) =>
+    http.delete(`${MEILISEARCH_URL}/indexes/:uid/settings`, () => HttpResponse.json(task)),
 
   /**
    * `POST /indexes/{uid}/search` answering the envelope of the API at its

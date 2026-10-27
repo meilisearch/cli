@@ -2,6 +2,7 @@ import { Flags } from "@oclif/core";
 import type { HybridSearch, SearchParams } from "meilisearch";
 import { type Api, BaseCommand } from "../lib/base-command.js";
 import { readJsonObjectBody } from "../lib/input.js";
+import { asJson, asNumber } from "../lib/values.js";
 
 export default class Search extends BaseCommand {
   static api: Api = "meilisearch";
@@ -183,33 +184,5 @@ export default class Search extends BaseCommand {
     } as SearchParams;
 
     await this.output(await this.meilisearch.index(flags.index).search(undefined, params));
-  }
-}
-
-/**
- * The two conversions a flag needs before it can be a body field (rule 7): the
- * text of a number, and the JSON text of an object. Text that does not convert
- * is sent as it is, so that the API names the value it refused, with its own
- * code, rather than the CLI judging a value the API owns. The CLI only refuses
- * what it cannot send at all, as `--data` and `--file`, which it has to parse
- * before it can merge them.
- */
-function asNumber(value: string | undefined): number | string | undefined {
-  if (value === undefined) return undefined;
-  const text = value.trim();
-  // `Number` alone would not do: it reads `0x1` as 1 and `1e999` as Infinity,
-  // which JSON writes as null. Both turn what the agent typed into another
-  // value, silently. Only text that spells a decimal number becomes one.
-  return DECIMAL.test(text) && Number.isFinite(Number(text)) ? Number(text) : value;
-}
-
-const DECIMAL = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/;
-
-function asJson(value: string | undefined): unknown {
-  if (value === undefined) return undefined;
-  try {
-    return JSON.parse(value);
-  } catch {
-    return value;
   }
 }

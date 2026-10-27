@@ -1,0 +1,134 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili update settings > passes an authentication error through with a hint and exits 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili update settings > prints its help without any network call 1`] = `
+"Change the settings given, leave the others as they are, and reset one with the value null.
+
+USAGE
+  $ meili update settings --index <index> [-o <mode>] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [--project <name>]
+    [--displayed-attributes <fields>] [--searchable-attributes <fields>]
+    [--filterable-attributes <fields>] [--sortable-attributes <fields>]
+    [--foreign-keys <json>] [--ranking-rules <rules>] [--stop-words <words>]
+    [--non-separator-tokens <tokens>] [--separator-tokens <tokens>]
+    [--dictionary <words>] [--synonyms <json>] [--distinct-attribute
+    <attribute>] [--proximity-precision <precision>] [--typo-tolerance <json>]
+    [--faceting <json>] [--pagination <json>] [--embedders <json>]
+    [--search-cutoff-ms <ms>] [--localized-attributes <json>] [--facet-search
+    <boolean>] [--prefix-search <mode>] [--chat <json>] [--file <path> | --data
+    <json>] [--timeout <duration> --wait]
+
+FLAGS
+  -o, --output=<mode>                    json (default): one document, the API
+                                         body as it is, indented in a terminal,
+                                         compact when piped. ndjson: one item
+                                         per line, list commands only, streams
+                                         with --all.
+      --chat=<json>                      Chat settings as JSON, for example
+                                         \`{"description":"A movie database"}\`,
+                                         which the LLM reads.
+      --data=<json>                      Inline JSON body.
+      --debug                            Print every HTTP request and response
+                                         on stderr, secrets redacted.
+      --dictionary=<words>               Strings parsed as a single term,
+                                         comma-separated, such as names.
+      --displayed-attributes=<fields>    Fields returned in search results,
+                                         comma-separated.
+      --distinct-attribute=<attribute>   Field whose value must be unique in the
+                                         returned documents.
+      --embedders=<json>                 Embedders as JSON, a map of name to
+                                         configuration:
+                                         \`{"default":{"source":"openAi"}}\`.
+      --facet-search=<boolean>           Whether the facet-search route is
+                                         enabled on this index, \`true\` or
+                                         \`false\`.
+      --faceting=<json>                  Faceting as JSON, for example
+                                         \`{"maxValuesPerFacet":200}\`.
+      --file=<path>                      Read the body from a file. \`-\` reads
+                                         from stdin.
+      --filterable-attributes=<fields>   Attributes usable as filters and
+                                         facets, comma-separated. Their rule
+                                         form goes through --data.
+      --foreign-keys=<json>              Foreign keys for cross-index filtering,
+                                         as JSON: \`[{"foreignIndexUid":"products
+                                         ","fieldName":"productId"}]\`.
+      --index=<index>                    (required) The index to update the
+                                         settings of.
+      --localized-attributes=<json>      Locales of the attributes, as JSON:
+                                         \`[{"locales":["jpn"],"attributePatterns
+                                         ":["*_ja"]}]\`.
+      --non-separator-tokens=<tokens>    Characters removed from the default
+                                         separators, comma-separated, so that
+                                         they no longer split words.
+      --pagination=<json>                Pagination as JSON, for example
+                                         \`{"maxTotalHits":2000}\`.
+      --prefix-search=<mode>             When prefix matches are computed,
+                                         \`indexingTime\` or \`disabled\`, which
+                                         indexes faster.
+      --project=<name>                   A project of the config file. Cannot be
+                                         combined with --project-url. Required
+                                         when the file has several projects.
+      --project-api-key=<key>            Project API key. \`-\` reads it from
+                                         stdin.
+      --project-url=<url>                Project URL, the Meilisearch instance
+                                         to talk to.
+      --proximity-precision=<precision>  Precision of the proximity ranking
+                                         rule, \`byWord\` or \`byAttribute\`, which
+                                         indexes faster.
+      --ranking-rules=<rules>            Ranking rules in order of importance,
+                                         comma-separated, built-in or
+                                         \`attribute:asc\` and \`:desc\`.
+      --search-cutoff-ms=<ms>            Maximum duration of a search in
+                                         milliseconds, 1500 when it is null.
+      --searchable-attributes=<fields>   Fields searched for query words,
+                                         comma-separated, in order of importance
+                                         for the ranking.
+      --separator-tokens=<tokens>        Characters added to the default
+                                         separators, comma-separated.
+      --sortable-attributes=<fields>     Attributes usable to sort the search
+                                         results, comma-separated.
+      --stop-words=<words>               Words ignored when they appear in a
+                                         search query, comma-separated.
+      --synonyms=<json>                  Words treated as equivalent, as JSON:
+                                         \`{"phone":["iPhone"]}\`.
+      --timeout=<duration>               Maximum wait time, for example 30s, 2m.
+                                         Default 60s. Only with --wait.
+      --typo-tolerance=<json>            Typo tolerance as JSON, for example
+                                         \`{"enabled":false}\`.
+      --wait                             Poll the task until it reaches a final
+                                         status, then print the final task.
+
+DESCRIPTION
+  Change the settings given, leave the others as they are, and reset one with
+  the value null.
+
+EXAMPLES
+  $ meili update settings --index movies --searchable-attributes title,overview
+
+  $ meili update settings --index movies --filterable-attributes genres,release_date --output json
+
+  $ meili update settings --index movies --stop-words null
+
+  $ meili update settings --index movies --typo-tolerance '{"enabled":false}' --wait
+
+  $ meili update settings --index movies --file settings.json
+
+"
+`;
+
+exports[`meili update settings > prints the enqueued task as the API returned it, without waiting 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"taskUid":14,"indexUid":"movies","status":"enqueued","type":"settingsUpdate","enqueuedAt":"2026-09-24T10:00:00Z"}
+",
+}
+`;
