@@ -112,7 +112,11 @@ describe("API commands derive from their routes", () => {
       const pathFlags = routes.map((route) => pathFlagsForRoute(route, id));
       for (const flag of new Set(pathFlags.flat())) {
         if (flag === "id") continue;
-        expect(flags[flag]?.required, `--${flag} must be a required flag`).toBe(true);
+        expect(flags[flag], `--${flag} must exist`).toBeDefined();
+        expect(
+          flags[flag]?.required === true,
+          `--${flag} is required only when every route takes it`,
+        ).toBe(pathFlags.every((set) => set.includes(flag)));
       }
       const routesWithId = pathFlags.filter((set) => set.includes("id")).length;
       if (routesWithId > 0) {

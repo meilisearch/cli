@@ -138,6 +138,13 @@ export const meilisearchHandlers = {
   multiSearch: (response: RecordAny) =>
     http.post(`${MEILISEARCH_URL}/multi-search`, () => HttpResponse.json(response)),
 
+  /** `GET /stats`, the statistics of every index of the instance. */
+  stats: (stats: RecordAny) => http.get(`${MEILISEARCH_URL}/stats`, () => HttpResponse.json(stats)),
+
+  /** `GET /indexes/{uid}/stats`, the statistics of one index. */
+  indexStats: (stats: RecordAny) =>
+    http.get(`${MEILISEARCH_URL}/indexes/:uid/stats`, () => HttpResponse.json(stats)),
+
   /**
    * `GET /tasks` paging over `all` like the API does: `limit` defaults to 20,
    * the newest uid first, `from` names the uid the page starts at, and the

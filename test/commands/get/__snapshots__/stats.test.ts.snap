@@ -1,0 +1,73 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili get stats > passes the API error of a missing index through and exits 4 1`] = `
+{
+  "exitCode": 4,
+  "stderr": "{"error":{"code":"index_not_found","type":"invalid_request","message":"Index \`missing\` not found.","link":"https://docs.meilisearch.com/errors#index_not_found"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili get stats > prints its help without any network call 1`] = `
+"Get the statistics of the whole instance, or those of one index with --index.
+
+USAGE
+  $ meili get stats [-o <mode>] [--debug] [--project-url <url>]
+    [--project-api-key <key>] [--project <name>] [--index <index>]
+    [--show-internal-database-sizes] [--size-format raw|human]
+
+FLAGS
+  -o, --output=<mode>                 json (default): one document, the API body
+                                      as it is, indented in a terminal, compact
+                                      when piped. ndjson: one item per line,
+                                      list commands only, streams with --all.
+      --debug                         Print every HTTP request and response on
+                                      stderr, secrets redacted.
+      --index=<index>                 The index to read the statistics of.
+                                      Without it, the whole instance.
+      --project=<name>                A project of the config file. Cannot be
+                                      combined with --project-url. Required when
+                                      the file has several projects.
+      --project-api-key=<key>         Project API key. \`-\` reads it from stdin.
+      --project-url=<url>             Project URL, the Meilisearch instance to
+                                      talk to.
+      --show-internal-database-sizes  Add internalDatabaseSizes to the response,
+                                      the size of each internal database.
+      --size-format=<option>          How the sizes are written: raw (default),
+                                      a number of bytes, or human, a string with
+                                      its unit.
+                                      <options: raw|human>
+
+DESCRIPTION
+  Get the statistics of the whole instance, or those of one index with --index.
+
+EXAMPLES
+  $ meili get stats
+
+  $ meili get stats --output json
+
+  $ meili get stats --index movies
+
+  $ meili get stats --index movies --size-format human --show-internal-database-sizes
+
+"
+`;
+
+exports[`meili get stats > prints the statistics of one index with --index 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"numberOfDocuments":10,"rawDocumentDbSize":100,"avgDocumentSize":10,"isIndexing":false,"numberOfEmbeddings":0,"numberOfEmbeddedDocuments":0,"fieldDistribution":{"genre":10,"title":10}}
+",
+}
+`;
+
+exports[`meili get stats > prints the statistics of the instance as the API returned them 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"databaseSize":567,"usedDatabaseSize":456,"lastUpdate":"2026-09-24T10:00:00.000000Z","indexes":{"movies":{"numberOfDocuments":10,"rawDocumentDbSize":100,"avgDocumentSize":10,"isIndexing":false,"numberOfEmbeddings":0,"numberOfEmbeddedDocuments":0,"fieldDistribution":{"genre":10,"title":10}}}}
+",
+}
+`;
