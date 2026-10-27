@@ -76,6 +76,8 @@ export default class Similar extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(Similar);
+    // Not typed against SearchSimilarDocumentsParams, unlike the flag object of `search`:
+    // the SDK type has no retrieveVectors, which SimilarQuery of the document declares.
     const fromFlags = {
       id: flags.id,
       embedder: flags.embedder,
