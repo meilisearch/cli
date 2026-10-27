@@ -131,6 +131,23 @@ export const meilisearchHandlers = {
     }),
 
   /**
+   * `POST /indexes/{uid}/similar` answering the envelope of the API at its
+   * default pagination, with the `id` of the document it was sent.
+   */
+  similar: (hits: RecordAny[]) =>
+    http.post(`${MEILISEARCH_URL}/indexes/:uid/similar`, async ({ request }) => {
+      const { id } = (await request.json()) as { id?: string };
+      return HttpResponse.json({
+        hits,
+        id: id ?? "",
+        processingTimeMs: 1,
+        limit: 20,
+        offset: 0,
+        estimatedTotalHits: hits.length,
+      });
+    }),
+
+  /**
    * `POST /multi-search` answering `response`, whatever shape it is given: the
    * route answers one envelope per query, or the merged hits of every query
    * when the body carries a `federation`, and the CLI prints either as it is.

@@ -5029,6 +5029,300 @@
         "search.js"
       ]
     },
+    "similar": {
+      "aliases": [],
+      "args": {},
+      "description": "Find the documents an index holds that are closest to one of its documents, named by --id and compared with --embedder.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %> --index movies --id 143 --embedder default",
+        "<%= config.bin %> <%= command.id %> --index movies --id 143 --embedder default --output json",
+        "<%= config.bin %> <%= command.id %> --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
+        "<%= config.bin %> <%= command.id %> --index movies --data '{\"id\":143,\"embedder\":\"default\",\"retrieveVectors\":true}'"
+      ],
+      "flags": {
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "name": "project-url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "name": "project-api-key",
+          "hasDynamicHelp": false,
+          "helpValue": "<key>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "name": "project",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "index": {
+          "description": "The index to search in.",
+          "name": "index",
+          "required": true,
+          "hasDynamicHelp": false,
+          "helpValue": "<index>",
+          "multiple": false,
+          "type": "option"
+        },
+        "id": {
+          "description": "The document to compare with, by its primary key value.",
+          "name": "id",
+          "hasDynamicHelp": false,
+          "helpValue": "<id>",
+          "multiple": false,
+          "type": "option"
+        },
+        "embedder": {
+          "description": "The embedder the similarity is computed with, one of those the index settings configure.",
+          "name": "embedder",
+          "hasDynamicHelp": false,
+          "helpValue": "<embedder>",
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Number of documents to skip.",
+          "name": "offset",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "limit": {
+          "description": "Maximum number of documents to return, 20 by default.",
+          "name": "limit",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "filter": {
+          "description": "Filter expression, for example `genres = horror`. Its array-of-arrays form goes through --data.",
+          "name": "filter",
+          "hasDynamicHelp": false,
+          "helpValue": "<filter>",
+          "multiple": false,
+          "type": "option"
+        },
+        "attributes-to-retrieve": {
+          "description": "Document attributes to return, comma-separated. Defaults to the displayed ones.",
+          "name": "attributes-to-retrieve",
+          "hasDynamicHelp": false,
+          "helpValue": "<fields>",
+          "multiple": false,
+          "type": "option"
+        },
+        "retrieve-vectors": {
+          "description": "Add _vectors to each hit, the embeddings of the document.",
+          "name": "retrieve-vectors",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "show-ranking-score": {
+          "description": "Add _rankingScore to each hit, between 0.0 and 1.0.",
+          "name": "show-ranking-score",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "show-ranking-score-details": {
+          "description": "Add _rankingScoreDetails to each hit, the score of every ranking rule.",
+          "name": "show-ranking-score-details",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "show-performance-details": {
+          "description": "Add performanceDetails to the response, a timing breakdown of the query.",
+          "name": "show-performance-details",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "ranking-score-threshold": {
+          "description": "Drop the hits whose ranking score is below this value, between 0.0 and 1.0.",
+          "name": "ranking-score-threshold",
+          "hasDynamicHelp": false,
+          "helpValue": "<number>",
+          "multiple": false,
+          "type": "option"
+        },
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "exclusive": [
+            "data"
+          ],
+          "name": "file",
+          "hasDynamicHelp": false,
+          "helpValue": "<path>",
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "name": "data",
+          "hasDynamicHelp": false,
+          "helpValue": "<json>",
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "similar",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "meilisearch",
+      "routes": [
+        "POST /indexes/{index_uid}/similar"
+      ],
+      "keyActions": [
+        "search"
+      ],
+      "connectionFlags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "helpValue": "<key>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "similar.js"
+      ]
+    },
     "update:documents": {
       "aliases": [],
       "args": {},
