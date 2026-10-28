@@ -1,0 +1,93 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili similar > passes the API error of a missing index through and exits 4 1`] = `
+{
+  "exitCode": 4,
+  "stderr": "{"error":{"code":"index_not_found","type":"invalid_request","message":"Index \`missing\` not found.","link":"https://docs.meilisearch.com/errors#index_not_found"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili similar > prints its help without any network call 1`] = `
+"Find the documents an index holds that are closest to one of its documents, named by --id and compared with --embedder.
+
+USAGE
+  $ meili similar --index <index> [-o <mode>] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [--project <name>] [--id
+    <id>] [--embedder <embedder>] [--offset <n>] [--limit <n>] [--filter
+    <filter>] [--attributes-to-retrieve <fields>] [--retrieve-vectors]
+    [--show-ranking-score] [--show-ranking-score-details]
+    [--show-performance-details] [--ranking-score-threshold <number>] [--file
+    <path> | --data <json>]
+
+FLAGS
+  -o, --output=<mode>                     json (default): one document, the API
+                                          body as it is, indented in a terminal,
+                                          compact when piped. ndjson: one item
+                                          per line, list commands only, streams
+                                          with --all.
+      --attributes-to-retrieve=<fields>   Document attributes to return,
+                                          comma-separated. Defaults to the
+                                          displayed ones.
+      --data=<json>                       Inline JSON body.
+      --debug                             Print every HTTP request and response
+                                          on stderr, secrets redacted.
+      --embedder=<embedder>               The embedder the similarity is
+                                          computed with, one of those the index
+                                          settings configure.
+      --file=<path>                       Read the body from a file. \`-\` reads
+                                          from stdin.
+      --filter=<filter>                   Filter expression, for example \`genres
+                                          = horror\`. Its array-of-arrays form
+                                          goes through --data.
+      --id=<id>                           The document to compare with, by its
+                                          primary key value.
+      --index=<index>                     (required) The index to search in.
+      --limit=<n>                         Maximum number of documents to return,
+                                          20 by default.
+      --offset=<n>                        Number of documents to skip.
+      --project=<name>                    A project of the config file. Cannot
+                                          be combined with --project-url.
+                                          Required when the file has several
+                                          projects.
+      --project-api-key=<key>             Project API key. \`-\` reads it from
+                                          stdin.
+      --project-url=<url>                 Project URL, the Meilisearch instance
+                                          to talk to.
+      --ranking-score-threshold=<number>  Drop the hits whose ranking score is
+                                          below this value, between 0.0 and 1.0.
+      --retrieve-vectors                  Add _vectors to each hit, the
+                                          embeddings of the document.
+      --show-performance-details          Add performanceDetails to the
+                                          response, a timing breakdown of the
+                                          query.
+      --show-ranking-score                Add _rankingScore to each hit, between
+                                          0.0 and 1.0.
+      --show-ranking-score-details        Add _rankingScoreDetails to each hit,
+                                          the score of every ranking rule.
+
+DESCRIPTION
+  Find the documents an index holds that are closest to one of its documents,
+  named by --id and compared with --embedder.
+
+EXAMPLES
+  $ meili similar --index movies --id 143 --embedder default
+
+  $ meili similar --index movies --id 143 --embedder default --output json
+
+  $ meili similar --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5
+
+  $ meili similar --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'
+
+"
+`;
+
+exports[`meili similar > prints the API envelope as it is in JSON 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"hits":[{"id":2770,"title":"American Pie 2"},{"id":190859,"title":"American Sniper"}],"id":"143","processingTimeMs":1,"limit":20,"offset":0,"estimatedTotalHits":2}
+",
+}
+`;

@@ -1488,6 +1488,127 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
+      "description": "Find the documents an index holds that are closest to one of its documents, named by --id and compared with --embedder.",
+      "examples": [
+        "meili similar --index movies --id 143 --embedder default",
+        "meili similar --index movies --id 143 --embedder default --output json",
+        "meili similar --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
+        "meili similar --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to search in.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "The document to compare with, by its primary key value.",
+          "helpValue": "<id>",
+          "name": "id",
+          "type": "option",
+        },
+        {
+          "description": "The embedder the similarity is computed with, one of those the index settings configure.",
+          "helpValue": "<embedder>",
+          "name": "embedder",
+          "type": "option",
+        },
+        {
+          "description": "Number of documents to skip.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Maximum number of documents to return, 20 by default.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Filter expression, for example \`genres = horror\`. Its array-of-arrays form goes through --data.",
+          "helpValue": "<filter>",
+          "name": "filter",
+          "type": "option",
+        },
+        {
+          "description": "Document attributes to return, comma-separated. Defaults to the displayed ones.",
+          "helpValue": "<fields>",
+          "name": "attributes-to-retrieve",
+          "type": "option",
+        },
+        {
+          "description": "Add _vectors to each hit, the embeddings of the document.",
+          "name": "retrieve-vectors",
+          "type": "boolean",
+        },
+        {
+          "description": "Add _rankingScore to each hit, between 0.0 and 1.0.",
+          "name": "show-ranking-score",
+          "type": "boolean",
+        },
+        {
+          "description": "Add _rankingScoreDetails to each hit, the score of every ranking rule.",
+          "name": "show-ranking-score-details",
+          "type": "boolean",
+        },
+        {
+          "description": "Add performanceDetails to the response, a timing breakdown of the query.",
+          "name": "show-performance-details",
+          "type": "boolean",
+        },
+        {
+          "description": "Drop the hits whose ranking score is below this value, between 0.0 and 1.0.",
+          "helpValue": "<number>",
+          "name": "ranking-score-threshold",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "similar",
+      "keyActions": [
+        "search",
+      ],
+      "routes": [
+        "POST /indexes/{index_uid}/similar",
+      ],
+    },
+    {
+      "api": "meilisearch",
       "async": true,
       "description": "Add documents to an index, merging their fields into the ones that already have the same primary key.",
       "examples": [
@@ -2005,6 +2126,13 @@ The file holds API keys and decides where every later command goes, for every pr
         "id": "search",
         "routes": [
           "POST /indexes/{index_uid}/search",
+        ],
+      },
+      {
+        "description": "Find the documents an index holds that are closest to one of its documents, named by --id and compared with --embedder.",
+        "id": "similar",
+        "routes": [
+          "POST /indexes/{index_uid}/similar",
         ],
       },
       {
