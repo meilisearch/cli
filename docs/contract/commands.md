@@ -34,6 +34,7 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 | Routes | Command |
 |---|---|
 | `GET /health` | `meili get health` |
+| `GET /version` | `meili get version` |
 | `GET /stats`, `GET /indexes/{index_uid}/stats` | `meili get stats [--index <index>]` |
 | `GET /indexes`, `GET /indexes/{index_uid}` | `meili get indexes [--id <index>]` |
 | `POST /indexes` | `meili add indexes --id <index> [--primary-key <field>]` |

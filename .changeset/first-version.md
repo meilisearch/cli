@@ -5,6 +5,7 @@
 First version of `meili`, the Meilisearch CLI built for coding agents.
 
 - Commands derive from the routes of the Meilisearch API and of the Management API, verb first and resource plural: `meili get health`, `meili get indexes`, `meili get indexes --id movies`.
+- `meili get version`, on `GET /version`, returns the version of the instance and the commit it was built from.
 - Documents: `meili get documents --index <index>`, narrowed by `--ids` or `--filter`; `meili add documents --index <index> --file <path>` and `meili update documents --index <index> --file <path>`, which read the documents from a file, from stdin with `--file -` or from `--data`; `meili delete documents --index <index> (--ids <ids> | --filter <filter> | --all) --yes`.
 - Indexes: `meili get indexes [--id <index>]`; `meili add indexes --id <index> [--primary-key <field>]`, `meili update indexes --id <index> [--primary-key <field>] [--new-id <index>]`, which renames the index, and `meili delete indexes --id <index> --yes`.
 - Tasks: `meili get tasks`, narrowed by `--ids`, `--statuses`, `--types`, `--index-ids`, `--batch-ids`, `--canceled-by` and the date filters of the route, paging with `--limit` and `--from` and following the `next` cursor with `--all`; `meili cancel tasks` and `meili delete tasks --yes`, which take the same filters and answer a task.

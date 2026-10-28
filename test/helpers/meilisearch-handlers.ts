@@ -19,6 +19,16 @@ export const meilisearchHandlers = {
   health: (url = MEILISEARCH_URL) =>
     http.get(`${url}/health`, () => HttpResponse.json({ status: "available" })),
 
+  /** `GET /version` answering a fixed version body. */
+  version: () =>
+    http.get(`${MEILISEARCH_URL}/version`, () =>
+      HttpResponse.json({
+        commitSha: "b46889b5f0f2f8b91438a08a358ba8f05fc09fc1",
+        commitDate: "2026-09-24T10:00:00.000000Z",
+        pkgVersion: "1.54.0",
+      }),
+    ),
+
   /**
    * `GET /indexes` paginating over `all` like the API does: `limit` defaults to
    * 20, `offset` to 0, and the envelope carries `offset`, `limit` and `total`.
