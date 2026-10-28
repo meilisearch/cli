@@ -49,3 +49,19 @@ export function fetchStats(
     params: query,
   });
 }
+
+/**
+ * `GET /keys`, the list route of `get keys`. `getKeys` of meilisearch-js
+ * rewrites `createdAt` and `updatedAt` into `Date` objects, which JSON writes
+ * back with milliseconds where the API answered nanoseconds: the agent would
+ * read a value the API never sent, against the pass-through of
+ * docs/contract/output.md. ADR 0003 allows `client.httpRequest` until the SDK
+ * leaves the body alone, as `fetchStats` does. The other four routes of the
+ * resource return the body as it comes, so they call the SDK.
+ */
+export function fetchKeys(
+  client: Meilisearch,
+  query: { limit?: number | undefined; offset?: number | undefined },
+): Promise<ListPage> {
+  return client.httpRequest.get({ path: "keys", params: query });
+}
