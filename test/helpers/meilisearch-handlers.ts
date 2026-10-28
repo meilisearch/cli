@@ -158,6 +158,16 @@ export const meilisearchHandlers = {
     }),
 
   /**
+   * `POST /indexes/{uid}/facet-search` answering the facet values it is given,
+   * with the `facetQuery` it was sent, `null` when the body carried none.
+   */
+  facetSearch: (facetHits: Array<{ value: string; count: number }>) =>
+    http.post(`${MEILISEARCH_URL}/indexes/:uid/facet-search`, async ({ request }) => {
+      const { facetQuery } = (await request.json()) as { facetQuery?: string };
+      return HttpResponse.json({ facetHits, facetQuery: facetQuery ?? null, processingTimeMs: 0 });
+    }),
+
+  /**
    * `POST /multi-search` answering `response`, whatever shape it is given: the
    * route answers one envelope per query, or the merged hits of every query
    * when the body carries a `federation`, and the CLI prints either as it is.
