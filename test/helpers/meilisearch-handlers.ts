@@ -5,6 +5,7 @@
 import type {
   EnqueuedTask,
   IndexObject,
+  Key,
   MeilisearchErrorResponse,
   RecordAny,
   Settings,
@@ -13,6 +14,18 @@ import type {
 import { HttpResponse, http } from "msw";
 
 export const MEILISEARCH_URL = "http://meili.test:7700";
+
+/**
+ * One page of a route that pages with an offset, `GET /indexes` and `GET /keys`:
+ * `limit` defaults to 20, `offset` to 0, and the envelope carries `offset`,
+ * `limit` and `total`.
+ */
+function offsetPage<T>(all: T[], url: string) {
+  const params = new URL(url).searchParams;
+  const limit = Number(params.get("limit") ?? 20);
+  const offset = Number(params.get("offset") ?? 0);
+  return { results: all.slice(offset, offset + limit), offset, limit, total: all.length };
+}
 
 export const meilisearchHandlers = {
   /** `GET /health` answering `{ "status": "available" }`. */
@@ -29,22 +42,11 @@ export const meilisearchHandlers = {
       }),
     ),
 
-  /**
-   * `GET /indexes` paginating over `all` like the API does: `limit` defaults to
-   * 20, `offset` to 0, and the envelope carries `offset`, `limit` and `total`.
-   */
+  /** `GET /indexes`, paginating over `all` with the offset of the route. */
   indexes: (all: IndexObject[]) =>
-    http.get(`${MEILISEARCH_URL}/indexes`, ({ request }) => {
-      const params = new URL(request.url).searchParams;
-      const limit = Number(params.get("limit") ?? 20);
-      const offset = Number(params.get("offset") ?? 0);
-      return HttpResponse.json({
-        results: all.slice(offset, offset + limit),
-        offset,
-        limit,
-        total: all.length,
-      });
-    }),
+    http.get(`${MEILISEARCH_URL}/indexes`, ({ request }) =>
+      HttpResponse.json(offsetPage(all, request.url)),
+    ),
 
   /** `GET /indexes/{uid}` answering the index from `all`, or the 404 body of Meilisearch. */
   index: (all: IndexObject[]) =>
@@ -208,6 +210,31 @@ export const meilisearchHandlers = {
       });
     }),
 
+  /** `GET /keys`, the same offset paging as the indexes. */
+  keys: (all: Key[]) =>
+    http.get(`${MEILISEARCH_URL}/keys`, ({ request }) =>
+      HttpResponse.json(offsetPage(all, request.url)),
+    ),
+
+  /** `GET /keys/{key}` answering the key from `all`, by its uid or by its key value. */
+  key: (all: Key[]) =>
+    http.get(`${MEILISEARCH_URL}/keys/:key`, ({ params }) => {
+      const found = all.find((key) => key.uid === params.key || key.key === params.key);
+      return found === undefined
+        ? HttpResponse.json(apiKeyNotFoundError, { status: 404 })
+        : HttpResponse.json(found);
+    }),
+
+  /** `POST /keys`, the creation route, which answers the key it created. */
+  keyCreate: (key: Key) => http.post(`${MEILISEARCH_URL}/keys`, () => HttpResponse.json(key)),
+
+  /** `PATCH /keys/{key}`, the update route, which answers the key it changed. */
+  keyUpdate: (key: Key) => http.patch(`${MEILISEARCH_URL}/keys/:key`, () => HttpResponse.json(key)),
+
+  /** `DELETE /keys/{key}`, which answers 204 with no body. */
+  keyDelete: () =>
+    http.delete(`${MEILISEARCH_URL}/keys/:key`, () => new HttpResponse(null, { status: 204 })),
+
   /** `POST /tasks/cancel`, the cancelation route. */
   tasksCancel: (task: EnqueuedTask) =>
     http.post(`${MEILISEARCH_URL}/tasks/cancel`, () => HttpResponse.json(task)),
@@ -240,6 +267,14 @@ export const invalidApiKeyError: MeilisearchErrorResponse = {
   code: "invalid_api_key",
   type: "auth",
   link: "https://docs.meilisearch.com/errors#invalid_api_key",
+};
+
+/** The error body Meilisearch returns for an API key that does not exist. */
+export const apiKeyNotFoundError: MeilisearchErrorResponse = {
+  message: "API key not found.",
+  code: "api_key_not_found",
+  type: "invalid_request",
+  link: "https://docs.meilisearch.com/errors#api_key_not_found",
 };
 
 /** The error body Meilisearch returns for an index that does not exist. */
@@ -287,4 +322,25 @@ export function makeTask(overrides: Partial<Task> & Pick<Task, "uid" | "status">
     error: undefined,
     ...overrides,
   } as Task;
+}
+
+/**
+ * An API key as the routes of `/keys` answer it, the `key` field included. The
+ * overrides are typed by name and not by value because meilisearch-js types
+ * `expiresAt` as a `Date` and `name` and `description` as strings, where the
+ * API answers the dates as text and both of the others as `null` when empty.
+ * What the API answers is what the CLI prints.
+ */
+export function makeKey(overrides: Partial<Record<keyof Key, unknown>> & Pick<Key, "uid">): Key {
+  return {
+    name: "Default Search API Key",
+    description: "Use it to search from the frontend",
+    key: "115f7b0806e6eb3409870fbfef319371dff43dd036746816358c1d71ad4e2221",
+    actions: ["search"],
+    indexes: ["*"],
+    expiresAt: null,
+    createdAt: "2026-09-24T10:00:00.000000Z",
+    updatedAt: "2026-09-24T10:00:00.000000Z",
+    ...overrides,
+  } as unknown as Key;
 }

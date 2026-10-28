@@ -175,6 +175,96 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
       ],
     },
     {
+      "api": "meilisearch",
+      "description": "Create an API key that runs --actions on --indexes until --expires-at.
+
+The answer carries the \`key\` field, the credential itself, on stdout like any other data.",
+      "examples": [
+        "meili add keys --actions search --indexes movies --expires-at null",
+        "meili add keys --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json",
+        "meili add keys --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
+        "meili add keys --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "Uid of the key, a uuid v4. Without it, Meilisearch generates one.",
+          "helpValue": "<uuid>",
+          "name": "id",
+          "type": "option",
+        },
+        {
+          "description": "Actions the key permits, comma-separated, for example \`search\` or \`documents.*\`. \`*\` permits them all.",
+          "helpValue": "<actions>",
+          "name": "actions",
+          "type": "option",
+        },
+        {
+          "description": "Indexes the key reaches, comma-separated. \`*\` reaches them all, and \`products_*\` every index of that prefix.",
+          "helpValue": "<indexes>",
+          "name": "indexes",
+          "type": "option",
+        },
+        {
+          "description": "Expiration date in RFC 3339 format. The value null creates a key that never expires.",
+          "helpValue": "<date>",
+          "name": "expires-at",
+          "type": "option",
+        },
+        {
+          "description": "Name of the key, for a human reading the list.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "Description of the key, for a human reading the list.",
+          "helpValue": "<text>",
+          "name": "description",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "add keys",
+      "keyActions": [
+        "keys.create",
+      ],
+      "routes": [
+        "POST /keys",
+      ],
+    },
+    {
       "api": "none",
       "description": "Log in to Meilisearch Cloud with a browser, and store the token for the management commands.",
       "examples": [
@@ -610,6 +700,54 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
       "routes": [
         "DELETE /indexes/{index_uid}",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "Delete an API key, which stops authenticating every request that carries it.",
+      "examples": [
+        "meili delete keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
+        "meili delete keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The key to delete, by its uid or by its key value.",
+          "helpValue": "<key>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "type": "boolean",
+        },
+      ],
+      "id": "delete keys",
+      "keyActions": [
+        "keys.delete",
+      ],
+      "routes": [
+        "DELETE /keys/{key}",
       ],
     },
     {
@@ -1133,6 +1271,70 @@ The file holds API keys and decides where every later command goes, for every pr
       "routes": [
         "GET /indexes",
         "GET /indexes/{index_uid}",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "List the API keys of the instance, or get one with --id.
+
+The answer is the API body as it is, so it carries the \`key\` field of every key it returns: credentials that work, on stdout, like any other data.",
+      "examples": [
+        "meili get keys",
+        "meili get keys --output json",
+        "meili get keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
+        "meili get keys --limit 5 --offset 10",
+        "meili get keys --all --output ndjson",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The key to get, by its uid or by its key value. Without it, the command lists the keys.",
+          "helpValue": "<key>",
+          "name": "id",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "name": "all",
+          "type": "boolean",
+        },
+      ],
+      "id": "get keys",
+      "keyActions": [
+        "keys.get",
+      ],
+      "routes": [
+        "GET /keys",
+        "GET /keys/{key}",
       ],
     },
     {
@@ -2008,6 +2210,76 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
+      "description": "Change the name or the description of an API key, the two fields the route takes, and reset one with the value null.",
+      "examples": [
+        "meili update keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
+        "meili update keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly' --output json",
+        "meili update keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The key to update, by its uid or by its key value.",
+          "helpValue": "<key>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "New name of the key. The value null removes the one it has.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "New description of the key. The value null removes the one it has.",
+          "helpValue": "<text>",
+          "name": "description",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "update keys",
+      "keyActions": [
+        "keys.update",
+      ],
+      "routes": [
+        "PATCH /keys/{key}",
+      ],
+    },
+    {
+      "api": "meilisearch",
       "async": true,
       "description": "Change the settings given, leave the others as they are, and reset one with the value null.",
       "examples": [
@@ -2231,6 +2503,13 @@ The file holds API keys and decides where every later command goes, for every pr
         ],
       },
       {
+        "description": "Create an API key that runs --actions on --indexes until --expires-at.",
+        "id": "add keys",
+        "routes": [
+          "POST /keys",
+        ],
+      },
+      {
         "description": "Log in to Meilisearch Cloud with a browser, and store the token for the management commands.",
         "id": "auth login",
       },
@@ -2282,6 +2561,13 @@ The file holds API keys and decides where every later command goes, for every pr
         ],
       },
       {
+        "description": "Delete an API key, which stops authenticating every request that carries it.",
+        "id": "delete keys",
+        "routes": [
+          "DELETE /keys/{key}",
+        ],
+      },
+      {
         "description": "Reset every setting of an index to its default value, which reindexes the documents.",
         "id": "delete settings",
         "routes": [
@@ -2322,6 +2608,14 @@ The file holds API keys and decides where every later command goes, for every pr
         "routes": [
           "GET /indexes",
           "GET /indexes/{index_uid}",
+        ],
+      },
+      {
+        "description": "List the API keys of the instance, or get one with --id.",
+        "id": "get keys",
+        "routes": [
+          "GET /keys",
+          "GET /keys/{key}",
         ],
       },
       {
@@ -2390,6 +2684,13 @@ The file holds API keys and decides where every later command goes, for every pr
         "id": "update indexes",
         "routes": [
           "PATCH /indexes/{index_uid}",
+        ],
+      },
+      {
+        "description": "Change the name or the description of an API key, the two fields the route takes, and reset one with the value null.",
+        "id": "update keys",
+        "routes": [
+          "PATCH /keys/{key}",
         ],
       },
       {
