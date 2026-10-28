@@ -30,3 +30,22 @@ export function fetchDocuments(
 ): Promise<ListPage> {
   return client.httpRequest.post({ path: `indexes/${index}/documents/fetch`, body: query });
 }
+
+/**
+ * `GET /stats` and `GET /indexes/{index}/stats` with the query parameters of
+ * the routes. `getStats` of meilisearch-js sends none, so it cannot carry
+ * `showInternalDatabaseSizes` or `sizeFormat`: ADR 0003 allows
+ * `client.httpRequest` until the SDK takes them. The body is returned as it
+ * comes, untyped, because `sizeFormat=human` answers strings where the types
+ * of the SDK declare numbers.
+ */
+export function fetchStats(
+  client: Meilisearch,
+  index: string | undefined,
+  query: { showInternalDatabaseSizes?: boolean; sizeFormat?: "human" | "raw" },
+): Promise<unknown> {
+  return client.httpRequest.get({
+    path: index === undefined ? "stats" : `indexes/${index}/stats`,
+    params: query,
+  });
+}

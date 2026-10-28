@@ -20,6 +20,8 @@ COMMANDS
   get indexes    List the indexes of the instance, or get one with --id.
   get settings   Get every setting of an index, each with its current value or
                  its default.
+  get stats      Get the statistics of the whole instance, or those of one index
+                 with --index.
   get tasks      List the tasks of the instance, narrowed by --ids, --statuses,
                  --types and the other filters of the route.
   get version    Get the version of the Meilisearch instance, with the commit it

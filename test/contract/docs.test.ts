@@ -24,15 +24,11 @@ for await (const file of glob("docs/contract/*.md", { cwd: PROJECT_ROOT })) guid
 const PLANNED_PATHS = [
   "CHANGELOG.md",
   "src/commands/get/projects.ts",
-  "src/commands/get/stats.ts",
   "src/lib/clients/management/generated/",
-  "test/commands/get/__snapshots__/stats.test.ts.snap",
-  "test/commands/get/stats.test.ts",
   "test/helpers/management-handlers.ts",
   "test/integration/management/",
   "test/integration/management/README.md",
   "test/integration/management/bootstrap/",
-  "test/integration/meilisearch/get-stats.test.ts",
 ];
 const PLANNED_SCRIPTS = ["gen:management"];
 
