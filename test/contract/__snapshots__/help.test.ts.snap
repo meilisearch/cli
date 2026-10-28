@@ -18,6 +18,7 @@ COMMANDS
                  --filter.
   get health     Check that the Meilisearch instance is available.
   get indexes    List the indexes of the instance, or get one with --id.
+  get keys       List the API keys of the instance, or get one with --id.
   get settings   Get every setting of an index, each with its current value or
                  its default.
   get stats      Get the statistics of the whole instance, or those of one index
