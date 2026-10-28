@@ -3322,6 +3322,329 @@
         "facet-search.js"
       ]
     },
+    "get:batches": {
+      "aliases": [],
+      "args": {},
+      "description": "List the batches of tasks the instance processed, narrowed by --ids, --task-ids, --statuses and the other filters of the route.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %>",
+        "<%= config.bin %> <%= command.id %> --output json",
+        "<%= config.bin %> <%= command.id %> --ids 7",
+        "<%= config.bin %> <%= command.id %> --task-ids 42",
+        "<%= config.bin %> <%= command.id %> --statuses failed --index-ids movies --limit 5",
+        "<%= config.bin %> <%= command.id %> --all --output ndjson"
+      ],
+      "flags": {
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "name": "project-url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "name": "project-api-key",
+          "hasDynamicHelp": false,
+          "helpValue": "<key>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "name": "project",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "ids": {
+          "aliases": [
+            "batch-uids",
+            "id"
+          ],
+          "description": "Batch uids to match, comma-separated. `*` matches every one.",
+          "name": "ids",
+          "hasDynamicHelp": false,
+          "helpValue": "<uids>",
+          "multiple": false,
+          "type": "option"
+        },
+        "task-ids": {
+          "aliases": [
+            "uids"
+          ],
+          "description": "Match the batches of these task uids, comma-separated. `*` matches every one.",
+          "name": "task-ids",
+          "hasDynamicHelp": false,
+          "helpValue": "<uids>",
+          "multiple": false,
+          "type": "option"
+        },
+        "index-ids": {
+          "aliases": [
+            "index-uids"
+          ],
+          "description": "Match the tasks of these indexes, comma-separated. `*` matches every one.",
+          "name": "index-ids",
+          "hasDynamicHelp": false,
+          "helpValue": "<indexes>",
+          "multiple": false,
+          "type": "option"
+        },
+        "canceled-by": {
+          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. `*` matches every one.",
+          "name": "canceled-by",
+          "hasDynamicHelp": false,
+          "helpValue": "<uids>",
+          "multiple": false,
+          "type": "option"
+        },
+        "types": {
+          "description": "Task types to match, comma-separated, as the `type` field of a task spells them, for example `documentAdditionOrUpdate`. `*` matches every one.",
+          "name": "types",
+          "hasDynamicHelp": false,
+          "helpValue": "<types>",
+          "multiple": false,
+          "type": "option"
+        },
+        "statuses": {
+          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. `*` matches every one.",
+          "name": "statuses",
+          "hasDynamicHelp": false,
+          "helpValue": "<statuses>",
+          "multiple": false,
+          "type": "option"
+        },
+        "after-enqueued-at": {
+          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
+          "name": "after-enqueued-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "before-enqueued-at": {
+          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
+          "name": "before-enqueued-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "after-started-at": {
+          "description": "Match the tasks started after this date, in RFC 3339 format.",
+          "name": "after-started-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "before-started-at": {
+          "description": "Match the tasks started before this date, in RFC 3339 format.",
+          "name": "before-started-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "after-finished-at": {
+          "description": "Match the tasks finished after this date, in RFC 3339 format.",
+          "name": "after-finished-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "before-finished-at": {
+          "description": "Match the tasks finished before this date, in RFC 3339 format.",
+          "name": "before-finished-at",
+          "hasDynamicHelp": false,
+          "helpValue": "<date>",
+          "multiple": false,
+          "type": "option"
+        },
+        "reverse": {
+          "description": "Return the batches from the oldest uid up, instead of the newest down.",
+          "name": "reverse",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "limit": {
+          "description": "Passed to the API.",
+          "name": "limit",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "name": "from",
+          "hasDynamicHelp": false,
+          "helpValue": "<uid>",
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "name": "all",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "get:batches",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "meilisearch",
+      "routes": [
+        "GET /batches"
+      ],
+      "keyActions": [
+        "tasks.get"
+      ],
+      "connectionFlags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "helpValue": "<key>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "get",
+        "batches.js"
+      ]
+    },
     "get:documents": {
       "aliases": [],
       "args": {},
