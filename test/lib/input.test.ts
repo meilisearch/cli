@@ -7,7 +7,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import type { MeiliCliError } from "../../src/lib/errors.js";
-import { isJsonObject, readJsonBody, readJsonObjectBody } from "../../src/lib/input.js";
+import {
+  isJsonObject,
+  readBodyWithFields,
+  readJsonBody,
+  readJsonObjectBody,
+} from "../../src/lib/input.js";
 
 vi.mock("node:fs", async (importOriginal) => {
   const actual = await importOriginal<typeof import("node:fs")>();
@@ -73,6 +78,28 @@ describe("readJsonObjectBody", () => {
         expect.objectContaining({ code: "cli_input_invalid" }) as MeiliCliError,
       );
     }
+  });
+});
+
+describe("readBodyWithFields", () => {
+  it("returns the fields alone when neither --file nor --data is given", () => {
+    expect(readBodyWithFields({}, { primaryKey: "id" })).toEqual({ primaryKey: "id" });
+  });
+
+  it("lets a field override the one the body carries", () => {
+    expect(readBodyWithFields({ data: '{"primaryKey":"isbn"}' }, { primaryKey: "id" })).toEqual({
+      primaryKey: "id",
+    });
+  });
+
+  it("drops an undefined field instead of erasing the one the body carries", () => {
+    expect(
+      readBodyWithFields({ data: '{"primaryKey":"isbn"}' }, { primaryKey: undefined }),
+    ).toEqual({ primaryKey: "isbn" });
+  });
+
+  it("keeps a field whose value is null, which the API reads as a value", () => {
+    expect(readBodyWithFields({}, { stopWords: null })).toEqual({ stopWords: null });
   });
 });
 
