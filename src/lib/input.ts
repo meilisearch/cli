@@ -49,6 +49,24 @@ export function readJsonObjectBody(flags: BodyInputFlagValues): Record<string, u
   return body;
 }
 
+/**
+ * The body a command sends on a route whose body is an object of named
+ * fields: the JSON of `--file` or `--data` first, then `fields`, the fields
+ * its own flags define, which override the ones the body carries (rule 8 of
+ * docs/contract/commands.md). A field left undefined is dropped rather than
+ * spread: an absent flag would otherwise erase the field the body carries,
+ * since JSON.stringify leaves an undefined value out.
+ */
+export function readBodyWithFields(
+  flags: BodyInputFlagValues,
+  fields: Record<string, unknown>,
+): Record<string, unknown> {
+  return {
+    ...readJsonObjectBody(flags),
+    ...Object.fromEntries(Object.entries(fields).filter(([, value]) => value !== undefined)),
+  };
+}
+
 /** Which of the two flags carried the body, for the message of an error about it. */
 function bodySource(flags: BodyInputFlagValues): string {
   return flags.data === undefined ? `\`${flags.file}\`` : "--data";

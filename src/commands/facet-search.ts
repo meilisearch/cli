@@ -1,7 +1,7 @@
 import { Flags } from "@oclif/core";
 import type { HybridSearch, SearchForFacetValuesParams } from "meilisearch";
 import { type Api, BaseCommand } from "../lib/base-command.js";
-import { readJsonObjectBody } from "../lib/input.js";
+import { readBodyWithFields } from "../lib/input.js";
 import { asJson, asNumber } from "../lib/values.js";
 
 export default class FacetSearch extends BaseCommand {
@@ -96,13 +96,7 @@ export default class FacetSearch extends BaseCommand {
       exhaustiveFacetCount: flags["exhaustive-facet-count"] ? true : undefined,
     };
 
-    // The body of --file or --data first, then the flags, which override a field of it (rule 8).
-    // The undefined entries are dropped rather than spread: an absent flag would otherwise
-    // erase the field the body carries, since JSON.stringify leaves an undefined value out.
-    const params = {
-      ...readJsonObjectBody(flags),
-      ...Object.fromEntries(Object.entries(fromFlags).filter(([, value]) => value !== undefined)),
-    } as SearchForFacetValuesParams;
+    const params = readBodyWithFields(flags, fromFlags) as SearchForFacetValuesParams;
 
     await this.output(await this.meilisearch.index(flags.index).searchForFacetValues(params));
   }
