@@ -3,6 +3,7 @@
  * any DNS lookup, and an unhandled request is an error.
  */
 import type {
+  Batch,
   EnqueuedTask,
   IndexObject,
   MeilisearchErrorResponse,
@@ -13,6 +14,32 @@ import type {
 import { HttpResponse, http } from "msw";
 
 export const MEILISEARCH_URL = "http://meili.test:7700";
+
+/**
+ * One page of a route that pages with a cursor, `GET /tasks` and `GET /batches`:
+ * `limit` defaults to 20, the newest uid first, `from` names the uid the page
+ * starts at, `idsParam` narrows the list, and the envelope carries `from`,
+ * `limit`, `total` and the `next` cursor.
+ */
+function cursorPage<T extends { uid: number }>(all: T[], url: string, idsParam: string) {
+  const params = new URL(url).searchParams;
+  const limit = Number(params.get("limit") ?? 20);
+  const from = params.get("from");
+  const uids = params.get(idsParam)?.split(",");
+  const matching = all
+    .filter((item) => uids === undefined || uids.includes(String(item.uid)))
+    .sort((a, b) => b.uid - a.uid);
+  const start =
+    from === null ? 0 : matching.findIndex((item) => item.uid === Number.parseInt(from, 10));
+  const results = matching.slice(start, start + limit);
+  return {
+    results,
+    total: matching.length,
+    limit,
+    from: results[0]?.uid ?? null,
+    next: matching[start + limit]?.uid ?? null,
+  };
+}
 
 export const meilisearchHandlers = {
   /** `GET /health` answering `{ "status": "available" }`. */
@@ -182,31 +209,17 @@ export const meilisearchHandlers = {
   indexStats: (stats: RecordAny) =>
     http.get(`${MEILISEARCH_URL}/indexes/:uid/stats`, () => HttpResponse.json(stats)),
 
-  /**
-   * `GET /tasks` paging over `all` like the API does: `limit` defaults to 20,
-   * the newest uid first, `from` names the uid the page starts at, and the
-   * envelope carries `from`, `limit`, `total` and the `next` cursor.
-   */
+  /** `GET /tasks`, paging over `all` with the cursor of the route, narrowed by `uids`. */
   tasks: (all: Task[]) =>
-    http.get(`${MEILISEARCH_URL}/tasks`, ({ request }) => {
-      const params = new URL(request.url).searchParams;
-      const limit = Number(params.get("limit") ?? 20);
-      const from = params.get("from");
-      const uids = params.get("uids")?.split(",");
-      const matching = all
-        .filter((task) => uids === undefined || uids.includes(String(task.uid)))
-        .sort((a, b) => b.uid - a.uid);
-      const start =
-        from === null ? 0 : matching.findIndex((task) => task.uid === Number.parseInt(from, 10));
-      const results = matching.slice(start, start + limit);
-      return HttpResponse.json({
-        results,
-        total: matching.length,
-        limit,
-        from: results[0]?.uid ?? null,
-        next: matching[start + limit]?.uid ?? null,
-      });
-    }),
+    http.get(`${MEILISEARCH_URL}/tasks`, ({ request }) =>
+      HttpResponse.json(cursorPage(all, request.url, "uids")),
+    ),
+
+  /** `GET /batches`, the same cursor, narrowed by `batchUids`. */
+  batches: (all: Batch[]) =>
+    http.get(`${MEILISEARCH_URL}/batches`, ({ request }) =>
+      HttpResponse.json(cursorPage(all, request.url, "batchUids")),
+    ),
 
   /** `POST /tasks/cancel`, the cancelation route. */
   tasksCancel: (task: EnqueuedTask) =>
@@ -287,4 +300,22 @@ export function makeTask(overrides: Partial<Task> & Pick<Task, "uid" | "status">
     error: undefined,
     ...overrides,
   } as Task;
+}
+
+export function makeBatch(overrides: Partial<Batch> & Pick<Batch, "uid">): Batch {
+  return {
+    progress: null,
+    details: { receivedDocuments: 1, indexedDocuments: 1 },
+    stats: {
+      totalNbTasks: 1,
+      status: { succeeded: 1 },
+      types: { documentAdditionOrUpdate: 1 },
+      indexUids: { movies: 1 },
+    },
+    duration: "PT0.001S",
+    startedAt: "2026-09-24T10:00:00.000000Z",
+    finishedAt: "2026-09-24T10:00:00.001000Z",
+    batchStrategy: "batched all enqueued tasks",
+    ...overrides,
+  } as Batch;
 }
