@@ -1,7 +1,7 @@
 import { Flags } from "@oclif/core";
 import type { KeyCreation } from "meilisearch";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { readJsonObjectBody } from "../../lib/input.js";
+import { readBodyWithFields } from "../../lib/input.js";
 import { asList, asText } from "../../lib/values.js";
 
 export default class AddKeys extends BaseCommand {
@@ -66,13 +66,9 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
       name: asText(flags.name),
       description: asText(flags.description),
     };
-    // The body of --file or --data first, then the flags, which override a field of it (rule 8).
-    // The API refuses a body missing actions, indexes or expiresAt, with its own code: the CLI
-    // judges no value it can send.
-    const key = {
-      ...readJsonObjectBody(flags),
-      ...Object.fromEntries(Object.entries(fromFlags).filter(([, value]) => value !== undefined)),
-    } as KeyCreation;
+    // The API refuses a body missing actions, indexes or expiresAt, with its own
+    // code: the CLI judges no value it can send.
+    const key = readBodyWithFields(flags, fromFlags) as KeyCreation;
     await this.output(await this.meilisearch.createKey(key));
   }
 }

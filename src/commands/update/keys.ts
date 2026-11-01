@@ -1,7 +1,7 @@
 import { Flags } from "@oclif/core";
 import type { KeyUpdate } from "meilisearch";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { readJsonObjectBody } from "../../lib/input.js";
+import { readBodyWithFields } from "../../lib/input.js";
 import { asText } from "../../lib/values.js";
 
 export default class UpdateKeys extends BaseCommand {
@@ -44,10 +44,7 @@ export default class UpdateKeys extends BaseCommand {
       name: asText(flags.name),
       description: asText(flags.description),
     };
-    const update = {
-      ...readJsonObjectBody(flags),
-      ...Object.fromEntries(Object.entries(fromFlags).filter(([, value]) => value !== undefined)),
-    } as KeyUpdate;
+    const update = readBodyWithFields(flags, fromFlags) as KeyUpdate;
     await this.output(await this.meilisearch.updateKey(flags.id, update));
   }
 }
