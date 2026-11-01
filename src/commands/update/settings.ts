@@ -1,7 +1,7 @@
 import { Flags } from "@oclif/core";
 import type { Settings } from "meilisearch";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { readJsonObjectBody } from "../../lib/input.js";
+import { readBodyWithFields } from "../../lib/input.js";
 import { asJson, asList, asNumber, asText } from "../../lib/values.js";
 
 export default class UpdateSettings extends BaseCommand {
@@ -158,13 +158,7 @@ export default class UpdateSettings extends BaseCommand {
       chat: asJson(flags.chat),
     };
 
-    // The body of --file or --data first, then the flags, which override a field of it (rule 8).
-    // The undefined entries are dropped rather than spread: an absent flag would otherwise
-    // erase the field the body carries, since JSON.stringify leaves an undefined value out.
-    const settings = {
-      ...readJsonObjectBody(flags),
-      ...Object.fromEntries(Object.entries(fromFlags).filter(([, value]) => value !== undefined)),
-    } as Settings;
+    const settings = readBodyWithFields(flags, fromFlags) as Settings;
 
     await this.outputTask(
       await this.meilisearch.index(flags.index).updateSettings(settings),
