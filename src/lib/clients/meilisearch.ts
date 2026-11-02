@@ -1,5 +1,5 @@
 /** Builds the meilisearch-js client from a resolved project connection. */
-import { type DocumentsQuery, Meilisearch } from "meilisearch";
+import { type DocumentsQuery, type EnqueuedTask, Meilisearch } from "meilisearch";
 import type { ListPage } from "../pagination.js";
 
 export interface MeilisearchClientOptions {
@@ -64,4 +64,16 @@ export function fetchKeys(
   query: { limit?: number | undefined; offset?: number | undefined },
 ): Promise<ListPage> {
   return client.httpRequest.get({ path: "keys", params: query });
+}
+
+/**
+ * `POST /export`, the one route of `export`. meilisearch-js has no method for
+ * it (meilisearch/meilisearch-js#1989), so ADR 0003 allows `client.httpRequest`
+ * until it has one, as `fetchStats` and `fetchKeys` do above.
+ */
+export function triggerExport(
+  client: Meilisearch,
+  body: Record<string, unknown>,
+): Promise<EnqueuedTask> {
+  return client.httpRequest.post({ path: "export", body });
 }

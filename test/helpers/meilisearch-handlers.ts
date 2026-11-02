@@ -248,6 +248,10 @@ export const meilisearchHandlers = {
   keyDelete: () =>
     http.delete(`${MEILISEARCH_URL}/keys/:key`, () => new HttpResponse(null, { status: 204 })),
 
+  /** `POST /export`, which answers the task that sends the data to the other instance. */
+  export: (task: EnqueuedTask) =>
+    http.post(`${MEILISEARCH_URL}/export`, () => HttpResponse.json(task)),
+
   /** `POST /tasks/cancel`, the cancelation route. */
   tasksCancel: (task: EnqueuedTask) =>
     http.post(`${MEILISEARCH_URL}/tasks/cancel`, () => HttpResponse.json(task)),
