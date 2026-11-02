@@ -946,6 +946,100 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
+      "async": true,
+      "description": "Send the documents and the settings of this instance to the Meilisearch at --url, and answer the task that does it.
+
+The export writes on that instance with the credentials of --api-key, and --indexes narrows it to the indexes those patterns match.",
+      "examples": [
+        "meili export --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
+        "meili export --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json",
+        "meili export --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait",
+        "meili export --url http://localhost:7701 --payload-size 24MiB",
+        "meili export --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "URL of the Meilisearch instance the data is sent to.",
+          "helpValue": "<url>",
+          "name": "url",
+          "type": "option",
+        },
+        {
+          "description": "API key of that instance, the one the export writes with. --project-api-key stays the key of this one.",
+          "helpValue": "<key>",
+          "name": "api-key",
+          "type": "option",
+        },
+        {
+          "description": "Maximum size of one request sent to that instance, for example 24MiB.",
+          "helpValue": "<size>",
+          "name": "payload-size",
+          "type": "option",
+        },
+        {
+          "description": "The indexes to export and how, as JSON: an index pattern per key, its filter and overrideSettings as value. Every index by default, \`{"*":{}}\`.",
+          "helpValue": "<json>",
+          "name": "indexes",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+      ],
+      "id": "export",
+      "keyActions": [
+        "export",
+      ],
+      "routes": [
+        "POST /export",
+      ],
+    },
+    {
+      "api": "meilisearch",
       "description": "Search the values of one facet attribute of an index, counted on the documents --q and --filter keep.",
       "examples": [
         "meili facet-search --index movies --facet-name genres --facet-query ac",
@@ -2712,6 +2806,13 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
         "id": "delete tasks",
         "routes": [
           "DELETE /tasks",
+        ],
+      },
+      {
+        "description": "Send the documents and the settings of this instance to the Meilisearch at --url, and answer the task that does it.",
+        "id": "export",
+        "routes": [
+          "POST /export",
         ],
       },
       {

@@ -3476,6 +3476,261 @@
         "tasks.js"
       ]
     },
+    "export": {
+      "aliases": [],
+      "args": {},
+      "description": "Send the documents and the settings of this instance to the Meilisearch at --url, and answer the task that does it.\n\nThe export writes on that instance with the credentials of --api-key, and --indexes narrows it to the indexes those patterns match.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %> --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
+        "<%= config.bin %> <%= command.id %> --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json",
+        "<%= config.bin %> <%= command.id %> --url http://localhost:7701 --indexes '{\"movies\":{\"filter\":\"rating > 4\"}}' --wait",
+        "<%= config.bin %> <%= command.id %> --url http://localhost:7701 --payload-size 24MiB",
+        "<%= config.bin %> <%= command.id %> --data '{\"url\":\"http://localhost:7701\",\"indexes\":{\"*\":{\"overrideSettings\":true}}}'"
+      ],
+      "flags": {
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "name": "project-url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "name": "project-api-key",
+          "hasDynamicHelp": false,
+          "helpValue": "<key>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "name": "project",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "url": {
+          "description": "URL of the Meilisearch instance the data is sent to.",
+          "name": "url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
+          "multiple": false,
+          "type": "option"
+        },
+        "api-key": {
+          "description": "API key of that instance, the one the export writes with. --project-api-key stays the key of this one.",
+          "name": "api-key",
+          "hasDynamicHelp": false,
+          "helpValue": "<key>",
+          "multiple": false,
+          "type": "option"
+        },
+        "payload-size": {
+          "description": "Maximum size of one request sent to that instance, for example 24MiB.",
+          "name": "payload-size",
+          "hasDynamicHelp": false,
+          "helpValue": "<size>",
+          "multiple": false,
+          "type": "option"
+        },
+        "indexes": {
+          "description": "The indexes to export and how, as JSON: an index pattern per key, its filter and overrideSettings as value. Every index by default, `{\"*\":{}}`.",
+          "name": "indexes",
+          "hasDynamicHelp": false,
+          "helpValue": "<json>",
+          "multiple": false,
+          "type": "option"
+        },
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "exclusive": [
+            "data"
+          ],
+          "name": "file",
+          "hasDynamicHelp": false,
+          "helpValue": "<path>",
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "name": "data",
+          "hasDynamicHelp": false,
+          "helpValue": "<json>",
+          "multiple": false,
+          "type": "option"
+        },
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "dependsOn": [
+            "wait"
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "name": "timeout",
+          "hasDynamicHelp": false,
+          "helpValue": "<duration>",
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "export",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "meilisearch",
+      "routes": [
+        "POST /export"
+      ],
+      "keyActions": [
+        "export"
+      ],
+      "connectionFlags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "helpValue": "<key>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "export.js"
+      ]
+    },
     "facet-search": {
       "aliases": [],
       "args": {},
