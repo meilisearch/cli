@@ -168,7 +168,12 @@ export async function resolveManagementCredentials(
 ): Promise<ManagementCredentials> {
   const chosen = nonEmpty(flags.url) ?? nonEmpty(env[ENV.MANAGEMENT_URL]);
   const token = nonEmpty(flags.token) ?? nonEmpty(env[ENV.MANAGEMENT_TOKEN]);
-  if (token !== undefined) return { token, url: chosen ?? DEFAULT_MANAGEMENT_URL };
+  if (token !== undefined) {
+    if (chosen !== undefined) {
+      requireSecureUrl(chosen, flags.url === undefined ? ENV.MANAGEMENT_URL : "--management-url");
+    }
+    return { token, url: chosen ?? DEFAULT_MANAGEMENT_URL };
+  }
 
   const path = credentialsFilePath(env);
   const session = readCredentialsFile(path, warn);

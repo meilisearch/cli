@@ -160,6 +160,40 @@ describe("resolveManagementCredentials", () => {
     ).resolves.toEqual({ token: "flagToken", url: "https://flag.test" });
   });
 
+  it("refuses plain HTTP for a token, unless the host is a loopback address", async () => {
+    await expect(
+      resolveManagementCredentials(
+        { token: "flagToken", url: "http://api.example.com" },
+        empty,
+        noWarning,
+      ),
+    ).rejects.toMatchObject({
+      code: "cli_usage",
+      message: expect.stringContaining("--management-url"),
+    });
+    await expect(
+      resolveManagementCredentials(
+        {},
+        {
+          ...empty,
+          MEILI_MANAGEMENT_TOKEN: "envToken",
+          MEILI_MANAGEMENT_URL: "http://api.example.com",
+        },
+        noWarning,
+      ),
+    ).rejects.toMatchObject({
+      code: "cli_usage",
+      message: expect.stringContaining("MEILI_MANAGEMENT_URL"),
+    });
+    await expect(
+      resolveManagementCredentials(
+        { token: "flagToken", url: "http://localhost:3000" },
+        empty,
+        noWarning,
+      ),
+    ).resolves.toEqual({ token: "flagToken", url: "http://localhost:3000" });
+  });
+
   it("fails before any network call with cli_auth_missing and exit 3", async () => {
     await expect(resolveManagementCredentials({}, empty, noWarning)).rejects.toMatchObject({
       code: "cli_auth_missing",

@@ -76,7 +76,7 @@ The credential is a bearer token: either a personal access token (PAT) created i
 
 If nothing is found, the CLI fails before any network call with `cli_auth_missing` and exit code 3. The hint names both ways in.
 
-The base URL comes from `--management-url`, then `MEILI_MANAGEMENT_URL`, and defaults to `https://api.meilisearch.com`. Every path starts with `/api/v2`.
+The base URL comes from `--management-url`, then `MEILI_MANAGEMENT_URL`, and defaults to `https://api.meilisearch.com`. Every path starts with `/api/v2`. It must be HTTPS, unless its host is `localhost`, `127.0.0.1` or `::1`: anything else would send the token in the clear, and is `cli_usage` before any network call.
 
 ## The credentials file
 
