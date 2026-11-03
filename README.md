@@ -14,15 +14,15 @@ TBD. The package is not published yet. To run it from the source, see [`CONTRIBU
 meili auth login
 ```
 
-The session is kept next to the config file, and the management commands refresh it on their own. `meili auth status` says whether it is still accepted, `meili auth logout` ends it.
-
-**2. Add your projects to the config file**, `~/.config/meili/config.json`:
+**2. Add your projects to the config file**:
 
 ```sh
 meili config sync-with-cloud --all   # every Cloud project you can see, with its URL and, when you own its team, its master key
 meili config set --project local --project-url http://localhost:7700 --project-api-key <your-key>   # an instance that is not on Meilisearch Cloud
 meili config list                    # the projects of the file, keys masked
 ```
+
+The config file is `~/.config/meili/config.json` by default, `$XDG_CONFIG_HOME/meili/config.json` when `XDG_CONFIG_HOME` is set. `MEILI_CONFIG` names another file.
 
 `--team-ids`, `--project-name` and `--project-url` narrow `sync-with-cloud` down. A key already in the file is never replaced; `meili config update --project <name> --project-api-key -` gives a project the key you got elsewhere.
 
