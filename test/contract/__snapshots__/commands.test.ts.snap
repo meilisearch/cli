@@ -1202,12 +1202,13 @@ The file holds API keys and decides where every later command goes, for every pr
     {
       "api": "meilisearch",
       "async": true,
-      "description": "Send the documents and the settings of this instance to the Meilisearch at --url, and answer the task that does it.
+      "description": "Send the documents and the settings of the source instance to the destination instance, and answer the task that does it.
 
-The export writes on that instance with the credentials of --api-key, and --indexes narrows it to the indexes those patterns match.",
+The source is the project this command connects to, named by --project, --project-url and --project-api-key as on every command: it receives the request and does the export. The destination is --url with --api-key, or --project-destination, an entry of the config file. --indexes narrows the export to the indexes those patterns match.",
       "examples": [
         "meili export --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
         "meili export --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json",
+        "meili export --project staging --project-destination prod",
         "meili export --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait",
         "meili export --url http://localhost:7701 --payload-size 24MiB",
         "meili export --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'",
@@ -1232,19 +1233,28 @@ The export writes on that instance with the credentials of --api-key, and --inde
           "type": "option",
         },
         {
-          "description": "URL of the Meilisearch instance the data is sent to.",
+          "description": "URL of the destination instance, the one the data is sent to.",
           "helpValue": "<url>",
           "name": "url",
           "type": "option",
         },
         {
-          "description": "API key of that instance, the one the export writes with. --project-api-key stays the key of this one.",
+          "description": "API key of the destination instance, the one the export writes with. --project-api-key stays the key of the source.",
           "helpValue": "<key>",
           "name": "api-key",
           "type": "option",
         },
         {
-          "description": "Maximum size of one request sent to that instance, for example 24MiB.",
+          "description": "A project of the config file, the destination: its URL and its key stand for --url and --api-key. Cannot be combined with --url. --api-key replaces its key.",
+          "exclusive": [
+            "url",
+          ],
+          "helpValue": "<name>",
+          "name": "project-destination",
+          "type": "option",
+        },
+        {
+          "description": "Maximum size of one request sent to the destination, for example 24MiB.",
           "helpValue": "<size>",
           "name": "payload-size",
           "type": "option",
@@ -3202,7 +3212,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
         ],
       },
       {
-        "description": "Send the documents and the settings of this instance to the Meilisearch at --url, and answer the task that does it.",
+        "description": "Send the documents and the settings of the source instance to the destination instance, and answer the task that does it.",
         "id": "export",
         "routes": [
           "POST /export",

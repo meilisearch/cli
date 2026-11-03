@@ -9,6 +9,7 @@
 import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { runBinary } from "../../helpers/run-binary.js";
+import { tempConfig } from "../../helpers/run-command.js";
 import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
@@ -63,6 +64,34 @@ describe.skipIf(!meilisearchUp)("meili export against a real Meilisearch", () =>
     expect(task.details).toMatchObject({ url: remote, payloadSize: "24 MiB" });
     // The route answers the indexes the patterns matched, none here, which is why the task is already over.
     expect(task.details.indexes).toEqual({});
+  });
+
+  it("sends to the project --project-destination names, from the project --project names", async () => {
+    const config = tempConfig("export.json", {
+      source: { url: MEILISEARCH_URL, apiKey: MASTER_KEY },
+      destination: { url: remote, apiKey: "1234abcd" },
+    });
+    const result = await runBinary(
+      [
+        "export",
+        "--project",
+        "source",
+        "--project-destination",
+        "destination",
+        "--indexes",
+        JSON.stringify({ [absent]: {} }),
+        "--wait",
+        "--output",
+        "json",
+      ],
+      config.env,
+    );
+    expect(result.exitCode).toBe(0);
+    expect(JSON.parse(result.stdout)).toMatchObject({
+      type: "export",
+      status: "succeeded",
+      details: { url: remote },
+    });
   });
 
   it("passes the error of a url that is not a string through and exits 1", async () => {

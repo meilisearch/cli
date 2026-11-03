@@ -48,6 +48,8 @@ The CLI resolves the project of a command in this order, and stops at the first 
 
    `--project-api-key` alone replaces the key of that single project.
 
+`meili export` reaches two projects: the source, resolved by the rules above, and the destination, which the export sends the data to. The destination is never resolved from the ambient sources: it is `--url` with `--api-key`, or `--project-destination <name>`, an entry of the config file whose URL and key become the `url` and `apiKey` of the body. `--project-destination` with `--url` is `cli_usage`, exit 2; a name the file does not have is `cli_config`, as for `--project`. `--api-key` replaces the key of the entry, and the key of the entry travels only with the URL of that entry, as everywhere else. See ADR 0012.
+
 A missing key is not an error at resolution time; the API answers 401 and the CLI exits 3 with a hint. The CLI never falls back to `http://localhost:7700` silently.
 
 ## Cloud projects
