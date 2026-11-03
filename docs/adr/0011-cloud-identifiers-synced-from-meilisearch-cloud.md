@@ -30,16 +30,6 @@ A first `config sync-with-cloud` set `cloudId` on the entries whose URL was a Cl
 - **The name `cloud`** is allowed in commands, flags and fields where the product is meant, `sync-with-cloud`, `cloud.id`: the product is Meilisearch Cloud, at cloud.meilisearch.com. `management` names the API, `--management-token`.
 - **A parent parameter of the Management API keeps its API name**, `{projectId}` is `--project-id`, because `--project` names an entry.
 
-Alternatives considered:
-
-- **Keep `cloudId` and add `teamId` and `teamName` beside it.** Three fields of the same origin, flat among the fields the human writes; `cloud` groups what the CLI fetched and states where it comes from.
-- **`sync-with-cloud` that never writes a key or adds an entry**, the withdrawn version. It left the human the half of the work that the API can do for an owner.
-- **Replacing a key in the file with the master key.** The key in the file can be a narrower key on purpose; a sync that widens it in silence is worse than one that leaves a gap.
-- **Skipping the master key call on the teams where `GET /teams` says `isAdmin: false`.** Fewer calls, but an organization owner reads the key without being a team admin; the 403 of the call is the one sure answer.
-- **Keeping `--project-cloud-id` on `config set` and `config update`.** The id by hand next to the id from the API is two sources for one field, and the one that is typed can be wrong.
-- **Suffixing duplicates with the team id.** Two projects of one team can share a name; the project id cannot collide.
-- **Removing the entries whose project is gone.** The file holds keys and decides where commands go; a sync that deletes on an empty answer of the API, or a narrower token, loses what the human wrote.
-
 ## Consequences
 
 - A user who created projects in the dashboard runs `meili config sync-with-cloud --all` once, gets an entry per project with its key when they own it, and names them with `--project` on every command, Meilisearch or management.
