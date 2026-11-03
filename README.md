@@ -36,7 +36,7 @@ meili update projects --project prod --name renamed   # a management command, on
 meili add projects --name demo --team-id 12 --resource-id 3 --sync-config   # creates a Cloud project and adds it to the file
 ```
 
-`--project` is required on every command, even when the file has a single project: the CLI never guesses, and no environment variable stands for it. Without a config file, name the instance outright: `--project-url <url> --project-api-key <key>`.
+`--project` is required on every command. Without a config file, name the instance outright: `--project-url <url> --project-api-key <key>`.
 
 ## Documentation
 
