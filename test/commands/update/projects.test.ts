@@ -34,9 +34,9 @@ describe("meili update projects", () => {
     expect(received[0]?.body).toEqual({ name: "renamed" });
   });
 
-  it("takes the project's cloudId from the config file with --project, not with --id too", async () => {
+  it("takes the project's cloud.id from the config file with --project, not with --id too", async () => {
     const { env: configEnv } = tempConfig("projects.json", {
-      prod: { url: "https://ms-abc.sfo.meilisearch.io", cloudId: 343 },
+      prod: { url: "https://ms-abc.sfo.meilisearch.io", cloud: { id: 343 } },
     });
     const received: ReceivedRequest[] = [];
     server.use(managementHandlers.updateProject(received));
@@ -55,11 +55,11 @@ describe("meili update projects", () => {
     expect(JSON.parse(both.stderr).error.code).toBe("cli_usage");
   });
 
-  it("renames the entry with --sync-config: the one --project names, or the one whose cloudId is --id", async () => {
-    server.use(managementHandlers.updateProject());
+  it("renames the entry with --sync-config: the one --project names, or the one whose cloud.id is --id, and refreshes its cloud identifiers", async () => {
+    server.use(managementHandlers.updateProject(), managementHandlers.listTeams());
     const { path, env: configEnv } = tempConfig("sync-update.json", {
       local: { url: "http://localhost:7700" },
-      prod: { url: "https://ms-abc.sfo.meilisearch.io", apiKey: "k", cloudId: 343 },
+      prod: { url: "https://ms-abc.sfo.meilisearch.io", apiKey: "k", cloud: { id: 343 } },
     });
     const named = await runCommand(
       UpdateProjects,
@@ -76,7 +76,11 @@ describe("meili update projects", () => {
     expect(readJson(path)).toEqual({
       projects: {
         local: { url: "http://localhost:7700" },
-        again: { url: "https://ms-abc.sfo.meilisearch.io", apiKey: "k", cloudId: 343 },
+        again: {
+          url: "https://ms-abc.sfo.meilisearch.io",
+          apiKey: "k",
+          cloud: { id: 343, teamId: 12, teamName: "Search" },
+        },
       },
     });
   });
@@ -86,9 +90,10 @@ describe("meili update projects", () => {
       http.patch(`${MANAGEMENT_URL}/api/v2/projects/:id`, () =>
         HttpResponse.json({ ...project, name: "taken" }),
       ),
+      managementHandlers.listTeams(),
     );
     const { path, env: configEnv } = tempConfig("sync-other-name.json", {
-      prod: { url: "https://p", cloudId: 343 },
+      prod: { url: "https://p", cloud: { id: 343 } },
       taken: { url: "http://elsewhere" },
     });
     const result = await runCommand(
@@ -98,14 +103,17 @@ describe("meili update projects", () => {
     );
     expect(result.exitCode).toBe(0);
     expect(readJson(path)).toEqual({
-      projects: { renamed: { url: "https://p", cloudId: 343 }, taken: { url: "http://elsewhere" } },
+      projects: {
+        renamed: { url: "https://p", cloud: { id: 343, teamId: 12, teamName: "Search" } },
+        taken: { url: "http://elsewhere" },
+      },
     });
   });
 
   it("refuses --sync-config without a name, or with a name the file has, before any network call", async () => {
     const { path, env: configEnv } = tempConfig("sync-taken.json", {
-      prod: { url: "https://p", cloudId: 343 },
-      staging: { url: "https://s", cloudId: 344 },
+      prod: { url: "https://p", cloud: { id: 343 } },
+      staging: { url: "https://s", cloud: { id: 344 } },
     });
     const noName = await runCommand(UpdateProjects, ["--project", "prod", "--sync-config"], {
       env: { ...env, ...configEnv },

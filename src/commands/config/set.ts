@@ -1,9 +1,11 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
+import { cloudEntry, findProjectByUrl } from "../../lib/cloud-sync.js";
 import {
   assertNoProject,
   assertProjectUrl,
   CONFIG_FILE_WARNING,
+  type ProjectEntry,
   writeConfigFile,
 } from "../../lib/config.js";
 import { readStdin } from "../../lib/input.js";
@@ -12,14 +14,14 @@ export default class ConfigSet extends BaseCommand {
   static api: Api = "none";
 
   static override description =
-    `Set a project in the config file, creating the file owner-only; refuses a name that exists.
+    `Set a project in the config file, creating the file owner-only; refuses a name that exists. Talks to the Management API only with --sync-with-cloud.
 
 ${CONFIG_FILE_WARNING}`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700",
     "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
-    "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-cloud-id 343",
+    "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
     "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700 --output json",
   ];
 
@@ -39,27 +41,25 @@ ${CONFIG_FILE_WARNING}`;
       helpValue: "<key>",
       parse: async (value) => (value === "-" ? readStdin() : value),
     }),
-    "project-cloud-id": Flags.integer({
-      description: "Id of the project in Meilisearch Cloud, for the management commands.",
-      helpValue: "<id>",
-    }),
+    ...BaseCommand.syncWithCloudFlags,
   };
 
   async run(): Promise<void> {
     const { flags } = await this.parse(ConfigSet);
-    assertProjectUrl(flags["project-url"]);
+    const url = flags["project-url"];
+    assertProjectUrl(url);
     const file = this.configFile();
     assertNoProject(file, flags.project, ".");
-    writeConfigFile({
-      path: file.path,
-      projects: {
-        ...file.projects,
-        [flags.project]: {
-          url: flags["project-url"],
-          apiKey: flags["project-api-key"],
-          cloudId: flags["project-cloud-id"],
-        },
-      },
-    });
+    const apiKey = flags["project-api-key"];
+    const entry: ProjectEntry = flags["sync-with-cloud"]
+      ? await cloudEntry(
+          this.managementClient,
+          await findProjectByUrl(this.managementClient, url),
+          flags.project,
+          url,
+          apiKey,
+        )
+      : { url, apiKey };
+    writeConfigFile({ path: file.path, projects: { ...file.projects, [flags.project]: entry } });
   }
 }

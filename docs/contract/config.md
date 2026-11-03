@@ -22,16 +22,16 @@ The path is `$MEILI_CONFIG` if set, else `$XDG_CONFIG_HOME/meili/config.json`, e
 {
   "projects": {
     "local": { "url": "http://localhost:7700" },
-    "prod": { "url": "https://ms-abc.sfo.meilisearch.io", "apiKey": "…", "cloudId": 343 }
+    "prod": { "url": "https://ms-abc.sfo.meilisearch.io", "apiKey": "…", "cloud": { "id": 343, "teamId": 12, "teamName": "Search" } }
   }
 }
 ```
 
-- `url` is required, `apiKey` and `cloudId` are optional. `cloudId` is the project's `id` in Meilisearch Cloud, an integer. Nothing else: no current project, no default entry.
+- `url` is required, `apiKey` and `cloud` are optional. `cloud` holds the identifiers of the project in Meilisearch Cloud: `id`, an integer, required, and `teamId`, an integer, and `teamName`, a string, both optional. The CLI writes `cloud` from the Management API, see "Cloud projects"; `teamId` and `teamName` are for the reader of the file, no command reads them. Nothing else: no current project, no default entry.
 - The file holds API keys, so it belongs to one user and is readable by that user alone: mode `600`, or `400` for a file an agent must not change. When the file is readable by others, the CLI warns on stderr with the `chmod` to run (`output.md`, "Warnings") and goes on. On Windows, where file modes do not exist, there is no check. A file that does not exist is not an error: the CLI behaves as if there were no file.
 - Invalid JSON, or a shape other than the one above, fails with `cli_config` and the path of the file.
 - The file is shared state: every process that reads it is affected by whoever writes it. Give an agent its own file through `MEILI_CONFIG`, prepared by a human and mounted read-only in its sandbox, never the human's file. An agent adds, removes or changes a project, or the permissions of the file, only when the human asked for it explicitly: the file decides where every later command goes, for every process that reads it. `meili --help`, the help of the `config` commands and `meili schema` say so.
-- `meili config list`, `meili config set`, `meili config update` and `meili config unset` manage the file, see `commands.md`. `config set` refuses a name that already exists and `config update` a name that does not: each does one thing.
+- `meili config list`, `meili config set`, `meili config update`, `meili config unset` and `meili config sync-with-cloud` manage the file, see `commands.md`. `config set` refuses a name that already exists and `config update` a name that does not: each does one thing.
 
 ## Resolution: nothing is deduced
 
@@ -52,19 +52,58 @@ A missing key is not an error at resolution time; the API answers 401 and the CL
 
 ## Cloud projects
 
-A management command acts on a project of Meilisearch Cloud, identified by its integer `id`, `meili update projects --id 343`. The id is not shown in the Cloud dashboard, so the config file can carry it, as `cloudId`, and `--project <name>` gives it to the command: `meili update projects --project prod --name renamed`.
+A management command acts on a project of Meilisearch Cloud, identified by its integer `id`, `meili update projects --id 343`. The id is not shown in the Cloud dashboard, so the config file carries it, as `cloud.id`, and `--project <name>` gives it to the command: `meili update projects --project prod --name renamed`. See ADR 0011.
 
 - `--project` and `--id` together are a `cli_usage` error, exit 2: the name and the id contradict each other. Neither is `cli_usage` too.
-- An entry without `cloudId` is a `cli_config` error, exit 2, whose hint names the ways to set it. The CLI never resolves the id by itself, from the URL or otherwise.
+- An entry without `cloud` is a `cli_config` error, exit 2, "Project `<name>` has no cloud identifiers", with a hint to `meili config update --project <name> --sync-with-cloud`. The CLI never resolves the id by itself when a command runs, from the URL or otherwise.
 - A management command that reaches no project, `add projects`, does not offer `--project` at all: the flag is not ignored in silence, it does not exist there.
 
-Three ways set `cloudId`, all explicit:
+### Writing `cloud`
 
-1. `meili add projects … --sync-config`: the created project joins the file, as an entry named after it, with its URL, its master key as `apiKey` and its `cloudId`. Creation is the one moment the API returns the key. A name the file already has is a `cli_config` error before the project is created.
-2. `meili config set --project <name> --project-url <url> --project-cloud-id <id>`: a new entry, the id written by hand.
-3. `meili config update --project <name> --project-cloud-id <id>`: the id given to an entry the file has.
+`cloud` is never typed on the command line: the CLI writes it from the Management API, and only when the command line asks for it. Four requests do:
 
-`--sync-config` keeps the file in step with the other two project commands. `meili update projects … --name <name> --sync-config` renames the project's entry after it; `meili delete projects … --sync-config` removes it. The entry is the one `--project` names, or else the one whose `cloudId` is `--id`. No entry, several, a missing `--name` on `update` or a new name the file already has is an error before the call: nothing is sent, and the file is written only once the API has answered.
+1. `meili config sync-with-cloud (--all | --team-ids <ids> | --project-name <name> | --project-url <url>)`: every Cloud project of the scope gets an entry, see below.
+2. `meili config set --project <name> --project-url <url> --sync-with-cloud`: the new entry is the Cloud project whose URL is `<url>`, same scheme and host.
+3. `meili config update --project <name> --sync-with-cloud`: the entry is synced with its project, the one of its `cloud.id`, else the one of its URL, the URL it has once the other flags are applied.
+4. `--sync-config` on the project commands. `meili add projects … --sync-config` adds the created project as an entry named after it, with its URL, its master key as `apiKey` and its `cloud`. `meili update projects … --name <name> --sync-config` renames the project's entry after it and refreshes its `cloud`; `meili delete projects … --sync-config` removes it. The entry is the one `--project` names, or else the one whose `cloud.id` is `--id`. No entry, several, a missing `--name` on `update` or a new name the file already has is an error before the call: nothing is sent, and the file is written only once the API has answered. A name the file already has on `add` is a `cli_config` error before the project is created.
+
+The same rules hold for all four:
+
+- **The key.** The CLI writes the project's master key, `GET /api/v2/projects/{projectId}/master-key`, only into an entry without `apiKey`, and never replaces a key the file has or `--project-api-key` gives. The API returns the master key to the owners of the project's team or organization only. On a 403 the entry is written without a key, with a warning that names the project and the hint "Ask an owner of the team for a key, then run `meili config update --project <name> --project-api-key -`.", and the command goes on.
+- **The team.** `teamId` is the project's, `teamName` comes from `GET /api/v2/teams`. When the name cannot be read, `cloud` is written without it, with a warning.
+- **No match.** `config set` and `config update` with `--sync-with-cloud`, and `sync-with-cloud --project-url` or `--project-name`, fail with `cli_config` when no Cloud project matches, and write nothing: not even the entry of `config set`.
+- **One write.** The file is written once, when every call has answered. A 403 on the master key, and a team name that cannot be read, are the only errors the command goes on through; any other error, a 401, a network error, a 5xx, leaves the file as it was.
+- **Credentials.** These requests resolve the Management API connection like any management command, see below. Without `--sync-with-cloud`, `config set` and `config update` resolve nothing and work offline.
+
+### `config sync-with-cloud`
+
+Exactly one scope flag, else `cli_usage`, exit 2:
+
+| Flag | Projects | Calls |
+|---|---|---|
+| `--all` | every project the token sees | `GET /api/v2/projects`, every page |
+| `--team-ids <ids>` | the projects of these teams | `GET /api/v2/projects?teamId=<id>`, every page, once per team |
+| `--project-name <name>` | the projects named exactly `<name>`, case included, in any team | `GET /api/v2/projects`, every page, filtered by the CLI |
+| `--project-url <url>` | the project whose URL is `<url>`, same scheme and host | `GET /api/v2/projects`, every page, filtered by the CLI |
+
+For each project of the scope:
+
+- A project whose `url` is `null`, still being created, is skipped, with a `cli_config` warning.
+- **The entry it already has** is the one whose `cloud.id` is the project's `id`, else the one without `cloud` whose `url` has the project's scheme and host. Two such entries without `cloud` are `cli_config`: the CLI does not pick one. That entry gets `cloud` and, if it has no key, the master key. Its name and its URL are kept; a URL other than the project's is an anomaly, reported with a `cli_config` warning and not corrected.
+- **A project without an entry** gets a new one, named after the project, with its URL, its master key and its `cloud`. When that name is the name of another new entry of the same run, or of an entry that is not this project's, the entry is `<name>-<id>`, every new one of them, with a `cli_config` warning that says the name chosen. A suffixed name the file already has is `cli_config`, and nothing is written.
+
+Entries whose project is not in the scope, or no longer in the Cloud, are left as they are and not reported.
+
+On stdout, one item per project of the scope that has an entry, in the order of the API: `ndjson` prints one per line.
+
+```json
+[
+  { "project": "prod", "cloud": { "id": 343, "teamId": 12, "teamName": "Search" }, "action": "unchanged", "apiKey": "kept" },
+  { "project": "prod-351", "cloud": { "id": 351, "teamId": 13, "teamName": "Docs" }, "action": "added", "apiKey": "missing" }
+]
+```
+
+`project` is the name of the entry. `action` is `added`, `updated` when a field of the entry changed, or `unchanged`. `apiKey` is `written`, `kept`, or `missing` when the entry has no key and the master key could not be read. The key itself is never printed. The command exits 0 when the file is written, warnings or not.
 
 ## Management API connection: resolution order
 
@@ -121,7 +160,7 @@ static api = "meilisearch" // or "management", or "none"
 - builds only that client and passes it to the command
 - reports only the missing pieces of that API when resolution fails: a Meilisearch API command without project exits 2 with `cli_config`, a management command without token exits 3 with `cli_auth_missing`
 
-A command cannot build a client by itself. Commands with `api = "none"` (`schema`, the `config` commands) resolve nothing and work offline.
+A command cannot build a client by itself. Commands with `api = "none"` (`schema`, the `config` commands) resolve nothing and work offline. Two exceptions, both explicit: `config sync-with-cloud` declares `api = "management"` and has no route of its own, and `config set` and `config update` resolve the Management API connection only when `--sync-with-cloud` is given.
 
 ## Environment variables
 

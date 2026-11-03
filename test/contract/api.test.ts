@@ -92,6 +92,9 @@ const listedCommands = tableRows(
 describe("API commands derive from their routes", () => {
   for (const { id, file, command } of commands) {
     if (command.api !== "meilisearch" && command.api !== "management") continue;
+    // A command of that table calls an API with no route of its own, `config sync-with-cloud`:
+    // commands.md lists it, and the next describe checks it.
+    if (listedCommands.includes(id)) continue;
     const api = command.api;
     const spec = specs[api];
 
@@ -180,7 +183,10 @@ describe("commands without an API", () => {
     ...derived.meilisearch.keys(),
     ...(derived.management?.keys() ?? []),
   ]);
-  for (const { id, command } of commands.filter(({ command }) => command.api === "none")) {
+  const withoutRoute = commands.filter(
+    ({ id, command }) => command.api === "none" || listedCommands.includes(id),
+  );
+  for (const { id, command } of withoutRoute) {
     it(`meili ${id} has no route, is in the table of commands.md and takes neither the name of an API command nor a verb`, () => {
       expect(command.routes ?? []).toEqual([]);
       expect(listedCommands).toContain(id);

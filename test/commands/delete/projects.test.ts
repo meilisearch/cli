@@ -28,7 +28,7 @@ describe("meili delete projects", () => {
 
   it("takes the project's cloudId from the config file with --project", async () => {
     const { env: configEnv } = tempConfig("projects.json", {
-      staging: { url: "https://s", cloudId: 343 },
+      staging: { url: "https://s", cloud: { id: 343 } },
     });
     server.use(managementHandlers.deleteProject());
     const result = await runCommand(DeleteProjects, ["--project", "staging", "--yes"], {
@@ -37,11 +37,11 @@ describe("meili delete projects", () => {
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
   });
 
-  it("removes the entry with --sync-config: the one --project names, or the one whose cloudId is --id", async () => {
+  it("removes the entry with --sync-config: the one --project names, or the one whose cloud.id is --id", async () => {
     server.use(managementHandlers.deleteProject());
     const { path, env: configEnv } = tempConfig("sync-delete.json", {
-      staging: { url: "https://s", cloudId: 343 },
-      prod: { url: "https://p", cloudId: 344 },
+      staging: { url: "https://s", cloud: { id: 343 } },
+      prod: { url: "https://p", cloud: { id: 344 } },
       local: { url: "http://localhost:7700" },
     });
     const named = await runCommand(
@@ -59,7 +59,7 @@ describe("meili delete projects", () => {
     expect(readJson(path)).toEqual({ projects: { local: { url: "http://localhost:7700" } } });
   });
 
-  it("refuses --sync-config when no entry has the project's cloudId, before any network call", async () => {
+  it("refuses --sync-config when no entry has the project's cloud id, before any network call", async () => {
     const { path, env: configEnv } = tempConfig("sync-none.json", {
       local: { url: "http://localhost:7700" },
     });
@@ -69,8 +69,8 @@ describe("meili delete projects", () => {
     expect(result.exitCode).toBe(2);
     expect(JSON.parse(result.stderr).error).toMatchObject({
       code: "cli_config",
-      message: `No project of ${path} has the cloudId 343: nothing was deleted.`,
-      hint: "Run `meili config update --project <name> --project-cloud-id 343` first.",
+      message: `No project of ${path} has the cloud id 343: nothing was deleted.`,
+      hint: "Run `meili config sync-with-cloud --project-url <url>` first, with the project's URL.",
     });
   });
 

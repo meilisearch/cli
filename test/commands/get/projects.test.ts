@@ -39,13 +39,13 @@ describe("meili get projects", () => {
     expect(result.stdout).toBe(`${JSON.stringify(project)}\n${JSON.stringify(staging)}\n`);
   });
 
-  it("gets one project with --id, or with --project and its cloudId", async () => {
+  it("gets one project with --id, or with --project and its cloud.id", async () => {
     server.use(managementHandlers.getProject([project, staging]));
     const byId = await runCommand(GetProjects, ["--id", "344", "--output", "json"], { env });
     expect(byId).toEqual({ stdout: `${JSON.stringify(staging)}\n`, stderr: "", exitCode: 0 });
 
     const { env: configEnv } = tempConfig("projects.json", {
-      demo: { url: "https://ms-abc.sfo.meilisearch.io", cloudId: 343 },
+      demo: { url: "https://ms-abc.sfo.meilisearch.io", cloud: { id: 343 } },
     });
     const byName = await runCommand(GetProjects, ["--project", "demo", "--output", "json"], {
       env: { ...env, ...configEnv },

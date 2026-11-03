@@ -33,12 +33,12 @@ FLAGS
       --debug                   Print every HTTP request and response on stderr,
                                 secrets redacted.
       --id=<id>                 The project to get, or give --project <name> and
-                                its cloudId from the config file. Without
+                                its cloud.id from the config file. Without
                                 either, the command lists the projects.
       --management-token=<pat>  Management API personal access token.
       --management-url=<url>    Management API base URL. Default
                                 https://api.meilisearch.com.
-      --project=<name>          A project of the config file, whose cloudId
+      --project=<name>          A project of the config file, whose cloud.id
                                 names the Cloud project, in place of --id.
       --team-id=<id>            Only the projects of this team. Ignored with
                                 --id.

@@ -52,7 +52,8 @@ describe("meili schema", () => {
       description: string;
       flags: Array<{ name: string }>;
     };
-    // `config set` declares the four values it writes, with its own descriptions.
+    // `config set` declares the three values it writes, with its own descriptions,
+    // and the Management API connection of --sync-with-cloud, which depends on it.
     expect(command.flags).toEqual([
       {
         name: "project",
@@ -75,10 +76,24 @@ describe("meili schema", () => {
         helpValue: "<key>",
       },
       {
-        name: "project-cloud-id",
+        name: "sync-with-cloud",
+        type: "boolean",
+        description:
+          "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+      },
+      {
+        name: "management-token",
         type: "option",
-        description: "Id of the project in Meilisearch Cloud, for the management commands.",
-        helpValue: "<id>",
+        description: "Management API personal access token.",
+        helpValue: "<pat>",
+        dependsOn: ["sync-with-cloud"],
+      },
+      {
+        name: "management-url",
+        type: "option",
+        description: "Management API base URL. Default https://api.meilisearch.com.",
+        helpValue: "<url>",
+        dependsOn: ["sync-with-cloud"],
       },
     ]);
     expect(command.description).toContain("\n\n");

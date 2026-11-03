@@ -25,15 +25,15 @@ FLAGS
       --debug                   Print every HTTP request and response on stderr,
                                 secrets redacted.
       --id=<id>                 The project to delete, or give --project <name>
-                                and its cloudId from the config file.
+                                and its cloud.id from the config file.
       --management-token=<pat>  Management API personal access token.
       --management-url=<url>    Management API base URL. Default
                                 https://api.meilisearch.com.
-      --project=<name>          A project of the config file, whose cloudId
+      --project=<name>          A project of the config file, whose cloud.id
                                 names the Cloud project, in place of --id.
       --sync-config             Remove the project's entry from the config file:
                                 the entry --project names, or the one whose
-                                cloudId is --id.
+                                cloud.id is --id.
       --yes                     (required) Confirm the deletion. Nothing is sent
                                 to the API without it.
 
