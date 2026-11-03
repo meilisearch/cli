@@ -913,7 +913,7 @@
     "add:projects": {
       "aliases": [],
       "args": {},
-      "description": "Create a Meilisearch Cloud project in a team, on a resource.",
+      "description": "Create a Meilisearch Cloud project in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3",
         "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --output json",

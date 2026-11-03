@@ -3,7 +3,7 @@ import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { postApiV2Projects } from "../../lib/clients/management/generated/sdk.gen.js";
 import type { PostApiV2ProjectsData } from "../../lib/clients/management/generated/types.gen.js";
 import { cloudOf, readTeamNames } from "../../lib/cloud-sync.js";
-import { assertNoProject, type ConfigFile, writeConfigFile } from "../../lib/config.js";
+import { assertNoProject, type ConfigFile, maskSecret, writeConfigFile } from "../../lib/config.js";
 import { MeiliCliError } from "../../lib/errors.js";
 import { readBodyWithFields } from "../../lib/input.js";
 
@@ -12,7 +12,8 @@ export default class AddProjects extends BaseCommand {
 
   static routes = ["POST /api/v2/projects"];
 
-  static override description = "Create a Meilisearch Cloud project in a team, on a resource.";
+  static override description =
+    "Create a Meilisearch Cloud project in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.";
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3",
@@ -65,14 +66,18 @@ export default class AddProjects extends BaseCommand {
       sync = { file, entry: body.name };
     }
     const project = await postApiV2Projects({ client: this.managementClient, body });
-    await this.output(project);
+    await this.output(
+      project.masterKey === undefined
+        ? project
+        : { ...project, masterKey: maskSecret(project.masterKey) },
+    );
     if (sync === undefined) return;
     if (project.url == null) {
       throw new MeiliCliError(
         "cli_config",
         `Project ${project.id} is created but has no URL yet, so it was not added to ${sync.file.path}.`,
         {
-          hint: `Run \`meili config set --project ${sync.entry} --project-url <url> --project-api-key <key> --sync-with-cloud\` once \`meili get projects --id ${project.id}\` shows its URL; the key is the masterKey printed above.`,
+          hint: `Run \`meili config sync-with-cloud --project-name ${project.name}\` once \`meili get projects --id ${project.id}\` shows its URL: it adds the project with its master key.`,
         },
       );
     }

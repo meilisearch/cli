@@ -266,7 +266,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
     },
     {
       "api": "management",
-      "description": "Create a Meilisearch Cloud project in a team, on a resource.",
+      "description": "Create a Meilisearch Cloud project in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.",
       "examples": [
         "meili add projects --name demo --team-id 12 --resource-id 3",
         "meili add projects --name demo --team-id 12 --resource-id 3 --output json",
@@ -3118,7 +3118,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
         ],
       },
       {
-        "description": "Create a Meilisearch Cloud project in a team, on a resource.",
+        "description": "Create a Meilisearch Cloud project in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.",
         "id": "add projects",
         "routes": [
           "POST /api/v2/projects",

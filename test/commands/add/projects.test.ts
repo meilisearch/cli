@@ -116,6 +116,26 @@ describe("meili add projects", () => {
     });
   });
 
+  it("points to config sync-with-cloud when the project created has no URL yet", async () => {
+    server.use(
+      http.post(`${MANAGEMENT_URL}/api/v2/projects`, () =>
+        HttpResponse.json({ ...project, url: null }, { status: 201 }),
+      ),
+    );
+    const { path, env: configEnv } = tempConfig("sync-no-url.json", {});
+    const result = await runCommand(
+      AddProjects,
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--sync-config"],
+      { env: { ...env, ...configEnv } },
+    );
+    expect(JSON.parse(result.stdout).masterKey).toBe("****9z8y");
+    expect(JSON.parse(result.stderr).error).toMatchObject({
+      code: "cli_config",
+      hint: "Run `meili config sync-with-cloud --project-name demo` once `meili get projects --id 343` shows its URL: it adds the project with its master key.",
+    });
+    expect(readJson(path)).toEqual({ projects: {} });
+  });
+
   it("refuses --sync-config for a name the file has, before any network call", async () => {
     const { path, env: configEnv } = tempConfig("taken.json", {
       demo: { url: "http://elsewhere" },
