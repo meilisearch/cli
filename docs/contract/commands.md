@@ -22,7 +22,7 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 1. **Verb.** The HTTP method gives it: `GET` is `get`, `POST` is `add`, `PUT` and `PATCH` are `update`, `DELETE` is `delete`. A trailing literal segment that is an action replaces it: `POST /tasks/cancel` gives `cancel`, `POST /indexes/{index_uid}/compact` gives `compact`, `POST /indexes/{index_uid}/documents/delete` gives `delete`. The literal verbs are a closed list: `delete`, `cancel`, `compact`, `swap`, `search`, `similar`, `facet-search`, `multi-search`, `export`. Adding one is a contract change.
 2. **Resource.** The last literal segment of the path that names a resource, plural, in kebab-case of the API name, without the `/api/v2` prefix of the Management API: `indexes`, `documents`, `team-members`, `stats`, `health`. A singleton keeps its name: `get health`, `get version`, `get stats`. Five commands have no resource word, because they are the most typed: `search`, `similar`, `facet-search`, `multi-search`, `export`. They are listed in the exceptions.
 3. **Several routes, one command.** Every route with the same verb and resource belongs to one command: `GET /indexes` and `GET /indexes/{index_uid}` are `get indexes`, `GET /stats` and `GET /indexes/{index_uid}/stats` are `get stats`, the three deletion routes of documents are `delete documents`. The flags choose the route: first the route whose path parameters are exactly the identifier flags given, then the route whose parameters cover the other flags given. Two flags that call for different routes, `--ids` and `--filter` on `delete documents` for example, are a usage error, `cli_usage`, exit 2, before any network call. A flag that belongs to the list route only, `--limit` or `--offset`, is ignored and not sent when `--id` selects the unit route.
-4. **Identifiers.** The path parameter of the resource itself is `--id` when the unit route is implemented: `get indexes --id movies`, `delete keys --id <uid>`, `get projects --id 343`. When the list route can filter by identifiers, the unit route is not implemented and the list takes `--ids`, with `--id` accepted as an alias: `get documents --index movies --ids 42` calls the fetch route, `get tasks --ids 42` filters `GET /tasks`, `get batches --ids 7` filters `GET /batches`. The path parameter of a parent resource is a flag named after that collection, singular: `--index movies`, required when every route of the command takes it and optional when one of them does not: `--index` is required on `get settings` and optional on `get stats`, whose other route is `GET /stats`. The verb-only commands take the index the same way: `search --index movies`. On the Management API, a parent parameter keeps its API name in kebab-case, `{projectId}` is `--project-id`, because `--project` is the global flag that names an entry of the config file; and that entry can supply the project: `--id` of the `projects` commands and `--project-id` of their sub-resources are optional, `--project <name>` fills them with the entry's `cloudId` (`config.md`, "Cloud projects").
+4. **Identifiers.** The path parameter of the resource itself is `--id` when the unit route is implemented: `get indexes --id movies`, `delete keys --id <uid>`, `get projects --id 343`. When the list route can filter by identifiers, the unit route is not implemented and the list takes `--ids`, with `--id` accepted as an alias: `get documents --index movies --ids 42` calls the fetch route, `get tasks --ids 42` filters `GET /tasks`, `get batches --ids 7` filters `GET /batches`. The path parameter of a parent resource is a flag named after that collection, singular: `--index movies`, required when every route of the command takes it and optional when one of them does not: `--index` is required on `get settings` and optional on `get stats`, whose other route is `GET /stats`. The verb-only commands take the index the same way: `search --index movies`. On the Management API, a parent parameter keeps its API name in kebab-case, `{projectId}` is `--project-id`, because `--project` names an entry of the config file, whose `cloudId` can stand for `--id` or `--project-id` (`config.md`, "Cloud projects").
 5. **Identifiers are named by what they identify.** A query or body parameter that carries identifiers, `uid`, `uids`, `batchUids`, `indexUids`, is named after the resource it identifies: the command's own resource gives `--id` or `--ids`, another resource gives `--<resource>-ids`. So `add indexes --id movies` and `add keys --id <uuid>` carry `uid`; `get tasks --ids 1,2 --batch-ids 7 --index-ids movies` carries `uids`, `batchUids` and `indexUids`; `get batches --ids 7 --task-ids 1,2` carries `batchUids` and `uids`, because bare `uids` are task identifiers everywhere. The API spellings, `--uid`, `--uids`, `--batch-uids`, `--index-uids`, are accepted as aliases, absent from `--help` and `meili schema`. One exception: on `update indexes`, `--id` is the index itself, so the new `uid` is `--new-id`, alias `--uid`. Every other body field keeps its API name, `--primary-key`, `--name`.
 6. **Other flags.** The query parameters and the first-level fields of the JSON body, in kebab-case of the API name: `retrieveVectors` is `--retrieve-vectors`, `teamId` is `--team-id`, `primaryKey` is `--primary-key`. The only flags that do not come from a route are the global flags and the CLI-owned flags: `--wait`, `--timeout`, `--all`, `--file`, `--data`, `--yes`, `--add-to-config`.
 7. **Values.** A scalar is passed as it is. A boolean is a bare flag, `--retrieve-vectors`, unless the route also reads `false` from it, as the settings do: it then takes its value, `--facet-search false`, because a bare flag says neither `false` nor `null`. An array of scalars is comma-separated, `--fields id,title`, as the API's own GET syntax. An object or a nested array is JSON text, `--typo-tolerance '{"enabled":false}'`. The value `null` sends a JSON null, `--expires-at null`, `--stop-words null`.
@@ -119,8 +119,6 @@ These two flags work on every command, whatever it talks to.
 | `-o, --output <mode>` | `json` (default) or `ndjson`. See `output.md`. |
 | `--debug` | Print every HTTP request and response on stderr, secrets redacted. |
 
-`--management-token <pat>` and `--management-url <url>` are the pair of flags of the Management group below: they reach the Management API, not every command.
-
 ## Shared flag groups
 
 Commands reuse these groups. A command that matches a group uses the whole group, with the same names.
@@ -131,7 +129,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 |---|---|
 | `--project-url <url>` | Project URL, the Meilisearch instance to talk to. |
 | `--project-api-key <key>` | Project API key. `-` reads it from stdin. |
-| `--project <name>` | A project of the config file: its URL and key for a Meilisearch command, its `cloudId` for a management command. Cannot be combined with `--project-url`, nor with `--id`. Required when the file has several projects. See `config.md`. |
+| `--project <name>` | A project of the config file. Cannot be combined with `--project-url`. Required when the file has several projects. See `config.md`. |
 
 `meili config set` writes these three values rather than connecting with them, so it declares its own, with its own descriptions. See ADR 0010.
 
@@ -142,7 +140,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 | `--management-token <pat>` | Management API personal access token. The pair of `MEILI_MANAGEMENT_TOKEN`; without either, the session of `meili auth login` is used. |
 | `--management-url <url>` | Management API base URL. The pair of `MEILI_MANAGEMENT_URL`. Default `https://api.meilisearch.com`. |
 
-**Cloud project** (every management command that acts on one project, next to its `--id`, and no other: `add projects` creates one rather than reaching one, so it does not offer it):
+**Cloud project** (every management command that acts on one project, next to its `--id`, and no other):
 
 | Flag | Meaning |
 |---|---|
@@ -182,9 +180,9 @@ Commands reuse these groups. A command that matches a group uses the whole group
 |---|---|
 | `--add-to-config` | Add the created project to the config file, as an entry named after it with its URL, its master key and its `cloudId`. See `config.md`. |
 
-## Commands that do not derive from a route
+## Commands without an API
 
-These commands are the only ones listed here; their `--help` defines their shape. Their name is never the name of an API resource. The `config` and `auth` commands are for humans: an agent works with the file and the token it was given, see `config.md`. The four `auth` commands do speak HTTP, to the authorization server of Meilisearch Cloud, which no OpenAPI document of this repository describes; ADR 0009 says why they live here.
+These commands call neither of the two APIs of this contract, so no route derives them. They are the only ones listed here; their `--help` defines their shape. Their name is never the name of an API resource. The `config` and `auth` commands are for humans: an agent works with the file and the token it was given, see `config.md`. The four `auth` commands do speak HTTP, to the authorization server of Meilisearch Cloud, which no OpenAPI document of this repository describes; ADR 0009 says why they live here.
 
 | Command | Effect |
 |---|---|

@@ -281,17 +281,12 @@ export function resolveCloudProjectId(
 }
 
 /** `cli_config` when the file already has an entry named `name`; `detail` follows the path. */
-export function assertNoProject(
-  file: ConfigFile,
-  name: string,
-  detail: string,
-  hint: string,
-): void {
+export function assertNoProject(file: ConfigFile, name: string, detail: string): void {
   if (file.projects[name] !== undefined) {
     throw new MeiliCliError(
       "cli_config",
       `Project \`${name}\` already exists in ${file.path}${detail}`,
-      { hint },
+      { hint: `Run \`meili config unset --project ${name}\` first.` },
     );
   }
 }

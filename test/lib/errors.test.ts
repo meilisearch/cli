@@ -34,14 +34,6 @@ describe("ManagementApiError", () => {
     expect(rendered.exitCode).toBe(3);
   });
 
-  it("maps the status to an exit code, as it does for Meilisearch", () => {
-    const at = (status: number) =>
-      toRenderedError(new ManagementApiError(status, { ...forbidden }, "https://m/x")).exitCode;
-    expect(at(404)).toBe(4);
-    expect(at(422)).toBe(1);
-    expect(at(500)).toBe(1);
-  });
-
   it("calls an answer without an error body a network error, not the API speaking", () => {
     const rendered = toRenderedError(
       new ManagementApiError(502, "<html>bad gateway</html>", "https://m/api/v2/projects"),

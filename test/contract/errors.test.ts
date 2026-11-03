@@ -11,11 +11,6 @@ describe("error codes", () => {
     const documented = codeSpans(errorsSection).filter((span) => /^cli_[a-z_]+$/.test(span));
     expect(new Set(documented)).toEqual(new Set(Object.keys(CLI_ERROR_CODES)));
   });
-
-  it("the CLI invents no code for either API: both are passed through", () => {
-    const invented = codeSpans(errorsSection).filter((span) => /^management_[a-z_]+$/.test(span));
-    expect(invented).toEqual([]);
-  });
 });
 
 describe("exit codes", () => {

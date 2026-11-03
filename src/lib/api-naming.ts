@@ -61,9 +61,8 @@ const IDENTIFIERS: Record<string, { of: "own" | string; flag: "id" | "ids" }> = 
 // OpenAPI, the little the rules read from it
 
 interface OpenApiParameter {
-  $ref?: string;
-  name?: string;
-  in?: string;
+  name: string;
+  in: string;
 }
 
 interface OpenApiSchema {
@@ -84,10 +83,7 @@ type OpenApiPathItem = { parameters?: OpenApiParameter[] } & Partial<
 
 export interface OpenApiDocument {
   paths: Record<string, OpenApiPathItem>;
-  components?: {
-    schemas?: Record<string, OpenApiSchema>;
-    parameters?: Record<string, OpenApiParameter>;
-  };
+  components?: { schemas?: Record<string, OpenApiSchema> };
 }
 
 /** `"GET /indexes"` into a route. */
@@ -438,22 +434,6 @@ export function projectFlagForRoute(route: Route): "id" | "project-id" | undefin
   return resourceOf(commandId) === "projects" && flags.includes("id") ? "id" : undefined;
 }
 
-/**
- * The names of the query parameters among `parameters`, the shared ones of
- * `components.parameters` resolved: the Management API declares its `page` and
- * its `limit` there, once for every list route.
- */
-function queryParameters(spec: OpenApiDocument, parameters: readonly OpenApiParameter[]): string[] {
-  return parameters
-    .map((parameter) =>
-      parameter.$ref === undefined
-        ? parameter
-        : spec.components?.parameters?.[parameter.$ref.split("/").at(-1) ?? ""],
-    )
-    .filter((parameter) => parameter?.in === "query")
-    .map((parameter) => parameter?.name ?? "");
-}
-
 function resolveSchema(
   spec: OpenApiDocument,
   schema: OpenApiSchema | undefined,
@@ -495,10 +475,9 @@ export function flagsForRoute(spec: OpenApiDocument, route: Route, commandId: st
   const flags = new Set(
     exception === null || exception === undefined ? [] : parseCommand(exception).flags,
   );
-  const query = queryParameters(spec, [
-    ...(spec.paths[route.path]?.parameters ?? []),
-    ...(operation.parameters ?? []),
-  ]);
+  const query = [...(spec.paths[route.path]?.parameters ?? []), ...(operation.parameters ?? [])]
+    .filter((parameter) => parameter.in === "query")
+    .map((parameter) => parameter.name);
 
   for (const name of [...query, ...bodyFields(spec, operation)]) {
     const identifier = IDENTIFIERS[name];

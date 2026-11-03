@@ -1,7 +1,4 @@
-/**
- * Builds the meilisearch-js client from a resolved project connection.
- * The only place, with the Management API client, that touches HTTP.
- */
+/** Builds the meilisearch-js client from a resolved project connection. */
 import { type DocumentsQuery, type EnqueuedTask, Meilisearch } from "meilisearch";
 import type { ListPage } from "../pagination.js";
 

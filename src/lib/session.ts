@@ -155,11 +155,6 @@ export function removeCredentialsFile(path: string): void {
 /** A token with less than this left is refreshed before the command runs. */
 const EXPIRY_MARGIN_MS = 30_000;
 
-export interface ManagementFlags {
-  token?: string | undefined;
-  url?: string | undefined;
-}
-
 /**
  * `--management-token`, then `MEILI_MANAGEMENT_TOKEN`, then the session of
  * `auth login`, with `--management-url`, `MEILI_MANAGEMENT_URL` and its
@@ -167,7 +162,7 @@ export interface ManagementFlags {
  * that is about to expire is refreshed here, and the new one is written back.
  */
 export async function resolveManagementCredentials(
-  flags: ManagementFlags,
+  flags: { token?: string | undefined; url?: string | undefined },
   env: Env,
   warn: (warning: MeiliCliError) => void,
 ): Promise<ManagementCredentials> {

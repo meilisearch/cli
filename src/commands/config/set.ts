@@ -49,12 +49,7 @@ ${CONFIG_FILE_WARNING}`;
       throw new MeiliCliError("cli_usage", `Invalid project URL \`${flags["project-url"]}\`.`);
     }
     const file = this.configFile();
-    assertNoProject(
-      file,
-      flags.project,
-      ".",
-      `Run \`meili config unset --project ${flags.project}\` first.`,
-    );
+    assertNoProject(file, flags.project, ".");
     writeConfigFile({
       path: file.path,
       projects: {

@@ -38,17 +38,14 @@ export default class GetProjects extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(GetProjects);
-    if (flags.id === undefined && this.globalFlags.project === undefined) {
-      // The list route pages, but by page number rather than by offset as every
-      // Meilisearch list does. The paging flags wait for the two to agree; the
-      // envelope goes out as it is, and `ndjson` streams its `results`.
-      const page = await getApiV2Projects({
-        client: this.managementClient,
-        query: { teamId: flags["team-id"] },
-      });
-      await this.output(this.outputMode === "ndjson" ? page.results : page, {
-        supportsNdjson: true,
-      });
+    if (flags.id === undefined && flags.project === undefined) {
+      // One page and no paging flags yet (output.md, "Pagination").
+      await this.outputList(
+        (query) => getApiV2Projects({ client: this.managementClient, query }),
+        { teamId: flags["team-id"] },
+        false,
+        () => undefined,
+      );
       return;
     }
     await this.output(

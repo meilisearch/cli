@@ -95,7 +95,7 @@ Then read the diff of your pull request twice. Once for simplicity: in Claude Co
 
 ## Where to read more
 
-- `docs/contract/commands.md`: the naming rules that turn an API route into a command, the exceptions, the global and shared flags, the commands that do not derive from a route
+- `docs/contract/commands.md`: the naming rules that turn an API route into a command, the exceptions, the global and shared flags, the commands without an API
 - `docs/contract/output.md`: output modes, error format, exit codes, async tasks, pagination
 - `docs/contract/config.md`: projects, the config file, connection resolution, Cloud projects, environment variables, secrets
 - `openapi/`: the OpenAPI documents downloaded by `pnpm openapi`, the reference for every command name

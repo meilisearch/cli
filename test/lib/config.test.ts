@@ -14,14 +14,23 @@ import {
   resolveProjectConnection,
   writeConfigFile,
 } from "../../src/lib/config.js";
-import type { MeiliCliError } from "../../src/lib/errors.js";
-import { caught } from "../helpers/errors.js";
+import { MeiliCliError } from "../../src/lib/errors.js";
 import { readJson, scrubbedHome } from "../helpers/run-command.js";
 
 /** A read that must not warn: an unexpected warning fails the test. */
 const noWarning = (warning: MeiliCliError): never => {
   throw warning;
 };
+
+function caught(fn: () => unknown): MeiliCliError {
+  try {
+    fn();
+  } catch (error) {
+    if (error instanceof MeiliCliError) return error;
+    throw error;
+  }
+  throw new Error("expected a MeiliCliError");
+}
 
 const file = (name: string, projects: ConfigFile["projects"]): ConfigFile => ({
   path: join(scrubbedHome, name),

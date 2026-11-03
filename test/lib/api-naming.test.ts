@@ -64,9 +64,7 @@ const spec: OpenApiDocument = {
     "/dumps": { post: {} },
     "/api/v2/me": { get: {} },
     "/api/v2/projects": {
-      get: {
-        parameters: [{ $ref: "#/components/parameters/Page" }, ...query("teamId").parameters],
-      },
+      get: query("teamId"),
       post: body({ name: {}, teamId: {}, resourceId: {} }),
     },
     "/api/v2/projects/{id}": { get: {}, delete: {} },
@@ -74,7 +72,6 @@ const spec: OpenApiDocument = {
   },
   components: {
     schemas: { IndexCreateRequest: { properties: { uid: {}, primaryKey: {} } } },
-    parameters: { Page: { name: "page", in: "query" } },
   },
 };
 
@@ -235,10 +232,7 @@ describe("flagsForRoute", () => {
   it("takes the query parameters and the first-level body fields, in kebab-case", () => {
     expect(flags("GET /indexes", "get indexes")).toEqual(["limit", "offset"]);
     expect(flags("GET /health", "get health")).toEqual([]);
-    expect(flags("GET /api/v2/projects", "get projects")).toEqual(["page", "team-id"]);
-  });
-
-  it("resolves a shared parameter, which the Management API uses for its paging", () => {
+    expect(flags("GET /api/v2/projects", "get projects")).toEqual(["team-id"]);
     expect(flags("POST /api/v2/projects", "add projects")).toEqual([
       "name",
       "resource-id",

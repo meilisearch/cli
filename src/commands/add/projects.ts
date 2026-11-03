@@ -4,7 +4,7 @@ import { postApiV2Projects } from "../../lib/clients/management/generated/sdk.ge
 import type { PostApiV2ProjectsData } from "../../lib/clients/management/generated/types.gen.js";
 import { assertNoProject, writeConfigFile } from "../../lib/config.js";
 import { MeiliCliError } from "../../lib/errors.js";
-import { readJsonObjectBody } from "../../lib/input.js";
+import { readBodyWithFields } from "../../lib/input.js";
 
 export default class AddProjects extends BaseCommand {
   static api: Api = "management";
@@ -43,13 +43,12 @@ export default class AddProjects extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(AddProjects);
-    // The body goes out whole: a field this command declares no flag for
-    // reaches the API, whose answer is the command's: today it ignores the field.
-    const body = { ...readJsonObjectBody(flags) } as NonNullable<PostApiV2ProjectsData["body"]>;
-    if (flags.name !== undefined) body.name = flags.name;
-    if (flags["team-id"] !== undefined) body.teamId = flags["team-id"];
-    if (flags["resource-id"] !== undefined) body.resourceId = flags["resource-id"];
-    if (flags["ms-version"] !== undefined) body.msVersion = flags["ms-version"];
+    const body = readBodyWithFields(flags, {
+      name: flags.name,
+      teamId: flags["team-id"],
+      resourceId: flags["resource-id"],
+      msVersion: flags["ms-version"],
+    }) as NonNullable<PostApiV2ProjectsData["body"]>;
 
     const file = flags["add-to-config"] ? this.configFile() : undefined;
     if (file !== undefined) {
@@ -59,12 +58,7 @@ export default class AddProjects extends BaseCommand {
           "`--add-to-config` names the entry after the project: give `--name`.",
         );
       }
-      assertNoProject(
-        file,
-        body.name,
-        ": nothing was created.",
-        `Run \`meili config unset --project ${body.name}\` first.`,
-      );
+      assertNoProject(file, body.name, ": nothing was created.");
     }
     const project = await postApiV2Projects({ client: this.managementClient, body });
     await this.output(project);

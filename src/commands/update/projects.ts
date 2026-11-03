@@ -2,7 +2,7 @@ import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { patchApiV2ProjectsById } from "../../lib/clients/management/generated/sdk.gen.js";
 import type { PatchApiV2ProjectsByIdData } from "../../lib/clients/management/generated/types.gen.js";
-import { readJsonObjectBody } from "../../lib/input.js";
+import { readBodyWithFields } from "../../lib/input.js";
 
 export default class UpdateProjects extends BaseCommand {
   static api: Api = "management";
@@ -32,17 +32,13 @@ export default class UpdateProjects extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(UpdateProjects);
-    // The body goes out whole: a field this command declares no flag for
-    // reaches the API, whose answer is the command's: today it ignores the field.
-    const body = { ...readJsonObjectBody(flags) } as NonNullable<
-      PatchApiV2ProjectsByIdData["body"]
-    >;
-    if (flags.name !== undefined) body.name = flags.name;
     await this.output(
       await patchApiV2ProjectsById({
         client: this.managementClient,
         path: { id: this.cloudProjectId(flags.id) },
-        body,
+        body: readBodyWithFields(flags, { name: flags.name }) as NonNullable<
+          PatchApiV2ProjectsByIdData["body"]
+        >,
       }),
     );
   }
