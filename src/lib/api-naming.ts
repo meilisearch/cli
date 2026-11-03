@@ -15,7 +15,15 @@ export interface Route {
 }
 
 /** Flags the CLI owns. Every other flag of an API command comes from a route. */
-export const CLI_OWNED_FLAGS: readonly string[] = ["wait", "timeout", "all", "file", "data", "yes"];
+export const CLI_OWNED_FLAGS: readonly string[] = [
+  "wait",
+  "timeout",
+  "all",
+  "file",
+  "data",
+  "yes",
+  "sync-config",
+];
 
 /** Trailing path literals that are verbs (rule 1). A closed list: adding one is a contract change. */
 export const LITERAL_VERBS: readonly string[] = [
@@ -404,8 +412,26 @@ export function pathFlagsForRoute(route: Route, commandId: string): string[] {
   return segments.flatMap((segment, index) => {
     if (!isParameter(segment)) return [];
     const collection = toKebabCase(segments[index - 1] ?? "");
-    return [collection === resource ? "id" : singular(collection)];
+    if (collection === resource) return ["id"];
+    // On the Management API a parent parameter keeps its API name, `{projectId}` is
+    // `--project-id`: `--project` is the global flag that names a config file entry.
+    return [
+      VERSION_PREFIX.test(route.path) ? toKebabCase(segment.slice(1, -1)) : singular(collection),
+    ];
   });
+}
+
+/**
+ * The flag of a Management API route that identifies a Cloud project, which
+ * `--project <name>` can fill from the config file (rule 4): `id` on the
+ * `projects` commands, `project-id` under a project, nothing otherwise.
+ */
+export function projectFlagForRoute(route: Route): "id" | "project-id" | undefined {
+  const commandId = VERSION_PREFIX.test(route.path) ? commandIdFor(route) : null;
+  if (commandId === null) return undefined;
+  const flags = pathFlagsForRoute(route, commandId);
+  if (flags.includes("project-id")) return "project-id";
+  return resourceOf(commandId) === "projects" && flags.includes("id") ? "id" : undefined;
 }
 
 function resolveSchema(
@@ -427,26 +453,11 @@ function schemaProperties(
   return Object.assign({}, ...inherited, resolved.properties ?? {});
 }
 
-/**
- * The first-level fields of a JSON body (rule 6). A body made of one object
- * property named after the resource, `{"project": {...}}`, is unwrapped.
- */
-function bodyFields(
-  spec: OpenApiDocument,
-  operation: OpenApiOperation,
-  resource: string | undefined,
-): string[] {
-  const fields = schemaProperties(
-    spec,
-    operation.requestBody?.content?.["application/json"]?.schema,
+/** The first-level fields of a JSON body (rule 6). */
+function bodyFields(spec: OpenApiDocument, operation: OpenApiOperation): string[] {
+  return Object.keys(
+    schemaProperties(spec, operation.requestBody?.content?.["application/json"]?.schema),
   );
-  const names = Object.keys(fields);
-  const wrapper = names[0];
-  if (names.length === 1 && wrapper !== undefined && resource !== undefined) {
-    const inner = schemaProperties(spec, fields[wrapper]);
-    if (wrapper === singular(resource) && Object.keys(inner).length > 0) return Object.keys(inner);
-  }
-  return names;
 }
 
 /**
@@ -468,7 +479,7 @@ export function flagsForRoute(spec: OpenApiDocument, route: Route, commandId: st
     .filter((parameter) => parameter.in === "query")
     .map((parameter) => parameter.name);
 
-  for (const name of [...query, ...bodyFields(spec, operation, resource)]) {
+  for (const name of [...query, ...bodyFields(spec, operation)]) {
     const identifier = IDENTIFIERS[name];
     if (identifier !== undefined) {
       const own =

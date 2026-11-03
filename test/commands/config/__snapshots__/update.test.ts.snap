@@ -1,0 +1,40 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili config update > prints its help without any network call 1`] = `
+"Change the fields given of a project of the config file; refuses a name that does not exist.
+
+USAGE
+  $ meili config update --project <name> [-o <mode>] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [--project-cloud-id <id>]
+
+FLAGS
+  -o, --output=<mode>          json (default): one document, the API body as it
+                               is, indented in a terminal, compact when piped.
+                               ndjson: one item per line, list commands only,
+                               streams with --all.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --project=<name>         (required) Name of the project to change.
+      --project-api-key=<key>  New API key of the project. \`-\` reads it from
+                               stdin, out of the shell history.
+      --project-cloud-id=<id>  New id of the project in Meilisearch Cloud, for
+                               the management commands.
+      --project-url=<url>      New URL of the project.
+
+DESCRIPTION
+  Change the fields given of a project of the config file; refuses a name that
+  does not exist.
+
+  The file holds API keys and decides where every later command goes, for every
+  process that reads it: an agent runs this only when the human asked for it
+  explicitly.
+
+EXAMPLES
+  $ meili config update --project prod --project-cloud-id 343
+
+  $ meili config update --project prod --project-api-key - < key.txt
+
+  $ meili config update --project local --project-url http://localhost:7701 --output json
+
+"
+`;

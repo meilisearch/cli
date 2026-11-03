@@ -5,13 +5,14 @@
  * them. Help, `--version` and unknown commands go through oclif's `run`, which
  * reads `oclif.manifest.json` and `dist` (built by `pnpm test` first).
  */
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { format } from "node:util";
 import { Config, Errors, type Interfaces, run as oclifRun, settings } from "@oclif/core";
 import { vi } from "vitest";
+import { type ConfigFile, writeConfigFile } from "../../src/lib/config.js";
 
 export const PROJECT_ROOT = fileURLToPath(new URL("../..", import.meta.url));
 
@@ -64,6 +65,21 @@ export async function runCli(argv: string[], options: RunOptions = {}): Promise<
 
 /** A temporary home per test file, where tests may write config files. */
 export const scrubbedHome = mkdtempSync(join(tmpdir(), "meili-test-home-"));
+
+/** Writes a config file in the temporary home and gives the environment that points at it. */
+export function tempConfig(
+  name: string,
+  projects: ConfigFile["projects"],
+): { path: string; env: { MEILI_CONFIG: string } } {
+  const path = join(scrubbedHome, name);
+  writeConfigFile({ path, projects });
+  return { path, env: { MEILI_CONFIG: path } };
+}
+
+/** The parsed content of a JSON file, for the assertions on a config file. */
+export function readJson(path: string): unknown {
+  return JSON.parse(readFileSync(path, "utf8"));
+}
 
 /** A fresh environment: the developer's MEILI_* variables never leak in. */
 export function scrubbedEnv(

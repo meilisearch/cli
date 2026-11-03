@@ -5,15 +5,15 @@ import type { ListPage } from "../pagination.js";
 export interface MeilisearchClientOptions {
   url: string;
   apiKey: string | undefined;
-  /** CLI version, sent in the X-Meilisearch-Client header. */
-  version: string;
+  /** `meili-cli (v1.2.3)`, sent in the X-Meilisearch-Client header. */
+  userAgent: string;
 }
 
 export function createMeilisearchClient(options: MeilisearchClientOptions): Meilisearch {
   return new Meilisearch({
     host: options.url,
     apiKey: options.apiKey,
-    clientAgents: [`meili-cli (v${options.version})`],
+    clientAgents: [options.userAgent],
   });
 }
 

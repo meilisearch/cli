@@ -1,12 +1,12 @@
 ---
 name: add-command
-description: Add exactly one command to the meili CLI (for example `get stats` or `cancel tasks`) from its routes in the OpenAPI document, following the naming rules of docs/contract/commands.md and CLAUDE.md, with its snapshot tests, integration test, manifest and changeset. Use it whenever a command must be added or when someone asks to expose an API route.
+description: Add exactly one command to the meili CLI (for example `get stats` or `cancel tasks`) from its routes in the OpenAPI document, following the naming rules of docs/contract/commands.md and CLAUDE.md, with its snapshot tests, its integration test for a Meilisearch command, manifest and changeset. Use it whenever a command must be added or when someone asks to expose an API route.
 argument-hint: <command, for example: get stats>
 ---
 
 # Add the command `meili $ARGUMENTS`
 
-You ship exactly one command in this change: `meili $ARGUMENTS`, with every route of its verb and resource. One file for the command, one test file, one integration test, the regenerated manifest, one changeset line. Nothing else, unless a shared piece of `src/lib/` is missing for this kind of command (say so in the report).
+You ship exactly one command in this change: `meili $ARGUMENTS`, with every route of its verb and resource. One file for the command, one test file, one integration test for a Meilisearch command, the regenerated manifest, one changeset line. Nothing else, unless a shared piece of `src/lib/` is missing for this kind of command (say so in the report).
 
 When `$ARGUMENTS` names several commands of the same resource, `get add update delete documents`, rule 10 of `CLAUDE.md` allows them in one change: run every step below once per command, and ship them complete or not at all. Commands of different resources stay in different changes.
 
@@ -35,7 +35,7 @@ Compare the derived command with `$ARGUMENTS`:
 - different name because the user's request contradicts the rules for no such reason: tell the user, propose the derived name, and follow what they decide; if they keep their name, it is an exception with their reason.
 - no route in the document, or a parameter the user mentions that the document does not have: stop and ask the user. Do not guess a route and do not read it in Meilisearch's source code.
 - a route behind an experimental feature: it is out of the contract (rule 10). Stop and tell the user; opening it is an exception they decide.
-- a command that calls no API (`schema`): it must be in the "Commands without an API" table of `commands.md`; if it is not, stop and ask.
+- a command that calls no API (`schema`, the `config` commands): it must be in the "Commands without an API" table of `commands.md`; if it is not, stop and ask.
 
 From the routes, write down the flags of each: the path flags (rule 4: `--id` for the resource itself, the singular collection for a parent, `--index`), the query parameters and body fields (rule 6), the identifier flags named by what they identify and their API-spelling aliases (rule 5), and which flag combination selects which route (rule 3).
 
@@ -47,12 +47,12 @@ The command id is the file path. `meili get stats` gives:
 |---|---|
 | command | `src/commands/get/stats.ts` |
 | unit test | `test/commands/get/stats.test.ts` |
-| integration test | `test/integration/meilisearch/get-stats.test.ts` |
+| integration test, Meilisearch commands only | `test/integration/meilisearch/get-stats.test.ts` |
 | snapshot (generated) | `test/commands/get/__snapshots__/stats.test.ts.snap` |
 
 The class name is the command id in PascalCase (`GetStats`). The first command of a new verb (`add`, `update`, `delete`, `cancel`, ...) also needs the topic description in `package.json`, under `oclif.topics.<verb>.description`, otherwise `meili --help` does not list the verb. A verb-only command (`search`, `export`) is a file at the root of `src/commands/`.
 
-Find the SDK method in `node_modules/meilisearch/dist/meilisearch.d.ts` or `node_modules/meilisearch/dist/indexes.d.ts`. Prefer the variant that returns the API body unchanged: `getRawIndexes` over `getIndexes`, `getRawIndex` over `getIndex`. If the SDK has no method for a route, stop and ask: ADR 0003 forbids hand-written HTTP.
+Find the SDK method in `node_modules/meilisearch/dist/meilisearch.d.ts` or `node_modules/meilisearch/dist/indexes.d.ts`. Prefer the variant that returns the API body unchanged: `getRawIndexes` over `getIndexes`, `getRawIndex` over `getIndex`. If the SDK has no method for a route, stop and ask: ADR 0003 forbids hand-written HTTP. A Management API command calls the generated SDK instead, one function per route in `src/lib/clients/management/generated/sdk.gen.ts`, named after the method and the path (`getApiV2ProjectsById`); run `pnpm gen:management` first if the route is missing there.
 
 ## 3. Copy the closest reference
 
@@ -62,6 +62,8 @@ Find the SDK method in `node_modules/meilisearch/dist/meilisearch.d.ts` or `node
 | read with a list route and a unit route | `src/commands/get/indexes.ts` | `outputList({...})` or `output(...)` by route |
 | write returning a task (the response is a task) | `src/commands/add/documents.ts` | `await this.outputTask(task, flags)` |
 | write with several routes, one per selector | `src/commands/delete/documents.ts` | `await this.outputTask(task, flags)` |
+| Management API, list route and unit route | `src/commands/get/projects.ts` | `outputList(...)` or `output(...)` by route |
+| Management API, write | `src/commands/update/projects.ts` | `await this.output(result)` |
 | offline (`schema`) | `src/commands/schema.ts` | `await this.output(result)` |
 
 Then fill the class:
@@ -73,7 +75,7 @@ Then fill the class:
 - `static override examples`: at least two, one of them with `--output json`, and one per route. Use `<%= config.bin %> <%= command.id %>`.
 - `static override flags`: the path flags first (`index: Flags.string(...)` for a parent, `id: Flags.string(...)` for the resource itself, each with `required: true` only when every route of the command takes it), then the query parameters and body fields in kebab-case of the API name, plus the shared groups. Identifier parameters are `id`, `ids`, `batch-ids`, `index-ids`, `task-ids` by what they identify, with the API spelling as `aliases: ["uids"]`; `id` is an alias of `ids` when the command has no unit route. Flags that call for different routes are `exclusive` of each other (`ids`, `filter`, `all` on `delete documents`), so that giving two is a usage error. Reuse the shared groups by spreading them: `BaseCommand.paginationFlags` (`--limit`, `--offset`, `--all`), `BaseCommand.waitFlags` (`--wait`, `--timeout`), `BaseCommand.bodyInputFlags` (`--file`, `--data`), `BaseCommand.confirmFlags` (`--yes`) on every command of the verb `delete`. A route that paginates with `from` (tasks, batches) needs its own group, added to `BaseCommand` with the first such command. Never give a flag a function as `default`: oclif would then load the class to render `--help`.
 - Value types (rule 7): `Flags.boolean` for a boolean, `Flags.integer` for an integer, `Flags.string` for a string, a comma-separated `Flags.string` for an array of scalars, a JSON-text `Flags.string` for an object or a nested array. The value `null` sends a JSON null.
-- `run()`: `const { flags } = await this.parse(ClassName)`, then one branch per route, selected by the flags (`if (flags.id !== undefined)`), one call on `this.meilisearch` and one of the `output*` calls per branch. A flag of the list route given with `--id` is simply not sent. For lists, pass the query built from the flags, `{ limit: flags.limit, offset: flags.offset }` (the SDK drops undefined values), and `nextOffsetQuery` from `src/lib/pagination.ts`.
+- `run()`: `const { flags } = await this.parse(ClassName)`, then one branch per route, selected by the flags (`if (flags.id !== undefined)`), one call on `this.meilisearch` (a Management API command: one generated SDK function with `{ client: this.managementClient, path, query, body }`) and one of the `output*` calls per branch. A flag of the list route given with `--id` is simply not sent. For lists, pass the query built from the flags, `{ limit: flags.limit, offset: flags.offset }` (the SDK drops undefined values), and `nextOffsetQuery` from `src/lib/pagination.ts`.
 - Errors: do nothing. `BaseCommand.catch` renders API errors as they are. Throw `MeiliCliError` only for CLI-side validation, with a `hint` only when you know the next command to run.
 - A command of the verb `delete` spreads `BaseCommand.confirmFlags`, so `--yes` is required: without it oclif fails the parse, `cli_usage`, exit 2, before any network call, and every example of the command carries it. Never a question. A deletion that needs a selector refuses to run without one (`delete documents` without `--ids`, `--filter` or `--all` is `cli_usage`).
 
@@ -87,13 +89,13 @@ Copy `test/commands/get/health.test.ts` (or `test/commands/get/indexes.test.ts` 
 2. one success in `--output json` per route: `runCommand(ClassName, [...argv, "--output", "json"], { env: { MEILI_PROJECT_URL: MEILISEARCH_URL } })`, snapshot of `{ stdout, stderr, exitCode }`.
 3. one error: an API error body passed through (exit 1, 3 or 4 by status) or a network failure (exit 6).
 
-Add the msw handler for each route in `test/helpers/meilisearch-handlers.ts`, parameterized (status, body, pagination) so that other tests reuse it. Handlers use the fake host `MEILISEARCH_URL`; nothing real goes out, an unhandled request fails the test.
+Add the msw handler for each route in `test/helpers/meilisearch-handlers.ts`, parameterized (status, body, pagination) so that other tests reuse it. Handlers use the fake host `MEILISEARCH_URL`; nothing real goes out, an unhandled request fails the test. A Management API command copies `test/commands/get/projects.test.ts` instead: its handlers live in `test/helpers/management-handlers.ts`, follow `openapi/management.json`, and the command runs with `env: managementEnv`, the token and the fake host `MANAGEMENT_URL`.
 
 Run `pnpm test` once to write the snapshots, then read the `.snap` file: the JSON must be the API body unchanged, no wrapper, no added field, no secret.
 
 ## 5. Integration test
 
-Copy `test/integration/meilisearch/get-health.test.ts` or `get-indexes.test.ts`. The file starts with `const meilisearchUp = await meilisearchAvailable()` and wraps everything in `describe.skipIf(!meilisearchUp)`. It runs the built binary with `runBinary([...])` against `MEILISEARCH_URL` and `MASTER_KEY` from `setup.ts`, never against the shell's `MEILI_PROJECT_URL`. Fixtures (an index, documents) are created with the SDK under a random suffix and deleted in `afterAll`, so the suite can run in parallel and never depends on existing data. A management command needs `test/integration/management/`, whose bootstrap (`docs/contract/testing.md`, section 2) does not exist yet: stop and tell the user it must be built first, in its own change.
+A Management API command has none: Meilisearch Cloud does not run locally (`docs/contract/testing.md`). For a Meilisearch command, copy `test/integration/meilisearch/get-health.test.ts` or `get-indexes.test.ts`. The file starts with `const meilisearchUp = await meilisearchAvailable()` and wraps everything in `describe.skipIf(!meilisearchUp)`. It runs the built binary with `runBinary([...])` against `MEILISEARCH_URL` and `MASTER_KEY` from `setup.ts`, never against the shell's `MEILI_PROJECT_URL`. Fixtures (an index, documents) are created with the SDK under a random suffix and deleted in `afterAll`, so the suite can run in parallel and never depends on existing data. A management command has no integration test (`docs/contract/testing.md`, section 2): its handlers in `test/helpers/management-handlers.ts` follow `openapi/management.json`, and what the document does not say is reported to the user as a documentation gap, never guessed.
 
 ## 6. Manifest, changeset
 

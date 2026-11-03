@@ -21,6 +21,9 @@ jobs:
         run: pnpm openapi
         env:
           MEILI_BOT_GH_PAT: ${{ secrets.MEILI_BOT_GH_PAT }}
+      - run: pnpm gen:management
+      - name: The committed Management API client must match the document
+        run: git diff --exit-code src/lib/clients/management/generated
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm gen:manifest

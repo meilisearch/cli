@@ -161,8 +161,10 @@ describe("global flags", () => {
         default: { api?: unknown };
       };
       const flags = Object.keys(manifest.commands[id]?.flags ?? {});
-      // `config set` writes a project rather than connecting to one: it declares its own.
-      const connects = command.api === "meilisearch" || id === "config:set";
+      // `config set` and `config update` write a project rather than connecting to
+      // one: they declare their own.
+      const connects =
+        command.api === "meilisearch" || id === "config:set" || id === "config:update";
       // `--project-url` is the unambiguous one: `config unset --project` names an
       // entry of the file, not a connection.
       expect(flags.includes("project-url"), `${id} and --project-url`).toBe(connects);

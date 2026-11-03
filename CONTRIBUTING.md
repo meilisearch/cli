@@ -25,7 +25,7 @@ export MEILI_PROJECT_API_KEY=masterKey   # only if the instance has a master key
 ./bin/run.js get indexes --debug        # HTTP trace on stderr, keys masked
 ```
 
-The management commands (not shipped yet) will read `MEILI_MANAGEMENT_TOKEN`, and `MEILI_MANAGEMENT_URL` to target something else than production.
+The management commands read `MEILI_MANAGEMENT_TOKEN`, and `MEILI_MANAGEMENT_URL` to target something else than production; `pnpm openapi:management` needs a GitHub token that reads `meilisearch/meilisearch-cloud`, and `pnpm gen:management` regenerates the client from the document.
 
 `pnpm link --global` puts a `meili` command on your PATH that points at your checkout.
 

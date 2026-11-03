@@ -41,38 +41,8 @@ export const CLI_ERROR_CODES = {
 
 export type CliErrorCode = keyof typeof CLI_ERROR_CODES;
 
-/**
- * Codes the CLI builds for Management API errors, which have no error body in
- * the OpenAPI spec. Keyed by code, valued by exit code.
- */
-export const MANAGEMENT_ERROR_CODES = {
-  management_unauthorized: EXIT_CODES.auth,
-  management_forbidden: EXIT_CODES.auth,
-  management_not_found: EXIT_CODES.notFound,
-  management_unprocessable: EXIT_CODES.error,
-  management_error: EXIT_CODES.error,
-} as const;
-
-export type ManagementErrorCode = keyof typeof MANAGEMENT_ERROR_CODES;
-
-/** Maps an HTTP status of the Management API to its CLI error code. */
-export function managementErrorCode(status: number): ManagementErrorCode {
-  switch (status) {
-    case 401:
-      return "management_unauthorized";
-    case 403:
-      return "management_forbidden";
-    case 404:
-      return "management_not_found";
-    case 422:
-      return "management_unprocessable";
-    default:
-      return "management_error";
-  }
-}
-
-/** Exit code of an Meilisearch API error, from its HTTP status. */
-export function meilisearchExitCode(status: number): ExitCode {
+/** Exit code of an API error, from its HTTP status. Both APIs answer the same shape. */
+export function apiExitCode(status: number): ExitCode {
   if (status === 401 || status === 403) return EXIT_CODES.auth;
   if (status === 404) return EXIT_CODES.notFound;
   return EXIT_CODES.error;
@@ -93,6 +63,36 @@ export interface MeiliCliErrorOptions {
   /** Overrides the default exit code of the code. Only for a case documented in output.md. */
   exitCode?: ExitCode;
   cause?: unknown;
+}
+
+/**
+ * A non-2xx answer of the Management API. Its body is the error object of the
+ * document, the same shape as a Meilisearch one, and it is passed through
+ * (docs/contract/output.md, "Errors"); `body` is undefined when the answer
+ * carried none, which is not the API answering.
+ */
+export class ManagementApiError extends Error {
+  readonly status: number;
+  readonly body: unknown;
+  readonly url: string;
+
+  constructor(status: number, body: unknown, url: string) {
+    super(parseErrorBody(body)?.message ?? `The Management API answered HTTP ${status} to ${url}.`);
+    this.name = "ManagementApiError";
+    this.status = status;
+    this.body = body;
+    this.url = url;
+  }
+}
+
+/** The error object of either API, or undefined when the body is not one. */
+function parseErrorBody(body: unknown): ErrorBody | undefined {
+  if (!isRecord(body)) return undefined;
+  const { message, code, type, link } = body;
+  if (typeof message !== "string" || typeof code !== "string" || typeof type !== "string") {
+    return undefined;
+  }
+  return { code, type, message, ...(typeof link === "string" ? { link } : {}) };
 }
 
 /** The only error class commands may throw. */
@@ -127,6 +127,34 @@ export interface RenderedError {
 const HELP_SUFFIX = /\n?See more help with --help\.?\s*$/;
 
 /**
+ * Both APIs answer the same error object, so both are rendered the same way:
+ * the body passed through, a hint on a credential error, and the exit code of
+ * the status. No error body at all is a proxy or a wrong URL, not the API.
+ */
+function renderApiError(
+  error: Error,
+  status: number,
+  url: string,
+  sent: unknown,
+  api: { name: string; hint: string },
+): RenderedError {
+  const body = parseErrorBody(sent);
+  if (body === undefined) {
+    return {
+      body: {
+        code: "cli_network",
+        type: "cli",
+        message: `${serverName(url)} answered HTTP ${status} without a ${api.name} error body.`,
+      },
+      exitCode: EXIT_CODES.network,
+      stack: error.stack,
+    };
+  }
+  if (status === 401 || status === 403) body.hint = api.hint;
+  return { body, exitCode: apiExitCode(status), stack: error.stack };
+}
+
+/**
  * Converts anything thrown during a command into a contract error. `commandIds`
  * are the commands of the manifest, `get indexes`, for the hint of an unknown command.
  */
@@ -136,29 +164,17 @@ export function toRenderedError(error: unknown, commandIds: readonly string[] = 
   }
 
   if (error instanceof MeilisearchApiError) {
-    const status = error.response.status;
-    if (error.cause !== undefined) {
-      const body: ErrorBody = {
-        code: error.cause.code,
-        type: error.cause.type,
-        message: error.cause.message,
-        link: error.cause.link,
-      };
-      if (status === 401 || status === 403) {
-        body.hint = "Provide an API key with `--project-api-key <key>` or `MEILI_PROJECT_API_KEY`.";
-      }
-      return { body, exitCode: meilisearchExitCode(status), stack: error.stack };
-    }
-    // An HTTP error without a Meilisearch error body: a proxy or a wrong URL answered.
-    return {
-      body: {
-        code: "cli_network",
-        type: "cli",
-        message: `${serverName(error.response.url)} answered HTTP ${status} without a Meilisearch error body.`,
-      },
-      exitCode: EXIT_CODES.network,
-      stack: error.stack,
-    };
+    return renderApiError(error, error.response.status, error.response.url, error.cause, {
+      name: "Meilisearch",
+      hint: "Provide an API key with `--project-api-key <key>` or `MEILI_PROJECT_API_KEY`.",
+    });
+  }
+
+  if (error instanceof ManagementApiError) {
+    return renderApiError(error, error.status, error.url, error.body, {
+      name: "Management API",
+      hint: "Provide a personal access token with `--management-token <pat>` or `MEILI_MANAGEMENT_TOKEN`.",
+    });
   }
 
   if (error instanceof MeilisearchRequestTimeOutError) {
@@ -261,9 +277,14 @@ function serverName(url: string): string {
 }
 
 function networkMessage(error: MeilisearchRequestError): string {
-  const reason = deepestCauseMessage(error.cause);
   const target = error.message.match(/https?:\/\/\S+/)?.[0];
   const where = target === undefined ? "the Meilisearch instance" : target.replace(/\/$/, "");
+  return cannotConnectMessage(where, error.cause);
+}
+
+/** The `cli_network` message: `Cannot connect to <where>`, with the deepest cause when there is one. */
+export function cannotConnectMessage(where: string, cause: unknown): string {
+  const reason = deepestCauseMessage(cause);
   return reason === undefined
     ? `Cannot connect to ${where}.`
     : `Cannot connect to ${where}: ${reason}.`;
@@ -338,4 +359,9 @@ export function handleFatalError(
     });
   }
   process.exitCode = rendered.exitCode;
+}
+
+/** A JSON object, as opposed to an array, a scalar or null. */
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }

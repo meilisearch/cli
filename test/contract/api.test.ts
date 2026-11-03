@@ -21,6 +21,7 @@ import {
   type OpenApiDocument,
   parseRoute,
   pathFlagsForRoute,
+  projectFlagForRoute,
   ROUTE_EXCEPTIONS,
   routeKey,
 } from "../../src/lib/api-naming.js";
@@ -70,8 +71,23 @@ const commands = await Promise.all(
 const globalFlags = [
   ...Object.keys(BaseCommand.baseFlags),
   ...Object.keys(BaseCommand.connectionFlags),
+  ...Object.keys(BaseCommand.managementFlags),
 ];
 const VERBS = ["get", "add", "update", "delete", ...LITERAL_VERBS];
+
+/** The commands of the "Commands without an API" table of commands.md. */
+const listedCommands = tableRows(
+  section(readDoc("docs/contract/commands.md"), "Commands without an API"),
+)
+  // The command words are the ones starting with a letter: `meili config set --project <name>`.
+  .map(([command = ""]) =>
+    (codeSpans(command)[0] ?? "")
+      .split(" ")
+      .slice(1)
+      .filter((word) => /^[a-z]/.test(word))
+      .join(" "),
+  )
+  .filter((id) => id !== "");
 
 describe("API commands derive from their routes", () => {
   for (const { id, file, command } of commands) {
@@ -110,19 +126,24 @@ describe("API commands derive from their routes", () => {
       expect(Object.keys(command.args ?? {}), "no positional argument").toEqual([]);
       const flags = command.flags ?? {};
       const pathFlags = routes.map((route) => pathFlagsForRoute(route, id));
+      // `--project <name>` may give a Cloud project's id from the config file (rule 4).
+      const fromConfig = (flag: string): boolean =>
+        routes.some((route) => projectFlagForRoute(route) === flag);
       for (const flag of new Set(pathFlags.flat())) {
         if (flag === "id") continue;
         expect(flags[flag], `--${flag} must exist`).toBeDefined();
-        expect(
-          flags[flag]?.required === true,
-          `--${flag} is required only when every route takes it`,
-        ).toBe(pathFlags.every((set) => set.includes(flag)));
+        if (!fromConfig(flag)) {
+          expect(
+            flags[flag]?.required === true,
+            `--${flag} is required only when every route takes it`,
+          ).toBe(pathFlags.every((set) => set.includes(flag)));
+        }
       }
       const routesWithId = pathFlags.filter((set) => set.includes("id")).length;
       if (routesWithId > 0) {
         expect(flags.id, "--id must exist").toBeDefined();
         expect(flags.id?.required === true, "--id is required only when every route takes it").toBe(
-          routesWithId === routes.length,
+          routesWithId === routes.length && !fromConfig("id"),
         );
       }
 
@@ -160,13 +181,19 @@ describe("commands without an API", () => {
     ...(derived.management?.keys() ?? []),
   ]);
   for (const { id, command } of commands.filter(({ command }) => command.api === "none")) {
-    it(`meili ${id} has no route and takes neither the name of an API command nor a verb`, () => {
+    it(`meili ${id} has no route, is in the table of commands.md and takes neither the name of an API command nor a verb`, () => {
       expect(command.routes ?? []).toEqual([]);
+      expect(listedCommands).toContain(id);
       expect(command.keyActions ?? []).toEqual([]);
       expect(apiCommands).not.toContain(id);
       expect(VERBS).not.toContain(id.split(" ")[0]);
     });
   }
+  it("the table of commands.md lists only commands that exist", () => {
+    const ids = commands.map(({ id }) => id);
+    for (const listed of listedCommands)
+      expect(ids, `meili ${listed} is listed but does not exist`).toContain(listed);
+  });
 });
 
 describe("exceptions", () => {

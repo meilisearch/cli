@@ -3,7 +3,7 @@
  * See docs/contract/output.md, section Pagination.
  */
 
-/** What every list route of the Meilisearch API returns: `results` plus pagination fields. */
+/** What every list route of either API returns: `results` plus pagination fields. */
 export type ListPage = { results: readonly unknown[] } & Record<string, unknown>;
 
 export interface OffsetQuery {

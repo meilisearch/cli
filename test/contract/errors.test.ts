@@ -1,6 +1,6 @@
 /** docs/contract/output.md against errors.ts: codes and exit codes, both ways. */
 import { describe, expect, it } from "vitest";
-import { CLI_ERROR_CODES, EXIT_CODES, MANAGEMENT_ERROR_CODES } from "../../src/lib/errors.js";
+import { CLI_ERROR_CODES, EXIT_CODES } from "../../src/lib/errors.js";
 import { codeSpans, readDoc, section, tableRows } from "./markdown.js";
 
 const outputDoc = readDoc("docs/contract/output.md");
@@ -10,11 +10,6 @@ describe("error codes", () => {
   it("cli_ codes of errors.ts are exactly the current list of output.md", () => {
     const documented = codeSpans(errorsSection).filter((span) => /^cli_[a-z_]+$/.test(span));
     expect(new Set(documented)).toEqual(new Set(Object.keys(CLI_ERROR_CODES)));
-  });
-
-  it("management_ codes of errors.ts are exactly those of output.md", () => {
-    const documented = codeSpans(errorsSection).filter((span) => /^management_[a-z_]+$/.test(span));
-    expect(new Set(documented)).toEqual(new Set(Object.keys(MANAGEMENT_ERROR_CODES)));
   });
 });
 
@@ -37,13 +32,6 @@ describe("exit codes", () => {
       cli_task_failed: 7,
       cli_input_invalid: 2,
       cli_internal: 1,
-    });
-    expect(MANAGEMENT_ERROR_CODES).toEqual({
-      management_unauthorized: 3,
-      management_forbidden: 3,
-      management_not_found: 4,
-      management_unprocessable: 1,
-      management_error: 1,
     });
   });
 });

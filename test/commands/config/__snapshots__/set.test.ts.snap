@@ -5,7 +5,7 @@ exports[`meili config set > prints its help without any network call 1`] = `
 
 USAGE
   $ meili config set --project <name> --project-url <url> [-o <mode>]
-    [--debug] [--project-api-key <key>]
+    [--debug] [--project-api-key <key>] [--project-cloud-id <id>]
 
 FLAGS
   -o, --output=<mode>          json (default): one document, the API body as it
@@ -17,6 +17,8 @@ FLAGS
       --project=<name>         (required) Name of the project to set.
       --project-api-key=<key>  API key of the project. \`-\` reads it from stdin,
                                out of the shell history.
+      --project-cloud-id=<id>  Id of the project in Meilisearch Cloud, for the
+                               management commands.
       --project-url=<url>      (required) URL of the project.
 
 DESCRIPTION
@@ -31,6 +33,8 @@ EXAMPLES
   $ meili config set --project local --project-url http://localhost:7700
 
   $ meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt
+
+  $ meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-cloud-id 343
 
   $ meili config set --project local --project-url http://localhost:7700 --output json
 
