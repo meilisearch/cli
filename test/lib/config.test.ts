@@ -127,13 +127,11 @@ describe("resolveCloudProjectId", () => {
     expect(neither.message).toBe("Name the project with `--id <id>` or `--project <name>`.");
   });
 
-  it("fails with cli_config, naming the ways to set it, on an entry without cloudId", () => {
+  it("fails with cli_config, naming the command that sets it, on an entry without cloudId", () => {
     const error = caught(() => resolveCloudProjectId({ project: "local" }, entries));
     expect(error.code).toBe("cli_config");
     expect(error.message).toContain("`local` has no `cloudId`");
-    expect(error.hint).toBe(
-      "Run `meili config sync-with-cloud`, or `meili config update --project local --project-cloud-id <id>`.",
-    );
+    expect(error.hint).toBe("Run `meili config sync-with-cloud`.");
   });
 });
 

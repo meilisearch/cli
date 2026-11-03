@@ -32,8 +32,8 @@ export default class UpdateProjects extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(UpdateProjects);
-    // The body goes out whole, so a field this command declares no flag for
-    // reaches the API, which refuses it rather than the CLI dropping it.
+    // The body goes out whole: a field this command declares no flag for
+    // reaches the API, whose answer is the command's: today it ignores the field.
     const body = { ...readJsonObjectBody(flags) } as NonNullable<
       PatchApiV2ProjectsByIdData["body"]
     >;
