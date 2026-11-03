@@ -273,7 +273,7 @@ export function resolveCloudProjectId(
       "cli_config",
       `Project \`${flags.project}\` has no \`cloudId\` in ${file.path}: the management commands need the project's id.`,
       {
-        hint: "Run `meili config sync-with-cloud`.",
+        hint: `Run \`meili config unset --project ${flags.project}\`, then \`meili config set --project ${flags.project} --project-url <url> --project-api-key <key> --project-cloud-id <id>\`.`,
       },
     );
   }

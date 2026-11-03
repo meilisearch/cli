@@ -31,7 +31,7 @@ The path is `$MEILI_CONFIG` if set, else `$XDG_CONFIG_HOME/meili/config.json`, e
 - The file holds API keys, so it belongs to one user and is readable by that user alone: mode `600`, or `400` for a file an agent must not change. When the file is readable by others, the CLI warns on stderr with the `chmod` to run (`output.md`, "Warnings") and goes on. On Windows, where file modes do not exist, there is no check. A file that does not exist is not an error: the CLI behaves as if there were no file.
 - Invalid JSON, or a shape other than the one above, fails with `cli_config` and the path of the file.
 - The file is shared state: every process that reads it is affected by whoever writes it. Give an agent its own file through `MEILI_CONFIG`, prepared by a human and mounted read-only in its sandbox, never the human's file. An agent adds, removes or changes a project, or the permissions of the file, only when the human asked for it explicitly: the file decides where every later command goes, for every process that reads it. `meili --help`, the help of the `config` commands and `meili schema` say so.
-- `meili config list`, `meili config set`, `meili config unset` and `meili config sync-with-cloud` manage the file, see `commands.md`. `config set` refuses a name that already exists: changing an entry is an `unset` then a `set`, on purpose.
+- `meili config list`, `meili config set` and `meili config unset` manage the file, see `commands.md`. `config set` refuses a name that already exists: changing an entry is an `unset` then a `set`, on purpose.
 
 ## Resolution: nothing is deduced
 
@@ -58,11 +58,10 @@ A management command acts on a project of Meilisearch Cloud, identified by its i
 - An entry without `cloudId` is a `cli_config` error, exit 2, whose hint names the ways to set it. The CLI never resolves the id by itself, from the URL or otherwise.
 - A management command that reaches no project, `add projects`, does not offer `--project` at all: the flag is not ignored in silence, it does not exist there.
 
-Three ways set `cloudId`, all explicit, the only moments the CLI consults the Management API on the config file's behalf:
+Two ways set `cloudId`, both explicit. The first is the only moment the CLI consults the Management API on the config file's behalf:
 
 1. `meili add projects … --add-to-config`: the created project joins the file, as an entry named after it, with its URL, its master key as `apiKey` and its `cloudId`. Creation is the one moment the API returns the key. A name the file already has is a `cli_config` error before the project is created.
 2. `meili config set --project <name> --project-url <url> --project-cloud-id <id>`: the id, written by hand.
-3. `meili config sync-with-cloud [--team-id <id>]`: lists the projects the token sees, and sets `cloudId` on every entry without one whose URL is one of theirs, same scheme and host. The other projects are ignored: an entry without its key would serve no Meilisearch command, and the key is not returned. The entries whose `cloudId` the token no longer sees are reported as `missing` and kept. No key is ever written, no entry is added or removed: a key in the file is always the human's choice.
 
 ## Management API connection: resolution order
 

@@ -73,7 +73,9 @@ export default class AddProjects extends BaseCommand {
       throw new MeiliCliError(
         "cli_config",
         `Project ${project.id} is created but has no URL yet, so it was not added to ${file.path}.`,
-        { hint: "Run `meili config sync-with-cloud` once it has one." },
+        {
+          hint: `Run \`meili config set --project ${project.name} --project-url <url> --project-api-key <key> --project-cloud-id ${project.id}\` once \`meili get projects --id ${project.id}\` shows its URL; the key is the masterKey printed above.`,
+        },
       );
     }
     writeConfigFile({
