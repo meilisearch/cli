@@ -24,7 +24,7 @@ export const CLI_OWNED_FLAGS: readonly string[] = [
   "yes",
   "sync-config",
   "project-destination",
-  "show-master-key",
+  "show-secrets",
 ];
 
 /** Trailing path literals that are verbs (rule 1). A closed list: adding one is a contract change. */

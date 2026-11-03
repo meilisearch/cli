@@ -40,11 +40,11 @@ describe("meili add projects", () => {
     ]);
   });
 
-  it("prints the master key in full with --show-master-key", async () => {
+  it("prints the master key in full with --show-secrets", async () => {
     server.use(managementHandlers.createProject());
     const result = await runCommand(
       AddProjects,
-      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--show-master-key"],
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--show-secrets"],
       { env },
     );
     expect(result.exitCode).toBe(0);

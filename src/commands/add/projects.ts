@@ -20,7 +20,7 @@ export default class AddProjects extends BaseCommand {
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --output json",
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --sync-config",
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
-    "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --show-master-key",
+    "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --show-secrets",
     '<%= config.bin %> <%= command.id %> --data \'{"name":"demo","teamId":12,"resourceId":3}\'',
     "<%= config.bin %> <%= command.id %> --file project.json --name other-name",
   ];
@@ -41,9 +41,9 @@ export default class AddProjects extends BaseCommand {
       description:
         "Add the project to the config file, as an entry named after it with its URL, its master key and its cloud identifiers.",
     }),
-    "show-master-key": Flags.boolean({
+    "show-secrets": Flags.boolean({
       description:
-        "Print the master key in full instead of masked. It then lands in logs and transcripts: prefer --sync-config.",
+        "Print the secrets of the response in full instead of masked, here the master key. They then land in logs and transcripts: prefer --sync-config.",
     }),
     ...BaseCommand.bodyInputFlags,
   };
@@ -72,7 +72,7 @@ export default class AddProjects extends BaseCommand {
     }
     const project = await postApiV2Projects({ client: this.managementClient, body });
     await this.output(
-      flags["show-master-key"] || project.masterKey === undefined
+      flags["show-secrets"] || project.masterKey === undefined
         ? project
         : { ...project, masterKey: maskSecret(project.masterKey) },
     );

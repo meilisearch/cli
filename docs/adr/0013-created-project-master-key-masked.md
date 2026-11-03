@@ -22,7 +22,7 @@ Alternatives considered:
 ## Decision
 
 - **`add projects` prints the `masterKey` masked**, `****` followed by its last four characters, the way `config list` masks a key. The other fields pass through unchanged.
-- **`--show-master-key`** prints it in full. A CLI-owned flag, on `add projects` only. Its description says where the key ends up and recommends `--sync-config`.
+- **`--show-secrets`** prints it in full. A CLI-owned flag, on `add projects` only. Its description says where the key ends up and recommends `--sync-config`. The name says what the flag does, not which field: a command that masks a secret later takes the same flag, rather than one flag per field. No environment variable stands for it, as none stands for `--yes`: an environment never reveals a secret in the agent's place.
 - **`--sync-config` is the recommended way to keep the key**: the description of `add projects` says so. When the project has no URL yet, the error points to `config sync-with-cloud --project-name <name>`, which adds the project with its master key once it has one.
 
 ## Consequences
