@@ -14,25 +14,23 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 /** Nothing listens there, and with no index to send nothing is sent. */
 const remote = "http://127.0.0.1:1";
 const absent = `meili-cli-test-export-${randomUUID().slice(0, 8)}`;
 
 describe.skipIf(!meilisearchUp)("meili export against a real Meilisearch", () => {
   it("answers the enqueued task of the export, without waiting", async () => {
-    const result = await runBinary(
-      [
-        "export",
-        "--url",
-        remote,
-        "--indexes",
-        JSON.stringify({ [absent]: {} }),
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "export",
+      "--url",
+      remote,
+      "--indexes",
+      JSON.stringify({ [absent]: {} }),
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const task = JSON.parse(result.stdout) as { taskUid: number };
@@ -41,23 +39,21 @@ describe.skipIf(!meilisearchUp)("meili export against a real Meilisearch", () =>
   });
 
   it("waits for the task with --wait and prints the body it sent in its details", async () => {
-    const result = await runBinary(
-      [
-        "export",
-        "--url",
-        remote,
-        "--api-key",
-        "1234abcd",
-        "--payload-size",
-        "24MiB",
-        "--indexes",
-        JSON.stringify({ [absent]: {} }),
-        "--wait",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "export",
+      "--url",
+      remote,
+      "--api-key",
+      "1234abcd",
+      "--payload-size",
+      "24MiB",
+      "--indexes",
+      JSON.stringify({ [absent]: {} }),
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const task = JSON.parse(result.stdout) as { details: { indexes: Record<string, unknown> } };
     expect(task).toMatchObject({ type: "export", status: "succeeded" });
@@ -95,7 +91,14 @@ describe.skipIf(!meilisearchUp)("meili export against a real Meilisearch", () =>
   });
 
   it("passes the error of a url that is not a string through and exits 1", async () => {
-    const result = await runBinary(["export", "--data", '{"url":true}', "--output", "json"], env);
+    const result = await runBinary([
+      "export",
+      "--data",
+      '{"url":true}',
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("invalid_export_url");

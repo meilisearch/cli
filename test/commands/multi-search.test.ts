@@ -6,7 +6,7 @@ import { runCli, runCommand } from "../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const queries = '[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]';
 
 /** The envelope the route answers without a `federation`: one result per query. */
@@ -36,7 +36,7 @@ const perQuery = {
 /** The body the CLI sent to POST /multi-search, request by request. */
 async function bodiesOf(argv: string[]): Promise<unknown[]> {
   const requests = await recordRequests(async () => {
-    await runCommand(MultiSearch, argv, { env });
+    await runCommand(MultiSearch, [...argv, ...project]);
   });
   return requests.map((request) => JSON.parse(request.body));
 }
@@ -51,9 +51,13 @@ describe("meili multi-search", () => {
 
   it("prints the API envelope as it is in JSON", async () => {
     server.use(meilisearchHandlers.multiSearch(perQuery));
-    const result = await runCommand(MultiSearch, ["--queries", queries, "--output", "json"], {
-      env,
-    });
+    const result = await runCommand(MultiSearch, [
+      "--queries",
+      queries,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
@@ -93,9 +97,13 @@ describe("meili multi-search", () => {
 
   it("refuses --output ndjson: the response is hits, not a list envelope", async () => {
     server.use(meilisearchHandlers.multiSearch(perQuery));
-    const result = await runCommand(MultiSearch, ["--queries", queries, "--output", "ndjson"], {
-      env,
-    });
+    const result = await runCommand(MultiSearch, [
+      "--queries",
+      queries,
+      "--output",
+      "ndjson",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
@@ -110,11 +118,13 @@ describe("meili multi-search", () => {
         link: "https://docs.meilisearch.com/errors#index_not_found",
       }),
     );
-    const result = await runCommand(
-      MultiSearch,
-      ["--queries", '[{"indexUid":"missing","q":"nosferatu"}]', "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(MultiSearch, [
+      "--queries",
+      '[{"indexUid":"missing","q":"nosferatu"}]',
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

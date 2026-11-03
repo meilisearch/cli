@@ -78,10 +78,14 @@ describe("the credentials file", () => {
 });
 
 describe("resolveOauthClient", () => {
-  const client = { clientId: "uid" };
+  const client = { MEILI_MANAGEMENT_CLIENT_ID: "uid" };
+  const cloud = (managementUrl: string, dashboardUrl = managementUrl) => ({
+    MEILI_MANAGEMENT_URL: managementUrl,
+    MEILI_MANAGEMENT_DASHBOARD_URL: dashboardUrl,
+  });
 
   it("logs in to Meilisearch Cloud, with the application of this CLI, when given nothing", () => {
-    expect(resolveOauthClient({}, {})).toEqual({
+    expect(resolveOauthClient({})).toEqual({
       clientId: DEFAULT_MANAGEMENT_CLIENT_ID,
       managementUrl: DEFAULT_MANAGEMENT_URL,
       dashboardUrl: DEFAULT_MANAGEMENT_DASHBOARD_URL,
@@ -90,46 +94,34 @@ describe("resolveOauthClient", () => {
 
   it("still takes it when Meilisearch Cloud is the one named, URLs and all", () => {
     expect(
-      resolveOauthClient(
-        { managementUrl: DEFAULT_MANAGEMENT_URL, dashboardUrl: DEFAULT_MANAGEMENT_DASHBOARD_URL },
-        {},
-      ),
+      resolveOauthClient(cloud(DEFAULT_MANAGEMENT_URL, DEFAULT_MANAGEMENT_DASHBOARD_URL)),
     ).toMatchObject({ clientId: DEFAULT_MANAGEMENT_CLIENT_ID });
   });
 
   it("asks another Cloud for its own application: the built-in one is not registered there", () => {
     expect(() =>
-      resolveOauthClient(
-        { managementUrl: "https://api.example.com", dashboardUrl: "https://cloud.example.com" },
-        {},
-      ),
+      resolveOauthClient(cloud("https://api.example.com", "https://cloud.example.com")),
     ).toThrowError(/No OAuth application/);
   });
 
   it("takes a loopback address in plain HTTP, including IPv6", () => {
     for (const url of ["http://localhost:3000", "http://127.0.0.1:8888", "http://[::1]:8888"]) {
-      expect(
-        resolveOauthClient({ ...client, managementUrl: url, dashboardUrl: url }, {}),
-      ).toMatchObject({ managementUrl: url });
+      expect(resolveOauthClient({ ...client, ...cloud(url) })).toMatchObject({
+        clientId: "uid",
+        managementUrl: url,
+      });
     }
   });
 
   it("refuses plain HTTP anywhere else, which would send the token in the clear", () => {
     expect(() =>
-      resolveOauthClient(
-        {
-          ...client,
-          managementUrl: "http://api.example.com",
-          dashboardUrl: "http://api.example.com",
-        },
-        {},
-      ),
+      resolveOauthClient({ ...client, ...cloud("http://api.example.com") }),
     ).toThrowError(/HTTPS/);
   });
 
   it("refuses one URL without the other: a Cloud is named by both", () => {
     expect(() =>
-      resolveOauthClient({ ...client, managementUrl: "https://api.example.com" }, {}),
+      resolveOauthClient({ ...client, MEILI_MANAGEMENT_URL: "https://api.example.com" }),
     ).toThrowError(/together/);
   });
 });
@@ -139,46 +131,21 @@ describe("resolveManagementCredentials", () => {
 
   it("reads the token and the URL, with the production URL by default", async () => {
     await expect(
-      resolveManagementCredentials({}, { ...empty, MEILI_MANAGEMENT_TOKEN: "envToken" }, noWarning),
+      resolveManagementCredentials({ ...empty, MEILI_MANAGEMENT_TOKEN: "envToken" }, noWarning),
     ).resolves.toEqual({ token: "envToken", url: DEFAULT_MANAGEMENT_URL });
     await expect(
       resolveManagementCredentials(
-        {},
         { ...empty, MEILI_MANAGEMENT_TOKEN: "envToken", MEILI_MANAGEMENT_URL: URL },
         noWarning,
       ),
     ).resolves.toEqual({ token: "envToken", url: URL });
   });
 
-  it("takes the flags over the variables", async () => {
-    await expect(
-      resolveManagementCredentials(
-        { token: "flagToken", url: "https://flag.test" },
-        { ...empty, MEILI_MANAGEMENT_TOKEN: "envToken", MEILI_MANAGEMENT_URL: URL },
-        noWarning,
-      ),
-    ).resolves.toEqual({ token: "flagToken", url: "https://flag.test" });
-  });
-
   it("refuses plain HTTP for a token, unless the host is a loopback address", async () => {
+    const token = { ...empty, MEILI_MANAGEMENT_TOKEN: "envToken" };
     await expect(
       resolveManagementCredentials(
-        { token: "flagToken", url: "http://api.example.com" },
-        empty,
-        noWarning,
-      ),
-    ).rejects.toMatchObject({
-      code: "cli_usage",
-      message: expect.stringContaining("--management-url"),
-    });
-    await expect(
-      resolveManagementCredentials(
-        {},
-        {
-          ...empty,
-          MEILI_MANAGEMENT_TOKEN: "envToken",
-          MEILI_MANAGEMENT_URL: "http://api.example.com",
-        },
+        { ...token, MEILI_MANAGEMENT_URL: "http://api.example.com" },
         noWarning,
       ),
     ).rejects.toMatchObject({
@@ -187,18 +154,17 @@ describe("resolveManagementCredentials", () => {
     });
     await expect(
       resolveManagementCredentials(
-        { token: "flagToken", url: "http://localhost:3000" },
-        empty,
+        { ...token, MEILI_MANAGEMENT_URL: "http://localhost:3000" },
         noWarning,
       ),
-    ).resolves.toEqual({ token: "flagToken", url: "http://localhost:3000" });
+    ).resolves.toEqual({ token: "envToken", url: "http://localhost:3000" });
   });
 
   it("fails before any network call with cli_auth_missing and exit 3", async () => {
-    await expect(resolveManagementCredentials({}, empty, noWarning)).rejects.toMatchObject({
+    await expect(resolveManagementCredentials(empty, noWarning)).rejects.toMatchObject({
       code: "cli_auth_missing",
       exitCode: 3,
-      message: expect.stringContaining("--management-token"),
+      message: expect.stringContaining("meili auth login"),
     });
   });
 
@@ -206,12 +172,12 @@ describe("resolveManagementCredentials", () => {
     const env = sessionHome();
     storeSession(env, URL, { accessToken: "fromFile" });
 
-    await expect(resolveManagementCredentials({}, env, noWarning)).resolves.toEqual({
+    await expect(resolveManagementCredentials(env, noWarning)).resolves.toEqual({
       token: "fromFile",
       url: URL,
     });
     await expect(
-      resolveManagementCredentials({}, { ...env, MEILI_MANAGEMENT_TOKEN: "envToken" }, noWarning),
+      resolveManagementCredentials({ ...env, MEILI_MANAGEMENT_TOKEN: "envToken" }, noWarning),
     ).resolves.toEqual({ token: "envToken", url: DEFAULT_MANAGEMENT_URL });
   });
 
@@ -220,7 +186,6 @@ describe("resolveManagementCredentials", () => {
     storeSession(env, URL);
     await expect(
       resolveManagementCredentials(
-        {},
         { ...env, MEILI_MANAGEMENT_URL: "https://other.test" },
         noWarning,
       ),
@@ -233,7 +198,7 @@ describe("resolveManagementCredentials", () => {
       expiresAt: new Date(Date.now() - 1000).toISOString(),
       refreshToken: undefined,
     });
-    await expect(resolveManagementCredentials({}, env, noWarning)).rejects.toMatchObject({
+    await expect(resolveManagementCredentials(env, noWarning)).rejects.toMatchObject({
       code: "cli_auth_failed",
       exitCode: 3,
       hint: expect.stringContaining("meili auth login"),

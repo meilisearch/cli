@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-delete-tasks-${randomUUID().slice(0, 8)}`;
 let created = 0;
 
@@ -22,10 +22,15 @@ describe.skipIf(!meilisearchUp)("meili delete tasks against a real Meilisearch",
   });
 
   it("exits 2 and deletes nothing without --yes", async () => {
-    const result = await runBinary(
-      ["delete", "tasks", "--ids", String(created), "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "tasks",
+      "--ids",
+      String(created),
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
@@ -33,17 +38,24 @@ describe.skipIf(!meilisearchUp)("meili delete tasks against a real Meilisearch",
   });
 
   it("exits 2 without a filter, before any network call", async () => {
-    const result = await runBinary(["delete", "tasks", "--yes", "--output", "json"], env);
+    const result = await runBinary(["delete", "tasks", "--yes", "--output", "json", ...project]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
   });
 
   it("deletes the task named by --ids", async () => {
-    const result = await runBinary(
-      ["delete", "tasks", "--ids", String(created), "--yes", "--wait", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "tasks",
+      "--ids",
+      String(created),
+      "--yes",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({
       type: "taskDeletion",

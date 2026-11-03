@@ -6,7 +6,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const indexStats = {
   numberOfDocuments: 10,
   rawDocumentDbSize: 100,
@@ -33,25 +33,34 @@ describe("meili get stats", () => {
 
   it("prints the statistics of the instance as the API returned them", async () => {
     server.use(meilisearchHandlers.stats(stats));
-    const result = await runCommand(GetStats, ["--output", "json"], { env });
+    const result = await runCommand(GetStats, ["--output", "json", ...project]);
     expect(result).toMatchSnapshot();
   });
 
   it("prints the statistics of one index with --index", async () => {
     server.use(meilisearchHandlers.indexStats(indexStats));
-    const result = await runCommand(GetStats, ["--index", "movies", "--output", "json"], { env });
+    const result = await runCommand(GetStats, [
+      "--index",
+      "movies",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
   it("sends the two query parameters of the route, and nothing when they are not given", async () => {
     server.use(meilisearchHandlers.stats(stats), meilisearchHandlers.indexStats(indexStats));
     const requests = await recordRequests(async () => {
-      await runCommand(GetStats, [], { env });
-      await runCommand(
-        GetStats,
-        ["--index", "movies", "--size-format", "human", "--show-internal-database-sizes"],
-        { env },
-      );
+      await runCommand(GetStats, project);
+      await runCommand(GetStats, [
+        "--index",
+        "movies",
+        "--size-format",
+        "human",
+        "--show-internal-database-sizes",
+        ...project,
+      ]);
     });
     expect(requests.map((request) => `${request.url.pathname}${request.url.search}`)).toEqual([
       "/stats",
@@ -68,7 +77,13 @@ describe("meili get stats", () => {
         link: "https://docs.meilisearch.com/errors#index_not_found",
       }),
     );
-    const result = await runCommand(GetStats, ["--index", "missing", "--output", "json"], { env });
+    const result = await runCommand(GetStats, [
+      "--index",
+      "missing",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

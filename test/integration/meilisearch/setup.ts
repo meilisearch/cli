@@ -1,7 +1,7 @@
 /**
  * The Meilisearch integration target, fixed by docs/contract/testing.md: the
  * Meilisearch started by docker-compose.yml, on localhost:7700 with the master
- * key `masterKey`. Never the MEILI_PROJECT_URL of the developer's shell.
+ * key `masterKey`. Never a project of the developer's config file.
  */
 export const MEILISEARCH_URL = "http://localhost:7700";
 export const MASTER_KEY = "masterKey";

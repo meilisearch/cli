@@ -6,7 +6,7 @@ import { runCli, runCommand } from "../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const facetHits = [
   { value: "action", count: 273 },
   { value: "animated", count: 15 },
@@ -15,7 +15,7 @@ const facetHits = [
 /** The body the CLI sent to POST /indexes/{uid}/facet-search, request by request. */
 async function bodiesOf(argv: string[]): Promise<unknown[]> {
   const requests = await recordRequests(async () => {
-    await runCommand(FacetSearch, argv, { env });
+    await runCommand(FacetSearch, [...argv, ...project]);
   });
   return requests.map((request) => JSON.parse(request.body));
 }
@@ -30,11 +30,17 @@ describe("meili facet-search", () => {
 
   it("prints the API envelope as it is in JSON", async () => {
     server.use(meilisearchHandlers.facetSearch(facetHits));
-    const result = await runCommand(
-      FacetSearch,
-      ["--index", "movies", "--facet-name", "genres", "--facet-query", "ac", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(FacetSearch, [
+      "--index",
+      "movies",
+      "--facet-name",
+      "genres",
+      "--facet-query",
+      "ac",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
@@ -106,11 +112,15 @@ describe("meili facet-search", () => {
 
   it("refuses --output ndjson: the response is facet hits, not a list envelope", async () => {
     server.use(meilisearchHandlers.facetSearch(facetHits));
-    const result = await runCommand(
-      FacetSearch,
-      ["--index", "movies", "--facet-name", "genres", "--output", "ndjson"],
-      { env },
-    );
+    const result = await runCommand(FacetSearch, [
+      "--index",
+      "movies",
+      "--facet-name",
+      "genres",
+      "--output",
+      "ndjson",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
@@ -126,11 +136,15 @@ describe("meili facet-search", () => {
         link: "https://docs.meilisearch.com/errors#invalid_facet_search_facet_name",
       }),
     );
-    const result = await runCommand(
-      FacetSearch,
-      ["--index", "movies", "--facet-name", "title", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(FacetSearch, [
+      "--index",
+      "movies",
+      "--facet-name",
+      "title",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

@@ -28,7 +28,7 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -118,7 +118,7 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -199,7 +199,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -279,18 +279,6 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
       ],
       "flags": [
         {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
-        {
           "description": "Name of the project.",
           "helpValue": "<name>",
           "name": "name",
@@ -364,24 +352,6 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
       ],
       "flags": [
         {
-          "description": "The OAuth application to log in with, on a Cloud that is not Meilisearch Cloud. Also MEILI_MANAGEMENT_CLIENT_ID.",
-          "helpValue": "<uid>",
-          "name": "management-client-id",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL, which holds the token endpoint.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
-        {
-          "description": "Dashboard URL, which hosts the consent page.",
-          "helpValue": "<url>",
-          "name": "management-dashboard-url",
-          "type": "option",
-        },
-        {
           "description": "Open the consent page in a browser. --no-browser only prints the URL.",
           "name": "browser",
           "type": "boolean",
@@ -443,7 +413,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -591,24 +561,6 @@ The file holds API keys and decides where every later command goes, for every pr
           "name": "sync-with-cloud",
           "type": "boolean",
         },
-        {
-          "dependsOn": [
-            "sync-with-cloud",
-          ],
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "dependsOn": [
-            "sync-with-cloud",
-          ],
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
       ],
       "id": "config set",
     },
@@ -624,18 +576,6 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili config sync-with-cloud --project-url https://ms-abc.sfo.meilisearch.io --output json",
       ],
       "flags": [
-        {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
         {
           "description": "Every project the token sees.",
           "name": "all",
@@ -717,24 +657,6 @@ The file holds API keys and decides where every later command goes, for every pr
           "name": "sync-with-cloud",
           "type": "boolean",
         },
-        {
-          "dependsOn": [
-            "sync-with-cloud",
-          ],
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "dependsOn": [
-            "sync-with-cloud",
-          ],
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
       ],
       "id": "config update",
     },
@@ -763,7 +685,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -881,7 +803,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -943,7 +865,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -980,18 +902,6 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili delete projects --project staging --yes --sync-config",
       ],
       "flags": [
-        {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
         {
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
@@ -1044,7 +954,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1109,7 +1019,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1243,7 +1153,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1342,7 +1252,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1472,7 +1382,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1604,7 +1514,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1692,7 +1602,7 @@ The source is the project this command connects to, named by --project, --projec
       "examples": [
         "meili get health",
         "meili get health --output json",
-        "MEILI_PROJECT_URL=http://localhost:7700 meili get health",
+        "meili get health --project-url http://localhost:7700",
       ],
       "flags": [
         {
@@ -1708,7 +1618,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1743,7 +1653,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1807,7 +1717,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1858,18 +1768,6 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       ],
       "flags": [
         {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
-        {
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "name": "project",
@@ -1915,7 +1813,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1959,7 +1857,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2019,7 +1917,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2148,7 +2046,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2185,7 +2083,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2269,7 +2167,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2489,7 +2387,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2612,7 +2510,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2703,7 +2601,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2787,7 +2685,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2846,18 +2744,6 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
         "meili update projects --id 343 --data '{"name":"renamed"}'",
       ],
       "flags": [
-        {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
         {
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
@@ -2927,7 +2813,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",

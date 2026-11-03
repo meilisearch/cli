@@ -47,27 +47,21 @@ function requireSecureUrl(url: string, what: string): void {
   }
 }
 
-export interface OauthFlags {
-  clientId?: string | undefined;
-  managementUrl?: string | undefined;
-  dashboardUrl?: string | undefined;
-}
-
 /**
- * The OAuth application `auth login` identifies itself with: the flags, then
- * the environment, then the application of this CLI, which exists on
+ * The OAuth application `auth login` identifies itself with: the environment,
+ * then the application of this CLI, which exists on
  * Meilisearch Cloud alone. An OAuth application belongs to the Cloud that
  * registered it, so naming another Cloud means naming its application too.
  */
-export function resolveOauthClient(flags: OauthFlags, env: Env): OauthClient {
+export function resolveOauthClient(env: Env): OauthClient {
   // The two URLs name the same Cloud: one alone would send the human to the consent
   // page of a Cloud and the code to the token endpoint of another.
-  const managementUrl = nonEmpty(flags.managementUrl) ?? nonEmpty(env[ENV.MANAGEMENT_URL]);
-  const dashboardUrl = nonEmpty(flags.dashboardUrl) ?? nonEmpty(env[ENV.MANAGEMENT_DASHBOARD_URL]);
+  const managementUrl = nonEmpty(env[ENV.MANAGEMENT_URL]);
+  const dashboardUrl = nonEmpty(env[ENV.MANAGEMENT_DASHBOARD_URL]);
   if ((managementUrl === undefined) !== (dashboardUrl === undefined)) {
     throw new MeiliCliError(
       "cli_usage",
-      "A Cloud is named by both of its URLs. Give `--management-url` and `--management-dashboard-url` together, or neither to use Meilisearch Cloud.",
+      "A Cloud is named by both of its URLs. Set `MEILI_MANAGEMENT_URL` and `MEILI_MANAGEMENT_DASHBOARD_URL` together, or neither to use Meilisearch Cloud.",
     );
   }
   // The built-in application is registered on Meilisearch Cloud and nowhere else,
@@ -76,13 +70,12 @@ export function resolveOauthClient(flags: OauthFlags, env: Env): OauthClient {
     (managementUrl ?? DEFAULT_MANAGEMENT_URL) === DEFAULT_MANAGEMENT_URL &&
     (dashboardUrl ?? DEFAULT_MANAGEMENT_DASHBOARD_URL) === DEFAULT_MANAGEMENT_DASHBOARD_URL;
   const clientId =
-    nonEmpty(flags.clientId) ??
     nonEmpty(env[ENV.MANAGEMENT_CLIENT_ID]) ??
     (meilisearchCloud ? DEFAULT_MANAGEMENT_CLIENT_ID : undefined);
   if (clientId === undefined) {
     throw new MeiliCliError(
       "cli_usage",
-      "No OAuth application on that Cloud. Pass `--management-client-id` or set the `MEILI_MANAGEMENT_CLIENT_ID` environment variable.",
+      "No OAuth application on that Cloud. Set the `MEILI_MANAGEMENT_CLIENT_ID` environment variable.",
       {
         hint: "The `uid` of a public OAuth application registered on that Cloud, with `http://127.0.0.1/callback` as its redirect URI. Only Meilisearch Cloud has a built-in one.",
       },
@@ -93,8 +86,8 @@ export function resolveOauthClient(flags: OauthFlags, env: Env): OauthClient {
     managementUrl: managementUrl ?? DEFAULT_MANAGEMENT_URL,
     dashboardUrl: dashboardUrl ?? DEFAULT_MANAGEMENT_DASHBOARD_URL,
   };
-  requireSecureUrl(client.managementUrl, "--management-url");
-  requireSecureUrl(client.dashboardUrl, "--management-dashboard-url");
+  requireSecureUrl(client.managementUrl, ENV.MANAGEMENT_URL);
+  requireSecureUrl(client.dashboardUrl, ENV.MANAGEMENT_DASHBOARD_URL);
   return client;
 }
 
@@ -156,22 +149,18 @@ export function removeCredentialsFile(path: string): void {
 const EXPIRY_MARGIN_MS = 30_000;
 
 /**
- * `--management-token`, then `MEILI_MANAGEMENT_TOKEN`, then the session of
- * `auth login`, with `--management-url`, `MEILI_MANAGEMENT_URL` and its
- * default. Fails before any network call when none exists. An access token
+ * `MEILI_MANAGEMENT_TOKEN`, then the session of `auth login`, with
+ * `MEILI_MANAGEMENT_URL` and its default. Fails before any network call when none exists. An access token
  * that is about to expire is refreshed here, and the new one is written back.
  */
 export async function resolveManagementCredentials(
-  flags: { token?: string | undefined; url?: string | undefined },
   env: Env,
   warn: (warning: MeiliCliError) => void,
 ): Promise<ManagementCredentials> {
-  const chosen = nonEmpty(flags.url) ?? nonEmpty(env[ENV.MANAGEMENT_URL]);
-  const token = nonEmpty(flags.token) ?? nonEmpty(env[ENV.MANAGEMENT_TOKEN]);
+  const chosen = nonEmpty(env[ENV.MANAGEMENT_URL]);
+  const token = nonEmpty(env[ENV.MANAGEMENT_TOKEN]);
   if (token !== undefined) {
-    if (chosen !== undefined) {
-      requireSecureUrl(chosen, flags.url === undefined ? ENV.MANAGEMENT_URL : "--management-url");
-    }
+    if (chosen !== undefined) requireSecureUrl(chosen, ENV.MANAGEMENT_URL);
     return { token, url: chosen ?? DEFAULT_MANAGEMENT_URL };
   }
 
@@ -180,7 +169,7 @@ export async function resolveManagementCredentials(
   if (session === undefined) {
     throw new MeiliCliError(
       "cli_auth_missing",
-      "No Management API credentials. Run `meili auth login`, pass `--management-token`, or set the `MEILI_MANAGEMENT_TOKEN` environment variable.",
+      "No Management API credentials. Run `meili auth login`.",
       { hint: "Run `meili auth login` to log in with a browser." },
     );
   }
@@ -189,7 +178,7 @@ export async function resolveManagementCredentials(
       "cli_config",
       `The session of \`meili auth login\` was issued by ${session.managementUrl}, but the Management API URL given is ${chosen}. A token is never sent to another Cloud.`,
       {
-        hint: "Run `meili auth login` against that URL, or drop `--management-url` and `MEILI_MANAGEMENT_URL`.",
+        hint: "Run `meili auth login` against that URL, or unset `MEILI_MANAGEMENT_URL`.",
       },
     );
   }

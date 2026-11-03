@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-search-${randomUUID().slice(0, 8)}`;
 const documents = [
   { id: 1, title: "Nosferatu", genre: "horror", rating: 4.5 },
@@ -34,10 +34,16 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
   });
 
   it("returns the hits of --q with the API envelope", async () => {
-    const result = await runBinary(
-      ["search", "--index", uid, "--q", "nosferatu", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "search",
+      "--index",
+      uid,
+      "--q",
+      "nosferatu",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const body = JSON.parse(result.stdout) as SearchResponse;
@@ -47,30 +53,28 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
   });
 
   it("returns every document for a placeholder search", async () => {
-    const result = await runBinary(["search", "--index", uid, "--output", "json"], env);
+    const result = await runBinary(["search", "--index", uid, "--output", "json", ...project]);
     expect(result.exitCode).toBe(0);
     expect((JSON.parse(result.stdout) as SearchResponse).hits).toHaveLength(3);
   });
 
   it("filters, sorts, projects and facets", async () => {
-    const result = await runBinary(
-      [
-        "search",
-        "--index",
-        uid,
-        "--filter",
-        "rating > 4",
-        "--sort",
-        "rating:desc",
-        "--attributes-to-retrieve",
-        "id",
-        "--facets",
-        "genre",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "search",
+      "--index",
+      uid,
+      "--filter",
+      "rating > 4",
+      "--sort",
+      "rating:desc",
+      "--attributes-to-retrieve",
+      "id",
+      "--facets",
+      "genre",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const body = JSON.parse(result.stdout) as SearchResponse;
     expect(body.hits).toEqual([{ id: 3 }, { id: 1 }]);
@@ -78,10 +82,18 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
   });
 
   it("switches the envelope to totalHits and totalPages with --page", async () => {
-    const result = await runBinary(
-      ["search", "--index", uid, "--page", "2", "--hits-per-page", "2", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "search",
+      "--index",
+      uid,
+      "--page",
+      "2",
+      "--hits-per-page",
+      "2",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const body = JSON.parse(result.stdout) as SearchResponse;
     expect(body.hits).toHaveLength(1);
@@ -90,20 +102,18 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
   });
 
   it("sends the body of --data, which a flag of the same field overrides", async () => {
-    const result = await runBinary(
-      [
-        "search",
-        "--index",
-        uid,
-        "--data",
-        '{"q":"solaris","limit":1}',
-        "--q",
-        "nosferatu",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "search",
+      "--index",
+      uid,
+      "--data",
+      '{"q":"solaris","limit":1}',
+      "--q",
+      "nosferatu",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const body = JSON.parse(result.stdout) as SearchResponse;
     expect(body.query).toBe("nosferatu");
@@ -111,20 +121,32 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
   });
 
   it("lets the API refuse a flag value that does not convert, with its own code", async () => {
-    const result = await runBinary(
-      ["search", "--index", uid, "--ranking-score-threshold", "abc", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "search",
+      "--index",
+      uid,
+      "--ranking-score-threshold",
+      "abc",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("invalid_search_ranking_score_threshold");
   });
 
   it("exits 4 with the API error when the index does not exist", async () => {
-    const result = await runBinary(
-      ["search", "--index", `${uid}-missing`, "--q", "nosferatu", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "search",
+      "--index",
+      `${uid}-missing`,
+      "--q",
+      "nosferatu",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("index_not_found");

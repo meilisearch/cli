@@ -12,7 +12,6 @@ import { installHttpTrace } from "./clients/trace.js";
 import {
   type ConfigFile,
   configFilePath,
-  DEFAULT_MANAGEMENT_URL,
   ENV,
   type Env,
   readConfigFile,
@@ -37,7 +36,6 @@ export type Api = "meilisearch" | "management" | "none";
 export type GlobalFlags = Interfaces.InferredFlags<
   typeof BaseCommand.baseFlags &
     typeof BaseCommand.connectionFlags &
-    typeof BaseCommand.managementFlags &
     typeof BaseCommand.cloudProjectFlags &
     typeof BaseCommand.syncWithCloudFlags
 >;
@@ -106,25 +104,8 @@ export abstract class BaseCommand extends Command {
       parse: async (value) => (value === "-" ? readStdin() : value),
     }),
     project: Flags.string({
-      description:
-        "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+      description: "A project of the config file. Cannot be combined with --project-url.",
       helpValue: "<name>",
-    }),
-  };
-
-  /**
-   * How a command reaches the Management API, the group of
-   * docs/contract/commands.md. Spread by the commands that talk to it, and by
-   * no other.
-   */
-  static managementFlags = {
-    "management-token": Flags.string({
-      description: "Management API personal access token.",
-      helpValue: "<pat>",
-    }),
-    "management-url": Flags.string({
-      description: `Management API base URL. Default ${DEFAULT_MANAGEMENT_URL}.`,
-      helpValue: "<url>",
     }),
   };
 
@@ -143,22 +124,13 @@ export abstract class BaseCommand extends Command {
 
   /**
    * `config set` and `config update` work offline, and talk to the Management
-   * API only with `--sync-with-cloud` (ADR 0011): the connection flags take
-   * effect with it alone, so they depend on it.
+   * API only with `--sync-with-cloud` (ADR 0011).
    */
   static syncWithCloudFlags = {
     "sync-with-cloud": Flags.boolean({
       description:
         "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
     }),
-    "management-token": {
-      ...BaseCommand.managementFlags["management-token"],
-      dependsOn: ["sync-with-cloud"],
-    },
-    "management-url": {
-      ...BaseCommand.managementFlags["management-url"],
-      dependsOn: ["sync-with-cloud"],
-    },
   };
 
   /** Shared group for write commands whose API response is a task. */
@@ -251,7 +223,6 @@ export abstract class BaseCommand extends Command {
           apiKey: this.globalFlags["project-api-key"],
           project: this.globalFlags.project,
         },
-        this.env,
         () => this.configFile(),
       );
       this.meilisearch = createMeilisearchClient({
@@ -262,11 +233,7 @@ export abstract class BaseCommand extends Command {
       return;
     }
 
-    const credentials = await resolveManagementCredentials(
-      { token: this.globalFlags["management-token"], url: this.globalFlags["management-url"] },
-      this.env,
-      writeWarning,
-    );
+    const credentials = await resolveManagementCredentials(this.env, writeWarning);
     this.managementClient = createManagementClient({
       ...credentials,
       userAgent: this.userAgent,

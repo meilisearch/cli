@@ -14,13 +14,15 @@ const SECRET = "supersecretkey1a2b";
 describe("--debug", () => {
   it("traces the request and the response with the API key masked", async () => {
     server.use(meilisearchHandlers.health());
-    const result = await runCommand(
-      Health,
-      ["--debug", "--output", "json", "--project-api-key", SECRET],
-      {
-        env: { MEILI_PROJECT_URL: MEILISEARCH_URL },
-      },
-    );
+    const result = await runCommand(Health, [
+      "--debug",
+      "--output",
+      "json",
+      "--project-url",
+      MEILISEARCH_URL,
+      "--project-api-key",
+      SECRET,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toBe('{"status":"available"}\n');
     expect(result.stderr).toContain(`> GET ${MEILISEARCH_URL}/health`);
@@ -48,14 +50,5 @@ describe("--debug", () => {
     expect(result.stderr).not.toContain(project.masterKey);
     // Masked on stdout too (ADR 0013).
     expect(result.stdout).not.toContain(project.masterKey);
-  });
-
-  it("never prints the key from MEILI_PROJECT_API_KEY either", async () => {
-    server.use(meilisearchHandlers.health());
-    const result = await runCommand(Health, ["--debug", "--output", "json"], {
-      env: { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: SECRET },
-    });
-    expect(result.stderr).not.toContain(SECRET);
-    expect(result.stdout).not.toContain(SECRET);
   });
 });

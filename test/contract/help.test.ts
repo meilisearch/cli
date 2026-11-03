@@ -20,7 +20,7 @@ describe("--help", () => {
     ]) {
       let result: Awaited<ReturnType<typeof runCli>> | undefined;
       const requests = await countRequests(async () => {
-        result = await runCli(argv, { env: { MEILI_PROJECT_URL: "http://meili.test:7700" } });
+        result = await runCli([...argv, "--project-url", "http://meili.test:7700"]);
       });
       expect(requests, argv.join(" ")).toBe(0);
       expect(result?.exitCode, argv.join(" ")).toBe(0);

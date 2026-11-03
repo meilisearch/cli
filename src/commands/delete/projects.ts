@@ -19,7 +19,6 @@ export default class DeleteProjects extends BaseCommand {
   ];
 
   static override flags = {
-    ...BaseCommand.managementFlags,
     ...BaseCommand.cloudProjectFlags,
     id: Flags.integer({
       description:

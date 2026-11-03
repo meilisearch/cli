@@ -24,8 +24,7 @@ FLAGS
       --debug                  Print every HTTP request and response on stderr,
                                secrets redacted.
       --project=<name>         A project of the config file. Cannot be combined
-                               with --project-url. Required when the file has
-                               several projects.
+                               with --project-url.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
 
@@ -37,7 +36,7 @@ EXAMPLES
 
   $ meili get health --output json
 
-  MEILI_PROJECT_URL=http://localhost:7700 meili get health
+  $ meili get health --project-url http://localhost:7700
 
 "
 `;

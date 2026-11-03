@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-get-settings-${randomUUID().slice(0, 8)}`;
 
 describe.skipIf(!meilisearchUp)("meili get settings against a real Meilisearch", () => {
@@ -25,7 +25,15 @@ describe.skipIf(!meilisearchUp)("meili get settings against a real Meilisearch",
   });
 
   it("returns every setting, the ones set and the defaults", async () => {
-    const result = await runBinary(["get", "settings", "--index", uid, "--output", "json"], env);
+    const result = await runBinary([
+      "get",
+      "settings",
+      "--index",
+      uid,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     expect(JSON.parse(result.stdout)).toMatchObject({
@@ -36,10 +44,15 @@ describe.skipIf(!meilisearchUp)("meili get settings against a real Meilisearch",
   });
 
   it("exits 4 with the API error when the index does not exist", async () => {
-    const result = await runBinary(
-      ["get", "settings", "--index", `${uid}-missing`, "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "get",
+      "settings",
+      "--index",
+      `${uid}-missing`,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("index_not_found");

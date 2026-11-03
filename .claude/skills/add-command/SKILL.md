@@ -86,7 +86,7 @@ Never, in a command file: `console.log`, `process.stdout.write`, `this.log`, `fe
 Copy `test/commands/get/health.test.ts` (or `test/commands/get/indexes.test.ts` for a command with several routes). It must contain, each as a snapshot:
 
 1. `--help`: `runCli(["get", "stats", "--help"])`, exit 0, empty stderr, stdout snapshot.
-2. one success in `--output json` per route: `runCommand(ClassName, [...argv, "--output", "json"], { env: { MEILI_PROJECT_URL: MEILISEARCH_URL } })`, snapshot of `{ stdout, stderr, exitCode }`.
+2. one success in `--output json` per route: `runCommand(ClassName, [...argv, "--output", "json", "--project-url", MEILISEARCH_URL])`, snapshot of `{ stdout, stderr, exitCode }`.
 3. one error: an API error body passed through (exit 1, 3 or 4 by status) or a network failure (exit 6).
 
 Add the msw handler for each route in `test/helpers/meilisearch-handlers.ts`, parameterized (status, body, pagination) so that other tests reuse it. Handlers use the fake host `MEILISEARCH_URL`; nothing real goes out, an unhandled request fails the test. A Management API command copies `test/commands/get/projects.test.ts` instead: its handlers live in `test/helpers/management-handlers.ts`, follow `openapi/management.json`, and the command runs with `env: managementEnv`, the token and the fake host `MANAGEMENT_URL`.
@@ -95,7 +95,7 @@ Run `pnpm test` once to write the snapshots, then read the `.snap` file: the JSO
 
 ## 5. Integration test
 
-A Management API command has none: Meilisearch Cloud does not run locally (`docs/contract/testing.md`). For a Meilisearch command, copy `test/integration/meilisearch/get-health.test.ts` or `get-indexes.test.ts`. The file starts with `const meilisearchUp = await meilisearchAvailable()` and wraps everything in `describe.skipIf(!meilisearchUp)`. It runs the built binary with `runBinary([...])` against `MEILISEARCH_URL` and `MASTER_KEY` from `setup.ts`, never against the shell's `MEILI_PROJECT_URL`. Fixtures (an index, documents) are created with the SDK under a random suffix and deleted in `afterAll`, so the suite can run in parallel and never depends on existing data. A management command has no integration test (`docs/contract/testing.md`, section 2): its handlers in `test/helpers/management-handlers.ts` follow `openapi/management.json`, and what the document does not say is reported to the user as a documentation gap, never guessed.
+A Management API command has none: Meilisearch Cloud does not run locally (`docs/contract/testing.md`). For a Meilisearch command, copy `test/integration/meilisearch/get-health.test.ts` or `get-indexes.test.ts`. The file starts with `const meilisearchUp = await meilisearchAvailable()` and wraps everything in `describe.skipIf(!meilisearchUp)`. It runs the built binary with `runBinary([...])` against `MEILISEARCH_URL` and `MASTER_KEY` from `setup.ts`, with `--project-url` and `--project-api-key`, never a project of the developer's config file. Fixtures (an index, documents) are created with the SDK under a random suffix and deleted in `afterAll`, so the suite can run in parallel and never depends on existing data. A management command has no integration test (`docs/contract/testing.md`, section 2): its handlers in `test/helpers/management-handlers.ts` follow `openapi/management.json`, and what the document does not say is reported to the user as a documentation gap, never guessed.
 
 ## 6. Manifest, changeset
 

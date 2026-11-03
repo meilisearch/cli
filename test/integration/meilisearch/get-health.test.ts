@@ -4,26 +4,35 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 
 describe.skipIf(!meilisearchUp)("meili get health against a real Meilisearch", () => {
   it("prints the health as compact JSON on stdout and nothing on stderr", async () => {
-    const result = await runBinary(["get", "health"], env);
+    const result = await runBinary(["get", "health", ...project]);
     expect(result).toEqual({ stdout: '{"status":"available"}\n', stderr: "", exitCode: 0 });
   });
 
   it("works without an API key, since /health is public", async () => {
-    const result = await runBinary(["get", "health", "--output", "json"], {
-      MEILI_PROJECT_URL: MEILISEARCH_URL,
-    });
+    const result = await runBinary([
+      "get",
+      "health",
+      "--project-url",
+      MEILISEARCH_URL,
+      "--output",
+      "json",
+    ]);
     expect(result.exitCode).toBe(0);
   });
 
   it("exits 6 with cli_network on stderr when nothing listens, and keeps stdout empty", async () => {
-    const result = await runBinary(
-      ["get", "health", "--project-url", "http://127.0.0.1:1", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "get",
+      "health",
+      "--project-url",
+      "http://127.0.0.1:1",
+      "--output",
+      "json",
+    ]);
     expect(result.exitCode).toBe(6);
     expect(result.stdout).toBe("");
     const error = JSON.parse(result.stderr) as { error: { code: string; type: string } };
@@ -31,7 +40,7 @@ describe.skipIf(!meilisearchUp)("meili get health against a real Meilisearch", (
   });
 
   it("suggests the closest command on a typo, with exit 2", async () => {
-    const result = await runBinary(["get", "helth"], env);
+    const result = await runBinary(["get", "helth", ...project]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     const error = JSON.parse(result.stderr) as { error: { code: string; hint: string } };

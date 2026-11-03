@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const created: string[] = [];
 
 describe.skipIf(!meilisearchUp)("meili add keys against a real Meilisearch", () => {
@@ -18,25 +18,23 @@ describe.skipIf(!meilisearchUp)("meili add keys against a real Meilisearch", () 
 
   it("creates a key from the flags and answers it with its key value", async () => {
     const uid = randomUUID();
-    const result = await runBinary(
-      [
-        "add",
-        "keys",
-        "--id",
-        uid,
-        "--actions",
-        "search,documents.add",
-        "--indexes",
-        "movies",
-        "--expires-at",
-        "null",
-        "--name",
-        `meili-cli-test-add-keys-${uid.slice(0, 8)}`,
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "add",
+      "keys",
+      "--id",
+      uid,
+      "--actions",
+      "search,documents.add",
+      "--indexes",
+      "movies",
+      "--expires-at",
+      "null",
+      "--name",
+      `meili-cli-test-add-keys-${uid.slice(0, 8)}`,
+      "--output",
+      "json",
+      ...project,
+    ]);
     created.push(uid);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
@@ -52,24 +50,30 @@ describe.skipIf(!meilisearchUp)("meili add keys against a real Meilisearch", () 
 
   it("creates a key from --data alone", async () => {
     const uid = randomUUID();
-    const result = await runBinary(
-      [
-        "add",
-        "keys",
-        "--data",
-        JSON.stringify({ uid, actions: ["search"], indexes: ["*"], expiresAt: null }),
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "add",
+      "keys",
+      "--data",
+      JSON.stringify({ uid, actions: ["search"], indexes: ["*"], expiresAt: null }),
+      "--output",
+      "json",
+      ...project,
+    ]);
     created.push(uid);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid, actions: ["search"] });
   });
 
   it("exits 1 with the API error when the body misses a required field", async () => {
-    const result = await runBinary(["add", "keys", "--actions", "search", "--output", "json"], env);
+    const result = await runBinary([
+      "add",
+      "keys",
+      "--actions",
+      "search",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("missing_api_key_indexes");

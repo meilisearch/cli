@@ -19,13 +19,25 @@ The management document lives in a private repository: `pnpm openapi` needs `gh 
 pnpm build                              # after every change
 ./bin/run.js --help
 
-export MEILI_PROJECT_URL=http://localhost:7700
-export MEILI_PROJECT_API_KEY=masterKey   # only if the instance has a master key
-./bin/run.js get health                 # JSON: indented in a terminal, compact when piped
-./bin/run.js get indexes --debug        # HTTP trace on stderr, keys masked
+./bin/run.js config set --project local --project-url http://localhost:7700 --project-api-key masterKey
+./bin/run.js get health --project local          # JSON: indented in a terminal, compact when piped
+./bin/run.js get indexes --project local --debug # HTTP trace on stderr, keys masked
 ```
 
-The management commands read `MEILI_MANAGEMENT_TOKEN`, and `MEILI_MANAGEMENT_URL` to target something else than production; `pnpm openapi:management` needs a GitHub token that reads `meilisearch/meilisearch-cloud`, and `pnpm gen:management` regenerates the client from the document.
+The management commands use the session of `meili auth login`, on production. To test against another Cloud, the development one or a local one, point the CLI at it with environment variables, which have no flag and are not in the README:
+
+```sh
+export MEILI_MANAGEMENT_URL=https://api.meilisearch.dev
+export MEILI_MANAGEMENT_TOKEN=...                        # a personal access token of that Cloud, created by an administrator
+./bin/run.js get projects
+
+# or log in to that Cloud: both URLs, and the OAuth application registered there
+export MEILI_MANAGEMENT_DASHBOARD_URL=...                # the dashboard of that Cloud, which hosts the consent page
+export MEILI_MANAGEMENT_CLIENT_ID=...                    # the uid of a public OAuth application registered there
+./bin/run.js auth login
+```
+
+`MEILI_MANAGEMENT_TOKEN` wins over the session. `pnpm openapi:management` needs a GitHub token that reads `meilisearch/meilisearch-cloud`, and `pnpm gen:management` regenerates the client from the document.
 
 `pnpm link --global` puts a `meili` command on your PATH that points at your checkout.
 

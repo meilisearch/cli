@@ -20,7 +20,7 @@ The rules in `docs/contract/output.md` and `docs/contract/config.md` are the pub
 - never a prompt, never a confirmation flag, never `$EDITOR`: a destructive command runs as written
 - write commands return the task; `--wait` polls to a final status
 - `meili schema` describes every command as JSON, always in sync with the code
-- configuration works from environment variables alone, with no config file and no `HOME`
+- configuration works from the command line and environment variables alone, with no config file and no `HOME`
 
 Only `src/lib/output.ts`, `src/lib/errors.ts` and `src/lib/config.ts` implement these rules. Commands cannot bypass them.
 

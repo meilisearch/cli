@@ -10,7 +10,7 @@ export default class GetHealth extends BaseCommand {
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
     "<%= config.bin %> <%= command.id %> --output json",
-    "MEILI_PROJECT_URL=http://localhost:7700 <%= config.bin %> <%= command.id %>",
+    "<%= config.bin %> <%= command.id %> --project-url http://localhost:7700",
   ];
 
   static override flags = { ...BaseCommand.connectionFlags };

@@ -12,7 +12,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const uid = "52787ccd-48ff-48e5-9c4b-03cd76978a60";
 const updated = makeKey({ uid, name: "CI indexer", description: null });
 
@@ -20,7 +20,7 @@ const updated = makeKey({ uid, name: "CI indexer", description: null });
 async function sentBody(argv: string[]): Promise<unknown> {
   server.use(meilisearchHandlers.keyUpdate(updated));
   const requests = await recordRequests(async () => {
-    await runCommand(UpdateKeys, argv, { env });
+    await runCommand(UpdateKeys, [...argv, ...project]);
   });
   expect(requests).toHaveLength(1);
   expect(requests[0]?.method).toBe("PATCH");
@@ -38,11 +38,15 @@ describe("meili update keys", () => {
 
   it("prints the key the API returned, as it returned it", async () => {
     server.use(meilisearchHandlers.keyUpdate(updated));
-    const result = await runCommand(
-      UpdateKeys,
-      ["--id", uid, "--name", "CI indexer", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(UpdateKeys, [
+      "--id",
+      uid,
+      "--name",
+      "CI indexer",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
@@ -58,21 +62,29 @@ describe("meili update keys", () => {
 
   it("passes the 404 of an unknown key through and exits 4", async () => {
     server.use(meilisearchHandlers.apiError("/keys/nope", 404, apiKeyNotFoundError));
-    const result = await runCommand(
-      UpdateKeys,
-      ["--id", "nope", "--name", "CI indexer", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(UpdateKeys, [
+      "--id",
+      "nope",
+      "--name",
+      "CI indexer",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError(`/keys/${uid}`, 403, invalidApiKeyError));
-    const result = await runCommand(
-      UpdateKeys,
-      ["--id", uid, "--name", "CI indexer", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(UpdateKeys, [
+      "--id",
+      uid,
+      "--name",
+      "CI indexer",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

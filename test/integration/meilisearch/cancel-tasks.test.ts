@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-cancel-tasks-${randomUUID().slice(0, 8)}`;
 let created = 0;
 
@@ -25,10 +25,16 @@ describe.skipIf(!meilisearchUp)("meili cancel tasks against a real Meilisearch",
   });
 
   it("enqueues a taskCancelation and waits for it", async () => {
-    const result = await runBinary(
-      ["cancel", "tasks", "--ids", String(created), "--wait", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "cancel",
+      "tasks",
+      "--ids",
+      String(created),
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     // The task has already succeeded, so the cancelation matches nothing: what
     // the command owns is the taskCancelation it enqueued and polled.
@@ -39,10 +45,15 @@ describe.skipIf(!meilisearchUp)("meili cancel tasks against a real Meilisearch",
   });
 
   it("prints the enqueued task and returns at once without --wait", async () => {
-    const result = await runBinary(
-      ["cancel", "tasks", "--ids", String(created), "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "cancel",
+      "tasks",
+      "--ids",
+      String(created),
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({
       type: "taskCancelation",
@@ -51,7 +62,7 @@ describe.skipIf(!meilisearchUp)("meili cancel tasks against a real Meilisearch",
   });
 
   it("exits 1 with the API error when no filter is given", async () => {
-    const result = await runBinary(["cancel", "tasks", "--output", "json"], env);
+    const result = await runBinary(["cancel", "tasks", "--output", "json", ...project]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("missing_task_filters");

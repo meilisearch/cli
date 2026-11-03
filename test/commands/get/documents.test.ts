@@ -10,7 +10,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const documents = [
   { id: 1, title: "Nosferatu", rating: 4.5 },
   { id: 2, title: "Alien", rating: 5 },
@@ -20,7 +20,7 @@ const documents = [
 /** The body the CLI sent to POST /indexes/{uid}/documents/fetch, request by request. */
 async function bodiesOf(argv: string[]): Promise<unknown[]> {
   const requests = await recordRequests(async () => {
-    await runCommand(GetDocuments, argv, { env });
+    await runCommand(GetDocuments, [...argv, ...project]);
   });
   return requests.map((request) => JSON.parse(request.body));
 }
@@ -35,16 +35,20 @@ describe("meili get documents", () => {
 
   it("prints the API envelope as it is in JSON", async () => {
     server.use(meilisearchHandlers.documentsFetch(documents));
-    const result = await runCommand(GetDocuments, ["--index", "movies", "--output", "json"], {
-      env,
-    });
+    const result = await runCommand(GetDocuments, [
+      "--index",
+      "movies",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
   it("narrows the list with --ids, and --id is the same flag", async () => {
     server.use(meilisearchHandlers.documentsFetch(documents));
     for (const flag of ["--ids", "--id"]) {
-      const result = await runCommand(GetDocuments, ["--index", "movies", flag, "2,3"], { env });
+      const result = await runCommand(GetDocuments, ["--index", "movies", flag, "2,3", ...project]);
       expect(result.exitCode).toBe(0);
       const page = JSON.parse(result.stdout) as { results: Array<{ id: number }>; total: number };
       expect(page.results.map((document) => document.id)).toEqual([2, 3]);
@@ -99,7 +103,7 @@ describe("meili get documents", () => {
   it("refuses a --data that is not the query object, before any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(GetDocuments, ["--index", "movies", "--data", "[1,2]"], { env });
+      result = await runCommand(GetDocuments, ["--index", "movies", "--data", "[1,2]", ...project]);
     });
     expect(requests).toBe(0);
     expect(result?.exitCode).toBe(2);
@@ -109,7 +113,13 @@ describe("meili get documents", () => {
   it("refuses a --data that is not JSON, before any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(GetDocuments, ["--index", "movies", "--data", "{nope}"], { env });
+      result = await runCommand(GetDocuments, [
+        "--index",
+        "movies",
+        "--data",
+        "{nope}",
+        ...project,
+      ]);
     });
     expect(requests).toBe(0);
     expect(result?.exitCode).toBe(2);
@@ -118,9 +128,13 @@ describe("meili get documents", () => {
 
   it("prints one document per line in ndjson", async () => {
     server.use(meilisearchHandlers.documentsFetch(documents));
-    const result = await runCommand(GetDocuments, ["--index", "movies", "--output", "ndjson"], {
-      env,
-    });
+    const result = await runCommand(GetDocuments, [
+      "--index",
+      "movies",
+      "--output",
+      "ndjson",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const lines = result.stdout.trimEnd().split("\n");
     expect(lines).toHaveLength(3);
@@ -131,11 +145,16 @@ describe("meili get documents", () => {
     server.use(meilisearchHandlers.documentsFetch(documents));
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(
-        GetDocuments,
-        ["--index", "movies", "--all", "--limit", "2", "--output", "json"],
-        { env },
-      );
+      result = await runCommand(GetDocuments, [
+        "--index",
+        "movies",
+        "--all",
+        "--limit",
+        "2",
+        "--output",
+        "json",
+        ...project,
+      ]);
     });
     expect(requests).toBe(2);
     expect(result?.exitCode).toBe(0);
@@ -146,9 +165,13 @@ describe("meili get documents", () => {
     server.use(
       meilisearchHandlers.apiError("/indexes/movies/documents/fetch", 403, invalidApiKeyError),
     );
-    const result = await runCommand(GetDocuments, ["--index", "movies", "--output", "json"], {
-      env,
-    });
+    const result = await runCommand(GetDocuments, [
+      "--index",
+      "movies",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

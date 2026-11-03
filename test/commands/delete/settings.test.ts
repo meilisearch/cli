@@ -11,7 +11,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const reset = makeEnqueuedTask({ taskUid: 15, type: "settingsUpdate" });
 
 describe("meili delete settings", () => {
@@ -24,18 +24,21 @@ describe("meili delete settings", () => {
 
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.settingsDelete(reset));
-    const result = await runCommand(
-      DeleteSettings,
-      ["--index", "movies", "--yes", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(DeleteSettings, [
+      "--index",
+      "movies",
+      "--yes",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
   it("names the index in the path", async () => {
     server.use(meilisearchHandlers.settingsDelete(reset));
     const requests = await recordRequests(async () => {
-      await runCommand(DeleteSettings, ["--index", "movies", "--yes"], { env });
+      await runCommand(DeleteSettings, ["--index", "movies", "--yes", ...project]);
     });
     expect(requests).toHaveLength(1);
     expect(requests[0]?.method).toBe("DELETE");
@@ -45,7 +48,7 @@ describe("meili delete settings", () => {
   it("refuses to run without --yes, before any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(DeleteSettings, ["--index", "movies"], { env });
+      result = await runCommand(DeleteSettings, ["--index", "movies", ...project]);
     });
     expect(requests).toBe(0);
     expect(result?.stdout).toBe("");
@@ -55,11 +58,14 @@ describe("meili delete settings", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/indexes/movies/settings", 403, invalidApiKeyError));
-    const result = await runCommand(
-      DeleteSettings,
-      ["--index", "movies", "--yes", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(DeleteSettings, [
+      "--index",
+      "movies",
+      "--yes",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

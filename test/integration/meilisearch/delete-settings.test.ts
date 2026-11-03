@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-delete-settings-${randomUUID().slice(0, 8)}`;
 
 describe.skipIf(!meilisearchUp)("meili delete settings against a real Meilisearch", () => {
@@ -25,10 +25,17 @@ describe.skipIf(!meilisearchUp)("meili delete settings against a real Meilisearc
   });
 
   it("resets every setting to its default value", async () => {
-    const result = await runBinary(
-      ["delete", "settings", "--index", uid, "--yes", "--wait", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "settings",
+      "--index",
+      uid,
+      "--yes",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({
       indexUid: uid,
@@ -46,7 +53,15 @@ describe.skipIf(!meilisearchUp)("meili delete settings against a real Meilisearc
       .index(uid)
       .updateSettings({ stopWords: ["the"] })
       .waitTask();
-    const result = await runBinary(["delete", "settings", "--index", uid, "--output", "json"], env);
+    const result = await runBinary([
+      "delete",
+      "settings",
+      "--index",
+      uid,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");

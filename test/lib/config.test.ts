@@ -156,93 +156,62 @@ describe("resolveCloudProjectId", () => {
 });
 
 describe("resolveProjectConnection", () => {
-  const envPair = { MEILI_PROJECT_URL: "http://env", MEILI_PROJECT_API_KEY: "envKey" };
   const two = () => file("two.json", { prod, local });
-  const one = () => file("one.json", { prod });
   const none = () => file("none.json", {});
   const unread = () => {
     throw new Error("the file must not be read");
   };
 
-  it("takes the command line first, the URL with its own key only, without reading the file", () => {
-    expect(resolveProjectConnection({ url: "http://flag" }, envPair, unread)).toEqual({
+  it("takes --project-url with its own key only, without reading the file", () => {
+    expect(resolveProjectConnection({ url: "http://flag" }, unread)).toEqual({
       url: "http://flag",
       apiKey: undefined,
     });
-    expect(
-      resolveProjectConnection({ url: "http://flag", apiKey: "flagKey" }, envPair, unread),
-    ).toEqual({ url: "http://flag", apiKey: "flagKey" });
+    expect(resolveProjectConnection({ url: "http://flag", apiKey: "flagKey" }, unread)).toEqual({
+      url: "http://flag",
+      apiKey: "flagKey",
+    });
   });
 
   it("refuses --project with --project-url", () => {
     const error = caught(() =>
-      resolveProjectConnection({ url: "http://flag", project: "prod" }, {}, two),
+      resolveProjectConnection({ url: "http://flag", project: "prod" }, two),
     );
     expect(error.code).toBe("cli_usage");
     expect(error.exitCode).toBe(2);
   });
 
   it("takes the named project of the file, with the key the flag may replace", () => {
-    expect(resolveProjectConnection({ project: "prod" }, envPair, two)).toEqual(prod);
-    expect(resolveProjectConnection({ project: "prod", apiKey: "search" }, {}, two)).toEqual({
+    expect(resolveProjectConnection({ project: "prod" }, two)).toEqual(prod);
+    expect(resolveProjectConnection({ project: "prod", apiKey: "search" }, two)).toEqual({
       url: "http://prod",
       apiKey: "search",
     });
-    expect(resolveProjectConnection({ project: "local" }, {}, two)).toEqual({
+    expect(resolveProjectConnection({ project: "local" }, two)).toEqual({
       url: "http://local",
       apiKey: undefined,
     });
   });
 
   it("fails with cli_config, the path and the names when --project names nothing", () => {
-    const noFile = caught(() => resolveProjectConnection({ project: "prod" }, {}, none));
+    const noFile = caught(() => resolveProjectConnection({ project: "prod" }, none));
     expect(noFile.code).toBe("cli_config");
     expect(noFile.message).toBe(`No project \`prod\` in ${none().path}. Projects: none.`);
-    const unknown = caught(() => resolveProjectConnection({ project: "nope" }, {}, two));
+    const unknown = caught(() => resolveProjectConnection({ project: "nope" }, two));
     expect(unknown.code).toBe("cli_config");
     expect(unknown.message).toContain("Projects: prod, local");
   });
 
-  it("takes the environment pair when it is the only ambient source", () => {
-    expect(resolveProjectConnection({}, envPair, none)).toEqual({
-      url: "http://env",
-      apiKey: "envKey",
-    });
-    expect(resolveProjectConnection({ apiKey: "flagKey" }, envPair, none).apiKey).toBe("flagKey");
-    expect(
-      resolveProjectConnection(
-        {},
-        { MEILI_PROJECT_URL: "http://env", MEILI_PROJECT_API_KEY: "" },
-        none,
-      ).apiKey,
-    ).toBeUndefined();
-  });
-
-  it("refuses the environment pair next to a file that has projects", () => {
-    const error = caught(() => resolveProjectConnection({}, envPair, one));
-    expect(error.code).toBe("cli_config");
-    expect(error.message).toContain("MEILI_PROJECT_URL");
-    expect(error.message).toContain(one().path);
-    expect(error.hint).toContain("MEILI_CONFIG");
-  });
-
-  it("takes the only project of the file, and refuses to pick among several", () => {
-    expect(resolveProjectConnection({}, {}, one)).toEqual(prod);
-    expect(resolveProjectConnection({ apiKey: "search" }, {}, one).apiKey).toBe("search");
-    const error = caught(() => resolveProjectConnection({}, {}, two));
-    expect(error.code).toBe("cli_config");
-    expect(error.message).toBe("Pick a project with `--project`: prod, local.");
-  });
-
-  it("fails with cli_config and exit 2 without any project, naming the three ways to give one", () => {
-    const error = caught(() => resolveProjectConnection({}, { MEILI_PROJECT_API_KEY: "k" }, none));
-    expect(error.code).toBe("cli_config");
-    expect(error.exitCode).toBe(2);
-    expect(error.message).toContain("`--project-url`");
-    expect(error.message).toContain("`MEILI_PROJECT_URL`");
-    expect(error.message).toContain(none().path);
-    expect(error.message).not.toContain("MANAGEMENT");
-    expect(error.message).not.toContain("localhost");
+  it("never takes the only project of the file: without either flag it is cli_usage, exit 2", () => {
+    for (const flags of [{}, { apiKey: "k" }]) {
+      const error = caught(() => resolveProjectConnection(flags, unread));
+      expect(error.code).toBe("cli_usage");
+      expect(error.exitCode).toBe(2);
+      expect(error.message).toContain("`--project <name>`");
+      expect(error.message).toContain("`--project-url <url>`");
+      expect(error.message).not.toContain("localhost");
+      expect(error.hint).toBe("Run `meili config list` to see the projects of the config file.");
+    }
   });
 });
 
@@ -292,8 +261,6 @@ describe("redaction", () => {
 describe("ENV_VARS", () => {
   it("lists every variable with a description", () => {
     expect(ENV_VARS.map((variable) => variable.name)).toEqual([
-      "MEILI_PROJECT_URL",
-      "MEILI_PROJECT_API_KEY",
       "MEILI_CONFIG",
       "MEILI_MANAGEMENT_TOKEN",
       "MEILI_MANAGEMENT_URL",

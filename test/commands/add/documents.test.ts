@@ -14,7 +14,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const documents = '[{"id":1,"title":"Nosferatu"},{"id":2,"title":"Alien"}]';
 const directory = mkdtempSync(join(tmpdir(), "meili-add-documents-"));
 const file = join(directory, "movies.json");
@@ -30,32 +30,33 @@ describe("meili add documents", () => {
 
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.documentsAdd(makeEnqueuedTask()));
-    const result = await runCommand(
-      AddDocuments,
-      ["--index", "movies", "--data", documents, "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(AddDocuments, [
+      "--index",
+      "movies",
+      "--data",
+      documents,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
   it("sends the documents of --file as the body, and the options as query parameters", async () => {
     server.use(meilisearchHandlers.documentsAdd(makeEnqueuedTask()));
     const requests = await recordRequests(async () => {
-      await runCommand(
-        AddDocuments,
-        [
-          "--index",
-          "movies",
-          "--file",
-          file,
-          "--primary-key",
-          "id",
-          "--custom-metadata",
-          "import-42",
-          "--skip-creation",
-        ],
-        { env },
-      );
+      await runCommand(AddDocuments, [
+        "--index",
+        "movies",
+        "--file",
+        file,
+        "--primary-key",
+        "id",
+        "--custom-metadata",
+        "import-42",
+        "--skip-creation",
+        ...project,
+      ]);
     });
     expect(requests).toHaveLength(1);
     expect(requests[0]?.method).toBe("POST");
@@ -71,7 +72,7 @@ describe("meili add documents", () => {
   it("sends no query parameter when no option is given", async () => {
     server.use(meilisearchHandlers.documentsAdd(makeEnqueuedTask()));
     const requests = await recordRequests(async () => {
-      await runCommand(AddDocuments, ["--index", "movies", "--data", documents], { env });
+      await runCommand(AddDocuments, ["--index", "movies", "--data", documents, ...project]);
     });
     expect(requests[0]?.url.search).toBe("");
   });
@@ -79,7 +80,7 @@ describe("meili add documents", () => {
   it("refuses to run without documents, before any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(AddDocuments, ["--index", "movies"], { env });
+      result = await runCommand(AddDocuments, ["--index", "movies", ...project]);
     });
     expect(requests).toBe(0);
     expect(result?.exitCode).toBe(2);
@@ -89,11 +90,13 @@ describe("meili add documents", () => {
   it("refuses a file it cannot read, before any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(
-        AddDocuments,
-        ["--index", "movies", "--file", join(directory, "absent.json")],
-        { env },
-      );
+      result = await runCommand(AddDocuments, [
+        "--index",
+        "movies",
+        "--file",
+        join(directory, "absent.json"),
+        ...project,
+      ]);
     });
     expect(requests).toBe(0);
     expect(result?.exitCode).toBe(2);
@@ -108,11 +111,16 @@ describe("meili add documents", () => {
         makeTask({ uid: 42, status: "succeeded" }),
       ]),
     );
-    const result = await runCommand(
-      AddDocuments,
-      ["--index", "movies", "--data", documents, "--wait", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(AddDocuments, [
+      "--index",
+      "movies",
+      "--data",
+      documents,
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid: 42, status: "succeeded" });
   });
@@ -122,11 +130,16 @@ describe("meili add documents", () => {
       meilisearchHandlers.documentsAdd(makeEnqueuedTask()),
       meilisearchHandlers.taskSequence(42, [makeTask({ uid: 42, status: "failed" })]),
     );
-    const result = await runCommand(
-      AddDocuments,
-      ["--index", "movies", "--data", documents, "--wait", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(AddDocuments, [
+      "--index",
+      "movies",
+      "--data",
+      documents,
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(7);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid: 42, status: "failed" });
     expect(JSON.parse(result.stderr).error.code).toBe("cli_task_failed");
@@ -141,11 +154,15 @@ describe("meili add documents", () => {
         link: "https://docs.meilisearch.com/errors#index_not_found",
       }),
     );
-    const result = await runCommand(
-      AddDocuments,
-      ["--index", "nope", "--data", documents, "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(AddDocuments, [
+      "--index",
+      "nope",
+      "--data",
+      documents,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

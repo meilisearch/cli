@@ -111,18 +111,6 @@ describe("meili config set", () => {
     expect(existsSync(path)).toBe(false);
   });
 
-  it("needs no token without --sync-with-cloud, and refuses one there", async () => {
-    const path = join(scrubbedHome, "offline.json");
-    const result = await runCommand(
-      ConfigSet,
-      ["--project", "p", "--project-url", "https://p", "--management-token", "t"],
-      { env: { MEILI_CONFIG: path } },
-    );
-    expect(result.exitCode).toBe(2);
-    expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
-    expect(existsSync(path)).toBe(false);
-  });
-
   it("reads the key from stdin with -", async () => {
     const path = join(scrubbedHome, "stdin.json");
     const result = await runCommand(

@@ -166,14 +166,14 @@ export function toRenderedError(error: unknown, commandIds: readonly string[] = 
   if (error instanceof MeilisearchApiError) {
     return renderApiError(error, error.response.status, error.response.url, error.cause, {
       name: "Meilisearch",
-      hint: "Provide an API key with `--project-api-key <key>` or `MEILI_PROJECT_API_KEY`.",
+      hint: "Provide an API key with `--project-api-key <key>`.",
     });
   }
 
   if (error instanceof ManagementApiError) {
     return renderApiError(error, error.status, error.url, error.body, {
       name: "Management API",
-      hint: "Provide a personal access token with `--management-token <pat>` or `MEILI_MANAGEMENT_TOKEN`.",
+      hint: "Run `meili auth login` to log in again.",
     });
   }
 

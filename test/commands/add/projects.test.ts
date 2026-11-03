@@ -303,15 +303,6 @@ describe("meili add projects", () => {
     expect(received[0]?.body).toEqual({ name: "demo", teamId: 12, resourceId: 3 });
   });
 
-  it("takes the token from --management-token over MEILI_MANAGEMENT_TOKEN", async () => {
-    const received: ReceivedRequest[] = [];
-    server.use(managementHandlers.createProject(received));
-    await runCommand(AddProjects, ["--name", "demo", "--management-token", "flagToken"], {
-      env,
-    });
-    expect(received[0]?.authorization).toBe("Bearer flagToken");
-  });
-
   it("passes the API's error body through on a 403, with exit 3", async () => {
     server.use(managementHandlers.apiError("/api/v2/projects", 403, forbidden));
     const result = await runCommand(AddProjects, ["--name", "demo", "--output", "json"], {
@@ -326,7 +317,7 @@ describe("meili add projects", () => {
     });
     expect(result.exitCode).toBe(3);
     expect(JSON.parse(result.stderr).error.code).toBe("cli_auth_missing");
-    expect(result.stderr).not.toContain("MEILI_PROJECT");
+    expect(result.stderr).not.toContain("--project");
   });
 
   it("reports a connection failure with cli_network and exit 6", async () => {

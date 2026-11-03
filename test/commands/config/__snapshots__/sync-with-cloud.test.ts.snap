@@ -17,7 +17,7 @@ exports[`meili config sync-with-cloud > gives every project an entry: the one th
 exports[`meili config sync-with-cloud > passes the API's error body through and writes nothing on a 403 of the list 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible","hint":"Provide a personal access token with \`--management-token <pat>\` or \`MEILI_MANAGEMENT_TOKEN\`."}}
+  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible","hint":"Run \`meili auth login\` to log in again."}}
 ",
   "stdout": "",
 }
@@ -27,25 +27,20 @@ exports[`meili config sync-with-cloud > prints its help without any network call
 "Give every Meilisearch Cloud project of the scope an entry of the config file, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.
 
 USAGE
-  $ meili config sync-with-cloud [-o <mode>] [--debug] [--management-token <pat>]
-    [--management-url <url>] [--all] [--team-ids <ids>] [--project-name <name>]
-    [--project-url <url>]
+  $ meili config sync-with-cloud [-o <mode>] [--debug] [--all] [--team-ids <ids>]
+    [--project-name <name>] [--project-url <url>]
 
 FLAGS
-  -o, --output=<mode>           json (default): one document, the API body as it
-                                is, indented in a terminal, compact when piped.
-                                ndjson: one item per line, list commands only,
-                                streams with --all.
-      --all                     Every project the token sees.
-      --debug                   Print every HTTP request and response on stderr,
-                                secrets redacted.
-      --management-token=<pat>  Management API personal access token.
-      --management-url=<url>    Management API base URL. Default
-                                https://api.meilisearch.com.
-      --project-name=<name>     The projects with exactly this name, in any
-                                team.
-      --project-url=<url>       The project with this URL, same scheme and host.
-      --team-ids=<ids>          The projects of these teams, comma-separated.
+  -o, --output=<mode>        json (default): one document, the API body as it
+                             is, indented in a terminal, compact when piped.
+                             ndjson: one item per line, list commands only,
+                             streams with --all.
+      --all                  Every project the token sees.
+      --debug                Print every HTTP request and response on stderr,
+                             secrets redacted.
+      --project-name=<name>  The projects with exactly this name, in any team.
+      --project-url=<url>    The project with this URL, same scheme and host.
+      --team-ids=<ids>       The projects of these teams, comma-separated.
 
 DESCRIPTION
   Give every Meilisearch Cloud project of the scope an entry of the config file,

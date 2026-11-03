@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-get-tasks-${randomUUID().slice(0, 8)}`;
 let created = 0;
 
@@ -23,10 +23,16 @@ describe.skipIf(!meilisearchUp)("meili get tasks against a real Meilisearch", ()
   });
 
   it("returns the list envelope filtered by --index-ids", async () => {
-    const result = await runBinary(
-      ["get", "tasks", "--index-ids", uid, "--all", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "get",
+      "tasks",
+      "--index-ids",
+      uid,
+      "--all",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const page = JSON.parse(result.stdout) as { results: Array<{ uid: number; type: string }> };
@@ -35,10 +41,15 @@ describe.skipIf(!meilisearchUp)("meili get tasks against a real Meilisearch", ()
   });
 
   it("filters by --ids and still answers the list envelope", async () => {
-    const result = await runBinary(
-      ["get", "tasks", "--ids", String(created), "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "get",
+      "tasks",
+      "--ids",
+      String(created),
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const page = JSON.parse(result.stdout) as {
       results: Array<{ uid: number; indexUid: string; status: string }>;
@@ -49,10 +60,18 @@ describe.skipIf(!meilisearchUp)("meili get tasks against a real Meilisearch", ()
   });
 
   it("streams the tasks of the index as ndjson", async () => {
-    const result = await runBinary(
-      ["get", "tasks", "--index-ids", uid, "--all", "--limit", "1", "--output", "ndjson"],
-      env,
-    );
+    const result = await runBinary([
+      "get",
+      "tasks",
+      "--index-ids",
+      uid,
+      "--all",
+      "--limit",
+      "1",
+      "--output",
+      "ndjson",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const uids = result.stdout
       .trimEnd()
@@ -62,7 +81,15 @@ describe.skipIf(!meilisearchUp)("meili get tasks against a real Meilisearch", ()
   });
 
   it("exits 1 with the API error when a filter value is not one the API knows", async () => {
-    const result = await runBinary(["get", "tasks", "--statuses", "nope", "--output", "json"], env);
+    const result = await runBinary([
+      "get",
+      "tasks",
+      "--statuses",
+      "nope",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("invalid_task_statuses");

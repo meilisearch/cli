@@ -11,7 +11,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const five = [5, 4, 3, 2, 1].map((uid) => makeBatch({ uid }));
 
 describe("meili get batches", () => {
@@ -24,38 +24,35 @@ describe("meili get batches", () => {
 
   it("prints the API envelope as it is in JSON", async () => {
     server.use(meilisearchHandlers.batches(five));
-    const result = await runCommand(GetBatches, ["--output", "json"], { env });
+    const result = await runCommand(GetBatches, ["--output", "json", ...project]);
     expect(result).toMatchSnapshot();
   });
 
   it("sends --ids as batchUids and --task-ids as uids, the text as it is", async () => {
     server.use(meilisearchHandlers.batches(five));
     const requests = await recordRequests(async () => {
-      await runCommand(
-        GetBatches,
-        [
-          "--ids",
-          "7,8",
-          "--task-ids",
-          "1,2",
-          "--index-ids",
-          "movies",
-          "--canceled-by",
-          "9",
-          "--types",
-          "documentAdditionOrUpdate,indexDeletion",
-          "--statuses",
-          "failed,canceled",
-          "--before-enqueued-at",
-          "2026-01-01T00:00:00Z",
-          "--reverse",
-          "--limit",
-          "2",
-          "--from",
-          "4",
-        ],
-        { env },
-      );
+      await runCommand(GetBatches, [
+        "--ids",
+        "7,8",
+        "--task-ids",
+        "1,2",
+        "--index-ids",
+        "movies",
+        "--canceled-by",
+        "9",
+        "--types",
+        "documentAdditionOrUpdate,indexDeletion",
+        "--statuses",
+        "failed,canceled",
+        "--before-enqueued-at",
+        "2026-01-01T00:00:00Z",
+        "--reverse",
+        "--limit",
+        "2",
+        "--from",
+        "4",
+        ...project,
+      ]);
     });
     expect(requests).toHaveLength(1);
     expect(Object.fromEntries(requests[0]?.url.searchParams ?? [])).toEqual({
@@ -75,7 +72,7 @@ describe("meili get batches", () => {
   it("accepts the API spelling of the identifier flags as an alias", async () => {
     server.use(meilisearchHandlers.batches(five));
     const requests = await recordRequests(async () => {
-      await runCommand(GetBatches, ["--batch-uids", "7", "--uids", "3"], { env });
+      await runCommand(GetBatches, ["--batch-uids", "7", "--uids", "3", ...project]);
     });
     expect(Object.fromEntries(requests[0]?.url.searchParams ?? [])).toEqual({
       batchUids: "7",
@@ -87,7 +84,14 @@ describe("meili get batches", () => {
     server.use(meilisearchHandlers.batches(five));
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(GetBatches, ["--all", "--limit", "2", "--output", "json"], { env });
+      result = await runCommand(GetBatches, [
+        "--all",
+        "--limit",
+        "2",
+        "--output",
+        "json",
+        ...project,
+      ]);
     });
     expect(requests).toBe(3);
     expect(result?.exitCode).toBe(0);
@@ -96,9 +100,14 @@ describe("meili get batches", () => {
 
   it("streams every batch with --all in ndjson", async () => {
     server.use(meilisearchHandlers.batches(five));
-    const result = await runCommand(GetBatches, ["--all", "--limit", "2", "--output", "ndjson"], {
-      env,
-    });
+    const result = await runCommand(GetBatches, [
+      "--all",
+      "--limit",
+      "2",
+      "--output",
+      "ndjson",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const lines = result.stdout.trimEnd().split("\n");
     expect(lines.map((line) => (JSON.parse(line) as { uid: number }).uid)).toEqual([5, 4, 3, 2, 1]);
@@ -106,7 +115,7 @@ describe("meili get batches", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/batches", 403, invalidApiKeyError));
-    const result = await runCommand(GetBatches, ["--output", "json"], { env });
+    const result = await runCommand(GetBatches, ["--output", "json", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

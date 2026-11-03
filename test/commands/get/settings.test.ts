@@ -7,7 +7,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 
 /** A settings body with one of each shape: lists, a map, a scalar and an object. */
 const settings: Settings = {
@@ -36,16 +36,20 @@ describe("meili get settings", () => {
 
   it("prints the settings as the API returned them", async () => {
     server.use(meilisearchHandlers.settings(settings));
-    const result = await runCommand(GetSettings, ["--index", "movies", "--output", "json"], {
-      env,
-    });
+    const result = await runCommand(GetSettings, [
+      "--index",
+      "movies",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
   it("names the index in the path", async () => {
     server.use(meilisearchHandlers.settings(settings));
     const requests = await recordRequests(async () => {
-      await runCommand(GetSettings, ["--index", "movies"], { env });
+      await runCommand(GetSettings, ["--index", "movies", ...project]);
     });
     expect(requests).toHaveLength(1);
     expect(requests[0]?.method).toBe("GET");
@@ -61,9 +65,13 @@ describe("meili get settings", () => {
         link: "https://docs.meilisearch.com/errors#index_not_found",
       }),
     );
-    const result = await runCommand(GetSettings, ["--index", "missing", "--output", "json"], {
-      env,
-    });
+    const result = await runCommand(GetSettings, [
+      "--index",
+      "missing",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

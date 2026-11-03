@@ -3,7 +3,7 @@
 exports[`meili add indexes > passes an authentication error through with a hint and exits 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\`."}}
 ",
   "stdout": "",
 }
@@ -31,8 +31,7 @@ FLAGS
                                document. Without it, Meilisearch infers it from
                                the first documents.
       --project=<name>         A project of the config file. Cannot be combined
-                               with --project-url. Required when the file has
-                               several projects.
+                               with --project-url.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
       --timeout=<duration>     Maximum wait time, for example 30s, 2m. Default

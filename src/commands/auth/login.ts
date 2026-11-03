@@ -26,19 +26,6 @@ export default class AuthLogin extends BaseCommand {
   ];
 
   static override flags = {
-    "management-client-id": Flags.string({
-      description:
-        "The OAuth application to log in with, on a Cloud that is not Meilisearch Cloud. Also MEILI_MANAGEMENT_CLIENT_ID.",
-      helpValue: "<uid>",
-    }),
-    "management-url": Flags.string({
-      description: "Management API base URL, which holds the token endpoint.",
-      helpValue: "<url>",
-    }),
-    "management-dashboard-url": Flags.string({
-      description: "Dashboard URL, which hosts the consent page.",
-      helpValue: "<url>",
-    }),
     browser: Flags.boolean({
       default: true,
       allowNo: true,
@@ -48,14 +35,7 @@ export default class AuthLogin extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(AuthLogin);
-    const client = resolveOauthClient(
-      {
-        clientId: flags["management-client-id"],
-        managementUrl: flags["management-url"],
-        dashboardUrl: flags["management-dashboard-url"],
-      },
-      this.env,
-    );
+    const client = resolveOauthClient(this.env);
 
     const tokens = await logIn(client, {
       timeoutMs: TIMEOUT_MS,

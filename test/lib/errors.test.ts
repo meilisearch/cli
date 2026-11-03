@@ -29,7 +29,7 @@ describe("ManagementApiError", () => {
     );
     expect(rendered.body).toEqual({
       ...forbidden,
-      hint: expect.stringContaining("--management-token"),
+      hint: expect.stringContaining("meili auth login"),
     });
     expect(rendered.exitCode).toBe(3);
   });
@@ -183,12 +183,12 @@ describe("toRenderedError", () => {
 
 describe("formatError", () => {
   const rendered = toRenderedError(
-    new MeiliCliError("cli_config", "No URL.", { hint: "Set `MEILI_PROJECT_URL`." }),
+    new MeiliCliError("cli_config", "No URL.", { hint: "Set `--project-url`." }),
   );
 
   it("prints one compact JSON document", () => {
     expect(formatError(rendered, { pretty: false, debug: false })).toBe(
-      '{"error":{"code":"cli_config","type":"cli","message":"No URL.","hint":"Set `MEILI_PROJECT_URL`."}}\n',
+      '{"error":{"code":"cli_config","type":"cli","message":"No URL.","hint":"Set `--project-url`."}}\n',
     );
   });
 

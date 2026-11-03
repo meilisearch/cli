@@ -11,7 +11,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 
 /** One task per route, so that the output alone says which route answered. */
 function useDeleteRoutes(): void {
@@ -34,7 +34,7 @@ async function sentAndPrinted(
 ): Promise<{ sent: string; printed: Awaited<ReturnType<typeof runCommand>> | undefined }> {
   let printed: Awaited<ReturnType<typeof runCommand>> | undefined;
   const requests = await recordRequests(async () => {
-    printed = await runCommand(DeleteDocuments, argv, { env });
+    printed = await runCommand(DeleteDocuments, [...argv, ...project]);
   });
   expect(requests).toHaveLength(1);
   const request = requests[0];
@@ -48,7 +48,7 @@ async function sentAndPrinted(
 async function usageErrorOf(argv: string[]): Promise<{ code: string; exitCode: number }> {
   let result: Awaited<ReturnType<typeof runCommand>> | undefined;
   const requests = await countRequests(async () => {
-    result = await runCommand(DeleteDocuments, argv, { env });
+    result = await runCommand(DeleteDocuments, [...argv, ...project]);
   });
   expect(requests).toBe(0);
   expect(result?.stdout).toBe("");
@@ -150,11 +150,15 @@ describe("meili delete documents", () => {
   it("sends --custom-metadata as a query parameter", async () => {
     useDeleteRoutes();
     const requests = await recordRequests(async () => {
-      await runCommand(
-        DeleteDocuments,
-        ["--index", "movies", "--all", "--custom-metadata", "cleanup", "--yes"],
-        { env },
-      );
+      await runCommand(DeleteDocuments, [
+        "--index",
+        "movies",
+        "--all",
+        "--custom-metadata",
+        "cleanup",
+        "--yes",
+        ...project,
+      ]);
     });
     expect(requests[0]?.url.searchParams.get("customMetadata")).toBe("cleanup");
   });
@@ -195,11 +199,16 @@ describe("meili delete documents", () => {
         invalidApiKeyError,
       ),
     );
-    const result = await runCommand(
-      DeleteDocuments,
-      ["--index", "movies", "--ids", "42", "--yes", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(DeleteDocuments, [
+      "--index",
+      "movies",
+      "--ids",
+      "42",
+      "--yes",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

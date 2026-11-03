@@ -5,26 +5,22 @@ exports[`meili config update > prints its help without any network call 1`] = `
 
 USAGE
   $ meili config update --project <name> [-o <mode>] [--debug]
-    [--project-url <url>] [--project-api-key <key>] [--management-token <pat>
-    --sync-with-cloud] [--management-url <url> ]
+    [--project-url <url>] [--project-api-key <key>] [--sync-with-cloud]
 
 FLAGS
-  -o, --output=<mode>           json (default): one document, the API body as it
-                                is, indented in a terminal, compact when piped.
-                                ndjson: one item per line, list commands only,
-                                streams with --all.
-      --debug                   Print every HTTP request and response on stderr,
-                                secrets redacted.
-      --management-token=<pat>  Management API personal access token.
-      --management-url=<url>    Management API base URL. Default
-                                https://api.meilisearch.com.
-      --project=<name>          (required) Name of the project to change.
-      --project-api-key=<key>   New API key of the project. \`-\` reads it from
-                                stdin, out of the shell history.
-      --project-url=<url>       New URL of the project.
-      --sync-with-cloud         Write the entry's cloud identifiers from
-                                Meilisearch Cloud, and its master key when the
-                                entry has no key. Never replaces a key.
+  -o, --output=<mode>          json (default): one document, the API body as it
+                               is, indented in a terminal, compact when piped.
+                               ndjson: one item per line, list commands only,
+                               streams with --all.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --project=<name>         (required) Name of the project to change.
+      --project-api-key=<key>  New API key of the project. \`-\` reads it from
+                               stdin, out of the shell history.
+      --project-url=<url>      New URL of the project.
+      --sync-with-cloud        Write the entry's cloud identifiers from
+                               Meilisearch Cloud, and its master key when the
+                               entry has no key. Never replaces a key.
 
 DESCRIPTION
   Change the fields given of a project of the config file; refuses a name that

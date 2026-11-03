@@ -15,8 +15,6 @@ export type Env = Readonly<Record<string, string | undefined>>;
 
 /** Names of the environment variables the CLI reads. Nothing reads `process.env.MEILI_*` directly. */
 export const ENV = {
-  PROJECT_URL: "MEILI_PROJECT_URL",
-  PROJECT_API_KEY: "MEILI_PROJECT_API_KEY",
   CONFIG: "MEILI_CONFIG",
   MANAGEMENT_TOKEN: "MEILI_MANAGEMENT_TOKEN",
   MANAGEMENT_URL: "MEILI_MANAGEMENT_URL",
@@ -42,25 +40,18 @@ export const DEFAULT_MANAGEMENT_CLIENT_ID = "0sZKkuuaL3xcitNgKUchid3Vz4sHPslxQNF
  */
 export const ENV_VARS: ReadonlyArray<{ name: string; description: string; flag?: string }> = [
   {
-    name: ENV.PROJECT_URL,
-    description: "Project URL, the Meilisearch instance to talk to.",
-    flag: "project-url",
-  },
-  { name: ENV.PROJECT_API_KEY, description: "Project API key.", flag: "project-api-key" },
-  {
     name: ENV.CONFIG,
     description:
       "Config file path. Default ~/.config/meili/config.json. Give each agent its own file, read-only.",
   },
   {
     name: ENV.MANAGEMENT_TOKEN,
-    description: "Management API personal access token.",
-    flag: "management-token",
+    description:
+      "Management API token, in place of the session of `auth login`. For development and tests.",
   },
   {
     name: ENV.MANAGEMENT_URL,
-    description: `Management API base URL. Default ${DEFAULT_MANAGEMENT_URL}.`,
-    flag: "management-url",
+    description: `Management API base URL. Default ${DEFAULT_MANAGEMENT_URL}. For development and tests.`,
   },
   {
     name: ENV.MANAGEMENT_CLIENT_ID,
@@ -214,14 +205,12 @@ export interface ProjectConnection {
 }
 
 /**
- * The rules of docs/contract/config.md, "Resolution: nothing is deduced". The
- * command line wins, and the file is read only past that rule; otherwise
- * exactly one ambient source must define exactly one project, or the error
- * says what was found. Never falls back to localhost.
+ * The rules of docs/contract/config.md, "Resolution: the command line names
+ * the project". The file is read only for `--project`; nothing else is read.
+ * Never falls back to localhost.
  */
 export function resolveProjectConnection(
   flags: ProjectFlags,
-  env: Env,
   readFile: () => ConfigFile,
 ): ProjectConnection {
   if (flags.url !== undefined) {
@@ -233,36 +222,14 @@ export function resolveProjectConnection(
     }
     return { url: flags.url, apiKey: flags.apiKey };
   }
-
-  const file = readFile();
-  const names = Object.keys(file.projects);
   if (flags.project !== undefined) {
-    const entry = projectOf(file, flags.project);
+    const entry = projectOf(readFile(), flags.project);
     return { url: entry.url, apiKey: flags.apiKey ?? entry.apiKey };
   }
-
-  const envUrl = nonEmpty(env[ENV.PROJECT_URL]);
-  if (envUrl !== undefined && names.length > 0) {
-    throw new MeiliCliError(
-      "cli_config",
-      `Both \`MEILI_PROJECT_URL\` and the config file ${file.path} define a project.`,
-      { hint: "Unset the variable, or point `MEILI_CONFIG` at a file that does not exist." },
-    );
-  }
-  if (envUrl !== undefined) {
-    return { url: envUrl, apiKey: flags.apiKey ?? nonEmpty(env[ENV.PROJECT_API_KEY]) };
-  }
-  if (names.length > 1) {
-    throw new MeiliCliError(
-      "cli_config",
-      `Pick a project with \`--project\`: ${names.join(", ")}.`,
-    );
-  }
-  const entry = Object.values(file.projects)[0];
-  if (entry !== undefined) return { url: entry.url, apiKey: flags.apiKey ?? entry.apiKey };
   throw new MeiliCliError(
-    "cli_config",
-    `No project configured. Provide one with the \`--project-url\` flag, the \`MEILI_PROJECT_URL\` environment variable, or a config file at ${file.path}.`,
+    "cli_usage",
+    "Name the project with `--project <name>`, an entry of the config file, or with `--project-url <url>`.",
+    { hint: "Run `meili config list` to see the projects of the config file." },
   );
 }
 

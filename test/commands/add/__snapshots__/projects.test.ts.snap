@@ -12,7 +12,7 @@ exports[`meili add projects > fails with cli_timeout and exit 5 when the project
 exports[`meili add projects > passes the API's error body through on a 403, with exit 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible","hint":"Provide a personal access token with \`--management-token <pat>\` or \`MEILI_MANAGEMENT_TOKEN\`."}}
+  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible","hint":"Run \`meili auth login\` to log in again."}}
 ",
   "stdout": "",
 }
@@ -22,36 +22,31 @@ exports[`meili add projects > prints its help without any network call 1`] = `
 "Create a Meilisearch Cloud project in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.
 
 USAGE
-  $ meili add projects [-o <mode>] [--debug] [--management-token <pat>]
-    [--management-url <url>] [--name <name>] [--team-id <id>] [--resource-id
-    <id>] [--ms-version <version>] [--sync-config] [--timeout <duration> --wait]
-    [--file <path> | --data <json>]
+  $ meili add projects [-o <mode>] [--debug] [--name <name>] [--team-id
+    <id>] [--resource-id <id>] [--ms-version <version>] [--sync-config]
+    [--timeout <duration> --wait] [--file <path> | --data <json>]
 
 FLAGS
-  -o, --output=<mode>           json (default): one document, the API body as it
-                                is, indented in a terminal, compact when piped.
-                                ndjson: one item per line, list commands only,
-                                streams with --all.
-      --data=<json>             Inline JSON body.
-      --debug                   Print every HTTP request and response on stderr,
-                                secrets redacted.
-      --file=<path>             Read the body from a file. \`-\` reads from stdin.
-      --management-token=<pat>  Management API personal access token.
-      --management-url=<url>    Management API base URL. Default
-                                https://api.meilisearch.com.
-      --ms-version=<version>    Meilisearch version of the project, the latest
-                                by default.
-      --name=<name>             Name of the project.
-      --resource-id=<id>        Resource of the project: its plan and its
-                                region.
-      --sync-config             Add the project to the config file, as an entry
-                                named after it with its URL, its master key and
-                                its cloud identifiers.
-      --team-id=<id>            Team that owns the project.
-      --timeout=<duration>      Maximum wait time, for example 30s, 2m. Default
-                                10m. Only with --wait.
-      --wait                    Poll the project until its status is running or
-                                failed, then print it.
+  -o, --output=<mode>         json (default): one document, the API body as it
+                              is, indented in a terminal, compact when piped.
+                              ndjson: one item per line, list commands only,
+                              streams with --all.
+      --data=<json>           Inline JSON body.
+      --debug                 Print every HTTP request and response on stderr,
+                              secrets redacted.
+      --file=<path>           Read the body from a file. \`-\` reads from stdin.
+      --ms-version=<version>  Meilisearch version of the project, the latest by
+                              default.
+      --name=<name>           Name of the project.
+      --resource-id=<id>      Resource of the project: its plan and its region.
+      --sync-config           Add the project to the config file, as an entry
+                              named after it with its URL, its master key and
+                              its cloud identifiers.
+      --team-id=<id>          Team that owns the project.
+      --timeout=<duration>    Maximum wait time, for example 30s, 2m. Default
+                              10m. Only with --wait.
+      --wait                  Poll the project until its status is running or
+                              failed, then print it.
 
 DESCRIPTION
   Create a Meilisearch Cloud project in a team, on a resource. The master key is

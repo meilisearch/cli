@@ -12,7 +12,7 @@ exports[`meili get projects > lists the projects in the envelope the API returns
 exports[`meili get projects > passes the API's error body through on an unknown id, with exit 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible","hint":"Provide a personal access token with \`--management-token <pat>\` or \`MEILI_MANAGEMENT_TOKEN\`."}}
+  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible","hint":"Run \`meili auth login\` to log in again."}}
 ",
   "stdout": "",
 }
@@ -22,26 +22,21 @@ exports[`meili get projects > prints its help without any network call 1`] = `
 "List the Meilisearch Cloud projects the token sees, or get one with --id or --project.
 
 USAGE
-  $ meili get projects [-o <mode>] [--debug] [--management-token <pat>]
-    [--management-url <url>] [--project <name>] [--id <id>] [--team-id <id>]
+  $ meili get projects [-o <mode>] [--debug] [--project <name>] [--id
+    <id>] [--team-id <id>]
 
 FLAGS
-  -o, --output=<mode>           json (default): one document, the API body as it
-                                is, indented in a terminal, compact when piped.
-                                ndjson: one item per line, list commands only,
-                                streams with --all.
-      --debug                   Print every HTTP request and response on stderr,
-                                secrets redacted.
-      --id=<id>                 The project to get, or give --project <name> and
-                                its cloud.id from the config file. Without
-                                either, the command lists the projects.
-      --management-token=<pat>  Management API personal access token.
-      --management-url=<url>    Management API base URL. Default
-                                https://api.meilisearch.com.
-      --project=<name>          A project of the config file, whose cloud.id
-                                names the Cloud project, in place of --id.
-      --team-id=<id>            Only the projects of this team. Ignored with
-                                --id.
+  -o, --output=<mode>   json (default): one document, the API body as it is,
+                        indented in a terminal, compact when piped. ndjson: one
+                        item per line, list commands only, streams with --all.
+      --debug           Print every HTTP request and response on stderr, secrets
+                        redacted.
+      --id=<id>         The project to get, or give --project <name> and its
+                        cloud.id from the config file. Without either, the
+                        command lists the projects.
+      --project=<name>  A project of the config file, whose cloud.id names the
+                        Cloud project, in place of --id.
+      --team-id=<id>    Only the projects of this team. Ignored with --id.
 
 DESCRIPTION
   List the Meilisearch Cloud projects the token sees, or get one with --id or

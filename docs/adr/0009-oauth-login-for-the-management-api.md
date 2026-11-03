@@ -28,11 +28,11 @@ Alternatives considered:
 
 - **`auth login` runs the authorization code flow with PKCE**, as a native application does (RFC 8252). It starts a server bound to `127.0.0.1` on a free port, prints the consent URL on stderr, opens it in a browser unless `--no-browser`, waits for the redirect, checks the `state` it sent, and exchanges the code with its verifier. It writes nothing on stdout: what it produced is a file, as for `config set`. `auth status` is where the data is. The browser is a convenience: the URL is always printed, so a session over SSH works by opening it elsewhere.
 
-- **It is the one command that waits for a human**, and it says so in `commands.md`. It never prompts and never reads stdin: it waits for an HTTP request that the human causes, for five minutes, then `cli_timeout` and exit 5. Everything else the CLI does stays non-interactive, and an agent that must not wait uses `MEILI_MANAGEMENT_TOKEN`.
+- **It is the one command that waits for a human**, and it says so in `commands.md`. It never prompts and never reads stdin: it waits for an HTTP request that the human causes, for five minutes, then `cli_timeout` and exit 5. Everything else the CLI does stays non-interactive: an agent never runs it, it uses the session a human logged in with.
 
 - **The session goes to `credentials.json`, next to the config file**, mode `600`, written atomically. `MEILI_CONFIG` moves both, so the isolation a human sets up for an agent covers the token. The file holds the client id and the two URLs with the tokens, so refreshing and revoking need no flag later.
 
-- **The environment still wins.** Resolution is `--management-token`, then `MEILI_MANAGEMENT_TOKEN`, then the session. A token handed to a process is an explicit instruction and overrides a login that happens to sit in the home directory.
+- **The session is the way in, and the CLI offers no other.** Only an administrator can create a personal access token in the dashboard today, so a `--management-token` flag would document a way in that users do not have. `MEILI_MANAGEMENT_TOKEN` stays, with no flag, for development and tests against another Cloud, and wins over the session there: a token handed to a process is an explicit instruction. `MEILI_MANAGEMENT_URL`, `MEILI_MANAGEMENT_DASHBOARD_URL` and `MEILI_MANAGEMENT_CLIENT_ID` point `auth login` and the management commands at that other Cloud, with no flag either.
 
 - **Expiry is handled where credentials are resolved.** A management command whose access token has less than thirty seconds left trades the refresh token for a new pair and writes it back, before calling the API. A session without a refresh token, or one the server refuses, is `cli_auth_failed`.
 
@@ -46,12 +46,12 @@ Alternatives considered:
 
 - **`auth logout` revokes both tokens, then forgets the session whatever happened.** It revokes the refresh token and the access token, each with its `token_type_hint`, because the cascade from one to the other is a SHOULD of RFC 7009 and not every server does it. The file is removed even when the revocation fails, since a session the CLI cannot end remotely is still one it must stop using; but the command then exits with the code of what failed, `cli_network` or `cli_auth_failed`, and says the token stays valid until it expires. Exiting 0 there would tell a script that a live token is gone. With no session, it does nothing and exits 0.
 
-- **The client id is given, not built in.** `--management-client-id`, or `MEILI_MANAGEMENT_CLIENT_ID`. The OAuth application for this CLI does not exist yet on any Cloud; when it does, its `uid` becomes the default here and the flag stays for other environments. A client id is public by definition, so shipping one later is not a secret in the binary.
+- **The client id is given, not built in.** `MEILI_MANAGEMENT_CLIENT_ID`. The OAuth application for this CLI does not exist yet on any Cloud; when it does, its `uid` becomes the default here and the variable stays for other environments. A client id is public by definition, so shipping one later is not a secret in the binary.
 
 ## Consequences
 
 - A human runs `meili auth login` once and the management commands work for as long as the refresh token lives, with no token in a shell profile and no secret on a command line.
-- An agent is unchanged: `MEILI_MANAGEMENT_TOKEN` still wins, and an agent that was given a config file now also gets, or does not get, the session next to it.
+- An agent uses the session a human logged in with: an agent that was given a config file gets, or does not get, the session next to it.
 - The CLI holds a refresh token on disk. It is long-lived, and `auth logout` is the way to end it; the file is `600` and the CLI warns when it is not.
 - `src/lib/config.ts` resolves credentials asynchronously from now on, because refreshing is a network call. `BaseCommand` awaits it. The call goes through `src/lib/clients/oauth.ts`, which keeps every `fetch` of the CLI in `src/lib/clients/`.
 - Two environment variables join the table, and `output.md` one error code.

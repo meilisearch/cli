@@ -27,13 +27,13 @@ A first `config sync-with-cloud` set `cloudId` on the entries whose URL was a Cl
 - **An anomaly is reported, never corrected**: an entry recognized by `cloud.id` whose URL is not the one the Cloud gives keeps its URL, with a warning.
 - **The file is written once, when every call has answered.** A 403 on the master key is the only error a sync goes on through; any other error leaves the file as it was.
 - **`config set` and `config update` call the Management API only with `--sync-with-cloud`.** Without it they resolve nothing and work offline, as before. Their API depends on that one flag.
-- **The name `cloud`** is allowed in commands, flags and fields where the product is meant, `sync-with-cloud`, `cloud.id`: the product is Meilisearch Cloud, at cloud.meilisearch.com. `management` names the API, `--management-token`.
+- **The name `cloud`** is allowed in commands, flags and fields where the product is meant, `sync-with-cloud`, `cloud.id`: the product is Meilisearch Cloud, at cloud.meilisearch.com. `management` names the API, `MEILI_MANAGEMENT_URL`.
 - **A parent parameter of the Management API keeps its API name**, `{projectId}` is `--project-id`, because `--project` names an entry.
 
 ## Consequences
 
 - A user who created projects in the dashboard runs `meili config sync-with-cloud --all` once, gets an entry per project with its key when they own it, and names them with `--project` on every command, Meilisearch or management.
 - The file of a member holds entries without a key, with a warning per entry that says whom to ask.
-- `config set` and `config update` lose `--project-cloud-id` and gain `--sync-with-cloud`, with `--management-token` and `--management-url`, which take effect only with it. `meili schema` prints `"api": "none"` for them: the API they need without `--sync-with-cloud`.
+- `config set` and `config update` lose `--project-cloud-id` and gain `--sync-with-cloud`, which reaches the Management API through the session of `meili auth login`. `meili schema` prints `"api": "none"` for them: the API they need without `--sync-with-cloud`.
 - `--id` and `--project-id` are not required flags on the Management API, and `test/contract/api.test.ts` knows it.
 - `config.md` describes the `cloud` field and the four requests in "Cloud projects"; `commands.md` lists `config sync-with-cloud` among the commands without an API, since it has no route of its own.

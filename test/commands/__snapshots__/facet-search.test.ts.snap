@@ -59,8 +59,6 @@ FLAGS
                                           <options: last|all|frequency>
       --project=<name>                    A project of the config file. Cannot
                                           be combined with --project-url.
-                                          Required when the file has several
-                                          projects.
       --project-api-key=<key>             Project API key. \`-\` reads it from
                                           stdin.
       --project-url=<url>                 Project URL, the Meilisearch instance

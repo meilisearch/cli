@@ -35,8 +35,7 @@ FLAGS
       --primary-key=<field>       Primary key of the index. Only taken into
                                   account on its first documents.
       --project=<name>            A project of the config file. Cannot be
-                                  combined with --project-url. Required when the
-                                  file has several projects.
+                                  combined with --project-url.
       --project-api-key=<key>     Project API key. \`-\` reads it from stdin.
       --project-url=<url>         Project URL, the Meilisearch instance to talk
                                   to.

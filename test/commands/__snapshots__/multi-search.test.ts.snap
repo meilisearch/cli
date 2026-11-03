@@ -31,8 +31,7 @@ FLAGS
                                answers its own envelope.
       --file=<path>            Read the body from a file. \`-\` reads from stdin.
       --project=<name>         A project of the config file. Cannot be combined
-                               with --project-url. Required when the file has
-                               several projects.
+                               with --project-url.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
       --queries=<json>         The search queries as a JSON array, each one an
