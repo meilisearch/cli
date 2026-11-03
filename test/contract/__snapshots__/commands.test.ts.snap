@@ -272,7 +272,6 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
         "meili add projects --name demo --team-id 12 --resource-id 3 --output json",
         "meili add projects --name demo --team-id 12 --resource-id 3 --sync-config",
         "meili add projects --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
-        "meili add projects --name demo --team-id 12 --resource-id 3 --show-secrets",
         "meili add projects --data '{"name":"demo","teamId":12,"resourceId":3}'",
         "meili add projects --file project.json --name other-name",
       ],
@@ -316,11 +315,6 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
         {
           "description": "Add the project to the config file, as an entry named after it with its URL, its master key and its cloud identifiers.",
           "name": "sync-config",
-          "type": "boolean",
-        },
-        {
-          "description": "Print the secrets of the response in full instead of masked, here the master key. They then land in logs and transcripts: prefer --sync-config.",
-          "name": "show-secrets",
           "type": "boolean",
         },
         {

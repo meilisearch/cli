@@ -17,12 +17,12 @@ Alternatives considered:
 
 - **Keep printing the key.** Faithful to the API, but every creation leaks the strongest key of the project into logs, for a use the config file already covers.
 - **Drop the field.** The output no longer says a key exists, and an agent cannot tell a key that was masked from a response that had none.
+- **A flag that prints the key in full**, `--show-secrets`. Not now: no use needs it that the config file does not cover, and a flag that unmasks is one an agent adds by reflex. It can come later, in its own decision, if a use shows up.
 - **Mask every credential an API returns**, the `key` of `get keys` too. A key of the `keys` commands is what the agent asked for and has a narrower scope; the question is a separate one, not settled here.
 
 ## Decision
 
 - **`add projects` prints the `masterKey` masked**, `****` followed by its last four characters, the way `config list` masks a key. The other fields pass through unchanged.
-- **`--show-secrets`** prints it in full. A CLI-owned flag, on `add projects` only. Its description says where the key ends up and recommends `--sync-config`. The name says what the flag does, not which field: a command that masks a secret later takes the same flag, rather than one flag per field. No environment variable stands for it, as none stands for `--yes`: an environment never reveals a secret in the agent's place.
 - **`--sync-config` is the recommended way to keep the key**: the description of `add projects` says so. When the project has no URL yet, the error points to `config sync-with-cloud --project-name <name>`, which adds the project with its master key once it has one.
 
 ## Consequences

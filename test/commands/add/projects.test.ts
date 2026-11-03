@@ -40,17 +40,6 @@ describe("meili add projects", () => {
     ]);
   });
 
-  it("prints the master key in full with --show-secrets", async () => {
-    server.use(managementHandlers.createProject());
-    const result = await runCommand(
-      AddProjects,
-      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--show-secrets"],
-      { env },
-    );
-    expect(result.exitCode).toBe(0);
-    expect(JSON.parse(result.stdout)).toEqual(project);
-  });
-
   it("adds the project to the config file with --sync-config: its URL, its master key and its cloud identifiers", async () => {
     server.use(managementHandlers.createProject(), managementHandlers.listTeams());
     const { path, env: configEnv } = tempConfig("sync-config.json", {

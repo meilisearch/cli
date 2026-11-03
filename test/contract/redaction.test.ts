@@ -46,7 +46,7 @@ describe("--debug", () => {
     expect(result.stderr).toContain('"masterKey":"****9z8y"');
     expect(result.stderr).not.toContain(SECRET);
     expect(result.stderr).not.toContain(project.masterKey);
-    // Only --show-secrets prints it in full (ADR 0013).
+    // Masked on stdout too (ADR 0013).
     expect(result.stdout).not.toContain(project.masterKey);
   });
 

@@ -15,8 +15,8 @@ exports[`meili add projects > prints its help without any network call 1`] = `
 USAGE
   $ meili add projects [-o <mode>] [--debug] [--management-token <pat>]
     [--management-url <url>] [--name <name>] [--team-id <id>] [--resource-id
-    <id>] [--ms-version <version>] [--sync-config] [--show-secrets] [--file
-    <path> | --data <json>]
+    <id>] [--ms-version <version>] [--sync-config] [--file <path> | --data
+    <json>]
 
 FLAGS
   -o, --output=<mode>           json (default): one document, the API body as it
@@ -35,10 +35,6 @@ FLAGS
       --name=<name>             Name of the project.
       --resource-id=<id>        Resource of the project: its plan and its
                                 region.
-      --show-secrets            Print the secrets of the response in full
-                                instead of masked, here the master key. They
-                                then land in logs and transcripts: prefer
-                                --sync-config.
       --sync-config             Add the project to the config file, as an entry
                                 named after it with its URL, its master key and
                                 its cloud identifiers.
@@ -56,8 +52,6 @@ EXAMPLES
   $ meili add projects --name demo --team-id 12 --resource-id 3 --sync-config
 
   $ meili add projects --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0
-
-  $ meili add projects --name demo --team-id 12 --resource-id 3 --show-secrets
 
   $ meili add projects --data '{"name":"demo","teamId":12,"resourceId":3}'
 
