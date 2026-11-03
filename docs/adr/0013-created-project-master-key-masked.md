@@ -6,7 +6,9 @@ Status: accepted. Date: 2026-11-04. Supersedes one point of ADR 0007: API respon
 
 `POST /api/v2/projects` returns the new project with its `masterKey`, the key that can do everything on that project. `meili add projects` printed it on stdout unchanged, as `output.md` and `config.md` asked: a credential an API returns is data, and the CLI hides nothing from the agent it works for.
 
-An agent's stdout is not a private channel. It lands in the agent's transcript, in CI logs, in the history of a chat, wherever the output of a command is kept. A master key printed there is a master key copied to every one of those places, and nobody asked for it there: the agent needs the key to reach the project, not to read it.
+A command that prints a key is fine when the key is what it was run for. `get keys` prints keys, and a command on `GET /api/v2/projects/{projectId}/master-key` would print the master key: whoever runs them expects a secret in the answer and handles the output accordingly. `add projects` is run to create a project. Nobody expects the strongest key of that project to pop up at the end of its output, so nobody takes care of where that output goes.
+
+And an agent's stdout is not a private channel. It lands in the agent's transcript, in CI logs, in the history of a chat, wherever the output of a command is kept. A master key printed there by surprise is a master key copied to every one of those places, when the agent needs the key to reach the project, not to read it.
 
 The CLI already has two ways to put the key where it belongs, the config file, without printing it:
 
@@ -18,7 +20,7 @@ Alternatives considered:
 - **Keep printing the key.** Faithful to the API, but every creation leaks the strongest key of the project into logs, for a use the config file already covers.
 - **Drop the field.** The output no longer says a key exists, and an agent cannot tell a key that was masked from a response that had none.
 - **A flag that prints the key in full**, `--show-secrets`. Not now: no use needs it that the config file does not cover, and a flag that unmasks is one an agent adds by reflex. It can come later, in its own decision, if a use shows up.
-- **Mask every credential an API returns**, the `key` of `get keys` too. A key of the `keys` commands is what the agent asked for and has a narrower scope; the question is a separate one, not settled here.
+- **Mask every credential an API returns**, the `key` of `get keys` too. Those commands are run for the key: printing it is their purpose, not a surprise. Not this decision.
 
 ## Decision
 
