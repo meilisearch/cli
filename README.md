@@ -38,28 +38,6 @@ meili add projects --name demo --team-id 12 --resource-id 3 --sync-config   # cr
 
 `--project` is required on every command, even when the file has a single project: the CLI never guesses, and no environment variable stands for it. Without a config file, name the instance outright: `--project-url <url> --project-api-key <key>`.
 
-## The config file
-
-```json
-{
-  "projects": {
-    "local": { "url": "http://localhost:7700", "apiKey": "..." },
-    "prod": { "url": "https://ms-abc.sfo.meilisearch.io", "apiKey": "...", "cloud": { "id": 343, "teamId": 12, "teamName": "Search" } }
-  }
-}
-```
-
-`cloud` holds the project's identifiers in Meilisearch Cloud, which the dashboard does not show: `sync-with-cloud`, `--sync-with-cloud` on `config set` and `config update`, and `--sync-config` on `add projects`, `update projects` and `delete projects` write it. `meili config list`, `config set`, `config update`, `config unset` and `config sync-with-cloud` manage the file. It holds your keys: keep it readable by you alone, the CLI warns on stderr otherwise. `MEILI_CONFIG` names another file.
-
-## For a coding agent
-
-Give the agent its own config file through `MEILI_CONFIG`, read-only: the file is shared state, and an agent must not be able to change where another one's commands go. It changes nothing in it, neither a project nor its permissions, unless you asked for it explicitly. The agent uses the session you logged in with and never runs `auth login` itself; the session sits next to the config file, so log in with the agent's variable set:
-
-```sh
-MEILI_CONFIG=~/agents/search/config.json meili auth login
-MEILI_CONFIG=~/agents/search/config.json meili config sync-with-cloud --project-name prod
-```
-
 ## Documentation
 
 ```sh
