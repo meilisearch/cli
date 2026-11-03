@@ -1,3 +1,4 @@
+import { HttpResponse, http } from "msw";
 import { describe, expect, it } from "vitest";
 import UpdateProjects from "../../../src/commands/update/projects.js";
 import {
@@ -5,6 +6,7 @@ import {
   forbidden,
   MANAGEMENT_URL,
   managementHandlers,
+  project,
   type ReceivedRequest,
 } from "../../helpers/management-handlers.js";
 import { server, useMockServer } from "../../helpers/msw.js";
@@ -76,6 +78,27 @@ describe("meili update projects", () => {
         local: { url: "http://localhost:7700" },
         again: { url: "https://ms-abc.sfo.meilisearch.io", apiKey: "k", cloudId: 343 },
       },
+    });
+  });
+
+  it("renames the entry with the name checked, not the one the API answers", async () => {
+    server.use(
+      http.patch(`${MANAGEMENT_URL}/api/v2/projects/:id`, () =>
+        HttpResponse.json({ ...project, name: "taken" }),
+      ),
+    );
+    const { path, env: configEnv } = tempConfig("sync-other-name.json", {
+      prod: { url: "https://p", cloudId: 343 },
+      taken: { url: "http://elsewhere" },
+    });
+    const result = await runCommand(
+      UpdateProjects,
+      ["--project", "prod", "--name", "renamed", "--sync-config"],
+      { env: { ...env, ...configEnv } },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(readJson(path)).toEqual({
+      projects: { renamed: { url: "https://p", cloudId: 343 }, taken: { url: "http://elsewhere" } },
     });
   });
 

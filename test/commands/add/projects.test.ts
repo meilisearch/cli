@@ -1,3 +1,4 @@
+import { HttpResponse, http } from "msw";
 import { describe, expect, it } from "vitest";
 import AddProjects from "../../../src/commands/add/projects.js";
 import {
@@ -6,6 +7,7 @@ import {
   MANAGEMENT_TOKEN,
   MANAGEMENT_URL,
   managementHandlers,
+  project,
   type ReceivedRequest,
 } from "../../helpers/management-handlers.js";
 import { server, useMockServer } from "../../helpers/msw.js";
@@ -58,6 +60,29 @@ describe("meili add projects", () => {
           apiKey: "projectmasterkey9z8y",
           cloudId: 343,
         },
+      },
+    });
+  });
+
+  it("names the entry with the name checked, not the one the API answers", async () => {
+    server.use(
+      http.post(`${MANAGEMENT_URL}/api/v2/projects`, () =>
+        HttpResponse.json({ ...project, name: "taken" }, { status: 201 }),
+      ),
+    );
+    const { path, env: configEnv } = tempConfig("sync-other-name.json", {
+      taken: { url: "http://elsewhere" },
+    });
+    const result = await runCommand(
+      AddProjects,
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--sync-config"],
+      { env: { ...env, ...configEnv } },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(readJson(path)).toEqual({
+      projects: {
+        taken: { url: "http://elsewhere" },
+        demo: { url: project.url, apiKey: project.masterKey, cloudId: 343 },
       },
     });
   });

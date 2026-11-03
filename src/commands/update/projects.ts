@@ -49,7 +49,8 @@ export default class UpdateProjects extends BaseCommand {
       PatchApiV2ProjectsByIdData["body"]
     >;
 
-    let sync: { file: ConfigFile; entry: string } | undefined;
+    // The entry takes the name checked here, whatever name the API answers.
+    let sync: { file: ConfigFile; entry: string; name: string } | undefined;
     if (flags["sync-config"]) {
       if (typeof body.name !== "string" || body.name === "") {
         throw new MeiliCliError(
@@ -60,7 +61,7 @@ export default class UpdateProjects extends BaseCommand {
       const file = this.configFile();
       const entry = cloudProjectEntry(file, flags.project, id, ": nothing was renamed.");
       if (body.name !== entry) assertNoProject(file, body.name, ": nothing was renamed.");
-      sync = { file, entry };
+      sync = { file, entry, name: body.name };
     }
     const project = await patchApiV2ProjectsById({
       client: this.managementClient,
@@ -73,7 +74,7 @@ export default class UpdateProjects extends BaseCommand {
       path: sync.file.path,
       projects: Object.fromEntries(
         Object.entries(sync.file.projects).map(([name, entry]) => [
-          name === sync.entry ? project.name : name,
+          name === sync.entry ? sync.name : name,
           entry,
         ]),
       ),
