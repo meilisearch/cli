@@ -1,6 +1,6 @@
 # ADR 0007: Delete commands require `--yes`
 
-Status: accepted. Date: 2026-10-15.
+Status: accepted. Date: 2026-10-15. One point is superseded by ADR 0013: the `masterKey` that `add projects` prints is masked, no longer passed through unchanged.
 
 Supersedes ADR 0002, whose rules it keeps except the one about confirmation.
 

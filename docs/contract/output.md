@@ -30,7 +30,7 @@ Three consequences of pass-through:
 
 - Both APIs name their fields in camelCase, but they do not name everything alike: a key is `apiKey` in a Meilisearch config file and `masterKey` on a Cloud project. The CLI does not normalize. An agent reads each API's documentation and gets exactly that.
 - A command that filters a list instead of calling a unit route returns the list envelope: `get tasks --ids 42` prints `{"results": [the task], …}`, and the agent reads `results[0]`.
-- Some API responses contain secrets by design, for example `masterKey` on a Meilisearch Cloud project. They are data the agent needs and they go to stdout unchanged. Redaction applies to stderr, `--debug` traces and logs, not to the data stream.
+- Some API responses contain secrets by design, for example the `key` of an API key. They are data the agent needs and they go to stdout unchanged. Redaction applies to stderr, `--debug` traces and logs, not to the data stream. One exception: `add projects` prints the `masterKey` of the project it creates masked, `****9z8y`, unless `--show-master-key`; `--sync-config` writes it to the config file instead. See ADR 0013.
 
 ## Errors
 

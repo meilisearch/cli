@@ -40,6 +40,17 @@ describe("meili add projects", () => {
     ]);
   });
 
+  it("prints the master key in full with --show-master-key", async () => {
+    server.use(managementHandlers.createProject());
+    const result = await runCommand(
+      AddProjects,
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--show-master-key"],
+      { env },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(JSON.parse(result.stdout)).toEqual(project);
+  });
+
   it("adds the project to the config file with --sync-config: its URL, its master key and its cloud identifiers", async () => {
     server.use(managementHandlers.createProject(), managementHandlers.listTeams());
     const { path, env: configEnv } = tempConfig("sync-config.json", {
@@ -114,6 +125,26 @@ describe("meili add projects", () => {
         demo: { url: project.url, apiKey: project.masterKey, cloud: { id: 343, teamId: 12 } },
       },
     });
+  });
+
+  it("points to config sync-with-cloud when the project created has no URL yet", async () => {
+    server.use(
+      http.post(`${MANAGEMENT_URL}/api/v2/projects`, () =>
+        HttpResponse.json({ ...project, url: null }, { status: 201 }),
+      ),
+    );
+    const { path, env: configEnv } = tempConfig("sync-no-url.json", {});
+    const result = await runCommand(
+      AddProjects,
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--sync-config"],
+      { env: { ...env, ...configEnv } },
+    );
+    expect(JSON.parse(result.stdout).masterKey).toBe("****9z8y");
+    expect(JSON.parse(result.stderr).error).toMatchObject({
+      code: "cli_config",
+      hint: "Run `meili config sync-with-cloud --project-name demo` once `meili get projects --id 343` shows its URL: it adds the project with its master key.",
+    });
+    expect(readJson(path)).toEqual({ projects: {} });
   });
 
   it("refuses --sync-config for a name the file has, before any network call", async () => {

@@ -266,12 +266,13 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
     },
     {
       "api": "management",
-      "description": "Create a Meilisearch Cloud project in a team, on a resource.",
+      "description": "Create a Meilisearch Cloud project in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.",
       "examples": [
         "meili add projects --name demo --team-id 12 --resource-id 3",
         "meili add projects --name demo --team-id 12 --resource-id 3 --output json",
         "meili add projects --name demo --team-id 12 --resource-id 3 --sync-config",
         "meili add projects --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
+        "meili add projects --name demo --team-id 12 --resource-id 3 --show-master-key",
         "meili add projects --data '{"name":"demo","teamId":12,"resourceId":3}'",
         "meili add projects --file project.json --name other-name",
       ],
@@ -315,6 +316,11 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
         {
           "description": "Add the project to the config file, as an entry named after it with its URL, its master key and its cloud identifiers.",
           "name": "sync-config",
+          "type": "boolean",
+        },
+        {
+          "description": "Print the master key in full instead of masked. It then lands in logs and transcripts: prefer --sync-config.",
+          "name": "show-master-key",
           "type": "boolean",
         },
         {
@@ -3118,7 +3124,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
         ],
       },
       {
-        "description": "Create a Meilisearch Cloud project in a team, on a resource.",
+        "description": "Create a Meilisearch Cloud project in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.",
         "id": "add projects",
         "routes": [
           "POST /api/v2/projects",
