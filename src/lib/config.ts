@@ -273,7 +273,7 @@ export function resolveCloudProjectId(
       "cli_config",
       `Project \`${flags.project}\` has no \`cloudId\` in ${file.path}: the management commands need the project's id.`,
       {
-        hint: `Run \`meili config unset --project ${flags.project}\`, then \`meili config set --project ${flags.project} --project-url <url> --project-api-key <key> --project-cloud-id <id>\`.`,
+        hint: `Run \`meili config update --project ${flags.project} --project-cloud-id <id>\`.`,
       },
     );
   }
@@ -286,8 +286,47 @@ export function assertNoProject(file: ConfigFile, name: string, detail: string):
     throw new MeiliCliError(
       "cli_config",
       `Project \`${name}\` already exists in ${file.path}${detail}`,
-      { hint: `Run \`meili config unset --project ${name}\` first.` },
+      {
+        hint: `Run \`meili config update --project ${name}\` to change it, or \`meili config unset --project ${name}\` first.`,
+      },
     );
+  }
+}
+
+/**
+ * The entry `--sync-config` changes for the Cloud project `id`: the one
+ * `--project` names, else the one whose `cloudId` is `id`. None, or several,
+ * is `cli_config` before any call; `detail` follows the path.
+ */
+export function cloudProjectEntry(
+  file: ConfigFile,
+  project: string | undefined,
+  id: number,
+  detail: string,
+): string {
+  if (project !== undefined) return project;
+  const names = Object.keys(file.projects).filter((name) => file.projects[name]?.cloudId === id);
+  const [name] = names;
+  if (name !== undefined && names.length === 1) return name;
+  throw new MeiliCliError(
+    "cli_config",
+    names.length === 0
+      ? `No project of ${file.path} has the cloudId ${id}${detail}`
+      : `Projects ${names.map((each) => `\`${each}\``).join(", ")} of ${file.path} have the cloudId ${id}${detail}`,
+    {
+      hint:
+        names.length === 0
+          ? `Run \`meili config update --project <name> --project-cloud-id ${id}\` first.`
+          : "Name one with `--project` in place of `--id`.",
+    },
+  );
+}
+
+/** `cli_usage` unless `value` is an HTTP(S) URL: a Meilisearch instance answers over nothing else. */
+export function assertProjectUrl(value: string): void {
+  const url = URL.parse(value);
+  if (url === null || (url.protocol !== "http:" && url.protocol !== "https:")) {
+    throw new MeiliCliError("cli_usage", `Invalid project URL \`${value}\`.`);
   }
 }
 

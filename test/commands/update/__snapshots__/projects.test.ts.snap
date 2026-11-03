@@ -15,7 +15,7 @@ exports[`meili update projects > prints its help without any network call 1`] = 
 USAGE
   $ meili update projects [-o <mode>] [--debug] [--management-token <pat>]
     [--management-url <url>] [--project <name>] [--id <id>] [--name <name>]
-    [--file <path> | --data <json>]
+    [--sync-config] [--file <path> | --data <json>]
 
 FLAGS
   -o, --output=<mode>           json (default): one document, the API body as it
@@ -34,6 +34,9 @@ FLAGS
       --name=<name>             New name of the project.
       --project=<name>          A project of the config file, whose cloudId
                                 names the Cloud project, in place of --id.
+      --sync-config             Rename the project's entry of the config file
+                                after it: the entry --project names, or the one
+                                whose cloudId is --id.
 
 DESCRIPTION
   Rename a Meilisearch Cloud project.
@@ -44,6 +47,8 @@ EXAMPLES
   $ meili update projects --id 343 --name renamed --output json
 
   $ meili update projects --project prod --name renamed
+
+  $ meili update projects --project prod --name renamed --sync-config
 
   $ meili update projects --id 343 --data '{"name":"renamed"}'
 

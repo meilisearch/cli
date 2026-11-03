@@ -16,7 +16,7 @@ export default class AddProjects extends BaseCommand {
   static override examples = [
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3",
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --output json",
-    "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --add-to-config",
+    "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --sync-config",
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
     '<%= config.bin %> <%= command.id %> --data \'{"name":"demo","teamId":12,"resourceId":3}\'',
     "<%= config.bin %> <%= command.id %> --file project.json --name other-name",
@@ -34,7 +34,7 @@ export default class AddProjects extends BaseCommand {
       description: "Meilisearch version of the project, the latest by default.",
       helpValue: "<version>",
     }),
-    "add-to-config": Flags.boolean({
+    "sync-config": Flags.boolean({
       description:
         "Add the project to the config file, as an entry named after it with its URL, its master key and its cloudId.",
     }),
@@ -50,12 +50,12 @@ export default class AddProjects extends BaseCommand {
       msVersion: flags["ms-version"],
     }) as NonNullable<PostApiV2ProjectsData["body"]>;
 
-    const file = flags["add-to-config"] ? this.configFile() : undefined;
+    const file = flags["sync-config"] ? this.configFile() : undefined;
     if (file !== undefined) {
       if (typeof body.name !== "string" || body.name === "") {
         throw new MeiliCliError(
           "cli_usage",
-          "`--add-to-config` names the entry after the project: give `--name`.",
+          "`--sync-config` names the entry after the project: give `--name`.",
         );
       }
       assertNoProject(file, body.name, ": nothing was created.");

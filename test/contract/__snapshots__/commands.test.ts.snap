@@ -270,7 +270,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
       "examples": [
         "meili add projects --name demo --team-id 12 --resource-id 3",
         "meili add projects --name demo --team-id 12 --resource-id 3 --output json",
-        "meili add projects --name demo --team-id 12 --resource-id 3 --add-to-config",
+        "meili add projects --name demo --team-id 12 --resource-id 3 --sync-config",
         "meili add projects --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
         "meili add projects --data '{"name":"demo","teamId":12,"resourceId":3}'",
         "meili add projects --file project.json --name other-name",
@@ -314,7 +314,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
         },
         {
           "description": "Add the project to the config file, as an entry named after it with its URL, its master key and its cloudId.",
-          "name": "add-to-config",
+          "name": "sync-config",
           "type": "boolean",
         },
         {
@@ -600,6 +600,45 @@ The file holds API keys and decides where every later command goes, for every pr
       "id": "config unset",
     },
     {
+      "api": "none",
+      "description": "Change the fields given of a project of the config file; refuses a name that does not exist.
+
+The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+      "examples": [
+        "meili config update --project prod --project-cloud-id 343",
+        "meili config update --project prod --project-api-key - < key.txt",
+        "meili config update --project local --project-url http://localhost:7701 --output json",
+      ],
+      "flags": [
+        {
+          "description": "Name of the project to change.",
+          "helpValue": "<name>",
+          "name": "project",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "New URL of the project.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "New API key of the project. \`-\` reads it from stdin, out of the shell history.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "New id of the project in Meilisearch Cloud, for the management commands.",
+          "helpValue": "<id>",
+          "name": "project-cloud-id",
+          "type": "option",
+        },
+      ],
+      "id": "config update",
+    },
+    {
       "api": "meilisearch",
       "async": true,
       "description": "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.",
@@ -838,6 +877,7 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili delete projects --id 343 --yes",
         "meili delete projects --id 343 --yes --output json",
         "meili delete projects --project staging --yes",
+        "meili delete projects --project staging --yes --sync-config",
       ],
       "flags": [
         {
@@ -863,6 +903,11 @@ The file holds API keys and decides where every later command goes, for every pr
           "helpValue": "<id>",
           "name": "id",
           "type": "option",
+        },
+        {
+          "description": "Remove the project's entry from the config file: the entry --project names, or the one whose cloudId is --id.",
+          "name": "sync-config",
+          "type": "boolean",
         },
         {
           "description": "Confirm the deletion. Nothing is sent to the API without it.",
@@ -2687,6 +2732,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
         "meili update projects --id 343 --name renamed",
         "meili update projects --id 343 --name renamed --output json",
         "meili update projects --project prod --name renamed",
+        "meili update projects --project prod --name renamed --sync-config",
         "meili update projects --id 343 --data '{"name":"renamed"}'",
       ],
       "flags": [
@@ -2719,6 +2765,11 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "helpValue": "<name>",
           "name": "name",
           "type": "option",
+        },
+        {
+          "description": "Rename the project's entry of the config file after it: the entry --project names, or the one whose cloudId is --id.",
+          "name": "sync-config",
+          "type": "boolean",
         },
         {
           "description": "Read the body from a file. \`-\` reads from stdin.",
@@ -3013,6 +3064,10 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       {
         "description": "Remove a project from the config file.",
         "id": "config unset",
+      },
+      {
+        "description": "Change the fields given of a project of the config file; refuses a name that does not exist.",
+        "id": "config update",
       },
       {
         "description": "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.",

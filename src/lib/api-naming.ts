@@ -22,7 +22,7 @@ export const CLI_OWNED_FLAGS: readonly string[] = [
   "file",
   "data",
   "yes",
-  "add-to-config",
+  "sync-config",
 ];
 
 /** Trailing path literals that are verbs (rule 1). A closed list: adding one is a contract change. */

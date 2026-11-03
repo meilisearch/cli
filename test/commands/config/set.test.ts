@@ -64,7 +64,9 @@ describe("meili config set", () => {
     expect(result.exitCode).toBe(2);
     const error = JSON.parse(result.stderr).error as { code: string; hint: string };
     expect(error.code).toBe("cli_config");
-    expect(error.hint).toBe("Run `meili config unset --project a` first.");
+    expect(error.hint).toBe(
+      "Run `meili config update --project a` to change it, or `meili config unset --project a` first.",
+    );
     expect(read(path)).toEqual({ projects: { a: { url: "http://a" }, b: { url: "http://b" } } });
   });
 

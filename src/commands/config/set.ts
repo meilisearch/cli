@@ -1,7 +1,11 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { assertNoProject, CONFIG_FILE_WARNING, writeConfigFile } from "../../lib/config.js";
-import { MeiliCliError } from "../../lib/errors.js";
+import {
+  assertNoProject,
+  assertProjectUrl,
+  CONFIG_FILE_WARNING,
+  writeConfigFile,
+} from "../../lib/config.js";
 import { readStdin } from "../../lib/input.js";
 
 export default class ConfigSet extends BaseCommand {
@@ -43,11 +47,7 @@ ${CONFIG_FILE_WARNING}`;
 
   async run(): Promise<void> {
     const { flags } = await this.parse(ConfigSet);
-    // A Meilisearch instance answers over HTTP(S) only; the SDK mangles any other scheme.
-    const url = URL.parse(flags["project-url"]);
-    if (url === null || (url.protocol !== "http:" && url.protocol !== "https:")) {
-      throw new MeiliCliError("cli_usage", `Invalid project URL \`${flags["project-url"]}\`.`);
-    }
+    assertProjectUrl(flags["project-url"]);
     const file = this.configFile();
     assertNoProject(file, flags.project, ".");
     writeConfigFile({

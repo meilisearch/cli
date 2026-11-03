@@ -15,7 +15,7 @@ exports[`meili add projects > prints its help without any network call 1`] = `
 USAGE
   $ meili add projects [-o <mode>] [--debug] [--management-token <pat>]
     [--management-url <url>] [--name <name>] [--team-id <id>] [--resource-id
-    <id>] [--ms-version <version>] [--add-to-config] [--file <path> | --data
+    <id>] [--ms-version <version>] [--sync-config] [--file <path> | --data
     <json>]
 
 FLAGS
@@ -23,9 +23,6 @@ FLAGS
                                 is, indented in a terminal, compact when piped.
                                 ndjson: one item per line, list commands only,
                                 streams with --all.
-      --add-to-config           Add the project to the config file, as an entry
-                                named after it with its URL, its master key and
-                                its cloudId.
       --data=<json>             Inline JSON body.
       --debug                   Print every HTTP request and response on stderr,
                                 secrets redacted.
@@ -38,6 +35,9 @@ FLAGS
       --name=<name>             Name of the project.
       --resource-id=<id>        Resource of the project: its plan and its
                                 region.
+      --sync-config             Add the project to the config file, as an entry
+                                named after it with its URL, its master key and
+                                its cloudId.
       --team-id=<id>            Team that owns the project.
 
 DESCRIPTION
@@ -48,7 +48,7 @@ EXAMPLES
 
   $ meili add projects --name demo --team-id 12 --resource-id 3 --output json
 
-  $ meili add projects --name demo --team-id 12 --resource-id 3 --add-to-config
+  $ meili add projects --name demo --team-id 12 --resource-id 3 --sync-config
 
   $ meili add projects --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0
 

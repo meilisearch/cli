@@ -15,6 +15,7 @@ exports[`meili delete projects > prints its help without any network call 1`] = 
 USAGE
   $ meili delete projects --yes [-o <mode>] [--debug] [--management-token
     <pat>] [--management-url <url>] [--project <name>] [--id <id>]
+    [--sync-config]
 
 FLAGS
   -o, --output=<mode>           json (default): one document, the API body as it
@@ -30,6 +31,9 @@ FLAGS
                                 https://api.meilisearch.com.
       --project=<name>          A project of the config file, whose cloudId
                                 names the Cloud project, in place of --id.
+      --sync-config             Remove the project's entry from the config file:
+                                the entry --project names, or the one whose
+                                cloudId is --id.
       --yes                     (required) Confirm the deletion. Nothing is sent
                                 to the API without it.
 
@@ -42,6 +46,8 @@ EXAMPLES
   $ meili delete projects --id 343 --yes --output json
 
   $ meili delete projects --project staging --yes
+
+  $ meili delete projects --project staging --yes --sync-config
 
 "
 `;

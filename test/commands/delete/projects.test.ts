@@ -6,7 +6,7 @@ import {
   managementHandlers,
 } from "../../helpers/management-handlers.js";
 import { server, useMockServer } from "../../helpers/msw.js";
-import { runCli, runCommand, tempConfig } from "../../helpers/run-command.js";
+import { readJson, runCli, runCommand, tempConfig } from "../../helpers/run-command.js";
 
 useMockServer();
 
@@ -35,6 +35,43 @@ describe("meili delete projects", () => {
       env: { ...env, ...configEnv },
     });
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
+  });
+
+  it("removes the entry with --sync-config: the one --project names, or the one whose cloudId is --id", async () => {
+    server.use(managementHandlers.deleteProject());
+    const { path, env: configEnv } = tempConfig("sync-delete.json", {
+      staging: { url: "https://s", cloudId: 343 },
+      prod: { url: "https://p", cloudId: 344 },
+      local: { url: "http://localhost:7700" },
+    });
+    const named = await runCommand(
+      DeleteProjects,
+      ["--project", "staging", "--yes", "--sync-config"],
+      {
+        env: { ...env, ...configEnv },
+      },
+    );
+    expect(named.exitCode).toBe(0);
+    const byId = await runCommand(DeleteProjects, ["--id", "344", "--yes", "--sync-config"], {
+      env: { ...env, ...configEnv },
+    });
+    expect(byId.exitCode).toBe(0);
+    expect(readJson(path)).toEqual({ projects: { local: { url: "http://localhost:7700" } } });
+  });
+
+  it("refuses --sync-config when no entry has the project's cloudId, before any network call", async () => {
+    const { path, env: configEnv } = tempConfig("sync-none.json", {
+      local: { url: "http://localhost:7700" },
+    });
+    const result = await runCommand(DeleteProjects, ["--id", "343", "--yes", "--sync-config"], {
+      env: { ...env, ...configEnv },
+    });
+    expect(result.exitCode).toBe(2);
+    expect(JSON.parse(result.stderr).error).toMatchObject({
+      code: "cli_config",
+      message: `No project of ${path} has the cloudId 343: nothing was deleted.`,
+      hint: "Run `meili config update --project <name> --project-cloud-id 343` first.",
+    });
   });
 
   it("passes the API's error body through on a 403, with exit 3", async () => {

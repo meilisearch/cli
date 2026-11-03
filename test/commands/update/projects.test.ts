@@ -8,7 +8,7 @@ import {
   type ReceivedRequest,
 } from "../../helpers/management-handlers.js";
 import { server, useMockServer } from "../../helpers/msw.js";
-import { runCli, runCommand, tempConfig } from "../../helpers/run-command.js";
+import { readJson, runCli, runCommand, tempConfig } from "../../helpers/run-command.js";
 
 useMockServer();
 
@@ -51,6 +51,55 @@ describe("meili update projects", () => {
     );
     expect(both.exitCode).toBe(2);
     expect(JSON.parse(both.stderr).error.code).toBe("cli_usage");
+  });
+
+  it("renames the entry with --sync-config: the one --project names, or the one whose cloudId is --id", async () => {
+    server.use(managementHandlers.updateProject());
+    const { path, env: configEnv } = tempConfig("sync-update.json", {
+      local: { url: "http://localhost:7700" },
+      prod: { url: "https://ms-abc.sfo.meilisearch.io", apiKey: "k", cloudId: 343 },
+    });
+    const named = await runCommand(
+      UpdateProjects,
+      ["--project", "prod", "--name", "renamed", "--sync-config"],
+      { env: { ...env, ...configEnv } },
+    );
+    expect(named.exitCode).toBe(0);
+    const byId = await runCommand(
+      UpdateProjects,
+      ["--id", "343", "--name", "again", "--sync-config"],
+      { env: { ...env, ...configEnv } },
+    );
+    expect(byId.exitCode).toBe(0);
+    expect(readJson(path)).toEqual({
+      projects: {
+        local: { url: "http://localhost:7700" },
+        again: { url: "https://ms-abc.sfo.meilisearch.io", apiKey: "k", cloudId: 343 },
+      },
+    });
+  });
+
+  it("refuses --sync-config without a name, or with a name the file has, before any network call", async () => {
+    const { path, env: configEnv } = tempConfig("sync-taken.json", {
+      prod: { url: "https://p", cloudId: 343 },
+      staging: { url: "https://s", cloudId: 344 },
+    });
+    const noName = await runCommand(UpdateProjects, ["--project", "prod", "--sync-config"], {
+      env: { ...env, ...configEnv },
+    });
+    expect(noName.exitCode).toBe(2);
+    expect(JSON.parse(noName.stderr).error.code).toBe("cli_usage");
+
+    const taken = await runCommand(
+      UpdateProjects,
+      ["--project", "prod", "--name", "staging", "--sync-config"],
+      { env: { ...env, ...configEnv } },
+    );
+    expect(taken.exitCode).toBe(2);
+    expect(JSON.parse(taken.stderr).error).toMatchObject({
+      code: "cli_config",
+      message: `Project \`staging\` already exists in ${path}: nothing was renamed.`,
+    });
   });
 
   it("passes the API's error body through on a 403, with exit 3", async () => {

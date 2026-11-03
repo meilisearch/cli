@@ -38,14 +38,14 @@ describe("meili add projects", () => {
     ]);
   });
 
-  it("adds the project to the config file with --add-to-config: its URL, its master key and its cloudId", async () => {
+  it("adds the project to the config file with --sync-config: its URL, its master key and its cloudId", async () => {
     server.use(managementHandlers.createProject());
-    const { path, env: configEnv } = tempConfig("add-to-config.json", {
+    const { path, env: configEnv } = tempConfig("sync-config.json", {
       local: { url: "http://localhost:7700" },
     });
     const result = await runCommand(
       AddProjects,
-      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--add-to-config"],
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--sync-config"],
       { env: { ...env, ...configEnv } },
     );
     expect(result.exitCode).toBe(0);
@@ -62,13 +62,13 @@ describe("meili add projects", () => {
     });
   });
 
-  it("refuses --add-to-config for a name the file has, before any network call", async () => {
+  it("refuses --sync-config for a name the file has, before any network call", async () => {
     const { path, env: configEnv } = tempConfig("taken.json", {
       demo: { url: "http://elsewhere" },
     });
     const result = await runCommand(
       AddProjects,
-      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--add-to-config"],
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--sync-config"],
       { env: { ...env, ...configEnv } },
     );
     expect(result.exitCode).toBe(2);
