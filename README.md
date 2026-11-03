@@ -20,7 +20,7 @@ The session is kept next to the config file, and the management commands refresh
 
 ```sh
 meili config sync-with-cloud --all   # every Cloud project you can see, with its URL and, when you own its team, its master key
-meili config set --project local --project-url http://localhost:7700 --project-api-key - < key.txt   # an instance that is not on Meilisearch Cloud
+meili config set --project local --project-url http://localhost:7700 --project-api-key <your-key>   # an instance that is not on Meilisearch Cloud
 meili config list                    # the projects of the file, keys masked
 ```
 
