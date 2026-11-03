@@ -42,9 +42,11 @@ FLAGS
       --name=<name>            New name of the key. The value null removes the
                                one it has.
       --project=<name>         A project of the config file. Cannot be combined
-                               with --project-url.
+                               with --project-url. One of --project or
+                               --project-url is required.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
 
 DESCRIPTION
   Change the name or the description of an API key, the two fields the route

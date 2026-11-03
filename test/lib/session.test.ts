@@ -164,7 +164,7 @@ describe("resolveManagementCredentials", () => {
     await expect(resolveManagementCredentials(empty, noWarning)).rejects.toMatchObject({
       code: "cli_auth_missing",
       exitCode: 3,
-      message: expect.stringContaining("meili auth login"),
+      hint: expect.stringContaining("meili auth login"),
     });
   });
 

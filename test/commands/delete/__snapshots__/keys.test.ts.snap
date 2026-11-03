@@ -26,9 +26,11 @@ FLAGS
       --id=<key>               (required) The key to delete, by its uid or by
                                its key value.
       --project=<name>         A project of the config file. Cannot be combined
-                               with --project-url.
+                               with --project-url. One of --project or
+                               --project-url is required.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
       --yes                    (required) Confirm the deletion. Nothing is sent
                                to the API without it.
 

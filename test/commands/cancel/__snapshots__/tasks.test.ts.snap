@@ -50,10 +50,12 @@ FLAGS
       --index-ids=<indexes>        Match the tasks of these indexes,
                                    comma-separated. \`*\` matches every one.
       --project=<name>             A project of the config file. Cannot be
-                                   combined with --project-url.
+                                   combined with --project-url. One of --project
+                                   or --project-url is required.
       --project-api-key=<key>      Project API key. \`-\` reads it from stdin.
       --project-url=<url>          Project URL, the Meilisearch instance to talk
-                                   to.
+                                   to. One of --project or --project-url is
+                                   required.
       --statuses=<statuses>        Task statuses to match, comma-separated:
                                    enqueued, processing, succeeded, failed or
                                    canceled. \`*\` matches every one.

@@ -173,6 +173,14 @@ describe("resolveProjectConnection", () => {
     });
   });
 
+  it("refuses a --project-url that is not HTTP(S), an empty one included", () => {
+    for (const url of ["", "ftp://flag"]) {
+      const error = caught(() => resolveProjectConnection({ url }, unread));
+      expect(error.code).toBe("cli_usage");
+      expect(error.exitCode).toBe(2);
+    }
+  });
+
   it("refuses --project with --project-url", () => {
     const error = caught(() =>
       resolveProjectConnection({ url: "http://flag", project: "prod" }, two),

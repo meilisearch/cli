@@ -28,7 +28,6 @@ describe("meili get health", () => {
   });
 
   it("takes the project named by --project from the config file", async () => {
-    // Not the scrubbed default path: the other tests of this file must see no project.
     const path = join(scrubbedHome, "projects.json");
     writeConfigFile({
       path,
@@ -71,11 +70,11 @@ describe("meili get health", () => {
   });
 
   it("fails with cli_usage and exits 2 without --project or --project-url", async () => {
-    // A file with one project: it is never taken without --project.
+    // A file with one project is never taken without --project, nor is a variable.
     const path = join(scrubbedHome, "one-project.json");
     writeConfigFile({ path, projects: { prod: { url: MEILISEARCH_URL } } });
     const result = await runCommand(GetHealth, ["--output", "json"], {
-      env: { MEILI_CONFIG: path },
+      env: { MEILI_CONFIG: path, MEILI_PROJECT_URL: MEILISEARCH_URL },
     });
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");

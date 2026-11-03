@@ -56,11 +56,11 @@ export const ENV_VARS: ReadonlyArray<{ name: string; description: string; flag?:
   {
     name: ENV.MANAGEMENT_CLIENT_ID,
     description:
-      "OAuth application the `auth login` command identifies itself with. Default: the one of this CLI on Meilisearch Cloud.",
+      "OAuth application the `auth login` command identifies itself with. Default: the one of this CLI on Meilisearch Cloud. For development and tests.",
   },
   {
     name: ENV.MANAGEMENT_DASHBOARD_URL,
-    description: `Dashboard URL, which hosts the consent page of \`auth login\`. Default ${DEFAULT_MANAGEMENT_DASHBOARD_URL}.`,
+    description: `Dashboard URL, which hosts the consent page of \`auth login\`. Default ${DEFAULT_MANAGEMENT_DASHBOARD_URL}. For development and tests.`,
   },
   { name: ENV.OUTPUT, description: "Default output mode: json or ndjson.", flag: "output" },
   { name: ENV.TIMEOUT, description: "Default --timeout for --wait.", flag: "timeout" },
@@ -220,6 +220,7 @@ export function resolveProjectConnection(
         "`--project` cannot be combined with `--project-url`: the name and the URL contradict each other.",
       );
     }
+    assertProjectUrl(flags.url);
     return { url: flags.url, apiKey: flags.apiKey };
   }
   if (flags.project !== undefined) {

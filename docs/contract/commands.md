@@ -127,9 +127,9 @@ Commands reuse these groups. A command that matches a group uses the whole group
 
 | Flag | Meaning |
 |---|---|
-| `--project-url <url>` | Project URL, the Meilisearch instance to talk to. |
+| `--project-url <url>` | Project URL, the Meilisearch instance to talk to. One of `--project` and `--project-url` is required. |
 | `--project-api-key <key>` | Project API key. `-` reads it from stdin. |
-| `--project <name>` | A project of the config file. Cannot be combined with `--project-url`. See `config.md`. |
+| `--project <name>` | A project of the config file. Cannot be combined with `--project-url`. One of `--project` and `--project-url` is required. See `config.md`. |
 
 `meili config set` writes these three values rather than connecting with them, so it declares its own, with its own descriptions, and `meili config update` its own optional ones. See ADR 0010.
 
@@ -181,7 +181,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 
 ## Commands without an API
 
-These commands have no route of their own, so no route derives them: most call neither of the two APIs of this contract, and the ones that do say so below. They are the only ones listed here; their `--help` defines their shape. Their name is never the name of an API resource. The `config` and `auth` commands are for humans: an agent works with the file and the token it was given, see `config.md`. The four `auth` commands do speak HTTP, to the authorization server of Meilisearch Cloud, which no OpenAPI document of this repository describes; ADR 0009 says why they live here. `config sync-with-cloud` speaks to the Management API itself, with `static api = "management"` and no route of its own, and so do `config set` and `config update` when `--sync-with-cloud` is given.
+These commands have no route of their own, so no route derives them: most call neither of the two APIs of this contract, and the ones that do say so below. They are the only ones listed here; their `--help` defines their shape. Their name is never the name of an API resource. The `config` and `auth` commands are for humans: an agent works with the file and the session it was given, see `config.md`. The four `auth` commands do speak HTTP, to the authorization server of Meilisearch Cloud, which no OpenAPI document of this repository describes; ADR 0009 says why they live here. `config sync-with-cloud` speaks to the Management API itself, with `static api = "management"` and no route of its own, and so do `config set` and `config update` when `--sync-with-cloud` is given.
 
 | Command | Effect |
 |---|---|

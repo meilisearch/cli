@@ -38,10 +38,12 @@ FLAGS
       --index=<index>             (required) The index to delete the documents
                                   from.
       --project=<name>            A project of the config file. Cannot be
-                                  combined with --project-url.
+                                  combined with --project-url. One of --project
+                                  or --project-url is required.
       --project-api-key=<key>     Project API key. \`-\` reads it from stdin.
       --project-url=<url>         Project URL, the Meilisearch instance to talk
-                                  to.
+                                  to. One of --project or --project-url is
+                                  required.
       --timeout=<duration>        Maximum wait time, for example 30s, 2m.
                                   Default 10m. Only with --wait.
       --wait                      Poll the task until it reaches a final status,

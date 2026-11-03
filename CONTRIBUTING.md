@@ -31,13 +31,14 @@ export MEILI_MANAGEMENT_URL=https://api.meilisearch.dev
 export MEILI_MANAGEMENT_TOKEN=...                        # a personal access token of that Cloud, created by an administrator
 ./bin/run.js get projects
 
-# or log in to that Cloud: both URLs, and the OAuth application registered there
+# or log in to that Cloud, in a new shell: both URLs, and the OAuth application registered there
+export MEILI_MANAGEMENT_URL=https://api.meilisearch.dev
 export MEILI_MANAGEMENT_DASHBOARD_URL=...                # the dashboard of that Cloud, which hosts the consent page
 export MEILI_MANAGEMENT_CLIENT_ID=...                    # the uid of a public OAuth application registered there
 ./bin/run.js auth login
 ```
 
-`MEILI_MANAGEMENT_TOKEN` wins over the session. `pnpm openapi:management` needs a GitHub token that reads `meilisearch/meilisearch-cloud`, and `pnpm gen:management` regenerates the client from the document.
+`MEILI_MANAGEMENT_TOKEN` wins over the session: unset it to use the one of `auth login`. `pnpm openapi:management` needs a GitHub token that reads `meilisearch/meilisearch-cloud`, and `pnpm gen:management` regenerates the client from the document.
 
 `pnpm link --global` puts a `meili` command on your PATH that points at your checkout.
 

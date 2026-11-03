@@ -49,9 +49,11 @@ FLAGS
       --limit=<n>              Passed to the API.
       --offset=<n>             Passed to the API.
       --project=<name>         A project of the config file. Cannot be combined
-                               with --project-url.
+                               with --project-url. One of --project or
+                               --project-url is required.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
 
 DESCRIPTION
   List the indexes of the instance, or get one with --id.

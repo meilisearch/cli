@@ -14,7 +14,7 @@ Alternatives considered:
 
 - **Leave them global and hide them per command.** oclif can hide a flag from `--help`, but a hidden flag still parses, so `meili auth login --project prod` would still be accepted and still do nothing. The lie moves instead of going away.
 - **Keep them in `baseFlags` and override that property on the commands that resolve no project.** The right flags on the right commands, but the wrong default: a new command gets the connection unless its author remembers to take it away, which is how the problem appeared in the first place.
-- **One `--connection` flag carrying a URL and a key.** A smaller surface, but it breaks the resolution of ADR 0005 and the pairing of flags and environment variables of rule 14.
+- **One `--connection` flag carrying a URL and a key.** A smaller surface, but it breaks the resolution of ADR 0005, which takes the URL and the key apart.
 
 ## Decision
 

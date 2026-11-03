@@ -11,7 +11,7 @@ const documented = tableRows(
 ).map((row) => codeSpans(row[0] ?? "")[0] ?? "");
 
 describe("--help", () => {
-  it("makes no network call, even with a URL configured", async () => {
+  it("makes no network call, even with --project-url", async () => {
     for (const argv of [
       ["--help"],
       ["get", "--help"],

@@ -24,7 +24,7 @@ The rules in `docs/contract/output.md` and `docs/contract/config.md` are the pub
 - never a prompt, never a question, never `$EDITOR`: every command runs as written, and a command of the verb `delete` requires `--yes` on the command line first
 - write commands return the task; `--wait` polls to a final status
 - `meili schema` describes every command as JSON, always in sync with the code
-- configuration works from the command line and environment variables alone, with no config file and no `HOME`
+- a Meilisearch command works from the command line alone, with no config file and no `HOME`; a management command needs the session a human logged in with
 
 Only `src/lib/output.ts`, `src/lib/errors.ts` and `src/lib/config.ts` implement these rules. Commands cannot bypass them.
 

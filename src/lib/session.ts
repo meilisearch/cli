@@ -150,8 +150,9 @@ const EXPIRY_MARGIN_MS = 30_000;
 
 /**
  * `MEILI_MANAGEMENT_TOKEN`, then the session of `auth login`, with
- * `MEILI_MANAGEMENT_URL` and its default. Fails before any network call when none exists. An access token
- * that is about to expire is refreshed here, and the new one is written back.
+ * `MEILI_MANAGEMENT_URL` and its default. Fails before any network call when
+ * none exists. An access token that is about to expire is refreshed here, and
+ * the new one is written back.
  */
 export async function resolveManagementCredentials(
   env: Env,
@@ -167,18 +168,16 @@ export async function resolveManagementCredentials(
   const path = credentialsFilePath(env);
   const session = readCredentialsFile(path, warn);
   if (session === undefined) {
-    throw new MeiliCliError(
-      "cli_auth_missing",
-      "No Management API credentials. Run `meili auth login`.",
-      { hint: "Run `meili auth login` to log in with a browser." },
-    );
+    throw new MeiliCliError("cli_auth_missing", "No Management API credentials.", {
+      hint: "Run `meili auth login` to log in with a browser.",
+    });
   }
   if (chosen !== undefined && chosen !== session.managementUrl) {
     throw new MeiliCliError(
       "cli_config",
       `The session of \`meili auth login\` was issued by ${session.managementUrl}, but the Management API URL given is ${chosen}. A token is never sent to another Cloud.`,
       {
-        hint: "Run `meili auth login` against that URL, or unset `MEILI_MANAGEMENT_URL`.",
+        hint: "Run `meili auth login` with `MEILI_MANAGEMENT_URL` and `MEILI_MANAGEMENT_DASHBOARD_URL` naming that Cloud, or unset `MEILI_MANAGEMENT_URL`.",
       },
     );
   }

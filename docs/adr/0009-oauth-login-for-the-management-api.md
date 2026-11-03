@@ -4,7 +4,7 @@ Status: accepted. Date: 2026-10-20.
 
 ## Context
 
-Until now the Management API took one credential: a personal access token, pasted into `MEILI_MANAGEMENT_TOKEN`. A human creates it in the dashboard, copies it into a shell profile or a secret manager, and it lives until someone revokes it. `config.md` left the rest open: "Storing a token on disk, with a `login` command, is a decision of the Management API milestone."
+Until now the Management API took one credential: a personal access token, pasted into `MEILI_MANAGEMENT_TOKEN`. An administrator creates it in the dashboard, copies it into a shell profile or a secret manager, and it lives until someone revokes it. `config.md` left the rest open: "Storing a token on disk, with a `login` command, is a decision of the Management API milestone."
 
 Meilisearch Cloud now runs its own authorization server, Doorkeeper, on the same two hosts as the product: the consent page is served by the dashboard, `/oauth/authorize`, and the token and revocation endpoints by the API, `/oauth/token` and `/oauth/revoke`. `grant_flows` is `authorization_code` only, `force_pkce` is on, and `api/app/controllers/api/v2/application_controller.rb` accepts an OAuth access token wherever it accepts a PAT, with `read` for the GET routes and `write` for the others. A token lives one hour and comes with a refresh token.
 
@@ -17,7 +17,7 @@ What that server expects from a CLI, checked against a local Cloud rather than a
 
 Alternatives considered:
 
-- **Keep PATs only.** The token is long-lived, copied by hand, and scoped to everything the user can do. Nothing to build, nothing to refresh, and no way to end a session from the CLI.
+- **Keep PATs only.** The token is long-lived, copied by hand, and scoped to everything the user can do. Nothing to build, nothing to refresh, and no way to end a session from the CLI. And users cannot create one: only an administrator can.
 - **The device authorization grant (RFC 8628)**, a code to type on a web page. It is the right flow for a terminal with no browser, and Doorkeeper supports it as a separate grant. The Cloud does not enable it today, and it asks the human to copy a code; the loopback flow asks for nothing.
 - **A token printed by the dashboard, pasted into `auth login`.** That is a PAT with more steps.
 - **Keeping the session in the config file.** One file to know about, but it mixes a file a human edits and shares with a secret the CLI rotates behind their back. `config list` would have to mask it, and `MEILI_CONFIG`, meant to hand an agent a read-only set of projects, would hand it a writable token too.
@@ -46,7 +46,7 @@ Alternatives considered:
 
 - **`auth logout` revokes both tokens, then forgets the session whatever happened.** It revokes the refresh token and the access token, each with its `token_type_hint`, because the cascade from one to the other is a SHOULD of RFC 7009 and not every server does it. The file is removed even when the revocation fails, since a session the CLI cannot end remotely is still one it must stop using; but the command then exits with the code of what failed, `cli_network` or `cli_auth_failed`, and says the token stays valid until it expires. Exiting 0 there would tell a script that a live token is gone. With no session, it does nothing and exits 0.
 
-- **The client id is given, not built in.** `MEILI_MANAGEMENT_CLIENT_ID`. The OAuth application for this CLI does not exist yet on any Cloud; when it does, its `uid` becomes the default here and the variable stays for other environments. A client id is public by definition, so shipping one later is not a secret in the binary.
+- **The client id is built in for Meilisearch Cloud.** A client id is public by definition, so it is not a secret in the binary. `MEILI_MANAGEMENT_CLIENT_ID` names the application of another Cloud, and is required as soon as the two URLs name one: an application belongs to the Cloud that registered it.
 
 ## Consequences
 

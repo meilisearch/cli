@@ -4,7 +4,7 @@ This file defines how `meili` finds the APIs to talk to and how it treats secret
 
 ## Principle
 
-An agent must be able to run `meili` from the command line alone, in a fresh container, with no config file and no `HOME`. A config file exists for the people who set up their projects once, and nothing is ever deduced from it: every command names its project on the command line, or fails and says how to name one. The Management API is consulted only when the command line asks for it, never to resolve the target of a command.
+An agent must be able to run a Meilisearch command from the command line alone, in a fresh container, with no config file and no `HOME`; a management command needs the session a human logged in with, see "Management API connection". A config file exists for the people who set up their projects once, and nothing is ever deduced from it: every command names its project on the command line, or fails and says how to name one. The Management API is consulted only when the command line asks for it, never to resolve the target of a command.
 
 ## Projects
 
@@ -13,7 +13,7 @@ A project is a Meilisearch instance: the one you run, or a project on Meilisearc
 1. `--project-url <url>` and `--project-api-key <key>`
 2. `--project <name>`, an entry of the config file
 
-A human writes the projects in the config file and names one with `--project`. An agent is handed the URL and the key and passes them as flags. No environment variable stands for a project: a variable is set once and silently chooses the target of every later command, which is a deduction.
+A human writes the projects in the config file. An agent names one with `--project`, from the file it was given, or is handed a URL and a key and passes them as flags. No environment variable stands for a project: a variable is set once and silently chooses the target of every later command, which is a deduction.
 
 ## Config file
 
@@ -38,7 +38,7 @@ The path is `$MEILI_CONFIG` if set, else `$XDG_CONFIG_HOME/meili/config.json`, e
 
 The CLI resolves the project of a command in this order, and stops at the first rule that applies.
 
-1. **`--project-url`** gives the URL. The key comes from `--project-api-key`, or there is none: the file is not read for it, so that a configured key never travels to a URL it was not configured with. `--project` together with `--project-url` is a `cli_usage` error, exit 2: the name and the URL contradict each other.
+1. **`--project-url`** gives the URL; one that is not HTTP(S), an empty one included, is `cli_usage`, exit 2. The key comes from `--project-api-key`, or there is none: the file is not read for it, so that a configured key never travels to a URL it was not configured with. `--project` together with `--project-url` is a `cli_usage` error, exit 2: the name and the URL contradict each other.
 2. **`--project <name>`** gives the entry of the config file. No file, or no such name, is `cli_config` with the path and the names the file has. `--project-api-key` replaces the key of the entry.
 3. **Neither flag** is a `cli_usage` error, exit 2, naming `--project` and `--project-url`, with a hint to `meili config list`. The CLI does not read the file to choose: a file with one project is not a default, and `--project-api-key` alone names no project.
 
@@ -103,14 +103,14 @@ On stdout, one item per project of the scope that has an entry, in the order of 
 
 ## Management API connection: resolution order
 
-The credential is a bearer token, sent as `Authorization: Bearer <token>`: the OAuth access token of `meili auth login`. A human logs in once; an agent uses the session a human logged in with, next to the config file it was given.
+The credential is a bearer token, sent as `Authorization: Bearer <token>`: the OAuth access token of `meili auth login`, or, for development, `MEILI_MANAGEMENT_TOKEN`. A human logs in once; an agent uses the session a human logged in with, next to the config file it was given.
 
 1. Environment variable: `MEILI_MANAGEMENT_TOKEN`, a personal access token, for development and tests against another Cloud. Only an administrator can create one in the dashboard today, so it is not a way in for users, and no flag stands for it.
 2. The session of `meili auth login`, in the credentials file below
 
 If nothing is found, the CLI fails before any network call with `cli_auth_missing` and exit code 3, with a hint to `meili auth login`.
 
-The base URL comes from `MEILI_MANAGEMENT_URL`, for development and tests, and defaults to `https://api.meilisearch.com`. No flag stands for it. Every path starts with `/api/v2`. It must be HTTPS, unless its host is `localhost`, `127.0.0.1` or `::1`: anything else would send the token in the clear, and is `cli_usage` before any network call.
+The base URL is the one the session was issued by. With `MEILI_MANAGEMENT_TOKEN`, it is `MEILI_MANAGEMENT_URL`, for development and tests, and defaults to `https://api.meilisearch.com`; with a session, `MEILI_MANAGEMENT_URL` must name the Cloud that issued it, see below. No flag stands for it. Every path starts with `/api/v2`. It must be HTTPS, unless its host is `localhost`, `127.0.0.1` or `::1`: anything else would send the token in the clear, and is `cli_usage` before any network call.
 
 ## The credentials file
 
@@ -164,14 +164,14 @@ A command cannot build a client by itself. Commands with `api = "none"` (`schema
 | `MEILI_CONFIG` | Config file path. Default `~/.config/meili/config.json`. Give each agent its own file, read-only. |
 | `MEILI_MANAGEMENT_TOKEN` | Management API token, in place of the session of `auth login`. For development and tests. |
 | `MEILI_MANAGEMENT_URL` | Management API base URL. Default `https://api.meilisearch.com`. For development and tests. |
-| `MEILI_MANAGEMENT_CLIENT_ID` | OAuth application the `auth login` command identifies itself with. Default: the one of this CLI on Meilisearch Cloud. |
-| `MEILI_MANAGEMENT_DASHBOARD_URL` | Dashboard URL, which hosts the consent page of `auth login`. Default `https://cloud.meilisearch.com`. |
+| `MEILI_MANAGEMENT_CLIENT_ID` | OAuth application the `auth login` command identifies itself with. Default: the one of this CLI on Meilisearch Cloud. For development and tests. |
+| `MEILI_MANAGEMENT_DASHBOARD_URL` | Dashboard URL, which hosts the consent page of `auth login`. Default `https://cloud.meilisearch.com`. For development and tests. |
 | `MEILI_OUTPUT` | Default output mode: `json` or `ndjson`. |
 | `MEILI_TIMEOUT` | Default `--timeout` for `--wait`. |
 
 Every variable is documented in `meili --help`. Adding a variable is a contract change.
 
-A variable that doubles a flag takes its name from the flag: `MEILI_` followed by the flag name in upper snake case. `--output` and `MEILI_OUTPUT`, `--timeout` and `MEILI_TIMEOUT`. `MEILI_CONFIG` has no flag, the file is chosen per process; the `MEILI_MANAGEMENT_*` variables have none, they point the CLI at another Cloud for development and tests; and the project flags, `--project`, `--project-url` and `--project-api-key`, have none, a project is chosen per command. The contract tests check the pairs.
+A variable that doubles a flag takes its name from the flag: `MEILI_` followed by the flag name in upper snake case. `--output` and `MEILI_OUTPUT`, `--timeout` and `MEILI_TIMEOUT`. `MEILI_CONFIG` has no flag, the file is chosen per process; the `MEILI_MANAGEMENT_*` variables have none, they serve development and tests, against another Cloud or with a token in place of the session; and the project flags, `--project`, `--project-url` and `--project-api-key`, have none, a project is chosen per command. The contract tests check the pairs.
 
 ## Secrets
 

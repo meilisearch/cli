@@ -5,7 +5,7 @@ import Health from "../../src/commands/get/health.js";
 import { MANAGEMENT_URL, managementHandlers, project } from "../helpers/management-handlers.js";
 import { MEILISEARCH_URL, meilisearchHandlers } from "../helpers/meilisearch-handlers.js";
 import { server, useMockServer } from "../helpers/msw.js";
-import { runCommand } from "../helpers/run-command.js";
+import { runCommand, tempConfig } from "../helpers/run-command.js";
 
 useMockServer();
 
@@ -30,6 +30,20 @@ describe("--debug", () => {
     expect(result.stderr).toContain("< HTTP 200 OK");
     expect(result.stderr).toContain('< {"status":"available"}');
     expect(result.stderr).not.toContain(SECRET);
+  });
+
+  it("masks the key of a config file entry reached with --project", async () => {
+    server.use(meilisearchHandlers.health());
+    const { env } = tempConfig("redaction.json", {
+      prod: { url: MEILISEARCH_URL, apiKey: SECRET },
+    });
+    const result = await runCommand(Health, ["--debug", "--output", "json", "--project", "prod"], {
+      env,
+    });
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toContain("> authorization: Bearer ****1a2b");
+    expect(result.stderr).not.toContain(SECRET);
+    expect(result.stdout).not.toContain(SECRET);
   });
 
   it("masks the management token and the project's masterKey in the trace and on stdout", async () => {

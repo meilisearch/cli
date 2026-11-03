@@ -68,7 +68,7 @@ export abstract class BaseCommand extends Command {
    * `["indexes.get"]`, as the `security` of the OpenAPI document declares it.
    * `meili schema --command` prints them so that a 403 names what the key
    * lacks. Empty when no key action is required (`GET /health`), and on the
-   * Management API, whose token carries no scope.
+   * Management API, whose document declares no key action.
    */
   static keyActions: readonly string[] = [];
 
@@ -95,7 +95,8 @@ export abstract class BaseCommand extends Command {
    */
   static connectionFlags = {
     "project-url": Flags.string({
-      description: "Project URL, the Meilisearch instance to talk to.",
+      description:
+        "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
       helpValue: "<url>",
     }),
     "project-api-key": Flags.string({
@@ -104,7 +105,8 @@ export abstract class BaseCommand extends Command {
       parse: async (value) => (value === "-" ? readStdin() : value),
     }),
     project: Flags.string({
-      description: "A project of the config file. Cannot be combined with --project-url.",
+      description:
+        "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
       helpValue: "<name>",
     }),
   };

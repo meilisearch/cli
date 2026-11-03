@@ -88,11 +88,14 @@ FLAGS
                                           totalPages instead of
                                           estimatedTotalHits.
       --project=<name>                    A project of the config file. Cannot
-                                          be combined with --project-url.
+                                          be combined with --project-url. One of
+                                          --project or --project-url is
+                                          required.
       --project-api-key=<key>             Project API key. \`-\` reads it from
                                           stdin.
       --project-url=<url>                 Project URL, the Meilisearch instance
-                                          to talk to.
+                                          to talk to. One of --project or
+                                          --project-url is required.
       --q=<query>                         The search terms. Omit it for a
                                           placeholder search, which returns
                                           everything.

@@ -116,7 +116,7 @@ export function hasRoute(spec: OpenApiDocument, route: Route): boolean {
  * lists them from the most specific to the widest wildcard, `["indexes.get",
  * "indexes.*", "*"]`, and a command declares the first one in `keyActions`.
  * Empty when the routes need no key action, as on `GET /health`, and on the
- * Management API, whose personal access token declares no scope.
+ * Management API, whose document declares no key action.
  */
 export function keyActionsForRoutes(spec: OpenApiDocument, routes: readonly Route[]): string[] {
   const actions = new Set<string>();
