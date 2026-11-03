@@ -43,6 +43,8 @@ meili add projects --name demo --team-id 12 --resource-id 3 --sync-config   # cr
 ```sh
 meili --help             # every command, global flag and environment variable
 meili get indexes --help # one command: flags, examples
+meili schema             # the command tree as JSON, one entry per command with its routes
+meili schema --command "get indexes" # one command in full, as JSON
 ```
 
 To contribute, read [`CONTRIBUTING.md`](CONTRIBUTING.md). [MIT](LICENSE).
