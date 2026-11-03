@@ -126,7 +126,7 @@ export type Project = {
     projectUid: string;
     url?: string | null;
     /**
-     * Only returned on project creation and master key rotation.
+     * Only returned on project creation and master key endpoints.
      */
     masterKey?: string;
     teamId: number;
@@ -435,6 +435,35 @@ export type GetApiV2ProjectsByProjectIdCostResponses = {
 };
 
 export type GetApiV2ProjectsByProjectIdCostResponse = GetApiV2ProjectsByProjectIdCostResponses[keyof GetApiV2ProjectsByProjectIdCostResponses];
+
+export type GetApiV2ProjectsByProjectIdMasterKeyData = {
+    body?: never;
+    path: {
+        projectId: number;
+    };
+    query?: never;
+    url: '/api/v2/projects/{projectId}/master-key';
+};
+
+export type GetApiV2ProjectsByProjectIdMasterKeyErrors = {
+    /**
+     * unauthorized
+     */
+    401: unknown;
+    /**
+     * not a team or organization owner
+     */
+    403: unknown;
+};
+
+export type GetApiV2ProjectsByProjectIdMasterKeyResponses = {
+    /**
+     * project with master key
+     */
+    200: Project;
+};
+
+export type GetApiV2ProjectsByProjectIdMasterKeyResponse = GetApiV2ProjectsByProjectIdMasterKeyResponses[keyof GetApiV2ProjectsByProjectIdMasterKeyResponses];
 
 export type PatchApiV2ProjectsByProjectIdMasterKeyData = {
     body?: never;
