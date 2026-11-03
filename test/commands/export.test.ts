@@ -8,7 +8,7 @@ import {
   meilisearchHandlers,
 } from "../helpers/meilisearch-handlers.js";
 import { recordRequests, server, useMockServer } from "../helpers/msw.js";
-import { runCli, runCommand } from "../helpers/run-command.js";
+import { runCli, runCommand, tempConfig } from "../helpers/run-command.js";
 
 useMockServer();
 
@@ -19,9 +19,9 @@ const exportType = "export" as TaskType;
 const exporting = makeEnqueuedTask({ taskUid: 7, indexUid: null, type: exportType });
 
 /** The body the CLI sent to POST /export. */
-async function bodyOf(argv: string[]): Promise<unknown> {
+async function bodyOf(argv: string[], runEnv: Record<string, string> = env): Promise<unknown> {
   const requests = await recordRequests(async () => {
-    await runCommand(Export, argv, { env });
+    await runCommand(Export, argv, { env: runEnv });
   });
   expect(requests).toHaveLength(1);
   expect(requests[0]?.method).toBe("POST");
@@ -79,6 +79,43 @@ describe("meili export", () => {
       url: "http://localhost:7701",
       indexes: { "*": { overrideSettings: true } },
     });
+  });
+
+  it("takes the destination from a project of the config file with --project-destination", async () => {
+    server.use(meilisearchHandlers.export(exporting));
+    const config = tempConfig("destination.json", {
+      prod: { url: remote, apiKey: "prodkey1" },
+      staging: { url: "http://localhost:7701" },
+    });
+    const source = ["--project-url", MEILISEARCH_URL];
+    expect(await bodyOf([...source, "--project-destination", "prod"], config.env)).toEqual({
+      url: remote,
+      apiKey: "prodkey1",
+    });
+    expect(
+      await bodyOf([...source, "--project-destination", "prod", "--api-key", "other"], config.env),
+    ).toEqual({ url: remote, apiKey: "other" });
+    expect(await bodyOf([...source, "--project-destination", "staging"], config.env)).toEqual({
+      url: "http://localhost:7701",
+    });
+  });
+
+  it("refuses --project-destination with --url, and a name the config file does not have", async () => {
+    const config = tempConfig("refused.json", { prod: { url: remote } });
+    const source = ["--project-url", MEILISEARCH_URL, "--output", "json"];
+    const both = await runCommand(
+      Export,
+      [...source, "--project-destination", "prod", "--url", remote],
+      { env: config.env },
+    );
+    expect(both.exitCode).toBe(2);
+    expect(both.stdout).toBe("");
+    const missing = await runCommand(Export, [...source, "--project-destination", "nope"], {
+      env: config.env,
+    });
+    expect(missing.exitCode).toBe(2);
+    expect(missing.stdout).toBe("");
+    expect(missing.stderr).toContain("cli_config");
   });
 
   it("polls the task to its final status with --wait", async () => {
