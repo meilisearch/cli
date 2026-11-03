@@ -22,7 +22,7 @@ meili config set --project local --project-url http://localhost:7700 --project-a
 meili config list                    # the projects of the file, keys masked
 ```
 
-The config file is `~/.config/meili/config.json` by default, `$XDG_CONFIG_HOME/meili/config.json` when `XDG_CONFIG_HOME` is set. `MEILI_CONFIG` names another file.
+The config file is `~/.config/meili/config.json` by default. `MEILI_CONFIG` names another file.
 
 `--team-ids`, `--project-name` and `--project-url` narrow `sync-with-cloud` down. A key already in the file is never replaced; `meili config update --project <name> --project-api-key -` gives a project the key you got elsewhere.
 
