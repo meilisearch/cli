@@ -62,7 +62,7 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 | `PATCH /keys/{key}` | `meili update keys --id <key> [--name <name>] [--description <text>]` |
 | `DELETE /keys/{key}` | `meili delete keys --id <key> --yes` |
 | `POST /dumps` | `meili add dumps` |
-| `POST /export` | `meili export (--url <url> [--api-key <key>] \| --project-destination <name>) [--indexes <json>]` |
+| `POST /export` | `meili export (--url <url> \| --project-destination <name>) [--api-key <key>] [--indexes <json>]` |
 | `GET /api/v2/projects`, `GET /api/v2/projects/{id}` | `meili get projects [--id <id> \| --project <name>] [--team-id <id>]` |
 | `POST /api/v2/projects` | `meili add projects --name <name> --team-id <id> --resource-id <id> [--ms-version <version>] [--sync-config]` |
 | `PATCH /api/v2/projects/{id}` | `meili update projects (--id <id> \| --project <name>) --name <name> [--sync-config]` |
