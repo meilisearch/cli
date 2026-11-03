@@ -6,45 +6,59 @@
 
 TBD. The package is not published yet. To run it from the source, see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-## Configure
+## Get started
 
-**Meilisearch API**, for the commands that talk to a project, that is a Meilisearch instance, yours or on Meilisearch Cloud:
-
-```sh
-meili get health --project-url http://localhost:7700 --project-api-key masterKey   # the key only if the instance has one
-```
-
-**Management API**, for the commands that manage Meilisearch Cloud, `meili get projects`, `meili add projects`, `meili update projects` and `meili delete projects`:
+**1. Log in to Meilisearch Cloud**, once, in a browser:
 
 ```sh
-meili auth login     # once, in a browser; the session is kept next to the config file
-
-meili add projects --name demo --team-id 12 --resource-id 3
+meili auth login
 ```
 
-The management commands refresh the session on their own. `meili auth status` says whether it is still accepted, `meili auth logout` ends it. A coding agent uses the session you logged in with; it never runs `auth login` itself. The session sits next to the config file, so for an agent with its own `MEILI_CONFIG`, log in with that variable set: `MEILI_CONFIG=<its file> meili auth login`.
+The session is kept next to the config file, and the management commands refresh it on their own. `meili auth status` says whether it is still accepted, `meili auth logout` ends it.
 
-A project has no variable: every command names it, with `--project-url` and `--project-api-key` or with `--project`.
+**2. Add your projects to the config file**, `~/.config/meili/config.json`:
 
-**Named projects**: put them in `~/.config/meili/config.json`, readable by you alone, and name the one a command targets with `--project`:
+```sh
+meili config sync-with-cloud --all   # every Cloud project you can see, with its URL and, when you own its team, its master key
+meili config set --project local --project-url http://localhost:7700 --project-api-key - < key.txt   # an instance that is not on Meilisearch Cloud
+meili config list                    # the projects of the file, keys masked
+```
+
+`--team-ids`, `--project-name` and `--project-url` narrow `sync-with-cloud` down. A key already in the file is never replaced; `meili config update --project <name> --project-api-key -` gives a project the key you got elsewhere.
+
+**3. Run commands**, naming the project with `--project`:
+
+```sh
+meili get indexes --project prod
+meili search --project prod --index movies --q "star wars"
+meili add documents --project local --index movies --file movies.json --wait
+meili update projects --project prod --name renamed   # a management command, on the Cloud project of the entry
+meili add projects --name demo --team-id 12 --resource-id 3 --sync-config   # creates a Cloud project and adds it to the file
+```
+
+`--project` is required on every command, even when the file has a single project: the CLI never guesses, and no environment variable stands for it. Without a config file, name the instance outright: `--project-url <url> --project-api-key <key>`.
+
+## The config file
 
 ```json
 {
   "projects": {
-    "local": { "url": "http://localhost:7700" },
+    "local": { "url": "http://localhost:7700", "apiKey": "..." },
     "prod": { "url": "https://ms-abc.sfo.meilisearch.io", "apiKey": "...", "cloud": { "id": 343, "teamId": 12, "teamName": "Search" } }
   }
 }
 ```
 
+`cloud` holds the project's identifiers in Meilisearch Cloud, which the dashboard does not show: `sync-with-cloud`, `--sync-with-cloud` on `config set` and `config update`, and `--sync-config` on `add projects`, `update projects` and `delete projects` write it. `meili config list`, `config set`, `config update`, `config unset` and `config sync-with-cloud` manage the file. It holds your keys: keep it readable by you alone, the CLI warns on stderr otherwise. `MEILI_CONFIG` names another file.
+
+## For a coding agent
+
+Give the agent its own config file through `MEILI_CONFIG`, read-only: the file is shared state, and an agent must not be able to change where another one's commands go. It changes nothing in it, neither a project nor its permissions, unless you asked for it explicitly. The agent uses the session you logged in with and never runs `auth login` itself; the session sits next to the config file, so log in with the agent's variable set:
+
 ```sh
-meili get indexes --project prod
-meili update projects --project prod --name renamed   # a management command uses cloud.id
+MEILI_CONFIG=~/agents/search/config.json meili auth login
+MEILI_CONFIG=~/agents/search/config.json meili config sync-with-cloud --project-name prod
 ```
-
-`--project` is required, even when the file has a single project: the CLI never guesses. `MEILI_CONFIG` names another file. For a coding agent, give it its own file through `MEILI_CONFIG`, read-only: the file is shared state, and an agent must not be able to change where another one's commands go. The file holds your keys: keep it readable by you alone, the CLI warns on stderr otherwise, and an agent changes nothing in it, neither a project nor its permissions, unless you asked for it explicitly. `meili config list`, `meili config set`, `meili config update`, `meili config unset` and `meili config sync-with-cloud` manage the file.
-
-`cloud` holds the project's identifiers in Meilisearch Cloud, which the dashboard does not show. `meili config sync-with-cloud --all` gives every project you can see an entry, with its URL, its `cloud` and, when you own its team or organization, its master key; `--team-ids`, `--project-name` and `--project-url` narrow it down. A key already in the file is never replaced. `--sync-with-cloud` on `config set` and `config update` does the same for one entry, and `--sync-config` on `add projects`, `update projects` and `delete projects` makes the file follow the command.
 
 ## Documentation
 
