@@ -42,6 +42,18 @@ export function nextFromQuery(query: FromQuery, page: ListPage): FromQuery | und
   return typeof next === "number" ? { ...query, from: next } : undefined;
 }
 
+/** The query of a route that pages by number: the Management API's. */
+export interface PageQuery {
+  page?: number | undefined;
+}
+
+/** The query of the page after `page` on a numbered route, or undefined past `totalPages`. */
+export function nextPageQuery<Q extends PageQuery>(query: Q, page: ListPage): Q | undefined {
+  const current = numberField(page, "page");
+  const done = page.results.length === 0 || current >= numberField(page, "totalPages");
+  return done ? undefined : { ...query, page: current + 1 };
+}
+
 /** Fetches page after page until `nextQuery` says there is no page left. */
 export async function* iteratePages<Q, P extends ListPage>(
   fetchPage: (query: Q) => Promise<P>,

@@ -2,6 +2,7 @@ import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { postApiV2Projects } from "../../lib/clients/management/generated/sdk.gen.js";
 import type { PostApiV2ProjectsData } from "../../lib/clients/management/generated/types.gen.js";
+import { cloudOf, readTeamNames } from "../../lib/cloud-sync.js";
 import { assertNoProject, type ConfigFile, writeConfigFile } from "../../lib/config.js";
 import { MeiliCliError } from "../../lib/errors.js";
 import { readBodyWithFields } from "../../lib/input.js";
@@ -36,7 +37,7 @@ export default class AddProjects extends BaseCommand {
     }),
     "sync-config": Flags.boolean({
       description:
-        "Add the project to the config file, as an entry named after it with its URL, its master key and its cloudId.",
+        "Add the project to the config file, as an entry named after it with its URL, its master key and its cloud identifiers.",
     }),
     ...BaseCommand.bodyInputFlags,
   };
@@ -71,7 +72,7 @@ export default class AddProjects extends BaseCommand {
         "cli_config",
         `Project ${project.id} is created but has no URL yet, so it was not added to ${sync.file.path}.`,
         {
-          hint: `Run \`meili config set --project ${sync.entry} --project-url <url> --project-api-key <key> --project-cloud-id ${project.id}\` once \`meili get projects --id ${project.id}\` shows its URL; the key is the masterKey printed above.`,
+          hint: `Run \`meili config set --project ${sync.entry} --project-url <url> --project-api-key <key> --sync-with-cloud\` once \`meili get projects --id ${project.id}\` shows its URL; the key is the masterKey printed above.`,
         },
       );
     }
@@ -79,7 +80,11 @@ export default class AddProjects extends BaseCommand {
       path: sync.file.path,
       projects: {
         ...sync.file.projects,
-        [sync.entry]: { url: project.url, apiKey: project.masterKey, cloudId: project.id },
+        [sync.entry]: {
+          url: project.url,
+          apiKey: project.masterKey,
+          cloud: cloudOf(project, await readTeamNames(this.managementClient)),
+        },
       },
     });
   }

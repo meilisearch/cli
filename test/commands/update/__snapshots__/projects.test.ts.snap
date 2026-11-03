@@ -27,16 +27,17 @@ FLAGS
                                 secrets redacted.
       --file=<path>             Read the body from a file. \`-\` reads from stdin.
       --id=<id>                 The project to update, or give --project <name>
-                                and its cloudId from the config file.
+                                and its cloud.id from the config file.
       --management-token=<pat>  Management API personal access token.
       --management-url=<url>    Management API base URL. Default
                                 https://api.meilisearch.com.
       --name=<name>             New name of the project.
-      --project=<name>          A project of the config file, whose cloudId
+      --project=<name>          A project of the config file, whose cloud.id
                                 names the Cloud project, in place of --id.
       --sync-config             Rename the project's entry of the config file
                                 after it: the entry --project names, or the one
-                                whose cloudId is --id.
+                                whose cloud.id is --id. Refreshes its cloud
+                                identifiers.
 
 DESCRIPTION
   Rename a Meilisearch Cloud project.

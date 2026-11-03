@@ -40,8 +40,8 @@ describe("meili add projects", () => {
     ]);
   });
 
-  it("adds the project to the config file with --sync-config: its URL, its master key and its cloudId", async () => {
-    server.use(managementHandlers.createProject());
+  it("adds the project to the config file with --sync-config: its URL, its master key and its cloud identifiers", async () => {
+    server.use(managementHandlers.createProject(), managementHandlers.listTeams());
     const { path, env: configEnv } = tempConfig("sync-config.json", {
       local: { url: "http://localhost:7700" },
     });
@@ -58,7 +58,7 @@ describe("meili add projects", () => {
         demo: {
           url: "https://ms-abc.sfo.meilisearch.io",
           apiKey: "projectmasterkey9z8y",
-          cloudId: 343,
+          cloud: { id: 343, teamId: 12, teamName: "Search" },
         },
       },
     });
@@ -69,6 +69,7 @@ describe("meili add projects", () => {
       http.post(`${MANAGEMENT_URL}/api/v2/projects`, () =>
         HttpResponse.json({ ...project, name: "taken" }, { status: 201 }),
       ),
+      managementHandlers.listTeams(),
     );
     const { path, env: configEnv } = tempConfig("sync-other-name.json", {
       taken: { url: "http://elsewhere" },
@@ -82,7 +83,35 @@ describe("meili add projects", () => {
     expect(readJson(path)).toEqual({
       projects: {
         taken: { url: "http://elsewhere" },
-        demo: { url: project.url, apiKey: project.masterKey, cloudId: 343 },
+        demo: {
+          url: project.url,
+          apiKey: project.masterKey,
+          cloud: { id: 343, teamId: 12, teamName: "Search" },
+        },
+      },
+    });
+  });
+
+  it("writes the entry without teamName, with a warning, when the team names cannot be read", async () => {
+    server.use(
+      managementHandlers.createProject(),
+      managementHandlers.apiError("/api/v2/teams", 403, forbidden),
+    );
+    const { path, env: configEnv } = tempConfig("sync-no-team.json", {});
+    const result = await runCommand(
+      AddProjects,
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--sync-config"],
+      { env: { ...env, ...configEnv } },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(JSON.parse(result.stderr).warning).toMatchObject({
+      code: "project_not_accessible",
+      message:
+        "The team names could not be read, the entries are written without teamName: You cannot access this project.",
+    });
+    expect(readJson(path)).toEqual({
+      projects: {
+        demo: { url: project.url, apiKey: project.masterKey, cloud: { id: 343, teamId: 12 } },
       },
     });
   });

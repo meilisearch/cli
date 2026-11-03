@@ -37,7 +37,7 @@ FLAGS
                                 region.
       --sync-config             Add the project to the config file, as an entry
                                 named after it with its URL, its master key and
-                                its cloudId.
+                                its cloud identifiers.
       --team-id=<id>            Team that owns the project.
 
 DESCRIPTION

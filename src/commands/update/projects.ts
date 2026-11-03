@@ -2,6 +2,7 @@ import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { patchApiV2ProjectsById } from "../../lib/clients/management/generated/sdk.gen.js";
 import type { PatchApiV2ProjectsByIdData } from "../../lib/clients/management/generated/types.gen.js";
+import { cloudOf, readTeamNames } from "../../lib/cloud-sync.js";
 import {
   assertNoProject,
   type ConfigFile,
@@ -31,13 +32,13 @@ export default class UpdateProjects extends BaseCommand {
     ...BaseCommand.cloudProjectFlags,
     id: Flags.integer({
       description:
-        "The project to update, or give --project <name> and its cloudId from the config file.",
+        "The project to update, or give --project <name> and its cloud.id from the config file.",
       helpValue: "<id>",
     }),
     name: Flags.string({ description: "New name of the project.", helpValue: "<name>" }),
     "sync-config": Flags.boolean({
       description:
-        "Rename the project's entry of the config file after it: the entry --project names, or the one whose cloudId is --id.",
+        "Rename the project's entry of the config file after it: the entry --project names, or the one whose cloud.id is --id. Refreshes its cloud identifiers.",
     }),
     ...BaseCommand.bodyInputFlags,
   };
@@ -70,13 +71,13 @@ export default class UpdateProjects extends BaseCommand {
     });
     await this.output(project);
     if (sync === undefined) return;
+    const cloud = cloudOf(project, await readTeamNames(this.managementClient));
     writeConfigFile({
       path: sync.file.path,
       projects: Object.fromEntries(
-        Object.entries(sync.file.projects).map(([name, entry]) => [
-          name === sync.entry ? sync.name : name,
-          entry,
-        ]),
+        Object.entries(sync.file.projects).map(([name, entry]) =>
+          name === sync.entry ? [sync.name, { ...entry, cloud }] : [name, entry],
+        ),
       ),
     });
   }

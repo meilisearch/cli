@@ -179,11 +179,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -446,11 +473,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -728,11 +782,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -910,7 +991,7 @@
           "type": "option"
         },
         "sync-config": {
-          "description": "Add the project to the config file, as an entry named after it with its URL, its master key and its cloudId.",
+          "description": "Add the project to the config file, as an entry named after it with its URL, its master key and its cloud identifiers.",
           "name": "sync-config",
           "allowNo": false,
           "type": "boolean"
@@ -989,11 +1070,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -1202,11 +1310,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -1384,11 +1519,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -1566,11 +1728,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -1748,11 +1937,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -2083,11 +2299,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -2266,11 +2509,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -2370,11 +2640,11 @@
     "config:set": {
       "aliases": [],
       "args": {},
-      "description": "Set a project in the config file, creating the file owner-only; refuses a name that exists.\n\nThe file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+      "description": "Set a project in the config file, creating the file owner-only; refuses a name that exists. Talks to the Management API only with --sync-with-cloud.\n\nThe file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700",
         "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
-        "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-cloud-id 343",
+        "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
         "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700 --output json"
       ],
       "flags": {
@@ -2423,11 +2693,31 @@
           "multiple": false,
           "type": "option"
         },
-        "project-cloud-id": {
-          "description": "Id of the project in Meilisearch Cloud, for the management commands.",
-          "name": "project-cloud-id",
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "name": "sync-with-cloud",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "dependsOn": [
+            "sync-with-cloud"
+          ],
+          "description": "Management API personal access token.",
+          "name": "management-token",
           "hasDynamicHelp": false,
-          "helpValue": "<id>",
+          "helpValue": "<pat>",
+          "multiple": false,
+          "type": "option"
+        },
+        "management-url": {
+          "dependsOn": [
+            "sync-with-cloud"
+          ],
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "name": "management-url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
           "multiple": false,
           "type": "option"
         }
@@ -2484,11 +2774,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -2585,6 +2902,263 @@
         "set.js"
       ]
     },
+    "config:sync-with-cloud": {
+      "aliases": [],
+      "args": {},
+      "description": "Give every Meilisearch Cloud project of the scope an entry of the config file, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.\n\nThe file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %> --all",
+        "<%= config.bin %> <%= command.id %> --team-ids 12,13",
+        "<%= config.bin %> <%= command.id %> --project-name prod",
+        "<%= config.bin %> <%= command.id %> --project-url https://ms-abc.sfo.meilisearch.io --output json"
+      ],
+      "flags": {
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "name": "management-token",
+          "hasDynamicHelp": false,
+          "helpValue": "<pat>",
+          "multiple": false,
+          "type": "option"
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "name": "management-url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Every project the token sees.",
+          "name": "all",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "team-ids": {
+          "description": "The projects of these teams, comma-separated.",
+          "name": "team-ids",
+          "hasDynamicHelp": false,
+          "helpValue": "<ids>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project-name": {
+          "description": "The projects with exactly this name, in any team.",
+          "name": "project-name",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "project-url": {
+          "description": "The project with this URL, same scheme and host.",
+          "name": "project-url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "config:sync-with-cloud",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "management",
+      "routes": [],
+      "keyActions": [],
+      "connectionFlags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "helpValue": "<key>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "managementFlags": {
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "cloudProjectFlags": {
+        "project": {
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        }
+      },
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "config",
+        "sync-with-cloud.js"
+      ]
+    },
     "config:unset": {
       "aliases": [],
       "args": {},
@@ -2675,11 +3249,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -2779,9 +3380,9 @@
     "config:update": {
       "aliases": [],
       "args": {},
-      "description": "Change the fields given of a project of the config file; refuses a name that does not exist.\n\nThe file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+      "description": "Change the fields given of a project of the config file; refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.\n\nThe file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --project prod --project-cloud-id 343",
+        "<%= config.bin %> <%= command.id %> --project prod --sync-with-cloud",
         "<%= config.bin %> <%= command.id %> --project prod --project-api-key - < key.txt",
         "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7701 --output json"
       ],
@@ -2830,11 +3431,31 @@
           "multiple": false,
           "type": "option"
         },
-        "project-cloud-id": {
-          "description": "New id of the project in Meilisearch Cloud, for the management commands.",
-          "name": "project-cloud-id",
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "name": "sync-with-cloud",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "dependsOn": [
+            "sync-with-cloud"
+          ],
+          "description": "Management API personal access token.",
+          "name": "management-token",
           "hasDynamicHelp": false,
-          "helpValue": "<id>",
+          "helpValue": "<pat>",
+          "multiple": false,
+          "type": "option"
+        },
+        "management-url": {
+          "dependsOn": [
+            "sync-with-cloud"
+          ],
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "name": "management-url",
+          "hasDynamicHelp": false,
+          "helpValue": "<url>",
           "multiple": false,
           "type": "option"
         }
@@ -2891,11 +3512,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -3205,11 +3853,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -3449,11 +4124,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -3675,11 +4377,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -3823,7 +4552,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -3831,7 +4560,7 @@
           "type": "option"
         },
         "id": {
-          "description": "The project to delete, or give --project <name> and its cloudId from the config file.",
+          "description": "The project to delete, or give --project <name> and its cloud.id from the config file.",
           "name": "id",
           "hasDynamicHelp": false,
           "helpValue": "<id>",
@@ -3839,7 +4568,7 @@
           "type": "option"
         },
         "sync-config": {
-          "description": "Remove the project's entry from the config file: the entry --project names, or the one whose cloudId is --id.",
+          "description": "Remove the project's entry from the config file: the entry --project names, or the one whose cloud.id is --id.",
           "name": "sync-config",
           "allowNo": false,
           "type": "boolean"
@@ -3906,11 +4635,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -4150,11 +4906,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -4492,11 +5275,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -4773,11 +5583,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -5102,11 +5939,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -5449,11 +6313,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -5753,11 +6644,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -5962,11 +6880,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -6206,11 +7151,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -6450,11 +7422,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -6600,7 +7599,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -6608,7 +7607,7 @@
           "type": "option"
         },
         "id": {
-          "description": "The project to get, or give --project <name> and its cloudId from the config file. Without either, the command lists the projects.",
+          "description": "The project to get, or give --project <name> and its cloud.id from the config file. Without either, the command lists the projects.",
           "name": "id",
           "hasDynamicHelp": false,
           "helpValue": "<id>",
@@ -6679,11 +7678,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -6898,11 +7924,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -7136,11 +8189,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -7484,11 +8564,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -7694,11 +8801,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -7941,11 +9075,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -8132,11 +9293,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -8582,11 +9770,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -8901,11 +10116,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -9180,11 +10422,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -9456,11 +10725,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -9711,11 +11007,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -9860,7 +11183,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -9868,7 +11191,7 @@
           "type": "option"
         },
         "id": {
-          "description": "The project to update, or give --project <name> and its cloudId from the config file.",
+          "description": "The project to update, or give --project <name> and its cloud.id from the config file.",
           "name": "id",
           "hasDynamicHelp": false,
           "helpValue": "<id>",
@@ -9884,7 +11207,7 @@
           "type": "option"
         },
         "sync-config": {
-          "description": "Rename the project's entry of the config file after it: the entry --project names, or the one whose cloudId is --id.",
+          "description": "Rename the project's entry of the config file after it: the entry --project names, or the one whose cloud.id is --id. Refreshes its cloud identifiers.",
           "name": "sync-config",
           "allowNo": false,
           "type": "boolean"
@@ -9963,11 +11286,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {
@@ -10397,11 +11747,38 @@
       },
       "cloudProjectFlags": {
         "project": {
-          "description": "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
           "multiple": false,
           "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "management-token": {
+          "description": "Management API personal access token.",
+          "helpValue": "<pat>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
+        },
+        "management-url": {
+          "description": "Management API base URL. Default https://api.meilisearch.com.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option",
+          "dependsOn": [
+            "sync-with-cloud"
+          ]
         }
       },
       "waitFlags": {

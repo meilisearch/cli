@@ -27,7 +27,7 @@ export default class GetProjects extends BaseCommand {
     ...BaseCommand.cloudProjectFlags,
     id: Flags.integer({
       description:
-        "The project to get, or give --project <name> and its cloudId from the config file. Without either, the command lists the projects.",
+        "The project to get, or give --project <name> and its cloud.id from the config file. Without either, the command lists the projects.",
       helpValue: "<id>",
     }),
     "team-id": Flags.integer({

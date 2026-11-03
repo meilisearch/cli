@@ -80,8 +80,15 @@ export const ENV_VARS: ReadonlyArray<{ name: string; description: string; flag?:
 export interface ProjectEntry {
   url: string;
   apiKey?: string;
-  /** The project's `id` in the Management API, for the management commands. */
-  cloudId?: number;
+  /** The project in Meilisearch Cloud, written from the Management API (ADR 0011). */
+  cloud?: CloudIdentifiers;
+}
+
+/** `id` names the project on the management commands; the team is for the reader of the file. */
+export interface CloudIdentifiers {
+  id: number;
+  teamId?: number;
+  teamName?: string;
 }
 
 export interface ConfigFile {
@@ -118,7 +125,7 @@ function parseProjects(parsed: unknown, path: string): Record<string, ProjectEnt
   const shape = () =>
     new MeiliCliError(
       "cli_config",
-      `The config file ${path} must be {"projects": {"<name>": {"url": "...", "apiKey": "...", "cloudId": 1}}}, the key and the id optional.`,
+      `The config file ${path} must be {"projects": {"<name>": {"url": "...", "apiKey": "...", "cloud": {"id": 1, "teamId": 2, "teamName": "..."}}}}, the key and cloud optional, and in cloud the team.`,
     );
   const projects = isRecord(parsed) ? parsed.projects : undefined;
   if (!isRecord(projects)) throw shape();
@@ -126,11 +133,28 @@ function parseProjects(parsed: unknown, path: string): Record<string, ProjectEnt
   for (const [name, entry] of Object.entries(projects)) {
     if (!isRecord(entry) || typeof entry.url !== "string") throw shape();
     if (entry.apiKey !== undefined && typeof entry.apiKey !== "string") throw shape();
-    if (entry.cloudId !== undefined && !Number.isInteger(entry.cloudId)) throw shape();
+    const { cloud } = entry;
+    if (
+      cloud !== undefined &&
+      (!isRecord(cloud) ||
+        !Number.isInteger(cloud.id) ||
+        (cloud.teamId !== undefined && !Number.isInteger(cloud.teamId)) ||
+        (cloud.teamName !== undefined && typeof cloud.teamName !== "string"))
+    ) {
+      throw shape();
+    }
     result[name] = {
       url: entry.url,
       ...(entry.apiKey === undefined ? {} : { apiKey: entry.apiKey }),
-      ...(entry.cloudId === undefined ? {} : { cloudId: entry.cloudId as number }),
+      ...(cloud === undefined
+        ? {}
+        : {
+            cloud: {
+              id: cloud.id as number,
+              ...(cloud.teamId === undefined ? {} : { teamId: cloud.teamId as number }),
+              ...(cloud.teamName === undefined ? {} : { teamName: cloud.teamName as string }),
+            },
+          }),
     };
   }
   return result;
@@ -244,7 +268,7 @@ export function resolveProjectConnection(
 
 /**
  * The Cloud project a management command acts on (config.md, "Cloud projects"):
- * `--id` as given, or the `cloudId` of the entry named by `--project`. Both
+ * `--id` as given, or the `cloud.id` of the entry named by `--project`. Both
  * together contradict each other; neither is a usage error.
  */
 export function resolveCloudProjectId(
@@ -267,17 +291,15 @@ export function resolveCloudProjectId(
     return flags.id;
   }
   const file = readFile();
-  const { cloudId } = projectOf(file, flags.project);
-  if (cloudId === undefined) {
+  const { cloud } = projectOf(file, flags.project);
+  if (cloud === undefined) {
     throw new MeiliCliError(
       "cli_config",
-      `Project \`${flags.project}\` has no \`cloudId\` in ${file.path}: the management commands need the project's id.`,
-      {
-        hint: `Run \`meili config update --project ${flags.project} --project-cloud-id <id>\`.`,
-      },
+      `Project \`${flags.project}\` has no cloud identifiers in ${file.path}: the management commands need the project's id.`,
+      { hint: `Run \`meili config update --project ${flags.project} --sync-with-cloud\`.` },
     );
   }
-  return cloudId;
+  return cloud.id;
 }
 
 /** `cli_config` when the file already has an entry named `name`; `detail` follows the path. */
@@ -295,7 +317,7 @@ export function assertNoProject(file: ConfigFile, name: string, detail: string):
 
 /**
  * The entry `--sync-config` changes for the Cloud project `id`: the one
- * `--project` names, else the one whose `cloudId` is `id`. None, or several,
+ * `--project` names, else the one whose `cloud.id` is `id`. None, or several,
  * is `cli_config` before any call; `detail` follows the path.
  */
 export function cloudProjectEntry(
@@ -305,21 +327,26 @@ export function cloudProjectEntry(
   detail: string,
 ): string {
   if (project !== undefined) return project;
-  const names = Object.keys(file.projects).filter((name) => file.projects[name]?.cloudId === id);
+  const names = entriesOfCloudId(file, id);
   const [name] = names;
   if (name !== undefined && names.length === 1) return name;
   throw new MeiliCliError(
     "cli_config",
     names.length === 0
-      ? `No project of ${file.path} has the cloudId ${id}${detail}`
-      : `Projects ${names.map((each) => `\`${each}\``).join(", ")} of ${file.path} have the cloudId ${id}${detail}`,
+      ? `No project of ${file.path} has the cloud id ${id}${detail}`
+      : `Projects ${names.map((each) => `\`${each}\``).join(", ")} of ${file.path} have the cloud id ${id}${detail}`,
     {
       hint:
         names.length === 0
-          ? `Run \`meili config update --project <name> --project-cloud-id ${id}\` first.`
+          ? `Run \`meili config sync-with-cloud --project-url <url>\` first, with the project's URL.`
           : "Name one with `--project` in place of `--id`.",
     },
   );
+}
+
+/** The names of the entries whose `cloud.id` is `id`. */
+export function entriesOfCloudId(file: ConfigFile, id: number): string[] {
+  return Object.keys(file.projects).filter((name) => file.projects[name]?.cloud?.id === id);
 }
 
 /** `cli_usage` unless `value` is an HTTP(S) URL: a Meilisearch instance answers over nothing else. */

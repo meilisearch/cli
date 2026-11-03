@@ -14,8 +14,9 @@ export function tableRows(markdown: string): string[][] {
     if (!line.startsWith("|")) continue;
     const cells = line
       .slice(1, line.endsWith("|") ? -1 : undefined)
-      .split("|")
-      .map((cell) => cell.trim());
+      // An escaped `\|` belongs to the cell, as in a code span of a command's usage.
+      .split(/(?<!\\)\|/)
+      .map((cell) => cell.trim().replaceAll("\\|", "|"));
     if (cells.every((cell) => /^:?-+:?$/.test(cell))) {
       // The separator row follows the header row: drop the header.
       rows.pop();

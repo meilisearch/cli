@@ -38,7 +38,8 @@ export type GlobalFlags = Interfaces.InferredFlags<
   typeof BaseCommand.baseFlags &
     typeof BaseCommand.connectionFlags &
     typeof BaseCommand.managementFlags &
-    typeof BaseCommand.cloudProjectFlags
+    typeof BaseCommand.cloudProjectFlags &
+    typeof BaseCommand.syncWithCloudFlags
 >;
 
 /** The two flags a list route declares whichever way it pages, shared by both groups below. */
@@ -129,15 +130,35 @@ export abstract class BaseCommand extends Command {
 
   /**
    * The Cloud project a management command acts on, when it acts on one:
-   * `--project` names an entry of the config file for its `cloudId` here,
-   * rather than for its URL and key (ADR 0006). Spread next to `--id`.
+   * `--project` names an entry of the config file for its `cloud.id` here,
+   * rather than for its URL and key (ADR 0011). Spread next to `--id`.
    */
   static cloudProjectFlags = {
     project: Flags.string({
       description:
-        "A project of the config file, whose cloudId names the Cloud project, in place of --id.",
+        "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
       helpValue: "<name>",
     }),
+  };
+
+  /**
+   * `config set` and `config update` work offline, and talk to the Management
+   * API only with `--sync-with-cloud` (ADR 0011): the connection flags take
+   * effect with it alone, so they depend on it.
+   */
+  static syncWithCloudFlags = {
+    "sync-with-cloud": Flags.boolean({
+      description:
+        "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+    }),
+    "management-token": {
+      ...BaseCommand.managementFlags["management-token"],
+      dependsOn: ["sync-with-cloud"],
+    },
+    "management-url": {
+      ...BaseCommand.managementFlags["management-url"],
+      dependsOn: ["sync-with-cloud"],
+    },
   };
 
   /** Shared group for write commands whose API response is a task. */
@@ -220,9 +241,10 @@ export abstract class BaseCommand extends Command {
     // Before any client: `auth login` talks to the authorization server with no client at all.
     if (this.globalFlags.debug) installHttpTrace();
 
-    if (this.api === "none") return;
+    const api = this.globalFlags["sync-with-cloud"] === true ? "management" : this.api;
+    if (api === "none") return;
 
-    if (this.api === "meilisearch") {
+    if (api === "meilisearch") {
       const connection = resolveProjectConnection(
         {
           url: this.globalFlags["project-url"],
@@ -267,7 +289,7 @@ export abstract class BaseCommand extends Command {
     this.exit(rendered.exitCode);
   }
 
-  /** The Cloud project a management command acts on: `--id`, or the `cloudId` of the entry `--project` names. */
+  /** The Cloud project a management command acts on: `--id`, or the `cloud.id` of the entry `--project` names. */
   protected cloudProjectId(id: number | undefined): number {
     return resolveCloudProjectId({ id, project: this.globalFlags.project }, () =>
       this.configFile(),

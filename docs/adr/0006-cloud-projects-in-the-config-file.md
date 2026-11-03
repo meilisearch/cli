@@ -1,6 +1,6 @@
 # ADR 0006: Cloud projects in the config file, the Management API consulted only on request
 
-Status: accepted. Date: 2026-10-15.
+Status: superseded by ADR 0011. Date: 2026-10-15.
 
 ## Context
 

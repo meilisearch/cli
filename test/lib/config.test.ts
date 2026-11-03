@@ -82,21 +82,31 @@ describe("readConfigFile", () => {
     },
   );
 
-  it("reads an entry's cloudId, a positive integer", () => {
+  it("reads an entry's cloud identifiers, the team optional", () => {
     const path = join(scrubbedHome, "cloud.json");
-    writeConfigFile({ path, projects: { prod: { url: "http://prod", cloudId: 343 } } });
+    const cloud = { id: 343, teamId: 12, teamName: "Search" };
+    writeConfigFile({
+      path,
+      projects: {
+        prod: { url: "http://prod", cloud },
+        dev: { url: "http://dev", cloud: { id: 7 } },
+      },
+    });
     expect(readConfigFile(path, noWarning).projects).toEqual({
-      prod: { url: "http://prod", cloudId: 343 },
+      prod: { url: "http://prod", cloud },
+      dev: { url: "http://dev", cloud: { id: 7 } },
     });
   });
 
-  it("refuses invalid JSON and a shape other than projects of url, apiKey and cloudId", () => {
+  it("refuses invalid JSON and a shape other than projects of url, apiKey and cloud", () => {
     for (const [name, content] of [
       ["bad.json", "{"],
       ["shape.json", '{"current":"prod"}'],
       ["entry.json", '{"projects":{"prod":{"apiKey":"k"}}}'],
       ["key.json", '{"projects":{"prod":{"url":"http://p","apiKey":1}}}'],
-      ["cloud.json", '{"projects":{"prod":{"url":"http://p","cloudId":"343"}}}'],
+      ["cloud.json", '{"projects":{"prod":{"url":"http://p","cloud":{"id":"343"}}}}'],
+      ["team.json", '{"projects":{"prod":{"url":"http://p","cloud":{"id":343,"teamName":1}}}}'],
+      ["cloud-id.json", '{"projects":{"prod":{"url":"http://p","cloudId":343,"cloud":7}}}'],
     ] as const) {
       const path = join(scrubbedHome, name);
       writeFileSync(path, content, { mode: 0o600 });
@@ -117,12 +127,13 @@ describe("writeConfigFile", () => {
 });
 
 describe("resolveCloudProjectId", () => {
-  const entries = () => file("ids.json", { prod: { url: "http://prod", cloudId: 343 }, local });
+  const entries = () =>
+    file("ids.json", { prod: { url: "http://prod", cloud: { id: 343 } }, local });
   const unread = () => {
     throw new Error("the file must not be read");
   };
 
-  it("takes --id as given, or the cloudId of the entry --project names", () => {
+  it("takes --id as given, or the cloud.id of the entry --project names", () => {
     expect(resolveCloudProjectId({ id: 7 }, unread)).toBe(7);
     expect(resolveCloudProjectId({ project: "prod" }, entries)).toBe(343);
   });
@@ -136,11 +147,11 @@ describe("resolveCloudProjectId", () => {
     expect(neither.message).toBe("Name the project with `--id <id>` or `--project <name>`.");
   });
 
-  it("fails with cli_config, naming the command that sets it, on an entry without cloudId", () => {
+  it("fails with cli_config, naming the command that sets it, on an entry without cloud identifiers", () => {
     const error = caught(() => resolveCloudProjectId({ project: "local" }, entries));
     expect(error.code).toBe("cli_config");
-    expect(error.message).toContain("`local` has no `cloudId`");
-    expect(error.hint).toBe("Run `meili config update --project local --project-cloud-id <id>`.");
+    expect(error.message).toContain("`local` has no cloud identifiers");
+    expect(error.hint).toBe("Run `meili config update --project local --sync-with-cloud`.");
   });
 });
 

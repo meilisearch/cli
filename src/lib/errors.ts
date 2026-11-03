@@ -322,10 +322,6 @@ export function writeError(rendered: RenderedError, options: RenderErrorOptions)
 }
 
 /**
- * Writes a warning on stderr, `{ "warning": ... }` in the shape of an error,
- * and the command goes on. Indented when stderr is a TTY, like errors.
- */
-/**
  * One line for the human, on stderr, and only when a human is there to read it
  * (docs/contract/output.md, "Streams"). Data never goes through here.
  */
@@ -333,8 +329,13 @@ export function writeNotice(line: string): void {
   if (process.stderr.isTTY === true) process.stderr.write(`${line}\n`);
 }
 
-export function writeWarning(warning: MeiliCliError): void {
-  const document = { warning: warning.toBody() };
+/**
+ * Writes a warning on stderr, `{ "warning": ... }` in the shape of an error,
+ * and the command goes on. Indented when stderr is a TTY, like errors. An API
+ * error the command goes on through keeps the API's code.
+ */
+export function writeWarning(warning: MeiliCliError | ErrorBody): void {
+  const document = { warning: warning instanceof MeiliCliError ? warning.toBody() : warning };
   const pretty = process.stderr.isTTY === true;
   process.stderr.write(
     `${pretty ? JSON.stringify(document, null, 2) : JSON.stringify(document)}\n`,

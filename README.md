@@ -33,19 +33,19 @@ The URL, the key and the token also exist as flags with the same name: `--projec
 {
   "projects": {
     "local": { "url": "http://localhost:7700" },
-    "prod": { "url": "https://ms-abc.sfo.meilisearch.io", "apiKey": "...", "cloudId": 343 }
+    "prod": { "url": "https://ms-abc.sfo.meilisearch.io", "apiKey": "...", "cloud": { "id": 343, "teamId": 12, "teamName": "Search" } }
   }
 }
 ```
 
 ```sh
 meili get indexes --project prod
-meili update projects --project prod --name renamed   # a management command uses the cloudId
+meili update projects --project prod --name renamed   # a management command uses cloud.id
 ```
 
-With several projects in the file, `--project` is required: the CLI never guesses, and it refuses to run when the file and the `MEILI_PROJECT_URL` variable both define a project. `MEILI_CONFIG` names another file. For a coding agent, give it its own file through `MEILI_CONFIG`, read-only: the file is shared state, and an agent must not be able to change where another one's commands go. The file holds your keys: keep it readable by you alone, the CLI warns on stderr otherwise, and an agent changes nothing in it, neither a project nor its permissions, unless you asked for it explicitly. `meili config list`, `meili config set`, `meili config update` and `meili config unset` manage the file.
+With several projects in the file, `--project` is required: the CLI never guesses, and it refuses to run when the file and the `MEILI_PROJECT_URL` variable both define a project. `MEILI_CONFIG` names another file. For a coding agent, give it its own file through `MEILI_CONFIG`, read-only: the file is shared state, and an agent must not be able to change where another one's commands go. The file holds your keys: keep it readable by you alone, the CLI warns on stderr otherwise, and an agent changes nothing in it, neither a project nor its permissions, unless you asked for it explicitly. `meili config list`, `meili config set`, `meili config update`, `meili config unset` and `meili config sync-with-cloud` manage the file.
 
-`cloudId` is the project's id in Meilisearch Cloud, which the dashboard does not show. `meili add projects --sync-config` adds the project it creates, with its URL, its master key and its `cloudId`: creation is the one moment the key is returned. `--sync-config` on `update projects` and `delete projects` renames or removes its entry. For a project created elsewhere, `meili config update --project <name> --project-cloud-id <id>` writes the id by hand.
+`cloud` holds the project's identifiers in Meilisearch Cloud, which the dashboard does not show. `meili config sync-with-cloud --all` gives every project your token sees an entry, with its URL, its `cloud` and, when you own its team or organization, its master key; `--team-ids`, `--project-name` and `--project-url` narrow it down. A key already in the file is never replaced. `--sync-with-cloud` on `config set` and `config update` does the same for one entry, and `--sync-config` on `add projects`, `update projects` and `delete projects` makes the file follow the command.
 
 ## Documentation
 

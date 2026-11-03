@@ -166,8 +166,11 @@ describe("global flags", () => {
       const connects =
         command.api === "meilisearch" || id === "config:set" || id === "config:update";
       // `--project-url` is the unambiguous one: `config unset --project` names an
-      // entry of the file, not a connection.
-      expect(flags.includes("project-url"), `${id} and --project-url`).toBe(connects);
+      // entry of the file, not a connection. `config sync-with-cloud --project-url`
+      // picks the Cloud project with that URL, and connects to nothing.
+      expect(flags.includes("project-url"), `${id} and --project-url`).toBe(
+        connects || id === "config:sync-with-cloud",
+      );
       if (connects) {
         for (const name of connection) expect(flags, `${id} lacks --${name}`).toContain(name);
       }

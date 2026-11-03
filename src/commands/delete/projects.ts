@@ -23,12 +23,12 @@ export default class DeleteProjects extends BaseCommand {
     ...BaseCommand.cloudProjectFlags,
     id: Flags.integer({
       description:
-        "The project to delete, or give --project <name> and its cloudId from the config file.",
+        "The project to delete, or give --project <name> and its cloud.id from the config file.",
       helpValue: "<id>",
     }),
     "sync-config": Flags.boolean({
       description:
-        "Remove the project's entry from the config file: the entry --project names, or the one whose cloudId is --id.",
+        "Remove the project's entry from the config file: the entry --project names, or the one whose cloud.id is --id.",
     }),
     ...BaseCommand.confirmFlags,
   };

@@ -7,6 +7,7 @@ import { HttpResponse, http } from "msw";
 import type {
   Error as ApiError,
   Project,
+  Team,
 } from "../../src/lib/clients/management/generated/types.gen.js";
 
 export const MANAGEMENT_URL = "https://management.test";
@@ -35,6 +36,15 @@ export const project: Project = {
   resource: { id: 3, name: "build", plan: "build", regionId: 1 },
 };
 
+/** The team of `project`, as `GET /api/v2/teams` returns it. */
+export const team: Team = {
+  id: 12,
+  name: "Search",
+  organizationId: 1,
+  ownerId: "user-1",
+  isAdmin: true,
+};
+
 /** An error body as the document describes it: the same shape as a Meilisearch one. */
 export const forbidden: ApiError = {
   message: "You cannot access this project.",
@@ -42,6 +52,25 @@ export const forbidden: ApiError = {
   type: "auth",
   link: "https://www.meilisearch.com/docs/reference/errors#project_not_accessible",
 };
+
+/** The 403 of the master key route to a member who is not an owner. */
+export const notOwner: ApiError = {
+  message: "Only team and organization owners can read the master key.",
+  code: "not_an_owner",
+  type: "auth",
+  link: "https://www.meilisearch.com/docs/reference/errors#not_an_owner",
+};
+
+/** Page `page` of `items`, `limit` per page, in the envelope of the document. */
+function onePage<T>(items: T[], page: number, limit: number) {
+  return {
+    page,
+    limit,
+    total: items.length,
+    totalPages: Math.max(1, Math.ceil(items.length / limit)),
+    results: items.slice((page - 1) * limit, page * limit),
+  };
+}
 
 /** What a handler saw: the URL, the `Authorization` header and the parsed body. */
 export interface ReceivedRequest {
@@ -58,17 +87,34 @@ async function record(received: ReceivedRequest[], request: Request): Promise<un
 }
 
 export const managementHandlers = {
-  /** `GET /api/v2/projects` answering `all` on one page, in the envelope of the document. */
-  listProjects: (all: Project[], received: ReceivedRequest[] = []) =>
+  /**
+   * `GET /api/v2/projects` answering the projects of `all`, of the `teamId`
+   * asked if any, `limit` per page, in the envelope of the document.
+   */
+  listProjects: (all: Project[], received: ReceivedRequest[] = [], limit = 20) =>
     http.get(`${MANAGEMENT_URL}/api/v2/projects`, async ({ request }) => {
       await record(received, request);
-      return HttpResponse.json({
-        page: 1,
-        limit: 20,
-        total: all.length,
-        totalPages: 1,
-        results: all,
-      });
+      const query = new URL(request.url).searchParams;
+      const teamId = query.get("teamId");
+      const matching = all.filter((each) => teamId === null || String(each.teamId) === teamId);
+      return HttpResponse.json(onePage(matching, Number(query.get("page") ?? "1"), limit));
+    }),
+
+  /** `GET /api/v2/teams` answering `all` on one page. */
+  listTeams: (all: Team[] = [team]) =>
+    http.get(`${MANAGEMENT_URL}/api/v2/teams`, () => HttpResponse.json(onePage(all, 1, 20))),
+
+  /**
+   * `GET /api/v2/projects/{projectId}/master-key` answering the project of
+   * `all` with `masterKey-<id>`, or the API's 403 to a member who is not an owner.
+   */
+  masterKey: (all: Project[], received: ReceivedRequest[] = []) =>
+    http.get(`${MANAGEMENT_URL}/api/v2/projects/:id/master-key`, async ({ request, params }) => {
+      await record(received, request);
+      const found = all.find((each) => String(each.id) === params.id);
+      return found === undefined
+        ? HttpResponse.json(notOwner, { status: 403 })
+        : HttpResponse.json({ ...found, masterKey: `masterKey-${found.id}` });
     }),
 
   /** `POST /api/v2/projects` answering 201 with `project` carrying the attributes received. */
