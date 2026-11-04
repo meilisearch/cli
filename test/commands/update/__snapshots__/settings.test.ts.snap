@@ -100,7 +100,7 @@ FLAGS
       --synonyms=<json>                  Words treated as equivalent, as JSON:
                                          \`{"phone":["iPhone"]}\`.
       --timeout=<duration>               Maximum wait time, for example 30s, 2m.
-                                         Default 60s. Only with --wait.
+                                         Default 10m. Only with --wait.
       --typo-tolerance=<json>            Typo tolerance as JSON, for example
                                          \`{"enabled":false}\`.
       --wait                             Poll the task until it reaches a final

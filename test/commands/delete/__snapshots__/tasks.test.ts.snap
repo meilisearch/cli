@@ -59,7 +59,7 @@ FLAGS
                                    enqueued, processing, succeeded, failed or
                                    canceled. \`*\` matches every one.
       --timeout=<duration>         Maximum wait time, for example 30s, 2m.
-                                   Default 60s. Only with --wait.
+                                   Default 10m. Only with --wait.
       --types=<types>              Task types to match, comma-separated, as the
                                    \`type\` field of a task spells them, for
                                    example \`documentAdditionOrUpdate\`. \`*\`

@@ -64,7 +64,7 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 | `POST /dumps` | `meili add dumps` |
 | `POST /export` | `meili export (--url <url> \| --project-destination <name>) [--api-key <key>] [--indexes <json>]` |
 | `GET /api/v2/projects`, `GET /api/v2/projects/{id}` | `meili get projects [--id <id> \| --project <name>] [--team-id <id>]` |
-| `POST /api/v2/projects` | `meili add projects --name <name> --team-id <id> --resource-id <id> [--ms-version <version>] [--sync-config]` |
+| `POST /api/v2/projects` | `meili add projects --name <name> --team-id <id> --resource-id <id> [--ms-version <version>] [--sync-config] [--wait [--timeout <duration>]]` |
 | `PATCH /api/v2/projects/{id}` | `meili update projects (--id <id> \| --project <name>) --name <name> [--sync-config]` |
 | `DELETE /api/v2/projects/{id}` | `meili delete projects (--id <id> \| --project <name>) --yes [--sync-config]` |
 | `GET /api/v2/team-members` | `meili get team-members --team-id <id>` |
@@ -146,12 +146,12 @@ Commands reuse these groups. A command that matches a group uses the whole group
 |---|---|
 | `--project <name>` | The entry of the config file whose `cloud.id` names the project, in place of `--id`. Cannot be combined with `--id`. See `config.md`. |
 
-**Write commands** (any command whose API response is a task):
+**Write commands** (any command whose API response is a task, and `add projects`):
 
 | Flag | Meaning |
 |---|---|
-| `--wait` | Poll the task until it reaches a final status, then print the final task. |
-| `--timeout <duration>` | Maximum wait time, for example `30s`, `2m`. Default `60s`. Only with `--wait`. |
+| `--wait` | Poll the task until it reaches a final status, then print the final task. On `add projects`, poll the project until its `status` is `running` or `failed`, then print it, see `output.md`. |
+| `--timeout <duration>` | Maximum wait time, for example `30s`, `2m`. Default `10m`. Only with `--wait`. |
 
 **List routes** (a `get` without `--id`, or `get documents`):
 

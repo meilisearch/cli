@@ -345,6 +345,11 @@ export abstract class BaseCommand extends Command {
     await this.output(mergePages(pages));
   }
 
+  /** The `--timeout` of `--wait`, or `MEILI_TIMEOUT`, or the default, in milliseconds. */
+  protected waitTimeoutMs(flags: WaitFlagValues): number {
+    return parseDuration(flags.timeout ?? this.env[ENV.TIMEOUT] ?? DEFAULT_TIMEOUT);
+  }
+
   /**
    * Writes the task the API returned, or with `--wait` the final task. Exits 7
    * through `cli_task_failed` when the task failed or was canceled. Write
@@ -355,9 +360,8 @@ export abstract class BaseCommand extends Command {
       await this.output(task);
       return;
     }
-    const timeoutMs = parseDuration(flags.timeout ?? this.env[ENV.TIMEOUT] ?? DEFAULT_TIMEOUT);
     const finalTask = await waitForTask(this.meilisearch, task.taskUid, {
-      timeoutMs,
+      timeoutMs: this.waitTimeoutMs(flags),
       onProgress: (current) => {
         writeNotice(`waiting for task ${current.uid}, status ${current.status}`);
       },

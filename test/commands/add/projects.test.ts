@@ -152,6 +152,95 @@ describe("meili add projects", () => {
     });
   });
 
+  /** `project` as `GET /api/v2/projects/{id}` returns it: only creation returns the master key. */
+  const { masterKey: _, ...polled } = project;
+
+  /** `POST /api/v2/projects` answering a project being created, without URL yet, and `GET /api/v2/projects/343` answering `statuses` in turn, the last one repeated. */
+  function creation(...statuses: string[]) {
+    let polls = 0;
+    return [
+      http.post(`${MANAGEMENT_URL}/api/v2/projects`, () =>
+        HttpResponse.json({ ...project, url: null, status: "creating" }, { status: 201 }),
+      ),
+      http.get(`${MANAGEMENT_URL}/api/v2/projects/343`, () => {
+        const status = statuses[Math.min(polls++, statuses.length - 1)];
+        return HttpResponse.json(
+          status === "running" ? { ...polled, status } : { ...polled, url: null, status },
+        );
+      }),
+    ];
+  }
+
+  it("polls the project with --wait until running, and prints it as the API returns it, without master key", async () => {
+    server.use(...creation("creating", "running"));
+    const result = await runCommand(
+      AddProjects,
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--wait", "--output", "json"],
+      { env },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(JSON.parse(result.stdout)).toEqual(polled);
+  });
+
+  it("adds the project to the config file with --wait --sync-config, once its URL is known", async () => {
+    server.use(...creation("running"), managementHandlers.listTeams());
+    const { path, env: configEnv } = tempConfig("wait-sync.json", {});
+    const result = await runCommand(
+      AddProjects,
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--wait", "--sync-config"],
+      { env: { ...env, ...configEnv } },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(readJson(path)).toEqual({
+      projects: {
+        demo: {
+          url: project.url,
+          apiKey: project.masterKey,
+          cloud: { id: 343, teamId: 12, teamName: "Search" },
+        },
+      },
+    });
+  });
+
+  it("prints the project and exits 7 with cli_task_failed when its status becomes failed", async () => {
+    server.use(...creation("failed"));
+    const { path, env: configEnv } = tempConfig("wait-failed.json", {});
+    const result = await runCommand(
+      AddProjects,
+      [
+        "--name",
+        "demo",
+        "--team-id",
+        "12",
+        "--resource-id",
+        "3",
+        "--wait",
+        "--sync-config",
+        "--output",
+        "json",
+      ],
+      { env: { ...env, ...configEnv } },
+    );
+    expect(result.exitCode).toBe(7);
+    expect(JSON.parse(result.stdout)).toEqual({ ...polled, url: null, status: "failed" });
+    expect(JSON.parse(result.stderr).error).toEqual({
+      code: "cli_task_failed",
+      type: "cli",
+      message: `Project 343 finished with status failed, so it was not added to ${path}.`,
+    });
+    expect(readJson(path)).toEqual({ projects: {} });
+  });
+
+  it("fails with cli_timeout and exit 5 when the project is not running within --timeout", async () => {
+    server.use(...creation("creating"));
+    const result = await runCommand(
+      AddProjects,
+      ["--name", "demo", "--wait", "--timeout", "50ms", "--output", "json"],
+      { env },
+    );
+    expect(result).toMatchSnapshot();
+  });
+
   it("offers no --project: the route creates a project rather than reaching one", async () => {
     const result = await runCommand(AddProjects, ["--name", "demo", "--project", "prod"], {
       env,
