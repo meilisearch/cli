@@ -1,0 +1,62 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili index update > passes an authentication error through with a hint and exits 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\`."}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili index update > prints its help without any network call 1`] = `
+"Change the primary key or the name of an index.
+
+USAGE
+  $ meili index update --id <index> [--debug] [--project-url <url>]
+    [--project-api-key <key>] [--project <name>] [--new-id <index>]
+    [--primary-key <field>] [--file <path> | --data <json>] [--timeout
+    <duration> --wait]
+
+FLAGS
+  --data=<json>            Inline JSON body.
+  --debug                  Print every HTTP request and response on stderr,
+                           secrets redacted.
+  --file=<path>            Read the body from a file. \`-\` reads from stdin.
+  --id=<index>             (required) The index to update.
+  --new-id=<index>         New uid of the index, which renames it.
+  --primary-key=<field>    The field that holds the identifier of each document.
+  --project=<name>         A project of the config file. Cannot be combined with
+                           --project-url. One of --project or --project-url is
+                           required.
+  --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+  --project-url=<url>      Project URL, the Meilisearch instance to talk to. One
+                           of --project or --project-url is required.
+  --timeout=<duration>     Maximum wait time, for example 30s, 2m. Default 10m.
+                           Only with --wait.
+  --wait                   Poll the task until it reaches a final status, then
+                           print the final task.
+
+DESCRIPTION
+  Change the primary key or the name of an index.
+
+  --primary-key changes the primary key, and --new-id renames the index.
+
+EXAMPLES
+  $ meili index update --project prod --id movies --primary-key movie_id
+
+  $ meili index update --project prod --id movies --new-id films
+
+  $ meili index update --project prod --id movies --new-id films --wait
+
+"
+`;
+
+exports[`meili index update > prints the enqueued task as the API returned it, without waiting 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"taskUid":12,"indexUid":"movies","status":"enqueued","type":"indexUpdate","enqueuedAt":"2026-09-24T10:00:00Z"}
+",
+}
+`;

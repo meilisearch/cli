@@ -38,7 +38,7 @@ Alternatives considered:
 
 - **Three commands without an API manage the file**, for humans. `config list` prints the path and the projects, with keys masked. `config set` creates the file in mode `600` and validates the URL. It reads the key from stdin with `--project-api-key -`, to keep the key out of the shell history. It refuses a name that already exists. `config unset` deletes an entry. These commands are a convenience, not a protection.
 
-- **The file is shared state.** An agent gets its own file through `MEILI_CONFIG`, never the human's file. A human prepares that file and mounts it read-only in the agent's sandbox. An agent changes nothing in the file, neither a project nor its permissions, unless the human explicitly asked for it. `--help`, `meili schema` and the README say so, because an agent reads them.
+- **The file is shared state.** An agent gets its own file through `MEILI_CONFIG`, never the human's file. A human prepares that file and mounts it read-only in the agent's sandbox. An agent changes nothing in the file, neither a project nor its permissions, unless the human explicitly asked for it. The description of `MEILI_CONFIG` in `meili --help` says so, because an agent reads it.
 
 - The container setup needs no file: `--project-url` and `--project-api-key` work with no file and no `HOME`.
 

@@ -1,8 +1,8 @@
 # Command contract
 
-`meili` mirrors the two APIs it talks to. A command exists for the routes of the Meilisearch API or of the Management API as soon as someone implements it. Its name and flags derive from those routes by the rules of this file. There is no list of commands to update first. The OpenAPI documents are the reference, `oclif.manifest.json` and `meili schema` are the list, and `pnpm api:coverage` shows what remains.
+`meili` mirrors the two APIs it talks to. A command exists for the routes of the Meilisearch API or of the Management API as soon as someone implements it. By default, its name and flags derive from those routes by the rules of this file. The rules give the default name, not the only one: the maintainers may choose another name, case by case, and record it as an exception (ADR 0018). There is no list of commands to update first. The OpenAPI documents are the reference, `oclif.manifest.json` and `meili schema` are the list, and `pnpm api:coverage` shows what remains.
 
-Grammar: `meili [global flags] <verb> <resources> [flags]`, for example `meili get indexes --id movies` or `meili delete documents --index movies --ids 1,2`. The verb comes first and the resource is plural. Every value goes in a named flag. There is no positional argument, so you can read a command without knowing the order of its parameters. One command covers every route that has the same verb and the same resource. The flags given choose the route.
+Grammar: `meili [global flags] <resource> <verb> [flags]`, for example `meili index view --id movies` or `meili document delete --index movies --ids 1,2`. The resource comes first, in the singular, then the verb (ADR 0018). Every value goes in a named flag. There is no positional argument, so you can read a command without knowing the order of its parameters. One command covers every route that has the same resource and the same verb. The flags given choose the route.
 
 ## The OpenAPI documents
 
@@ -17,70 +17,78 @@ When the document does not describe what a command needs (the route, a parameter
 
 ## Naming rules
 
-Every API command declares its routes, `static routes = ["GET /indexes", "GET /indexes/{index_uid}"]`, written as in the document. It also declares the key actions those routes require, `static keyActions = ["indexes.get"]`: the specific action of each `security` entry of the document, empty when the routes need none. `meili schema --command` prints both, and `test/contract/api.test.ts` checks both against the document. The rules below turn routes into a command name and its flags. `src/lib/api-naming.ts` implements them, and `test/contract/api.test.ts` enforces them.
+Every API command declares its routes, `static routes = ["GET /stats", "GET /indexes/{index_uid}/stats"]`, written as in the document. It also declares the key actions those routes require, `static keyActions = ["stats.get"]`: the specific action of each `security` entry of the document, empty when the routes need none. `meili schema --command` prints both, and `test/contract/api.test.ts` checks both against the document. The rules below turn routes into a command name and its flags. `src/lib/api-naming.ts` implements them, and `test/contract/api.test.ts` enforces them.
 
-1. **Verb.** The HTTP method gives the verb: `GET` is `get`, `POST` is `add`, `PUT` and `PATCH` are `update`, `DELETE` is `delete`. When the last segment of the path is a literal that names an action, this action replaces the verb: `POST /tasks/cancel` gives `cancel`, `POST /indexes/{index_uid}/compact` gives `compact`, `POST /indexes/{index_uid}/documents/delete` gives `delete`. The literal verbs are a closed list: `delete`, `cancel`, `compact`, `swap`, `search`, `similar`, `facet-search`, `multi-search`, `export`. Adding one is a contract change.
-2. **Resource.** The resource is the last literal segment of the path that names a resource. It is plural, in kebab-case of the API name, without the `/api/v2` prefix of the Management API: `indexes`, `documents`, `team-members`, `stats`, `health`. A singleton keeps its name: `get health`, `get version`, `get stats`. Five commands have no resource word, because people type them the most: `search`, `similar`, `facet-search`, `multi-search`, `export`. The exceptions list them.
-3. **Several routes, one command.** Every route with the same verb and resource belongs to one command: `GET /indexes` and `GET /indexes/{index_uid}` are `get indexes`, `GET /stats` and `GET /indexes/{index_uid}/stats` are `get stats`, the three deletion routes of documents are `delete documents`. The flags choose the route: first the route whose path parameters are exactly the identifier flags given, then the route whose parameters cover the other flags given. Two flags that call for different routes are a usage error, `cli_usage`, exit 2, before any network call. For example, `--ids` and `--filter` on `delete documents`. A flag that only the list route takes, for example `--limit` or `--offset`, is ignored and not sent when `--id` selects the unit route.
-4. **Identifiers.** The path parameter of the resource itself is `--id` when the unit route is implemented: `get indexes --id movies`, `delete keys --id <uid>`, `get projects --id 343`. When the list route can filter by identifiers, the unit route is not implemented. The list then takes `--ids`, and accepts `--id` as an alias: `get documents --index movies --ids 42` calls the fetch route, `get tasks --ids 42` filters `GET /tasks`, `get batches --ids 7` filters `GET /batches`. The path parameter of a parent resource is a flag named after that collection, in the singular: `--index movies`. This flag is required when every route of the command takes it, and optional when one of the routes does not. For example, `--index` is required on `get settings`, and optional on `get stats`, whose other route is `GET /stats`. The verb-only commands take the index the same way: `search --index movies`. On the Management API, a parent parameter keeps its API name in kebab-case: `{projectId}` is `--project-id`. The reason is that `--project` names an entry of the config file, and the `cloud.id` of this entry can replace `--id` or `--project-id` (`config.md`, "Cloud projects").
-5. **Identifiers are named by what they identify.** A query or body parameter that carries identifiers, `uid`, `uids`, `batchUids`, `indexUids`, is named after the resource it identifies. The command's own resource gives `--id` or `--ids`. Another resource gives `--<resource>-ids`. So `add indexes --id movies` and `add keys --id <uuid>` carry `uid`. `get tasks --ids 1,2 --batch-ids 7 --index-ids movies` carries `uids`, `batchUids` and `indexUids`. `get batches --ids 7 --task-ids 1,2` carries `batchUids` and `uids`, because bare `uids` are always task identifiers. The API spellings, `--uid`, `--uids`, `--batch-uids`, `--index-uids`, are accepted as aliases. They do not appear in `--help` or `meili schema`. One exception: on `update indexes`, `--id` is the index itself, so the new `uid` is `--new-id`, with the alias `--uid`. Every other body field keeps its API name: `--primary-key`, `--name`.
+1. **Verb.** The HTTP method gives the verb. `GET` is `list` when the path ends with a collection, `GET /indexes`, and `view` otherwise: the path ends with a parameter, `GET /indexes/{index_uid}`, or with an object, `GET /indexes/{index_uid}/settings` (rule 2). `POST` is `add`, `PUT` and `PATCH` are `update`, `DELETE` is `delete`. When the last segment of the path is a literal that names an action, this action replaces the verb: `POST /tasks/cancel` gives `task cancel`, `POST /indexes/{index_uid}/compact` gives `index compact`, `POST /indexes/{index_uid}/documents/delete` gives `document delete`. The literal verbs are a closed list: `delete`, `cancel`, `compact`, `swap`, `search`, `similar`, `facet-search`, `multi-search`, `export`. Adding one is a contract change.
+2. **Resource.** The resource is the last literal segment of the path that names a resource, in kebab-case of the API name, without the `/api/v2` prefix of the Management API. A collection takes its singular, from `COLLECTIONS` in `src/lib/api-naming.ts`: `indexes` is `index`, `batches` is `batch`, `team-members` is `team-member`. A new collection adds a row to this table. A resource that is one object keeps its API name: `settings`, `stats`, `health`. When `view` is the only command of such a resource, the command is the resource alone, with no verb: `meili health`, `meili stats`. `VIEW_ONLY` in the same file lists these resources. Five commands have no resource word, because people type them the most: `search`, `similar`, `facet-search`, `multi-search`, `export`. The exceptions list them.
+3. **Several routes, one command.** Every route with the same resource and verb belongs to one command: `GET /stats` and `GET /indexes/{index_uid}/stats` are `stats`, the three deletion routes of documents are `document delete`. The flags choose the route: first the route whose path parameters are exactly the identifier flags given, then the route whose parameters cover the other flags given. Two flags that call for different routes are a usage error, `cli_usage`, exit 2, before any network call. For example, `--ids` and `--filter` on `document delete`.
+4. **Identifiers.** The path parameter of the resource itself is `--id`: `index view --id movies`, `key delete --id <key>`, `project view --id 343`, `task view --id 42`. A list route that filters by identifiers takes `--ids`: `document list --index movies --ids 42,1344` calls the fetch route, `task list --ids 1,2` filters `GET /tasks`, `batch list --ids 7` filters `GET /batches`. The path parameter of a parent resource is a flag named after that collection, in the singular: `--index movies`. This flag is required when every route of the command takes it, and optional when one of the routes does not. For example, `--index` is required on `settings view`, and optional on `stats`, whose other route is `GET /stats`. The verb-only commands take the index the same way: `search --index movies`. On the Management API, a parent parameter keeps its API name in kebab-case: `{projectId}` is `--project-id`. The reason is that `--project` names an entry of the config file, and the `cloud.id` of this entry can replace `--id` or `--project-id` (`config.md`, "Cloud projects").
+5. **Identifiers are named by what they identify.** A query or body parameter that carries identifiers, `uid`, `uids`, `batchUids`, `indexUids`, is named after the resource it identifies. The command's own resource gives `--id` or `--ids`. Another resource gives `--<resource>-ids`. So `index add --id movies` and `key add --id <uuid>` carry `uid`. `task list --ids 1,2 --batch-ids 7 --index-ids movies` carries `uids`, `batchUids` and `indexUids`. `batch list --ids 7 --task-ids 1,2` carries `batchUids` and `uids`, because bare `uids` are always task identifiers. The API spellings, `--uid`, `--uids`, `--batch-uids`, `--index-uids`, are accepted as aliases. They do not appear in `--help` or `meili schema`. One exception: on `index update`, `--id` is the index itself, so the new `uid` is `--new-id`, with the alias `--uid`. Every other body field keeps its API name: `--primary-key`, `--name`.
 6. **Other flags.** The query parameters and the first-level fields of the JSON body are flags, in kebab-case of the API name: `retrieveVectors` is `--retrieve-vectors`, `teamId` is `--team-id`, `primaryKey` is `--primary-key`. Only the global flags and the CLI-owned flags do not come from a route: `--wait`, `--timeout`, `--all`, `--file`, `--data`, `--yes`, `--sync-config`, `--sync-with-cloud`, `--project-destination`.
 7. **Values.** A scalar is passed as it is. A boolean is a bare flag, `--retrieve-vectors`. The exception is a route that also reads `false` from the value, as the settings do. There the flag takes a value, `--facet-search false`, because a bare flag says neither `false` nor `null`. An array of scalars is comma-separated, `--fields id,title`, like the API's own GET syntax. An object or a nested array is JSON text: `--typo-tolerance '{"enabled":false}'`. The value `null` sends a JSON null: `--expires-at null`, `--stop-words null`.
-8. **Body input.** On every route with a body, `--file <path>` or `--data '<json>'` replaces the body fields. `--file -` reads stdin. Path and query flags stay valid next to them. A body-field flag given together with `--file` or `--data` overrides that field, as a flag overrides its environment variable. On some routes, the body is not an object of named fields but the value itself: the array of identifiers of `delete documents --ids`, or the documents of `add documents`. There the body is that value, and its shape selects the route among the routes of the command: `delete documents --data '[1,2]'` deletes by identifiers, `--data '{"filter":…}'` deletes by filter. Documents are sent as JSON, the only content type the document declares.
-9. **Routes that are not implemented.** These routes are not implemented: the `GET` twin of a `POST` route that takes the same parameters in a body (search, similar, the list of documents); the unit route of a resource whose list filters by identifiers (documents, tasks, batches); the settings sub-routes, because `update settings` sends any subset and `null` resets one setting; `GET /api/v2/meilisearch-versions`. Each one is recorded in the exceptions, without a command.
-10. **Experimental routes** are out of the contract until the feature is stable. Implementing one is a contract change: it needs an exception row with the reason. `compact` is the one exception today. A body field or a query parameter that an experimental feature gates is also out of the contract. The command declares no flag for it, and `--data` or `--file` still sends it to the API. These fields are `useNetwork` on `get documents`; `media`, `personalize`, `useNetwork` and `inlineRule` on `search`; and `media` and `useNetwork` on `facet-search`. They are not in the exceptions table, which lists routes.
+8. **Body input.** On every route with a body, `--file <path>` or `--data '<json>'` replaces the body fields. `--file -` reads stdin. Path and query flags stay valid next to them. A body-field flag given together with `--file` or `--data` overrides that field, as a flag overrides its environment variable. On some routes, the body is not an object of named fields but the value itself: the array of identifiers of `document delete --ids`, or the documents of `document add`. There the body is that value, and its shape selects the route among the routes of the command: `document delete --data '[1,2]'` deletes by identifiers, `--data '{"filter":…}'` deletes by filter. Documents are sent as JSON, the only content type the document declares.
+9. **Routes that are not implemented.** These routes are not implemented: the `GET` twin of a `POST` route that takes the same parameters in a body (search, similar, the list of documents); the deletion of one document, covered by `document delete --ids`; the settings sub-routes, because `settings update` sends any subset and `null` resets one setting; `GET /api/v2/meilisearch-versions`. Each one is recorded in the exceptions, without a command.
+10. **Experimental routes** are out of the contract until the feature is stable. Implementing one is a contract change: it needs an exception row with the reason. `compact` is the one exception today. A body field or a query parameter that an experimental feature gates is also out of the contract. The command declares no flag for it, and `--data` or `--file` still sends it to the API. These fields are `useNetwork` on `document list`; `media`, `personalize`, `useNetwork` and `inlineRule` on `search`; and `media` and `useNetwork` on `facet-search`. They are not in the exceptions table, which lists routes.
 11. **Destructive commands.** A command of the verb `delete` takes `--yes` and refuses to run without it: `cli_usage`, exit 2, before any network call. `--yes` is a flag that you write. It is never a question the CLI asks. See `output.md`.
 
 | Routes | Command |
 |---|---|
-| `GET /health` | `meili get health` |
-| `GET /version` | `meili get version` |
-| `GET /stats`, `GET /indexes/{index_uid}/stats` | `meili get stats [--index <index>]` |
-| `GET /indexes`, `GET /indexes/{index_uid}` | `meili get indexes [--id <index>]` |
-| `POST /indexes` | `meili add indexes --id <index> [--primary-key <field>]` |
-| `PATCH /indexes/{index_uid}` | `meili update indexes --id <index> [--primary-key <field>] [--new-id <index>]` |
-| `DELETE /indexes/{index_uid}` | `meili delete indexes --id <index> --yes` |
-| `POST /indexes/{index_uid}/compact` | `meili compact indexes --id <index>` |
-| `POST /swap-indexes` | `meili swap indexes --indexes <a>,<b>` |
-| `POST /indexes/{index_uid}/documents/fetch` | `meili get documents --index <index> [--ids <ids>] [--filter <filter>]` |
-| `POST /indexes/{index_uid}/documents` | `meili add documents --index <index> --file <path>` |
-| `PUT /indexes/{index_uid}/documents` | `meili update documents --index <index> --file <path>` |
-| `POST …/documents/delete-batch`, `POST …/documents/delete`, `DELETE …/documents` | `meili delete documents --index <index> (--ids <ids> \| --filter <filter> \| --all) --yes` |
+| `GET /health` | `meili health` |
+| `GET /version` | `meili info` |
+| `GET /stats`, `GET /indexes/{index_uid}/stats` | `meili stats [--index <index>]` |
+| `GET /indexes` | `meili index list` |
+| `GET /indexes/{index_uid}` | `meili index view --id <index>` |
+| `POST /indexes` | `meili index add --id <index> [--primary-key <field>]` |
+| `PATCH /indexes/{index_uid}` | `meili index update --id <index> [--primary-key <field>] [--new-id <index>]` |
+| `DELETE /indexes/{index_uid}` | `meili index delete --id <index> --yes` |
+| `POST /indexes/{index_uid}/compact` | `meili index compact --id <index>` |
+| `POST /swap-indexes` | `meili index swap --indexes <a>,<b>` |
+| `POST /indexes/{index_uid}/documents/fetch` | `meili document list --index <index> [--ids <ids>] [--filter <filter>]` |
+| `GET /indexes/{index_uid}/documents/{document_id}` | `meili document view --index <index> --id <id>` |
+| `POST /indexes/{index_uid}/documents` | `meili document add --index <index> --file <path>` |
+| `PUT /indexes/{index_uid}/documents` | `meili document update --index <index> --file <path>` |
+| `POST …/documents/delete-batch`, `POST …/documents/delete`, `DELETE …/documents` | `meili document delete --index <index> (--ids <ids> \| --filter <filter> \| --all) --yes` |
 | `POST /indexes/{index_uid}/search` | `meili search --index <index> --q <query>` |
 | `POST /indexes/{index_uid}/similar` | `meili similar --index <index> --id <document> --embedder <embedder>` |
 | `POST /indexes/{index_uid}/facet-search` | `meili facet-search --index <index> --facet-name <attribute>` |
 | `POST /multi-search` | `meili multi-search --queries <json> [--federation <json>]` |
-| `GET /indexes/{index_uid}/settings` | `meili get settings --index <index>` |
-| `PATCH /indexes/{index_uid}/settings` | `meili update settings --index <index> --<setting> <value>` |
-| `DELETE /indexes/{index_uid}/settings` | `meili delete settings --index <index> --yes` |
-| `GET /tasks` | `meili get tasks [--ids <uids>] [--statuses <statuses>]` |
-| `POST /tasks/cancel` | `meili cancel tasks --ids <uids>` |
-| `DELETE /tasks` | `meili delete tasks --ids <uids> --yes` |
-| `GET /batches` | `meili get batches [--ids <uids>] [--task-ids <uids>]` |
-| `GET /keys`, `GET /keys/{key}` | `meili get keys [--id <key>]` |
-| `POST /keys` | `meili add keys --actions <actions> --indexes <indexes> --expires-at <date>` |
-| `PATCH /keys/{key}` | `meili update keys --id <key> [--name <name>] [--description <text>]` |
-| `DELETE /keys/{key}` | `meili delete keys --id <key> --yes` |
-| `POST /dumps` | `meili add dumps` |
+| `GET /indexes/{index_uid}/settings` | `meili settings view --index <index>` |
+| `PATCH /indexes/{index_uid}/settings` | `meili settings update --index <index> --<setting> <value>` |
+| `DELETE /indexes/{index_uid}/settings` | `meili settings delete --index <index> --yes` |
+| `GET /tasks` | `meili task list [--ids <uids>] [--statuses <statuses>]` |
+| `GET /tasks/{task_id}` | `meili task view --id <uid>` |
+| `POST /tasks/cancel` | `meili task cancel --ids <uids>` |
+| `DELETE /tasks` | `meili task delete --ids <uids> --yes` |
+| `GET /batches` | `meili batch list [--ids <uids>] [--task-ids <uids>]` |
+| `GET /batches/{batch_id}` | `meili batch view --id <uid>` |
+| `GET /keys` | `meili key list` |
+| `GET /keys/{key}` | `meili key view --id <key>` |
+| `POST /keys` | `meili key add --actions <actions> --indexes <indexes> --expires-at <date>` |
+| `PATCH /keys/{key}` | `meili key update --id <key> [--name <name>] [--description <text>]` |
+| `DELETE /keys/{key}` | `meili key delete --id <key> --yes` |
+| `POST /dumps` | `meili dump add` |
 | `POST /export` | `meili export (--url <url> \| --project-destination <name>) [--api-key <key>] [--indexes <json>]` |
-| `GET /api/v2/projects`, `GET /api/v2/projects/{id}` | `meili get projects [--id <id> \| --project <name>] [--team-id <id>]` |
-| `POST /api/v2/projects` | `meili add projects --name <name> --team-id <id> --resource-id <id> [--ms-version <version>] [--sync-config] [--wait [--timeout <duration>]]` |
-| `PATCH /api/v2/projects/{id}` | `meili update projects (--id <id> \| --project <name>) --name <name> [--sync-config]` |
-| `DELETE /api/v2/projects/{id}` | `meili delete projects (--id <id> \| --project <name>) --yes [--sync-config]` |
-| `GET /api/v2/organizations`, `GET /api/v2/organizations/{id}` | `meili get organizations [--id <id>]` |
-| `PATCH /api/v2/organizations/{id}` | `meili update organizations --id <id> --name <name>` |
-| `DELETE /api/v2/organizations/{id}` | `meili delete organizations --id <id> --yes` |
-| `GET /api/v2/regions` | `meili get regions` |
-| `GET /api/v2/teams`, `GET /api/v2/teams/{id}` | `meili get teams [--id <id>]` |
-| `POST /api/v2/teams` | `meili add teams --organization-id <id> [--name <name>]` |
-| `PATCH /api/v2/teams/{id}` | `meili update teams --id <id> [--name <name>] [--owner-id <uuid>]` |
-| `DELETE /api/v2/teams/{id}` | `meili delete teams --id <id> --yes` |
-| `GET /api/v2/team-members` | `meili get team-members --team-id <id>` |
-| `GET /api/v2/resources` | `meili get resources [--region-id <id>]` |
+| `GET /api/v2/projects` | `meili project list [--team-id <id>]` |
+| `GET /api/v2/projects/{id}` | `meili project view (--id <id> \| --project <name>)` |
+| `POST /api/v2/projects` | `meili project add --name <name> --team-id <id> --resource-id <id> [--ms-version <version>] [--sync-config] [--wait [--timeout <duration>]]` |
+| `PATCH /api/v2/projects/{id}` | `meili project update (--id <id> \| --project <name>) --name <name> [--sync-config]` |
+| `DELETE /api/v2/projects/{id}` | `meili project delete (--id <id> \| --project <name>) --yes [--sync-config]` |
+| `GET /api/v2/organizations` | `meili organization list` |
+| `GET /api/v2/organizations/{id}` | `meili organization view --id <id>` |
+| `PATCH /api/v2/organizations/{id}` | `meili organization update --id <id> --name <name>` |
+| `DELETE /api/v2/organizations/{id}` | `meili organization delete --id <id> --yes` |
+| `GET /api/v2/regions` | `meili region list` |
+| `GET /api/v2/teams` | `meili team list` |
+| `GET /api/v2/teams/{id}` | `meili team view --id <id>` |
+| `POST /api/v2/teams` | `meili team add --organization-id <id> [--name <name>]` |
+| `PATCH /api/v2/teams/{id}` | `meili team update --id <id> [--name <name>] [--owner-id <uuid>]` |
+| `DELETE /api/v2/teams/{id}` | `meili team delete --id <id> --yes` |
+| `GET /api/v2/team-members` | `meili team-member list --team-id <id>` |
+| `GET /api/v2/resources` | `meili resource list [--region-id <id>]` |
 
 ## Exceptions
 
-A route whose derived name is wrong, ambiguous or collides with another one gets an explicit exception, with a reason. The exception is recorded in `ROUTE_EXCEPTIONS` of `src/lib/api-naming.ts` and in the table below. A route can also be declared without a command, `none`: a `GET` twin covered by its `POST`, a unit route covered by its list, an experimental route, a route the CLI will never expose. `*` as the method matches every method. A path ending with `/*` matches every route under that prefix, but not the prefix itself. The first matching row wins. The command column names the command, then the flags that distinguish the route. The route accepts these flags: `delete documents --ids` makes `--ids` a flag of the delete-batch route. The exception ships in the pull request of the command, and the contract test checks that the two lists match. Anything that the rules and the exceptions do not describe is a contract change.
+A route gets an explicit exception, with a reason, when the maintainers choose another name than the derived one. The derived name may be wrong, ambiguous or in collision with another one. Or another name may simply read better for a human or an agent, as `info` for `GET /version`. An agent that adds a command uses the derived name, and proposes another one to a human, who decides. The exception is recorded in `ROUTE_EXCEPTIONS` of `src/lib/api-naming.ts` and in the table below. A route can also be declared without a command, `none`: a `GET` twin covered by its `POST`, a route covered by another command, an experimental route, a route the CLI will never expose. `*` as the method matches every method. A path ending with `/*` matches every route under that prefix, but not the prefix itself. The first matching row wins. The command column names the command, then the flags that distinguish the route. The route accepts these flags: `document delete --ids` makes `--ids` a flag of the delete-batch route. The exception ships in the pull request of the command, and the contract test checks that the two lists match. Anything that the rules and the exceptions do not describe is a contract change.
 
 | Route | Command | Reason |
 |---|---|---|
@@ -91,17 +99,16 @@ A route whose derived name is wrong, ambiguous or collides with another one gets
 | `POST /indexes/{index_uid}/facet-search` | `facet-search --index` | Verb only, like `search`. |
 | `POST /multi-search` | `multi-search` | Verb only, like `search`. No index: the queries name theirs. |
 | `POST /export` | `export` | Verb only: the route has no resource. |
-| `POST /swap-indexes` | `swap indexes --indexes` | The literal holds the verb and the resource. `--indexes a,b` swaps one pair; several pairs go through `--data` or `--file`. |
-| `GET /indexes/{index_uid}/documents` | none | Covered by `get documents`, which uses the fetch route and its body. |
-| `POST /indexes/{index_uid}/documents/fetch` | `get documents --index` | A POST that lists: filters, fields and pagination travel in its body. `--id` is an alias of `--ids`. |
-| `GET /indexes/{index_uid}/documents/{document_id}` | none | Covered by `get documents --ids`. |
-| `DELETE /indexes/{index_uid}/documents/{document_id}` | none | Covered by `delete documents --ids`. |
-| `POST /indexes/{index_uid}/documents/delete-batch` | `delete documents --ids` | The body is an array of identifiers without a name; `--ids` is the name of the fetch route. |
-| `POST /indexes/{index_uid}/fields` | `get fields --index` | A POST that lists. |
-| `* /indexes/{index_uid}/settings/*` | none | `update settings` sends any subset of the settings; `null` resets one of them. |
-| `GET /tasks/{task_id}` | none | Covered by `get tasks --ids`, which filters `uids`. |
-| `GET /batches/{batch_id}` | none | Covered by `get batches --ids`. |
-| `POST /tasks/compact` | `compact tasks` | Experimental (`taskQueueCompactionRoute`), kept on purpose. |
+| `POST /swap-indexes` | `index swap --indexes` | The literal holds the verb and the resource. `--indexes a,b` swaps one pair; several pairs go through `--data` or `--file`. |
+| `GET /version` | `info` | `meili version` prints the version of the CLI. `info` describes the instance: its version and the commit it was built from. |
+| `GET /indexes/{index_uid}/documents` | none | Covered by `document list`, which uses the fetch route and its body. |
+| `POST /indexes/{index_uid}/documents/fetch` | `document list --index` | A POST that lists: filters, fields and pagination travel in its body. |
+| `DELETE /indexes/{index_uid}/documents/{document_id}` | none | Covered by `document delete --ids`. |
+| `POST /indexes/{index_uid}/documents/delete-batch` | `document delete --ids` | The body is an array of identifiers without a name; `--ids` is the name of the fetch route. |
+| `POST /indexes/{index_uid}/fields` | `field list --index` | A POST that lists. |
+| `* /indexes/{index_uid}/settings/*` | none | `settings update` sends any subset of the settings; `null` resets one of them. |
+| `POST /tasks/compact` | `task compact` | Experimental (`taskQueueCompactionRoute`), kept on purpose. |
+| `PATCH /api/v2/projects/{projectId}/version` | none | Not needed for now. `meili version` prints the version of the CLI. |
 | `GET /api/v2/meilisearch-versions` | none | Not needed for now. |
 | `* /chats` | none | Experimental (`chatCompletions`). Out of the contract until stable. |
 | `* /chats/*` | none | Experimental (`chatCompletions`). |
@@ -121,11 +128,10 @@ A route whose derived name is wrong, ambiguous or collides with another one gets
 
 ## Global flags
 
-These two flags work on every command, whatever it talks to.
+This flag works on every command, whatever it talks to.
 
 | Flag | Meaning |
 |---|---|
-| `-o, --output <mode>` | `json` (default) or `ndjson`. See `output.md`. |
 | `--debug` | Print every HTTP request and response on stderr, secrets redacted. |
 
 ## Shared flag groups
@@ -148,20 +154,20 @@ Commands reuse these groups. A command that matches a group uses the whole group
 |---|---|
 | `--project <name>` | The entry of the config file whose `cloud.id` names the project, in place of `--id`. Cannot be combined with `--id`. See `config.md`. |
 
-**Write commands** (any command whose API response is a task, and `add projects`):
+**Write commands** (any command whose API response is a task, and `project add`):
 
 | Flag | Meaning |
 |---|---|
-| `--wait` | Poll the task until it reaches a final status, then print the final task. On `add projects`, poll the project until its `status` is `running` or `failed`, then print it, see `output.md`. |
+| `--wait` | Poll the task until it reaches a final status, then print the final task. On `project add`, poll the project until its `status` is `running` or `failed`, then print it, see `output.md`. |
 | `--timeout <duration>` | Maximum wait time, for example `30s`, `2m`. Default `10m`. Only with `--wait`. |
 
-**List routes** (a `get` without `--id`, or `get documents`):
+**List routes** (the `list` commands of the Meilisearch API. Those of the Management API wait, see `output.md`, Pagination):
 
 | Flag | Meaning |
 |---|---|
 | `--limit <n>` | Passed to the API. |
 | `--offset <n>` or `--from <uid>` | Passed to the API. The name is the API parameter name for that route. |
-| `--all` | Fetch every page. With `ndjson`, stream the items. With `json`, buffer them into one array. On `delete documents`, select the route that deletes every document. |
+| `--all` | Fetch every page, and print them as one list. On `document delete`, select the route that deletes every document. |
 
 **Body input** (commands that send a JSON body):
 
@@ -182,7 +188,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 |---|---|
 | `--project-destination <name>` | A project of the config file: the instance that receives the exported data. Its URL and its key fill the `url` and `apiKey` fields of the body. Cannot be combined with `--url`. `--api-key` replaces the key of the entry. The connection group still names the source: the instance that receives `POST /export`. `--help` lists this flag with `--url`, `--api-key` and `--payload-size` under `DESTINATION FLAGS`. See `config.md` and ADR 0012. |
 
-**Config file** (`add projects`, `update projects`, `delete projects`):
+**Config file** (`project add`, `project update`, `project delete`):
 
 | Flag | Meaning |
 |---|---|
@@ -194,7 +200,8 @@ These commands have no route of their own, so no route derives them. Most of the
 
 | Command | Effect |
 |---|---|
-| `meili schema` | Print the index of the command tree as JSON: the global flags once, then one entry per command with its description and its routes. `meili schema --command "get indexes"` prints that one command in full: its API, its routes, its key actions, whether it returns a task, the flags it declares itself and its examples. Generated from the oclif manifest. This is how an agent learns the CLI: the index in one call, then one command when it needs it. See ADR 0008. |
+| `meili schema` | Print the index of the command tree as JSON: the global flags once, then one entry per command with its description and its routes. `meili schema --command "index list"` prints that one command in full: its API, its routes, its key actions, whether it returns a task, the flags it declares itself and its examples. Generated from the oclif manifest. This is how an agent learns the CLI: the index in one call, then one command when it needs it. See ADR 0008. |
+| `meili version` | Print the version of the CLI as JSON, `{"version": "0.2.0"}`. `meili --version` prints the same version as text, with the platform and the Node version. |
 | `meili config list` | Print the config file path and its projects as JSON, keys masked. |
 | `meili config set --project <name> --project-url <url> [--project-api-key <key>] [--sync-with-cloud]` | Set a project in the config file. Create the file in mode `600` when it does not exist. `--project-api-key -` reads the key from stdin. `--sync-with-cloud` writes the `cloud` of the Cloud project with that URL. It also writes the master key of this project when no key is given. If no such project exists, the error is `cli_config` and nothing is written. A URL that is not HTTP(S) is refused with `cli_usage`. A name that already exists is refused with `cli_config`: to change an entry, use `config update`. Nothing on stdout. See `config.md`, "Cloud projects". |
 | `meili config update --project <name> [--project-url <url>] [--project-api-key <key>] [--sync-with-cloud]` | Change the given fields of a project of the config file, and keep the others. `--project-api-key -` reads the key from stdin. `--sync-with-cloud` refreshes the entry's `cloud` from its Cloud project: the project of its `cloud.id`, else the project of its URL. It also writes the master key when the entry has no key. If no such project exists, the error is `cli_config` and nothing is written. A URL that is not HTTP(S) is refused with `cli_usage`. A name that the file does not have is refused with `cli_config`: this command never creates an entry. Nothing on stdout. See `config.md`, "Cloud projects". |

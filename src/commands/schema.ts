@@ -1,13 +1,6 @@
 import { type Command, Flags, toConfiguredId } from "@oclif/core";
-import { type Api, BaseCommand } from "../lib/base-command.js";
+import { type Api, BaseCommand, type LoadableCommand } from "../lib/base-command.js";
 import { closestCommand, MeiliCliError } from "../lib/errors.js";
-
-/** The statics every command declares beyond oclif's, as the manifest carries them. */
-type Loadable = Command.Loadable & {
-  api: Api;
-  routes: readonly string[];
-  keyActions: readonly string[];
-};
 
 /** The global flags, projected once: the index prints them, a command never repeats them. */
 const GLOBAL_FLAGS = Object.entries(BaseCommand.baseFlags).map(([name, flag]) =>
@@ -17,13 +10,13 @@ const GLOBAL_FLAGS = Object.entries(BaseCommand.baseFlags).map(([name, flag]) =>
 export default class Schema extends BaseCommand {
   static api: Api = "none";
 
-  static override description =
-    "Print one line per command, or one command in full with --command, from the oclif manifest.";
+  static override description = `Describe the commands as JSON.
+
+Prints one line per command, or one command in full with --command, from the oclif manifest.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-    '<%= config.bin %> <%= command.id %> --command "get indexes"',
+    '<%= config.bin %> <%= command.id %> --command "index list"',
     "<%= config.bin %> <%= command.id %> | jq '.commands[].id'",
   ];
 
@@ -37,7 +30,7 @@ export default class Schema extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(Schema);
-    const commands = (this.config.commands as Loadable[]).filter(
+    const commands = (this.config.commands as LoadableCommand[]).filter(
       (command) => command.hidden !== true,
     );
 
@@ -82,7 +75,7 @@ export default class Schema extends BaseCommand {
    * it inherits, which the index already prints. `JSON.stringify` drops the
    * undefined fields.
    */
-  private async describe(command: Loadable) {
+  private async describe(command: LoadableCommand) {
     const id = toConfiguredId(command.id, this.config);
     // A command with no flags of its own does not set the static at all.
     const own = (await command.load()).flags ?? {};

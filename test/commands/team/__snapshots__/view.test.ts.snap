@@ -1,0 +1,38 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili team view > gets one team with --id 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"id":13,"name":"Search","organizationId":1,"ownerId":"user-1","isAdmin":true}
+",
+}
+`;
+
+exports[`meili team view > passes the API's error body through on an unknown id, with exit 4 1`] = `
+{
+  "exitCode": 4,
+  "stderr": "{"error":{"code":"team_not_found","type":"invalid_request","message":"Team not found.","link":"https://www.meilisearch.com/docs/reference/errors#team_not_found"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili team view > prints its help without any network call 1`] = `
+"Get one Meilisearch Cloud team.
+
+USAGE
+  $ meili team view --id <id> [--debug]
+
+FLAGS
+  --debug    Print every HTTP request and response on stderr, secrets redacted.
+  --id=<id>  (required) The team to get.
+
+DESCRIPTION
+  Get one Meilisearch Cloud team.
+
+EXAMPLES
+  $ meili team view --id 12
+
+"
+`;

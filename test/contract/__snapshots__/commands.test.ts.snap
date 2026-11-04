@@ -4,15 +4,385 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
 {
   "commands": [
     {
+      "api": "none",
+      "description": "Log in to Meilisearch Cloud in a browser.
+
+Stores the token for the management commands.",
+      "examples": [
+        "meili auth login",
+        "meili auth login --no-browser",
+      ],
+      "flags": [
+        {
+          "description": "Open the consent page in a browser. --no-browser only prints the URL.",
+          "name": "browser",
+          "type": "boolean",
+        },
+      ],
+      "id": "auth login",
+    },
+    {
+      "api": "none",
+      "description": "Log out of Meilisearch Cloud.
+
+Revokes the token of \`auth login\` and forgets it. Does nothing when nobody is logged in.",
+      "examples": [
+        "meili auth logout",
+      ],
+      "flags": [],
+      "id": "auth logout",
+    },
+    {
+      "api": "none",
+      "description": "Refresh the Meilisearch Cloud session.
+
+Trades the refresh token of the stored session for a new access token, before it expires.",
+      "examples": [
+        "meili auth refresh",
+      ],
+      "flags": [],
+      "id": "auth refresh",
+    },
+    {
+      "api": "none",
+      "description": "Show the Meilisearch Cloud session.
+
+Says whether a session of \`auth login\` exists, whether the authorization server still accepts it, and who it logs in.",
+      "examples": [
+        "meili auth status",
+      ],
+      "flags": [],
+      "id": "auth status",
+    },
+    {
+      "api": "meilisearch",
+      "description": "List the batches of tasks.
+
+--ids, --task-ids, --statuses and the other filters of the route narrow the list.",
+      "examples": [
+        "meili batch list --project prod",
+        "meili batch list --project prod --ids 7",
+        "meili batch list --project prod --task-ids 42",
+        "meili batch list --project prod --statuses failed --index-ids movies --limit 5",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "Batch uids to match, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the batches of these task uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "task-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these indexes, comma-separated. \`*\` matches every one.",
+          "helpValue": "<indexes>",
+          "name": "index-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "canceled-by",
+          "type": "option",
+        },
+        {
+          "description": "Task types to match, comma-separated, as the \`type\` field of a task spells them, for example \`documentAdditionOrUpdate\`. \`*\` matches every one.",
+          "helpValue": "<types>",
+          "name": "types",
+          "type": "option",
+        },
+        {
+          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. \`*\` matches every one.",
+          "helpValue": "<statuses>",
+          "name": "statuses",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Return the batches from the oldest uid up, instead of the newest down.",
+          "name": "reverse",
+          "type": "boolean",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "name": "from",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "type": "boolean",
+        },
+      ],
+      "id": "batch list",
+      "keyActions": [
+        "tasks.get",
+      ],
+      "routes": [
+        "GET /batches",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "Get one batch of tasks.",
+      "examples": [
+        "meili batch view --project prod --id 7",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The batch uid.",
+          "helpValue": "<uid>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+      ],
+      "id": "batch view",
+      "keyActions": [
+        "tasks.get",
+      ],
+      "routes": [
+        "GET /batches/{batch_id}",
+      ],
+    },
+    {
+      "api": "none",
+      "description": "List the projects of the config file.
+
+Prints the path of the file and its projects as JSON, keys masked.",
+      "examples": [
+        "meili config list",
+        "MEILI_CONFIG=./meili.json meili config list",
+      ],
+      "flags": [],
+      "id": "config list",
+    },
+    {
+      "api": "none",
+      "description": "Add a project to the config file.
+
+Creates the file, owner-only, and refuses a name that exists. Talks to the Management API only with --sync-with-cloud.",
+      "examples": [
+        "meili config set --project local --project-url http://localhost:7700",
+        "meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
+        "meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
+      ],
+      "flags": [
+        {
+          "description": "Name of the project to set.",
+          "helpValue": "<name>",
+          "name": "project",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "URL of the project.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "API key of the project. \`-\` reads it from stdin, out of the shell history.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "name": "sync-with-cloud",
+          "type": "boolean",
+        },
+      ],
+      "id": "config set",
+    },
+    {
+      "api": "management",
+      "description": "Add the Meilisearch Cloud projects to the config file.
+
+Gives every project of the scope an entry, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.",
+      "examples": [
+        "meili config sync-with-cloud --all",
+        "meili config sync-with-cloud --team-ids 12,13",
+        "meili config sync-with-cloud --project-name prod",
+        "meili config sync-with-cloud --project-url https://ms-abc.sfo.meilisearch.io",
+      ],
+      "flags": [
+        {
+          "description": "Every project the token sees.",
+          "name": "all",
+          "type": "boolean",
+        },
+        {
+          "description": "The projects of these teams, comma-separated.",
+          "helpValue": "<ids>",
+          "name": "team-ids",
+          "type": "option",
+        },
+        {
+          "description": "The projects with exactly this name, in any team.",
+          "helpValue": "<name>",
+          "name": "project-name",
+          "type": "option",
+        },
+        {
+          "description": "The project with this URL, same scheme and host.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+      ],
+      "id": "config sync-with-cloud",
+    },
+    {
+      "api": "none",
+      "description": "Remove a project from the config file.",
+      "examples": [
+        "meili config unset --project prod",
+      ],
+      "flags": [
+        {
+          "description": "Name of the project to remove.",
+          "helpValue": "<name>",
+          "name": "project",
+          "required": true,
+          "type": "option",
+        },
+      ],
+      "id": "config unset",
+    },
+    {
+      "api": "none",
+      "description": "Change a project of the config file.
+
+Changes the fields given, and refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.",
+      "examples": [
+        "meili config update --project prod --sync-with-cloud",
+        "meili config update --project prod --project-api-key - < key.txt",
+        "meili config update --project local --project-url http://localhost:7701",
+      ],
+      "flags": [
+        {
+          "description": "Name of the project to change.",
+          "helpValue": "<name>",
+          "name": "project",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "New URL of the project.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "New API key of the project. \`-\` reads it from stdin, out of the shell history.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "name": "sync-with-cloud",
+          "type": "boolean",
+        },
+      ],
+      "id": "config update",
+    },
+    {
       "api": "meilisearch",
       "async": true,
-      "description": "Add documents to an index, replacing the ones that already have the same primary key.",
+      "description": "Add or replace documents in an index.
+
+A document replaces the one that has the same primary key.",
       "examples": [
-        "meili add documents --project prod --index movies --file movies.json",
-        "meili add documents --project prod --index movies --file movies.json --output json",
-        "cat movies.json | meili add documents --project prod --index movies --file -",
-        "meili add documents --project prod --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
-        "meili add documents --project prod --index movies --file movies.json --wait",
+        "meili document add --project prod --index movies --file movies.json",
+        "cat movies.json | meili document add --project prod --index movies --file -",
+        "meili document add --project prod --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
+        "meili document add --project prod --index movies --file movies.json --wait",
       ],
       "flags": [
         {
@@ -87,7 +457,7 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
           "type": "option",
         },
       ],
-      "id": "add documents",
+      "id": "document add",
       "keyActions": [
         "documents.add",
       ],
@@ -98,620 +468,15 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
     {
       "api": "meilisearch",
       "async": true,
-      "description": "Create an empty index, named by --id, with --primary-key as its primary key.",
-      "examples": [
-        "meili add indexes --project prod --id movies",
-        "meili add indexes --project prod --id movies --primary-key id --output json",
-        "meili add indexes --project prod --id movies --wait",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "The index to create.",
-          "helpValue": "<index>",
-          "name": "id",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "The field that holds the identifier of each document. Without it, Meilisearch infers it from the first documents.",
-          "helpValue": "<field>",
-          "name": "primary-key",
-          "type": "option",
-        },
-        {
-          "description": "Read the body from a file. \`-\` reads from stdin.",
-          "exclusive": [
-            "data",
-          ],
-          "helpValue": "<path>",
-          "name": "file",
-          "type": "option",
-        },
-        {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "name": "data",
-          "type": "option",
-        },
-        {
-          "description": "Poll the task until it reaches a final status, then print the final task.",
-          "name": "wait",
-          "type": "boolean",
-        },
-        {
-          "dependsOn": [
-            "wait",
-          ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
-          "helpValue": "<duration>",
-          "name": "timeout",
-          "type": "option",
-        },
-      ],
-      "id": "add indexes",
-      "keyActions": [
-        "indexes.create",
-      ],
-      "routes": [
-        "POST /indexes",
-      ],
-    },
-    {
-      "api": "meilisearch",
-      "description": "Create an API key that runs --actions on --indexes until --expires-at.
+      "description": "Delete documents from an index.
 
-The answer carries the \`key\` field, the credential itself, on stdout like any other data.",
+Deletes the documents named by --ids, matched by --filter, or every one of them with --all.",
       "examples": [
-        "meili add keys --project prod --actions search --indexes movies --expires-at null",
-        "meili add keys --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json",
-        "meili add keys --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
-        "meili add keys --project prod --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "Uid of the key, a uuid v4. Without it, Meilisearch generates one.",
-          "helpValue": "<uuid>",
-          "name": "id",
-          "type": "option",
-        },
-        {
-          "description": "Actions the key permits, comma-separated, for example \`search\` or \`documents.*\`. \`*\` permits them all.",
-          "helpValue": "<actions>",
-          "name": "actions",
-          "type": "option",
-        },
-        {
-          "description": "Indexes the key reaches, comma-separated. \`*\` reaches them all, and \`products_*\` every index of that prefix.",
-          "helpValue": "<indexes>",
-          "name": "indexes",
-          "type": "option",
-        },
-        {
-          "description": "Expiration date in RFC 3339 format. The value null creates a key that never expires.",
-          "helpValue": "<date>",
-          "name": "expires-at",
-          "type": "option",
-        },
-        {
-          "description": "Name of the key, for a human reading the list.",
-          "helpValue": "<name>",
-          "name": "name",
-          "type": "option",
-        },
-        {
-          "description": "Description of the key, for a human reading the list.",
-          "helpValue": "<text>",
-          "name": "description",
-          "type": "option",
-        },
-        {
-          "description": "Read the body from a file. \`-\` reads from stdin.",
-          "exclusive": [
-            "data",
-          ],
-          "helpValue": "<path>",
-          "name": "file",
-          "type": "option",
-        },
-        {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "name": "data",
-          "type": "option",
-        },
-      ],
-      "id": "add keys",
-      "keyActions": [
-        "keys.create",
-      ],
-      "routes": [
-        "POST /keys",
-      ],
-    },
-    {
-      "api": "management",
-      "async": true,
-      "description": "Create a Meilisearch Cloud project in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.",
-      "examples": [
-        "meili add projects --name demo --team-id 12 --resource-id 3",
-        "meili add projects --name demo --team-id 12 --resource-id 3 --output json",
-        "meili add projects --name demo --team-id 12 --resource-id 3 --sync-config",
-        "meili add projects --name demo --team-id 12 --resource-id 3 --wait --sync-config",
-        "meili add projects --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
-        "meili add projects --data '{"name":"demo","teamId":12,"resourceId":3}'",
-        "meili add projects --file project.json --name other-name",
-      ],
-      "flags": [
-        {
-          "description": "Name of the project.",
-          "helpValue": "<name>",
-          "name": "name",
-          "type": "option",
-        },
-        {
-          "description": "Team that owns the project.",
-          "helpValue": "<id>",
-          "name": "team-id",
-          "type": "option",
-        },
-        {
-          "description": "Resource of the project: its plan and its region.",
-          "helpValue": "<id>",
-          "name": "resource-id",
-          "type": "option",
-        },
-        {
-          "description": "Meilisearch version of the project, the latest by default.",
-          "helpValue": "<version>",
-          "name": "ms-version",
-          "type": "option",
-        },
-        {
-          "description": "Add the project to the config file, as an entry named after it with its URL, its master key and its cloud identifiers.",
-          "name": "sync-config",
-          "type": "boolean",
-        },
-        {
-          "description": "Poll the project until its status is running or failed, then print it.",
-          "name": "wait",
-          "type": "boolean",
-        },
-        {
-          "dependsOn": [
-            "wait",
-          ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
-          "helpValue": "<duration>",
-          "name": "timeout",
-          "type": "option",
-        },
-        {
-          "description": "Read the body from a file. \`-\` reads from stdin.",
-          "exclusive": [
-            "data",
-          ],
-          "helpValue": "<path>",
-          "name": "file",
-          "type": "option",
-        },
-        {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "name": "data",
-          "type": "option",
-        },
-      ],
-      "id": "add projects",
-      "routes": [
-        "POST /api/v2/projects",
-      ],
-    },
-    {
-      "api": "management",
-      "description": "Create a Meilisearch Cloud team in an organization.",
-      "examples": [
-        "meili add teams --name search --organization-id 1",
-        "meili add teams --name search --organization-id 1 --output json",
-        "meili add teams --data '{"name":"search","organizationId":1}'",
-      ],
-      "flags": [
-        {
-          "description": "Name of the team.",
-          "helpValue": "<name>",
-          "name": "name",
-          "type": "option",
-        },
-        {
-          "description": "Organization that owns the team.",
-          "helpValue": "<id>",
-          "name": "organization-id",
-          "type": "option",
-        },
-        {
-          "description": "Read the body from a file. \`-\` reads from stdin.",
-          "exclusive": [
-            "data",
-          ],
-          "helpValue": "<path>",
-          "name": "file",
-          "type": "option",
-        },
-        {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "name": "data",
-          "type": "option",
-        },
-      ],
-      "id": "add teams",
-      "routes": [
-        "POST /api/v2/teams",
-      ],
-    },
-    {
-      "api": "none",
-      "description": "Log in to Meilisearch Cloud with a browser, and store the token for the management commands.",
-      "examples": [
-        "meili auth login",
-        "meili auth login --output json",
-        "meili auth login --no-browser",
-      ],
-      "flags": [
-        {
-          "description": "Open the consent page in a browser. --no-browser only prints the URL.",
-          "name": "browser",
-          "type": "boolean",
-        },
-      ],
-      "id": "auth login",
-    },
-    {
-      "api": "none",
-      "description": "Revoke the token of \`auth login\` and forget it. Does nothing when nobody is logged in.",
-      "examples": [
-        "meili auth logout",
-        "meili auth logout --output json",
-      ],
-      "flags": [],
-      "id": "auth logout",
-    },
-    {
-      "api": "none",
-      "description": "Trade the refresh token of the stored session for a new access token, before it expires.",
-      "examples": [
-        "meili auth refresh",
-        "meili auth refresh --output json",
-      ],
-      "flags": [],
-      "id": "auth refresh",
-    },
-    {
-      "api": "none",
-      "description": "Say whether a session of \`auth login\` exists and whether the authorization server still accepts it, and who it logs in.",
-      "examples": [
-        "meili auth status",
-        "meili auth status --output json",
-      ],
-      "flags": [],
-      "id": "auth status",
-    },
-    {
-      "api": "meilisearch",
-      "async": true,
-      "description": "Cancel the enqueued and processing tasks matched by --ids, --statuses, --types and the other filters of the route.",
-      "examples": [
-        "meili cancel tasks --project prod --ids 42,1344",
-        "meili cancel tasks --project prod --ids 42 --output json",
-        "meili cancel tasks --project prod --statuses enqueued --index-ids movies",
-        "meili cancel tasks --project prod --statuses processing --wait",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "Task uids to match, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "ids",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks of these batch uids, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "batch-ids",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks of these indexes, comma-separated. \`*\` matches every one.",
-          "helpValue": "<indexes>",
-          "name": "index-ids",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "canceled-by",
-          "type": "option",
-        },
-        {
-          "description": "Task types to match, comma-separated, as the \`type\` field of a task spells them, for example \`documentAdditionOrUpdate\`. \`*\` matches every one.",
-          "helpValue": "<types>",
-          "name": "types",
-          "type": "option",
-        },
-        {
-          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. \`*\` matches every one.",
-          "helpValue": "<statuses>",
-          "name": "statuses",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-enqueued-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-enqueued-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks started after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-started-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks started before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-started-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks finished after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-finished-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks finished before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-finished-at",
-          "type": "option",
-        },
-        {
-          "description": "Poll the task until it reaches a final status, then print the final task.",
-          "name": "wait",
-          "type": "boolean",
-        },
-        {
-          "dependsOn": [
-            "wait",
-          ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
-          "helpValue": "<duration>",
-          "name": "timeout",
-          "type": "option",
-        },
-      ],
-      "id": "cancel tasks",
-      "keyActions": [
-        "tasks.cancel",
-      ],
-      "routes": [
-        "POST /tasks/cancel",
-      ],
-    },
-    {
-      "api": "none",
-      "description": "Print the config file path and its projects as JSON, keys masked.",
-      "examples": [
-        "meili config list",
-        "meili config list --output json",
-        "MEILI_CONFIG=./meili.json meili config list",
-      ],
-      "flags": [],
-      "id": "config list",
-    },
-    {
-      "api": "none",
-      "description": "Set a project in the config file, creating the file owner-only; refuses a name that exists. Talks to the Management API only with --sync-with-cloud.
-
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
-      "examples": [
-        "meili config set --project local --project-url http://localhost:7700",
-        "meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
-        "meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
-        "meili config set --project local --project-url http://localhost:7700 --output json",
-      ],
-      "flags": [
-        {
-          "description": "Name of the project to set.",
-          "helpValue": "<name>",
-          "name": "project",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "URL of the project.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "API key of the project. \`-\` reads it from stdin, out of the shell history.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
-          "name": "sync-with-cloud",
-          "type": "boolean",
-        },
-      ],
-      "id": "config set",
-    },
-    {
-      "api": "management",
-      "description": "Give every Meilisearch Cloud project of the scope an entry of the config file, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.
-
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
-      "examples": [
-        "meili config sync-with-cloud --all",
-        "meili config sync-with-cloud --team-ids 12,13",
-        "meili config sync-with-cloud --project-name prod",
-        "meili config sync-with-cloud --project-url https://ms-abc.sfo.meilisearch.io --output json",
-      ],
-      "flags": [
-        {
-          "description": "Every project the token sees.",
-          "name": "all",
-          "type": "boolean",
-        },
-        {
-          "description": "The projects of these teams, comma-separated.",
-          "helpValue": "<ids>",
-          "name": "team-ids",
-          "type": "option",
-        },
-        {
-          "description": "The projects with exactly this name, in any team.",
-          "helpValue": "<name>",
-          "name": "project-name",
-          "type": "option",
-        },
-        {
-          "description": "The project with this URL, same scheme and host.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-      ],
-      "id": "config sync-with-cloud",
-    },
-    {
-      "api": "none",
-      "description": "Remove a project from the config file.
-
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
-      "examples": [
-        "meili config unset --project prod",
-        "meili config unset --project prod --output json",
-      ],
-      "flags": [
-        {
-          "description": "Name of the project to remove.",
-          "helpValue": "<name>",
-          "name": "project",
-          "required": true,
-          "type": "option",
-        },
-      ],
-      "id": "config unset",
-    },
-    {
-      "api": "none",
-      "description": "Change the fields given of a project of the config file; refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.
-
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
-      "examples": [
-        "meili config update --project prod --sync-with-cloud",
-        "meili config update --project prod --project-api-key - < key.txt",
-        "meili config update --project local --project-url http://localhost:7701 --output json",
-      ],
-      "flags": [
-        {
-          "description": "Name of the project to change.",
-          "helpValue": "<name>",
-          "name": "project",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "New URL of the project.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "New API key of the project. \`-\` reads it from stdin, out of the shell history.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
-          "name": "sync-with-cloud",
-          "type": "boolean",
-        },
-      ],
-      "id": "config update",
-    },
-    {
-      "api": "meilisearch",
-      "async": true,
-      "description": "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.",
-      "examples": [
-        "meili delete documents --project prod --index movies --ids 42,1344 --yes",
-        "meili delete documents --project prod --index movies --ids 42 --yes --output json",
-        "meili delete documents --project prod --index movies --filter 'rating < 2' --yes",
-        "meili delete documents --project prod --index movies --file ids.json --yes",
-        "meili delete documents --project prod --index movies --all --yes --wait",
+        "meili document delete --project prod --index movies --ids 42,1344 --yes",
+        "meili document delete --project prod --index movies --ids 42 --yes",
+        "meili document delete --project prod --index movies --filter 'rating < 2' --yes",
+        "meili document delete --project prod --index movies --file ids.json --yes",
+        "meili document delete --project prod --index movies --all --yes --wait",
       ],
       "flags": [
         {
@@ -812,7 +577,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "boolean",
         },
       ],
-      "id": "delete documents",
+      "id": "document delete",
       "keyActions": [
         "documents.delete",
       ],
@@ -824,12 +589,13 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "meilisearch",
-      "async": true,
-      "description": "Delete an index, with its documents, its settings and its task history.",
+      "description": "List the documents of an index.
+
+--ids or --filter narrow the list.",
       "examples": [
-        "meili delete indexes --project prod --id movies --yes",
-        "meili delete indexes --project prod --id movies --yes --output json",
-        "meili delete indexes --project prod --id movies --yes --wait",
+        "meili document list --project prod --index movies",
+        "meili document list --project prod --index movies --ids 42,1344 --fields id,title",
+        "meili document list --project prod --index movies --filter 'rating > 4' --sort rating:desc",
       ],
       "flags": [
         {
@@ -851,228 +617,93 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "The index to delete.",
-          "helpValue": "<index>",
-          "name": "id",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "Poll the task until it reaches a final status, then print the final task.",
-          "name": "wait",
-          "type": "boolean",
-        },
-        {
-          "dependsOn": [
-            "wait",
-          ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
-          "helpValue": "<duration>",
-          "name": "timeout",
-          "type": "option",
-        },
-        {
-          "description": "Confirm the deletion. Nothing is sent to the API without it.",
-          "name": "yes",
-          "required": true,
-          "type": "boolean",
-        },
-      ],
-      "id": "delete indexes",
-      "keyActions": [
-        "indexes.delete",
-      ],
-      "routes": [
-        "DELETE /indexes/{index_uid}",
-      ],
-    },
-    {
-      "api": "meilisearch",
-      "description": "Delete an API key, which stops authenticating every request that carries it.",
-      "examples": [
-        "meili delete keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
-        "meili delete keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "The key to delete, by its uid or by its key value.",
-          "helpValue": "<key>",
-          "name": "id",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "Confirm the deletion. Nothing is sent to the API without it.",
-          "name": "yes",
-          "required": true,
-          "type": "boolean",
-        },
-      ],
-      "id": "delete keys",
-      "keyActions": [
-        "keys.delete",
-      ],
-      "routes": [
-        "DELETE /keys/{key}",
-      ],
-    },
-    {
-      "api": "management",
-      "description": "Delete a Meilisearch Cloud organization. Prints nothing on success.",
-      "examples": [
-        "meili delete organizations --id 7 --yes",
-        "meili delete organizations --id 7 --yes --output json",
-      ],
-      "flags": [
-        {
-          "description": "The organization to delete.",
-          "helpValue": "<id>",
-          "name": "id",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "Confirm the deletion. Nothing is sent to the API without it.",
-          "name": "yes",
-          "required": true,
-          "type": "boolean",
-        },
-      ],
-      "id": "delete organizations",
-      "routes": [
-        "DELETE /api/v2/organizations/{id}",
-      ],
-    },
-    {
-      "api": "management",
-      "description": "Delete a Meilisearch Cloud project, with its data. Prints nothing on success.",
-      "examples": [
-        "meili delete projects --id 343 --yes",
-        "meili delete projects --id 343 --yes --output json",
-        "meili delete projects --project staging --yes",
-        "meili delete projects --project staging --yes --sync-config",
-      ],
-      "flags": [
-        {
-          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "The project to delete, or give --project <name> and its cloud.id from the config file.",
-          "helpValue": "<id>",
-          "name": "id",
-          "type": "option",
-        },
-        {
-          "description": "Remove the project's entry from the config file: the entry --project names, or the one whose cloud.id is --id.",
-          "name": "sync-config",
-          "type": "boolean",
-        },
-        {
-          "description": "Confirm the deletion. Nothing is sent to the API without it.",
-          "name": "yes",
-          "required": true,
-          "type": "boolean",
-        },
-      ],
-      "id": "delete projects",
-      "routes": [
-        "DELETE /api/v2/projects/{id}",
-      ],
-    },
-    {
-      "api": "meilisearch",
-      "async": true,
-      "description": "Reset every setting of an index to its default value, which reindexes the documents.",
-      "examples": [
-        "meili delete settings --project prod --index movies --yes",
-        "meili delete settings --project prod --index movies --yes --output json",
-        "meili delete settings --project prod --index movies --yes --wait",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "The index to reset the settings of. \`update settings --<setting> null\` resets one of them.",
+          "description": "The index to read the documents from.",
           "helpValue": "<index>",
           "name": "index",
           "required": true,
           "type": "option",
         },
         {
-          "description": "Poll the task until it reaches a final status, then print the final task.",
-          "name": "wait",
-          "type": "boolean",
-        },
-        {
-          "dependsOn": [
-            "wait",
-          ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
-          "helpValue": "<duration>",
-          "name": "timeout",
+          "description": "Document identifiers to return, comma-separated.",
+          "helpValue": "<ids>",
+          "name": "ids",
           "type": "option",
         },
         {
-          "description": "Confirm the deletion. Nothing is sent to the API without it.",
-          "name": "yes",
-          "required": true,
+          "description": "Filter expression, for example \`rating > 4\`. Its array-of-arrays form goes through --data.",
+          "helpValue": "<filter>",
+          "name": "filter",
+          "type": "option",
+        },
+        {
+          "description": "Document attributes to return, comma-separated. Defaults to all of them.",
+          "helpValue": "<fields>",
+          "name": "fields",
+          "type": "option",
+        },
+        {
+          "description": "Attributes to sort on, comma-separated, each as \`attribute:asc\` or \`:desc\`.",
+          "helpValue": "<sort>",
+          "name": "sort",
+          "type": "option",
+        },
+        {
+          "description": "Include the vector embeddings of the documents that have them.",
+          "name": "retrieve-vectors",
           "type": "boolean",
         },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "type": "boolean",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
       ],
-      "id": "delete settings",
+      "id": "document list",
       "keyActions": [
-        "settings.update",
+        "documents.get",
       ],
       "routes": [
-        "DELETE /indexes/{index_uid}/settings",
+        "POST /indexes/{index_uid}/documents/fetch",
       ],
     },
     {
       "api": "meilisearch",
       "async": true,
-      "description": "Delete the finished tasks matched by --ids, --statuses, --types and the other filters of the route.",
+      "description": "Add or update documents in an index.
+
+The fields of a document are merged into the one that has the same primary key.",
       "examples": [
-        "meili delete tasks --project prod --ids 42,1344 --yes",
-        "meili delete tasks --project prod --ids 42 --yes --output json",
-        "meili delete tasks --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
-        "meili delete tasks --project prod --index-ids movies --yes --wait",
+        "meili document update --project prod --index movies --file changes.json",
+        "cat changes.json | meili document update --project prod --index movies --file -",
+        "meili document update --project prod --index movies --data '[{"id":1,"rating":4}]'",
+        "meili document update --project prod --index movies --file changes.json --wait",
       ],
       "flags": [
         {
@@ -1094,75 +725,42 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "Task uids to match, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "ids",
+          "description": "The index to update the documents of.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
           "type": "option",
         },
         {
-          "description": "Match the tasks of these batch uids, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "batch-ids",
+          "description": "Primary key of the index. Only taken into account on its first documents.",
+          "helpValue": "<field>",
+          "name": "primary-key",
           "type": "option",
         },
         {
-          "description": "Match the tasks of these indexes, comma-separated. \`*\` matches every one.",
-          "helpValue": "<indexes>",
-          "name": "index-ids",
+          "description": "String attached to the task, returned in the task object.",
+          "helpValue": "<string>",
+          "name": "custom-metadata",
           "type": "option",
         },
         {
-          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "canceled-by",
+          "description": "Only update documents that already exist, ignore the new ones.",
+          "name": "skip-creation",
+          "type": "boolean",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
           "type": "option",
         },
         {
-          "description": "Task types to match, comma-separated, as the \`type\` field of a task spells them, for example \`documentAdditionOrUpdate\`. \`*\` matches every one.",
-          "helpValue": "<types>",
-          "name": "types",
-          "type": "option",
-        },
-        {
-          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. \`*\` matches every one.",
-          "helpValue": "<statuses>",
-          "name": "statuses",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-enqueued-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-enqueued-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks started after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-started-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks started before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-started-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks finished after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-finished-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks finished before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-finished-at",
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
           "type": "option",
         },
         {
@@ -1179,57 +777,85 @@ The file holds API keys and decides where every later command goes, for every pr
           "name": "timeout",
           "type": "option",
         },
-        {
-          "description": "Confirm the deletion. Nothing is sent to the API without it.",
-          "name": "yes",
-          "required": true,
-          "type": "boolean",
-        },
       ],
-      "id": "delete tasks",
+      "id": "document update",
       "keyActions": [
-        "tasks.delete",
+        "documents.add",
       ],
       "routes": [
-        "DELETE /tasks",
+        "PUT /indexes/{index_uid}/documents",
       ],
     },
     {
-      "api": "management",
-      "description": "Delete a Meilisearch Cloud team that has no project left. Prints nothing on success.",
+      "api": "meilisearch",
+      "description": "Get one document of an index.",
       "examples": [
-        "meili delete teams --id 12 --yes",
-        "meili delete teams --id 12 --yes --output json",
+        "meili document view --project prod --index movies --id 42",
+        "meili document view --project prod --index movies --id 42 --fields id,title",
       ],
       "flags": [
         {
-          "description": "The team to delete.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to read the document from.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "The document identifier.",
           "helpValue": "<id>",
           "name": "id",
           "required": true,
           "type": "option",
         },
         {
-          "description": "Confirm the deletion. Nothing is sent to the API without it.",
-          "name": "yes",
-          "required": true,
+          "description": "Document attributes to return, comma-separated. Defaults to all of them.",
+          "helpValue": "<fields>",
+          "name": "fields",
+          "type": "option",
+        },
+        {
+          "description": "Include the vector embeddings of the document, if it has them.",
+          "name": "retrieve-vectors",
           "type": "boolean",
         },
       ],
-      "id": "delete teams",
+      "id": "document view",
+      "keyActions": [
+        "documents.get",
+      ],
       "routes": [
-        "DELETE /api/v2/teams/{id}",
+        "GET /indexes/{index_uid}/documents/{document_id}",
       ],
     },
     {
       "api": "meilisearch",
       "async": true,
-      "description": "Send the documents and the settings of the source instance to the destination instance, and answer the task that does it.
+      "description": "Export the data of the instance to another instance.
+
+Sends the documents and the settings to the destination instance, and prints the task that does it.
 
 The source is the project this command connects to, named by --project, --project-url and --project-api-key as on every command: it receives the request and does the export. The destination is --url with --api-key, or --project-destination, an entry of the config file. --indexes narrows the export to the indexes those patterns match.",
       "examples": [
         "meili export --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
-        "meili export --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json",
         "meili export --project staging --project-destination prod",
         "meili export --project prod --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait",
         "meili export --project prod --url http://localhost:7701 --payload-size 24MiB",
@@ -1327,10 +953,11 @@ The source is the project this command connects to, named by --project, --projec
     },
     {
       "api": "meilisearch",
-      "description": "Search the values of one facet attribute of an index, counted on the documents --q and --filter keep.",
+      "description": "Search the values of a facet.
+
+Counts the values on the documents that --q and --filter keep.",
       "examples": [
         "meili facet-search --project prod --index movies --facet-name genres --facet-query ac",
-        "meili facet-search --project prod --index movies --facet-name genres --facet-query ac --output json",
         "meili facet-search --project prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
         "meili facet-search --project prod --index movies --data '{"facetName":"genres","facetQuery":"ac"}'",
       ],
@@ -1455,14 +1082,10 @@ The source is the project this command connects to, named by --project, --projec
     },
     {
       "api": "meilisearch",
-      "description": "List the batches of tasks the instance processed, narrowed by --ids, --task-ids, --statuses and the other filters of the route.",
+      "description": "Check that the instance is available.",
       "examples": [
-        "meili get batches --project prod",
-        "meili get batches --project prod --output json",
-        "meili get batches --project prod --ids 7",
-        "meili get batches --project prod --task-ids 42",
-        "meili get batches --project prod --statuses failed --index-ids movies --limit 5",
-        "meili get batches --project prod --all --output ndjson",
+        "meili health --project prod",
+        "meili health --project-url http://localhost:7700",
       ],
       "flags": [
         {
@@ -1483,118 +1106,22 @@ The source is the project this command connects to, named by --project, --projec
           "name": "project",
           "type": "option",
         },
-        {
-          "description": "Batch uids to match, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "ids",
-          "type": "option",
-        },
-        {
-          "description": "Match the batches of these task uids, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "task-ids",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks of these indexes, comma-separated. \`*\` matches every one.",
-          "helpValue": "<indexes>",
-          "name": "index-ids",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "canceled-by",
-          "type": "option",
-        },
-        {
-          "description": "Task types to match, comma-separated, as the \`type\` field of a task spells them, for example \`documentAdditionOrUpdate\`. \`*\` matches every one.",
-          "helpValue": "<types>",
-          "name": "types",
-          "type": "option",
-        },
-        {
-          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. \`*\` matches every one.",
-          "helpValue": "<statuses>",
-          "name": "statuses",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-enqueued-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-enqueued-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks started after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-started-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks started before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-started-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks finished after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-finished-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks finished before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-finished-at",
-          "type": "option",
-        },
-        {
-          "description": "Return the batches from the oldest uid up, instead of the newest down.",
-          "name": "reverse",
-          "type": "boolean",
-        },
-        {
-          "description": "Passed to the API.",
-          "helpValue": "<n>",
-          "name": "limit",
-          "type": "option",
-        },
-        {
-          "description": "Passed to the API: the uid the page starts at, going down.",
-          "helpValue": "<uid>",
-          "name": "from",
-          "type": "option",
-        },
-        {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
-          "name": "all",
-          "type": "boolean",
-        },
       ],
-      "id": "get batches",
-      "keyActions": [
-        "tasks.get",
-      ],
+      "id": "health",
       "routes": [
-        "GET /batches",
+        "GET /health",
       ],
     },
     {
       "api": "meilisearch",
-      "description": "List the documents of an index, narrowed by --ids or by --filter.",
+      "async": true,
+      "description": "Create an index.
+
+--id names it, and --primary-key sets its primary key.",
       "examples": [
-        "meili get documents --project prod --index movies",
-        "meili get documents --project prod --index movies --output json",
-        "meili get documents --project prod --index movies --ids 42,1344 --fields id,title",
-        "meili get documents --project prod --index movies --filter 'rating > 4' --sort rating:desc",
-        "meili get documents --project prod --index movies --all --output ndjson",
+        "meili index add --project prod --id movies",
+        "meili index add --project prod --id movies --primary-key id",
+        "meili index add --project prod --id movies --wait",
       ],
       "flags": [
         {
@@ -1616,40 +1143,146 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "The index to read the documents from.",
+          "description": "The index to create.",
           "helpValue": "<index>",
-          "name": "index",
+          "name": "id",
           "required": true,
           "type": "option",
         },
         {
-          "description": "Document identifiers to return, comma-separated.",
-          "helpValue": "<ids>",
-          "name": "ids",
+          "description": "The field that holds the identifier of each document. Without it, Meilisearch infers it from the first documents.",
+          "helpValue": "<field>",
+          "name": "primary-key",
           "type": "option",
         },
         {
-          "description": "Filter expression, for example \`rating > 4\`. Its array-of-arrays form goes through --data.",
-          "helpValue": "<filter>",
-          "name": "filter",
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
           "type": "option",
         },
         {
-          "description": "Document attributes to return, comma-separated. Defaults to all of them.",
-          "helpValue": "<fields>",
-          "name": "fields",
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
           "type": "option",
         },
         {
-          "description": "Attributes to sort on, comma-separated, each as \`attribute:asc\` or \`:desc\`.",
-          "helpValue": "<sort>",
-          "name": "sort",
-          "type": "option",
-        },
-        {
-          "description": "Include the vector embeddings of the documents that have them.",
-          "name": "retrieve-vectors",
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
           "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+      ],
+      "id": "index add",
+      "keyActions": [
+        "indexes.create",
+      ],
+      "routes": [
+        "POST /indexes",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "async": true,
+      "description": "Delete an index.
+
+Deletes its documents, its settings and its task history too.",
+      "examples": [
+        "meili index delete --project prod --id movies --yes",
+        "meili index delete --project prod --id movies --yes --wait",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to delete.",
+          "helpValue": "<index>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+        {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "type": "boolean",
+        },
+      ],
+      "id": "index delete",
+      "keyActions": [
+        "indexes.delete",
+      ],
+      "routes": [
+        "DELETE /indexes/{index_uid}",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "List the indexes of the instance.",
+      "examples": [
+        "meili index list --project prod",
+        "meili index list --project prod --limit 5 --offset 10",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
         },
         {
           "description": "Passed to the API.",
@@ -1664,9 +1297,250 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "type": "boolean",
+        },
+      ],
+      "id": "index list",
+      "keyActions": [
+        "indexes.get",
+      ],
+      "routes": [
+        "GET /indexes",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "async": true,
+      "description": "Change the primary key or the name of an index.
+
+--primary-key changes the primary key, and --new-id renames the index.",
+      "examples": [
+        "meili index update --project prod --id movies --primary-key movie_id",
+        "meili index update --project prod --id movies --new-id films",
+        "meili index update --project prod --id movies --new-id films --wait",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to update.",
+          "helpValue": "<index>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "New uid of the index, which renames it.",
+          "helpValue": "<index>",
+          "name": "new-id",
+          "type": "option",
+        },
+        {
+          "description": "The field that holds the identifier of each document.",
+          "helpValue": "<field>",
+          "name": "primary-key",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+      ],
+      "id": "index update",
+      "keyActions": [
+        "indexes.update",
+      ],
+      "routes": [
+        "PATCH /indexes/{index_uid}",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "Get one index.",
+      "examples": [
+        "meili index view --project prod --id movies",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to get.",
+          "helpValue": "<index>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+      ],
+      "id": "index view",
+      "keyActions": [
+        "indexes.get",
+      ],
+      "routes": [
+        "GET /indexes/{index_uid}",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "Get the version of the instance.
+
+Prints the version of Meilisearch and the commit it was built from.",
+      "examples": [
+        "meili info --project prod",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+      ],
+      "id": "info",
+      "keyActions": [
+        "version",
+      ],
+      "routes": [
+        "GET /version",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "Create an API key.
+
+The key runs --actions on --indexes until --expires-at.
+
+The answer carries the \`key\` field, the credential itself, on stdout like any other data.",
+      "examples": [
+        "meili key add --project prod --actions search --indexes movies --expires-at null",
+        "meili key add --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z",
+        "meili key add --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
+        "meili key add --project prod --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "Uid of the key, a uuid v4. Without it, Meilisearch generates one.",
+          "helpValue": "<uuid>",
+          "name": "id",
+          "type": "option",
+        },
+        {
+          "description": "Actions the key permits, comma-separated, for example \`search\` or \`documents.*\`. \`*\` permits them all.",
+          "helpValue": "<actions>",
+          "name": "actions",
+          "type": "option",
+        },
+        {
+          "description": "Indexes the key reaches, comma-separated. \`*\` reaches them all, and \`products_*\` every index of that prefix.",
+          "helpValue": "<indexes>",
+          "name": "indexes",
+          "type": "option",
+        },
+        {
+          "description": "Expiration date in RFC 3339 format. The value null creates a key that never expires.",
+          "helpValue": "<date>",
+          "name": "expires-at",
+          "type": "option",
+        },
+        {
+          "description": "Name of the key.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "Description of the key.",
+          "helpValue": "<text>",
+          "name": "description",
+          "type": "option",
         },
         {
           "description": "Read the body from a file. \`-\` reads from stdin.",
@@ -1684,56 +1558,21 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
       ],
-      "id": "get documents",
+      "id": "key add",
       "keyActions": [
-        "documents.get",
+        "keys.create",
       ],
       "routes": [
-        "POST /indexes/{index_uid}/documents/fetch",
+        "POST /keys",
       ],
     },
     {
       "api": "meilisearch",
-      "description": "Check that the Meilisearch instance is available.",
+      "description": "Delete an API key.
+
+Every request that carries the key fails afterwards.",
       "examples": [
-        "meili get health --project prod",
-        "meili get health --project prod --output json",
-        "meili get health --project-url http://localhost:7700",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-      ],
-      "id": "get health",
-      "routes": [
-        "GET /health",
-      ],
-    },
-    {
-      "api": "meilisearch",
-      "description": "List the indexes of the instance, or get one with --id.",
-      "examples": [
-        "meili get indexes --project prod",
-        "meili get indexes --project prod --output json",
-        "meili get indexes --project prod --id movies",
-        "meili get indexes --project prod --limit 5 --offset 10",
-        "meili get indexes --project prod --all --output ndjson",
+        "meili key delete --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
       ],
       "flags": [
         {
@@ -1755,49 +1594,35 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "The index to get. Without it, the command lists the indexes.",
-          "helpValue": "<index>",
+          "description": "The key to delete, by its uid or by its key value.",
+          "helpValue": "<key>",
           "name": "id",
+          "required": true,
           "type": "option",
         },
         {
-          "description": "Passed to the API.",
-          "helpValue": "<n>",
-          "name": "limit",
-          "type": "option",
-        },
-        {
-          "description": "Passed to the API.",
-          "helpValue": "<n>",
-          "name": "offset",
-          "type": "option",
-        },
-        {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
-          "name": "all",
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
           "type": "boolean",
         },
       ],
-      "id": "get indexes",
+      "id": "key delete",
       "keyActions": [
-        "indexes.get",
+        "keys.delete",
       ],
       "routes": [
-        "GET /indexes",
-        "GET /indexes/{index_uid}",
+        "DELETE /keys/{key}",
       ],
     },
     {
       "api": "meilisearch",
-      "description": "List the API keys of the instance, or get one with --id.
+      "description": "List the API keys of the instance.
 
 The answer is the API body as it is, so it carries the \`key\` field of every key it returns: credentials that work, on stdout, like any other data.",
       "examples": [
-        "meili get keys --project prod",
-        "meili get keys --project prod --output json",
-        "meili get keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
-        "meili get keys --project prod --limit 5 --offset 10",
-        "meili get keys --project prod --all --output ndjson",
+        "meili key list --project prod",
+        "meili key list --project prod --limit 5 --offset 10",
       ],
       "flags": [
         {
@@ -1819,12 +1644,6 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "The key to get, by its uid or by its key value. Without it, the command lists the keys.",
-          "helpValue": "<key>",
-          "name": "id",
-          "type": "option",
-        },
-        {
           "description": "Passed to the API.",
           "helpValue": "<n>",
           "name": "limit",
@@ -1837,121 +1656,28 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "type": "boolean",
         },
       ],
-      "id": "get keys",
+      "id": "key list",
       "keyActions": [
         "keys.get",
       ],
       "routes": [
         "GET /keys",
-        "GET /keys/{key}",
-      ],
-    },
-    {
-      "api": "management",
-      "description": "List the Meilisearch Cloud organizations the token sees, or get one with --id.",
-      "examples": [
-        "meili get organizations",
-        "meili get organizations --output json",
-        "meili get organizations --id 7",
-        "meili get organizations --output ndjson",
-      ],
-      "flags": [
-        {
-          "description": "The organization to get. Without it, the command lists the organizations.",
-          "helpValue": "<id>",
-          "name": "id",
-          "type": "option",
-        },
-      ],
-      "id": "get organizations",
-      "routes": [
-        "GET /api/v2/organizations",
-        "GET /api/v2/organizations/{id}",
-      ],
-    },
-    {
-      "api": "management",
-      "description": "List the Meilisearch Cloud projects the token sees, or get one with --id or --project.",
-      "examples": [
-        "meili get projects",
-        "meili get projects --output json",
-        "meili get projects --team-id 12",
-        "meili get projects --id 343",
-        "meili get projects --project prod",
-        "meili get projects --output ndjson",
-      ],
-      "flags": [
-        {
-          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "The project to get, or give --project <name> and its cloud.id from the config file. Without either, the command lists the projects.",
-          "helpValue": "<id>",
-          "name": "id",
-          "type": "option",
-        },
-        {
-          "description": "Only the projects of this team. Ignored with --id.",
-          "helpValue": "<id>",
-          "name": "team-id",
-          "type": "option",
-        },
-      ],
-      "id": "get projects",
-      "routes": [
-        "GET /api/v2/projects",
-        "GET /api/v2/projects/{id}",
-      ],
-    },
-    {
-      "api": "management",
-      "description": "List the Meilisearch Cloud regions where a project can run.",
-      "examples": [
-        "meili get regions",
-        "meili get regions --output json",
-        "meili get regions --output ndjson",
-      ],
-      "flags": [],
-      "id": "get regions",
-      "routes": [
-        "GET /api/v2/regions",
-      ],
-    },
-    {
-      "api": "management",
-      "description": "List the active Meilisearch Cloud resources, the plans a project runs on, with their pricing.",
-      "examples": [
-        "meili get resources",
-        "meili get resources --output json",
-        "meili get resources --region-id 1",
-      ],
-      "flags": [
-        {
-          "description": "Only the resources of this region.",
-          "helpValue": "<id>",
-          "name": "region-id",
-          "type": "option",
-        },
-      ],
-      "id": "get resources",
-      "routes": [
-        "GET /api/v2/resources",
       ],
     },
     {
       "api": "meilisearch",
-      "description": "Get every setting of an index, each with its current value or its default.",
+      "description": "Change the name or the description of an API key.
+
+These are the two fields the route takes. The value null resets one.",
       "examples": [
-        "meili get settings --project prod --index movies",
-        "meili get settings --project prod --index movies --output json",
+        "meili key update --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
+        "meili key update --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly'",
+        "meili key update --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null",
       ],
       "flags": [
         {
@@ -1973,276 +1699,99 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "The index to read the settings of.",
-          "helpValue": "<index>",
-          "name": "index",
+          "description": "The key to update, by its uid or by its key value.",
+          "helpValue": "<key>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "New name of the key. The value null removes the one it has.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "New description of the key. The value null removes the one it has.",
+          "helpValue": "<text>",
+          "name": "description",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "key update",
+      "keyActions": [
+        "keys.update",
+      ],
+      "routes": [
+        "PATCH /keys/{key}",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "Get one API key.
+
+The answer is the API body as it is, so it carries the \`key\` field: a credential that works, on stdout, like any other data.",
+      "examples": [
+        "meili key view --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The key to get, by its uid or by its key value.",
+          "helpValue": "<key>",
+          "name": "id",
           "required": true,
           "type": "option",
         },
       ],
-      "id": "get settings",
+      "id": "key view",
       "keyActions": [
-        "settings.get",
+        "keys.get",
       ],
       "routes": [
-        "GET /indexes/{index_uid}/settings",
+        "GET /keys/{key}",
       ],
     },
     {
       "api": "meilisearch",
-      "description": "Get the statistics of the whole instance, or those of one index with --index.",
-      "examples": [
-        "meili get stats --project prod",
-        "meili get stats --project prod --output json",
-        "meili get stats --project prod --index movies",
-        "meili get stats --project prod --index movies --size-format human --show-internal-database-sizes",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "The index to read the statistics of. Without it, the whole instance.",
-          "helpValue": "<index>",
-          "name": "index",
-          "type": "option",
-        },
-        {
-          "description": "Add internalDatabaseSizes to the response, the size of each internal database.",
-          "name": "show-internal-database-sizes",
-          "type": "boolean",
-        },
-        {
-          "description": "How the sizes are written: raw (default), a number of bytes, or human, a string with its unit.",
-          "name": "size-format",
-          "options": [
-            "raw",
-            "human",
-          ],
-          "type": "option",
-        },
-      ],
-      "id": "get stats",
-      "keyActions": [
-        "stats.get",
-      ],
-      "routes": [
-        "GET /stats",
-        "GET /indexes/{index_uid}/stats",
-      ],
-    },
-    {
-      "api": "meilisearch",
-      "description": "List the tasks of the instance, narrowed by --ids, --statuses, --types and the other filters of the route.",
-      "examples": [
-        "meili get tasks --project prod",
-        "meili get tasks --project prod --output json",
-        "meili get tasks --project prod --ids 42",
-        "meili get tasks --project prod --statuses failed,canceled --limit 5",
-        "meili get tasks --project prod --index-ids movies --types documentAdditionOrUpdate",
-        "meili get tasks --project prod --all --output ndjson",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "Task uids to match, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "ids",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks of these batch uids, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "batch-ids",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks of these indexes, comma-separated. \`*\` matches every one.",
-          "helpValue": "<indexes>",
-          "name": "index-ids",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. \`*\` matches every one.",
-          "helpValue": "<uids>",
-          "name": "canceled-by",
-          "type": "option",
-        },
-        {
-          "description": "Task types to match, comma-separated, as the \`type\` field of a task spells them, for example \`documentAdditionOrUpdate\`. \`*\` matches every one.",
-          "helpValue": "<types>",
-          "name": "types",
-          "type": "option",
-        },
-        {
-          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. \`*\` matches every one.",
-          "helpValue": "<statuses>",
-          "name": "statuses",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-enqueued-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-enqueued-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks started after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-started-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks started before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-started-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks finished after this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "after-finished-at",
-          "type": "option",
-        },
-        {
-          "description": "Match the tasks finished before this date, in RFC 3339 format.",
-          "helpValue": "<date>",
-          "name": "before-finished-at",
-          "type": "option",
-        },
-        {
-          "description": "Return the tasks from the oldest uid up, instead of the newest down.",
-          "name": "reverse",
-          "type": "boolean",
-        },
-        {
-          "description": "Passed to the API.",
-          "helpValue": "<n>",
-          "name": "limit",
-          "type": "option",
-        },
-        {
-          "description": "Passed to the API: the uid the page starts at, going down.",
-          "helpValue": "<uid>",
-          "name": "from",
-          "type": "option",
-        },
-        {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
-          "name": "all",
-          "type": "boolean",
-        },
-      ],
-      "id": "get tasks",
-      "keyActions": [
-        "tasks.get",
-      ],
-      "routes": [
-        "GET /tasks",
-      ],
-    },
-    {
-      "api": "management",
-      "description": "List the Meilisearch Cloud teams the token sees, or get one with --id.",
-      "examples": [
-        "meili get teams",
-        "meili get teams --output json",
-        "meili get teams --id 12",
-        "meili get teams --output ndjson",
-      ],
-      "flags": [
-        {
-          "description": "The team to get. Without it, the command lists the teams.",
-          "helpValue": "<id>",
-          "name": "id",
-          "type": "option",
-        },
-      ],
-      "id": "get teams",
-      "routes": [
-        "GET /api/v2/teams",
-        "GET /api/v2/teams/{id}",
-      ],
-    },
-    {
-      "api": "meilisearch",
-      "description": "Get the version of the Meilisearch instance, with the commit it was built from.",
-      "examples": [
-        "meili get version --project prod",
-        "meili get version --project prod --output json",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-      ],
-      "id": "get version",
-      "keyActions": [
-        "version",
-      ],
-      "routes": [
-        "GET /version",
-      ],
-    },
-    {
-      "api": "meilisearch",
-      "description": "Run several search queries in one request, each naming its index in --queries, returned side by side or merged into one ranked list with --federation.",
+      "description": "Run several searches in one request.
+
+Each query of --queries names its index. The results come side by side, or merged into one ranked list with --federation.",
       "examples": [
         "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]'",
-        "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"}]' --output json",
+        "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"}]'",
         "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]' --federation '{"limit":5}'",
         "cat queries.json | meili multi-search --project prod --file -",
       ],
@@ -2302,12 +1851,376 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       ],
     },
     {
+      "api": "management",
+      "description": "Delete a Meilisearch Cloud organization.
+
+Prints nothing on success.",
+      "examples": [
+        "meili organization delete --id 7 --yes",
+      ],
+      "flags": [
+        {
+          "description": "The organization to delete.",
+          "helpValue": "<id>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "type": "boolean",
+        },
+      ],
+      "id": "organization delete",
+      "routes": [
+        "DELETE /api/v2/organizations/{id}",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "List the Meilisearch Cloud organizations.
+
+Only the organizations the token sees.",
+      "examples": [
+        "meili organization list",
+      ],
+      "flags": [],
+      "id": "organization list",
+      "routes": [
+        "GET /api/v2/organizations",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "Rename a Meilisearch Cloud organization.",
+      "examples": [
+        "meili organization update --id 7 --name Acme",
+        "meili organization update --id 7 --data '{"name":"Acme"}'",
+      ],
+      "flags": [
+        {
+          "description": "The organization to update.",
+          "helpValue": "<id>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "New name of the organization.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "organization update",
+      "routes": [
+        "PATCH /api/v2/organizations/{id}",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "Get one Meilisearch Cloud organization.",
+      "examples": [
+        "meili organization view --id 7",
+      ],
+      "flags": [
+        {
+          "description": "The organization to get.",
+          "helpValue": "<id>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+      ],
+      "id": "organization view",
+      "routes": [
+        "GET /api/v2/organizations/{id}",
+      ],
+    },
+    {
+      "api": "management",
+      "async": true,
+      "description": "Create a Meilisearch Cloud project.
+
+Creates it in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.",
+      "examples": [
+        "meili project add --name demo --team-id 12 --resource-id 3",
+        "meili project add --name demo --team-id 12 --resource-id 3 --sync-config",
+        "meili project add --name demo --team-id 12 --resource-id 3 --wait --sync-config",
+        "meili project add --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
+        "meili project add --data '{"name":"demo","teamId":12,"resourceId":3}'",
+        "meili project add --file project.json --name other-name",
+      ],
+      "flags": [
+        {
+          "description": "Name of the project.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "Team that owns the project.",
+          "helpValue": "<id>",
+          "name": "team-id",
+          "type": "option",
+        },
+        {
+          "description": "Resource of the project: its plan and its region.",
+          "helpValue": "<id>",
+          "name": "resource-id",
+          "type": "option",
+        },
+        {
+          "description": "Meilisearch version of the project, the latest by default.",
+          "helpValue": "<version>",
+          "name": "ms-version",
+          "type": "option",
+        },
+        {
+          "description": "Add the project to the config file, as an entry named after it with its URL, its master key and its cloud identifiers.",
+          "name": "sync-config",
+          "type": "boolean",
+        },
+        {
+          "description": "Poll the project until its status is running or failed, then print it.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "project add",
+      "routes": [
+        "POST /api/v2/projects",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "Delete a Meilisearch Cloud project and its data.
+
+Prints nothing on success.",
+      "examples": [
+        "meili project delete --id 343 --yes",
+        "meili project delete --project staging --yes",
+        "meili project delete --project staging --yes --sync-config",
+      ],
+      "flags": [
+        {
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The project to delete, or give --project <name> and its cloud.id from the config file.",
+          "helpValue": "<id>",
+          "name": "id",
+          "type": "option",
+        },
+        {
+          "description": "Remove the project's entry from the config file: the entry --project names, or the one whose cloud.id is --id.",
+          "name": "sync-config",
+          "type": "boolean",
+        },
+        {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "type": "boolean",
+        },
+      ],
+      "id": "project delete",
+      "routes": [
+        "DELETE /api/v2/projects/{id}",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "List the Meilisearch Cloud projects.
+
+Only the projects the token sees.",
+      "examples": [
+        "meili project list",
+        "meili project list --team-id 12",
+      ],
+      "flags": [
+        {
+          "description": "Only the projects of this team.",
+          "helpValue": "<id>",
+          "name": "team-id",
+          "type": "option",
+        },
+      ],
+      "id": "project list",
+      "routes": [
+        "GET /api/v2/projects",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "Rename a Meilisearch Cloud project.",
+      "examples": [
+        "meili project update --id 343 --name renamed",
+        "meili project update --project prod --name renamed",
+        "meili project update --project prod --name renamed --sync-config",
+        "meili project update --id 343 --data '{"name":"renamed"}'",
+      ],
+      "flags": [
+        {
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The project to update, or give --project <name> and its cloud.id from the config file.",
+          "helpValue": "<id>",
+          "name": "id",
+          "type": "option",
+        },
+        {
+          "description": "New name of the project.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "Rename the project's entry of the config file after it: the entry --project names, or the one whose cloud.id is --id. Refreshes its cloud identifiers.",
+          "name": "sync-config",
+          "type": "boolean",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "project update",
+      "routes": [
+        "PATCH /api/v2/projects/{id}",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "Get one Meilisearch Cloud project.
+
+--id or --project names it.",
+      "examples": [
+        "meili project view --id 343",
+        "meili project view --project prod",
+      ],
+      "flags": [
+        {
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The project to get, or give --project <name> and its cloud.id from the config file.",
+          "helpValue": "<id>",
+          "name": "id",
+          "type": "option",
+        },
+      ],
+      "id": "project view",
+      "routes": [
+        "GET /api/v2/projects/{id}",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "List the Meilisearch Cloud regions.
+
+The regions where a project can run.",
+      "examples": [
+        "meili region list",
+      ],
+      "flags": [],
+      "id": "region list",
+      "routes": [
+        "GET /api/v2/regions",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "List the Meilisearch Cloud resources.
+
+The active plans a project runs on, with their pricing.",
+      "examples": [
+        "meili resource list",
+        "meili resource list --region-id 1",
+      ],
+      "flags": [
+        {
+          "description": "Only the resources of this region.",
+          "helpValue": "<id>",
+          "name": "region-id",
+          "type": "option",
+        },
+      ],
+      "id": "resource list",
+      "routes": [
+        "GET /api/v2/resources",
+      ],
+    },
+    {
       "api": "none",
-      "description": "Print one line per command, or one command in full with --command, from the oclif manifest.",
+      "description": "Describe the commands as JSON.
+
+Prints one line per command, or one command in full with --command, from the oclif manifest.",
       "examples": [
         "meili schema",
-        "meili schema --output json",
-        "meili schema --command "get indexes"",
+        "meili schema --command "index list"",
         "meili schema | jq '.commands[].id'",
       ],
       "flags": [
@@ -2322,10 +2235,11 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
     },
     {
       "api": "meilisearch",
-      "description": "Search the documents of an index, with --q and the search parameters of the route.",
+      "description": "Search the documents of an index.
+
+--q and the search parameters of the route shape the search.",
       "examples": [
         "meili search --project prod --index movies --q nosferatu",
-        "meili search --project prod --index movies --q nosferatu --output json",
         "meili search --project prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
         "meili search --project prod --index movies --facets genres --attributes-to-retrieve id,title",
         "meili search --project prod --index movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'",
@@ -2543,156 +2457,13 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
     },
     {
       "api": "meilisearch",
-      "description": "Find the documents an index holds that are closest to one of its documents, named by --id and compared with --embedder.",
-      "examples": [
-        "meili similar --project prod --index movies --id 143 --embedder default",
-        "meili similar --project prod --index movies --id 143 --embedder default --output json",
-        "meili similar --project prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
-        "meili similar --project prod --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "The index to search in.",
-          "helpValue": "<index>",
-          "name": "index",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "The document to compare with, by its primary key value.",
-          "helpValue": "<id>",
-          "name": "id",
-          "type": "option",
-        },
-        {
-          "description": "The embedder the similarity is computed with, one of those the index settings configure.",
-          "helpValue": "<embedder>",
-          "name": "embedder",
-          "type": "option",
-        },
-        {
-          "description": "Number of documents to skip.",
-          "helpValue": "<n>",
-          "name": "offset",
-          "type": "option",
-        },
-        {
-          "description": "Maximum number of documents to return, 20 by default.",
-          "helpValue": "<n>",
-          "name": "limit",
-          "type": "option",
-        },
-        {
-          "description": "Filter expression, for example \`genres = horror\`. Its array-of-arrays form goes through --data.",
-          "helpValue": "<filter>",
-          "name": "filter",
-          "type": "option",
-        },
-        {
-          "description": "Document attributes to return, comma-separated. Defaults to the displayed ones.",
-          "helpValue": "<fields>",
-          "name": "attributes-to-retrieve",
-          "type": "option",
-        },
-        {
-          "description": "Add _vectors to each hit, the embeddings of the document.",
-          "name": "retrieve-vectors",
-          "type": "boolean",
-        },
-        {
-          "description": "Add _rankingScore to each hit, between 0.0 and 1.0.",
-          "name": "show-ranking-score",
-          "type": "boolean",
-        },
-        {
-          "description": "Add _rankingScoreDetails to each hit, the score of every ranking rule.",
-          "name": "show-ranking-score-details",
-          "type": "boolean",
-        },
-        {
-          "description": "Add performanceDetails to the response, a timing breakdown of the query.",
-          "name": "show-performance-details",
-          "type": "boolean",
-        },
-        {
-          "description": "Drop the hits whose ranking score is below this value, between 0.0 and 1.0.",
-          "helpValue": "<number>",
-          "name": "ranking-score-threshold",
-          "type": "option",
-        },
-        {
-          "description": "Read the body from a file. \`-\` reads from stdin.",
-          "exclusive": [
-            "data",
-          ],
-          "helpValue": "<path>",
-          "name": "file",
-          "type": "option",
-        },
-        {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "name": "data",
-          "type": "option",
-        },
-      ],
-      "id": "similar",
-      "keyActions": [
-        "search",
-      ],
-      "routes": [
-        "POST /indexes/{index_uid}/similar",
-      ],
-    },
-    {
-      "api": "none",
-      "description": "Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. An interactive command, for humans: an agent never runs it.
-
-It checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.
-
-An agent does the same without questions. Run \`meili auth login\`, then \`meili add projects --name <name> --team-id <id> --resource-id <id> --sync-config --wait\`, then \`meili export --project <source> --project-destination <name> --wait\`, then \`meili get tasks --project <name> --statuses enqueued,processing\` until it lists no task.",
-      "examples": [
-        "meili teleport",
-        "meili teleport --project local",
-      ],
-      "flags": [
-        {
-          "description": "A project of the config file, the one whose data moves to Meilisearch Cloud. Without it, the command asks.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-      ],
-      "id": "teleport",
-    },
-    {
-      "api": "meilisearch",
       "async": true,
-      "description": "Add documents to an index, merging their fields into the ones that already have the same primary key.",
+      "description": "Reset the settings of an index.
+
+Every setting goes back to its default value, which reindexes the documents.",
       "examples": [
-        "meili update documents --project prod --index movies --file changes.json",
-        "meili update documents --project prod --index movies --file changes.json --output json",
-        "cat changes.json | meili update documents --project prod --index movies --file -",
-        "meili update documents --project prod --index movies --data '[{"id":1,"rating":4}]'",
-        "meili update documents --project prod --index movies --file changes.json --wait",
+        "meili settings delete --project prod --index movies --yes",
+        "meili settings delete --project prod --index movies --yes --wait",
       ],
       "flags": [
         {
@@ -2714,42 +2485,10 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
           "type": "option",
         },
         {
-          "description": "The index to update the documents of.",
+          "description": "The index to reset the settings of. \`settings update --<setting> null\` resets one of them.",
           "helpValue": "<index>",
           "name": "index",
           "required": true,
-          "type": "option",
-        },
-        {
-          "description": "Primary key of the index. Only taken into account on its first documents.",
-          "helpValue": "<field>",
-          "name": "primary-key",
-          "type": "option",
-        },
-        {
-          "description": "String attached to the task, returned in the task object.",
-          "helpValue": "<string>",
-          "name": "custom-metadata",
-          "type": "option",
-        },
-        {
-          "description": "Only update documents that already exist, ignore the new ones.",
-          "name": "skip-creation",
-          "type": "boolean",
-        },
-        {
-          "description": "Read the body from a file. \`-\` reads from stdin.",
-          "exclusive": [
-            "data",
-          ],
-          "helpValue": "<path>",
-          "name": "file",
-          "type": "option",
-        },
-        {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "name": "data",
           "type": "option",
         },
         {
@@ -2766,279 +2505,33 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
           "name": "timeout",
           "type": "option",
         },
+        {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "type": "boolean",
+        },
       ],
-      "id": "update documents",
+      "id": "settings delete",
       "keyActions": [
-        "documents.add",
+        "settings.update",
       ],
       "routes": [
-        "PUT /indexes/{index_uid}/documents",
+        "DELETE /indexes/{index_uid}/settings",
       ],
     },
     {
       "api": "meilisearch",
       "async": true,
-      "description": "Change the primary key of an index with --primary-key, or rename it with --new-id.",
+      "description": "Change the settings of an index.
+
+Changes the settings given and leaves the others. The value null resets one.",
       "examples": [
-        "meili update indexes --project prod --id movies --primary-key movie_id",
-        "meili update indexes --project prod --id movies --primary-key movie_id --output json",
-        "meili update indexes --project prod --id movies --new-id films",
-        "meili update indexes --project prod --id movies --new-id films --wait",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "The index to update.",
-          "helpValue": "<index>",
-          "name": "id",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "New uid of the index, which renames it.",
-          "helpValue": "<index>",
-          "name": "new-id",
-          "type": "option",
-        },
-        {
-          "description": "The field that holds the identifier of each document.",
-          "helpValue": "<field>",
-          "name": "primary-key",
-          "type": "option",
-        },
-        {
-          "description": "Read the body from a file. \`-\` reads from stdin.",
-          "exclusive": [
-            "data",
-          ],
-          "helpValue": "<path>",
-          "name": "file",
-          "type": "option",
-        },
-        {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "name": "data",
-          "type": "option",
-        },
-        {
-          "description": "Poll the task until it reaches a final status, then print the final task.",
-          "name": "wait",
-          "type": "boolean",
-        },
-        {
-          "dependsOn": [
-            "wait",
-          ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
-          "helpValue": "<duration>",
-          "name": "timeout",
-          "type": "option",
-        },
-      ],
-      "id": "update indexes",
-      "keyActions": [
-        "indexes.update",
-      ],
-      "routes": [
-        "PATCH /indexes/{index_uid}",
-      ],
-    },
-    {
-      "api": "meilisearch",
-      "description": "Change the name or the description of an API key, the two fields the route takes, and reset one with the value null.",
-      "examples": [
-        "meili update keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
-        "meili update keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly' --output json",
-        "meili update keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null",
-      ],
-      "flags": [
-        {
-          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
-          "helpValue": "<url>",
-          "name": "project-url",
-          "type": "option",
-        },
-        {
-          "description": "Project API key. \`-\` reads it from stdin.",
-          "helpValue": "<key>",
-          "name": "project-api-key",
-          "type": "option",
-        },
-        {
-          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "The key to update, by its uid or by its key value.",
-          "helpValue": "<key>",
-          "name": "id",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "New name of the key. The value null removes the one it has.",
-          "helpValue": "<name>",
-          "name": "name",
-          "type": "option",
-        },
-        {
-          "description": "New description of the key. The value null removes the one it has.",
-          "helpValue": "<text>",
-          "name": "description",
-          "type": "option",
-        },
-        {
-          "description": "Read the body from a file. \`-\` reads from stdin.",
-          "exclusive": [
-            "data",
-          ],
-          "helpValue": "<path>",
-          "name": "file",
-          "type": "option",
-        },
-        {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "name": "data",
-          "type": "option",
-        },
-      ],
-      "id": "update keys",
-      "keyActions": [
-        "keys.update",
-      ],
-      "routes": [
-        "PATCH /keys/{key}",
-      ],
-    },
-    {
-      "api": "management",
-      "description": "Rename a Meilisearch Cloud organization.",
-      "examples": [
-        "meili update organizations --id 7 --name Acme",
-        "meili update organizations --id 7 --name Acme --output json",
-        "meili update organizations --id 7 --data '{"name":"Acme"}'",
-      ],
-      "flags": [
-        {
-          "description": "The organization to update.",
-          "helpValue": "<id>",
-          "name": "id",
-          "required": true,
-          "type": "option",
-        },
-        {
-          "description": "New name of the organization.",
-          "helpValue": "<name>",
-          "name": "name",
-          "type": "option",
-        },
-        {
-          "description": "Read the body from a file. \`-\` reads from stdin.",
-          "exclusive": [
-            "data",
-          ],
-          "helpValue": "<path>",
-          "name": "file",
-          "type": "option",
-        },
-        {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "name": "data",
-          "type": "option",
-        },
-      ],
-      "id": "update organizations",
-      "routes": [
-        "PATCH /api/v2/organizations/{id}",
-      ],
-    },
-    {
-      "api": "management",
-      "description": "Rename a Meilisearch Cloud project.",
-      "examples": [
-        "meili update projects --id 343 --name renamed",
-        "meili update projects --id 343 --name renamed --output json",
-        "meili update projects --project prod --name renamed",
-        "meili update projects --project prod --name renamed --sync-config",
-        "meili update projects --id 343 --data '{"name":"renamed"}'",
-      ],
-      "flags": [
-        {
-          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
-          "helpValue": "<name>",
-          "name": "project",
-          "type": "option",
-        },
-        {
-          "description": "The project to update, or give --project <name> and its cloud.id from the config file.",
-          "helpValue": "<id>",
-          "name": "id",
-          "type": "option",
-        },
-        {
-          "description": "New name of the project.",
-          "helpValue": "<name>",
-          "name": "name",
-          "type": "option",
-        },
-        {
-          "description": "Rename the project's entry of the config file after it: the entry --project names, or the one whose cloud.id is --id. Refreshes its cloud identifiers.",
-          "name": "sync-config",
-          "type": "boolean",
-        },
-        {
-          "description": "Read the body from a file. \`-\` reads from stdin.",
-          "exclusive": [
-            "data",
-          ],
-          "helpValue": "<path>",
-          "name": "file",
-          "type": "option",
-        },
-        {
-          "description": "Inline JSON body.",
-          "helpValue": "<json>",
-          "name": "data",
-          "type": "option",
-        },
-      ],
-      "id": "update projects",
-      "routes": [
-        "PATCH /api/v2/projects/{id}",
-      ],
-    },
-    {
-      "api": "meilisearch",
-      "async": true,
-      "description": "Change the settings given, leave the others as they are, and reset one with the value null.",
-      "examples": [
-        "meili update settings --project prod --index movies --searchable-attributes title,overview",
-        "meili update settings --project prod --index movies --filterable-attributes genres,release_date --output json",
-        "meili update settings --project prod --index movies --stop-words null",
-        "meili update settings --project prod --index movies --typo-tolerance '{"enabled":false}' --wait",
-        "meili update settings --project prod --index movies --file settings.json",
+        "meili settings update --project prod --index movies --searchable-attributes title,overview",
+        "meili settings update --project prod --index movies --filterable-attributes genres,release_date",
+        "meili settings update --project prod --index movies --stop-words null",
+        "meili settings update --project prod --index movies --typo-tolerance '{"enabled":false}' --wait",
+        "meili settings update --project prod --index movies --file settings.json",
       ],
       "flags": [
         {
@@ -3228,7 +2721,7 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
           "type": "option",
         },
       ],
-      "id": "update settings",
+      "id": "settings update",
       "keyActions": [
         "settings.update",
       ],
@@ -3237,13 +2730,755 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
       ],
     },
     {
-      "api": "management",
-      "description": "Rename a Meilisearch Cloud team, or give it to another of its members.",
+      "api": "meilisearch",
+      "description": "Get the settings of an index.
+
+Each setting has its current value or its default.",
       "examples": [
-        "meili update teams --id 12 --name renamed",
-        "meili update teams --id 12 --name renamed --output json",
-        "meili update teams --id 12 --owner-id 5b7c2f1e-8a3d-4e6f-9b0a-1c2d3e4f5a6b",
-        "meili update teams --id 12 --data '{"name":"renamed"}'",
+        "meili settings view --project prod --index movies",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to read the settings of.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+      ],
+      "id": "settings view",
+      "keyActions": [
+        "settings.get",
+      ],
+      "routes": [
+        "GET /indexes/{index_uid}/settings",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "Find the documents similar to one document.
+
+--id names the document, and --embedder the embedder that compares them.",
+      "examples": [
+        "meili similar --project prod --index movies --id 143 --embedder default",
+        "meili similar --project prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
+        "meili similar --project prod --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to search in.",
+          "helpValue": "<index>",
+          "name": "index",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "The document to compare with, by its primary key value.",
+          "helpValue": "<id>",
+          "name": "id",
+          "type": "option",
+        },
+        {
+          "description": "The embedder the similarity is computed with, one of those the index settings configure.",
+          "helpValue": "<embedder>",
+          "name": "embedder",
+          "type": "option",
+        },
+        {
+          "description": "Number of documents to skip.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Maximum number of documents to return, 20 by default.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Filter expression, for example \`genres = horror\`. Its array-of-arrays form goes through --data.",
+          "helpValue": "<filter>",
+          "name": "filter",
+          "type": "option",
+        },
+        {
+          "description": "Document attributes to return, comma-separated. Defaults to the displayed ones.",
+          "helpValue": "<fields>",
+          "name": "attributes-to-retrieve",
+          "type": "option",
+        },
+        {
+          "description": "Add _vectors to each hit, the embeddings of the document.",
+          "name": "retrieve-vectors",
+          "type": "boolean",
+        },
+        {
+          "description": "Add _rankingScore to each hit, between 0.0 and 1.0.",
+          "name": "show-ranking-score",
+          "type": "boolean",
+        },
+        {
+          "description": "Add _rankingScoreDetails to each hit, the score of every ranking rule.",
+          "name": "show-ranking-score-details",
+          "type": "boolean",
+        },
+        {
+          "description": "Add performanceDetails to the response, a timing breakdown of the query.",
+          "name": "show-performance-details",
+          "type": "boolean",
+        },
+        {
+          "description": "Drop the hits whose ranking score is below this value, between 0.0 and 1.0.",
+          "helpValue": "<number>",
+          "name": "ranking-score-threshold",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "similar",
+      "keyActions": [
+        "search",
+      ],
+      "routes": [
+        "POST /indexes/{index_uid}/similar",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "Get the statistics of the instance, or of one index.
+
+--index names the index.",
+      "examples": [
+        "meili stats --project prod",
+        "meili stats --project prod --index movies",
+        "meili stats --project prod --index movies --size-format human --show-internal-database-sizes",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The index to read the statistics of. Without it, the whole instance.",
+          "helpValue": "<index>",
+          "name": "index",
+          "type": "option",
+        },
+        {
+          "description": "Add internalDatabaseSizes to the response, the size of each internal database.",
+          "name": "show-internal-database-sizes",
+          "type": "boolean",
+        },
+        {
+          "description": "How the sizes are written: raw (default), a number of bytes, or human, a string with its unit.",
+          "name": "size-format",
+          "options": [
+            "raw",
+            "human",
+          ],
+          "type": "option",
+        },
+      ],
+      "id": "stats",
+      "keyActions": [
+        "stats.get",
+      ],
+      "routes": [
+        "GET /stats",
+        "GET /indexes/{index_uid}/stats",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "async": true,
+      "description": "Cancel tasks.
+
+Cancels the enqueued and processing tasks matched by --ids, --statuses, --types and the other filters of the route.",
+      "examples": [
+        "meili task cancel --project prod --ids 42,1344",
+        "meili task cancel --project prod --ids 42",
+        "meili task cancel --project prod --statuses enqueued --index-ids movies",
+        "meili task cancel --project prod --statuses processing --wait",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "Task uids to match, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these batch uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "batch-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these indexes, comma-separated. \`*\` matches every one.",
+          "helpValue": "<indexes>",
+          "name": "index-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "canceled-by",
+          "type": "option",
+        },
+        {
+          "description": "Task types to match, comma-separated, as the \`type\` field of a task spells them, for example \`documentAdditionOrUpdate\`. \`*\` matches every one.",
+          "helpValue": "<types>",
+          "name": "types",
+          "type": "option",
+        },
+        {
+          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. \`*\` matches every one.",
+          "helpValue": "<statuses>",
+          "name": "statuses",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+      ],
+      "id": "task cancel",
+      "keyActions": [
+        "tasks.cancel",
+      ],
+      "routes": [
+        "POST /tasks/cancel",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "async": true,
+      "description": "Delete finished tasks.
+
+Deletes the finished tasks matched by --ids, --statuses, --types and the other filters of the route.",
+      "examples": [
+        "meili task delete --project prod --ids 42,1344 --yes",
+        "meili task delete --project prod --ids 42 --yes",
+        "meili task delete --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
+        "meili task delete --project prod --index-ids movies --yes --wait",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "Task uids to match, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these batch uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "batch-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these indexes, comma-separated. \`*\` matches every one.",
+          "helpValue": "<indexes>",
+          "name": "index-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "canceled-by",
+          "type": "option",
+        },
+        {
+          "description": "Task types to match, comma-separated, as the \`type\` field of a task spells them, for example \`documentAdditionOrUpdate\`. \`*\` matches every one.",
+          "helpValue": "<types>",
+          "name": "types",
+          "type": "option",
+        },
+        {
+          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. \`*\` matches every one.",
+          "helpValue": "<statuses>",
+          "name": "statuses",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
+        },
+        {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "type": "boolean",
+        },
+      ],
+      "id": "task delete",
+      "keyActions": [
+        "tasks.delete",
+      ],
+      "routes": [
+        "DELETE /tasks",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "List the tasks of the instance.
+
+--ids, --statuses, --types and the other filters of the route narrow the list.",
+      "examples": [
+        "meili task list --project prod",
+        "meili task list --project prod --ids 42",
+        "meili task list --project prod --statuses failed,canceled --limit 5",
+        "meili task list --project prod --index-ids movies --types documentAdditionOrUpdate",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "Task uids to match, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these batch uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "batch-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks of these indexes, comma-separated. \`*\` matches every one.",
+          "helpValue": "<indexes>",
+          "name": "index-ids",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks canceled by these taskCancelation uids, comma-separated. \`*\` matches every one.",
+          "helpValue": "<uids>",
+          "name": "canceled-by",
+          "type": "option",
+        },
+        {
+          "description": "Task types to match, comma-separated, as the \`type\` field of a task spells them, for example \`documentAdditionOrUpdate\`. \`*\` matches every one.",
+          "helpValue": "<types>",
+          "name": "types",
+          "type": "option",
+        },
+        {
+          "description": "Task statuses to match, comma-separated: enqueued, processing, succeeded, failed or canceled. \`*\` matches every one.",
+          "helpValue": "<statuses>",
+          "name": "statuses",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks enqueued before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-enqueued-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks started before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-started-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished after this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "after-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Match the tasks finished before this date, in RFC 3339 format.",
+          "helpValue": "<date>",
+          "name": "before-finished-at",
+          "type": "option",
+        },
+        {
+          "description": "Return the tasks from the oldest uid up, instead of the newest down.",
+          "name": "reverse",
+          "type": "boolean",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "name": "from",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "type": "boolean",
+        },
+      ],
+      "id": "task list",
+      "keyActions": [
+        "tasks.get",
+      ],
+      "routes": [
+        "GET /tasks",
+      ],
+    },
+    {
+      "api": "meilisearch",
+      "description": "Get one task.
+
+Prints its status and its error.",
+      "examples": [
+        "meili task view --project prod --id 42",
+      ],
+      "flags": [
+        {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "name": "project-url",
+          "type": "option",
+        },
+        {
+          "description": "Project API key. \`-\` reads it from stdin.",
+          "helpValue": "<key>",
+          "name": "project-api-key",
+          "type": "option",
+        },
+        {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+        {
+          "description": "The task uid.",
+          "helpValue": "<uid>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+      ],
+      "id": "task view",
+      "keyActions": [
+        "tasks.get",
+      ],
+      "routes": [
+        "GET /tasks/{task_id}",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "Create a Meilisearch Cloud team.
+
+Creates it in an organization.",
+      "examples": [
+        "meili team add --name search --organization-id 1",
+        "meili team add --data '{"name":"search","organizationId":1}'",
+      ],
+      "flags": [
+        {
+          "description": "Name of the team.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "Organization that owns the team.",
+          "helpValue": "<id>",
+          "name": "organization-id",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "team add",
+      "routes": [
+        "POST /api/v2/teams",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "Delete a Meilisearch Cloud team.
+
+The team must have no project left. Prints nothing on success.",
+      "examples": [
+        "meili team delete --id 12 --yes",
+      ],
+      "flags": [
+        {
+          "description": "The team to delete.",
+          "helpValue": "<id>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "type": "boolean",
+        },
+      ],
+      "id": "team delete",
+      "routes": [
+        "DELETE /api/v2/teams/{id}",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "List the Meilisearch Cloud teams.
+
+Only the teams the token sees.",
+      "examples": [
+        "meili team list",
+      ],
+      "flags": [],
+      "id": "team list",
+      "routes": [
+        "GET /api/v2/teams",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "Rename a Meilisearch Cloud team, or change its owner.",
+      "examples": [
+        "meili team update --id 12 --name renamed",
+        "meili team update --id 12 --owner-id 5b7c2f1e-8a3d-4e6f-9b0a-1c2d3e4f5a6b",
+        "meili team update --id 12 --data '{"name":"renamed"}'",
       ],
       "flags": [
         {
@@ -3281,82 +3516,106 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
           "type": "option",
         },
       ],
-      "id": "update teams",
+      "id": "team update",
       "routes": [
         "PATCH /api/v2/teams/{id}",
       ],
+    },
+    {
+      "api": "management",
+      "description": "Get one Meilisearch Cloud team.",
+      "examples": [
+        "meili team view --id 12",
+      ],
+      "flags": [
+        {
+          "description": "The team to get.",
+          "helpValue": "<id>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+      ],
+      "id": "team view",
+      "routes": [
+        "GET /api/v2/teams/{id}",
+      ],
+    },
+    {
+      "api": "none",
+      "description": "Interactive command. Move a project to Meilisearch Cloud.
+
+Moves the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal.
+
+It checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.
+
+The same steps, without questions: Run \`meili auth login\`, then \`meili project add --name <name> --team-id <id> --resource-id <id> --sync-config --wait\`, then \`meili export --project <source> --project-destination <name> --wait\`, then \`meili task list --project <name> --statuses enqueued,processing\` until it lists no task.",
+      "examples": [
+        "meili teleport",
+        "meili teleport --project local",
+      ],
+      "flags": [
+        {
+          "description": "A project of the config file, the one whose data moves to Meilisearch Cloud. Without it, the command asks.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+      ],
+      "id": "teleport",
+    },
+    {
+      "api": "none",
+      "description": "Print the version of the CLI.",
+      "examples": [
+        "meili version",
+      ],
+      "flags": [],
+      "id": "version",
     },
   ],
   "index": {
     "commands": [
       {
-        "description": "Add documents to an index, replacing the ones that already have the same primary key.",
-        "id": "add documents",
-        "routes": [
-          "POST /indexes/{index_uid}/documents",
-        ],
-      },
-      {
-        "description": "Create an empty index, named by --id, with --primary-key as its primary key.",
-        "id": "add indexes",
-        "routes": [
-          "POST /indexes",
-        ],
-      },
-      {
-        "description": "Create an API key that runs --actions on --indexes until --expires-at.",
-        "id": "add keys",
-        "routes": [
-          "POST /keys",
-        ],
-      },
-      {
-        "description": "Create a Meilisearch Cloud project in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.",
-        "id": "add projects",
-        "routes": [
-          "POST /api/v2/projects",
-        ],
-      },
-      {
-        "description": "Create a Meilisearch Cloud team in an organization.",
-        "id": "add teams",
-        "routes": [
-          "POST /api/v2/teams",
-        ],
-      },
-      {
-        "description": "Log in to Meilisearch Cloud with a browser, and store the token for the management commands.",
+        "description": "Log in to Meilisearch Cloud in a browser.",
         "id": "auth login",
       },
       {
-        "description": "Revoke the token of \`auth login\` and forget it. Does nothing when nobody is logged in.",
+        "description": "Log out of Meilisearch Cloud.",
         "id": "auth logout",
       },
       {
-        "description": "Trade the refresh token of the stored session for a new access token, before it expires.",
+        "description": "Refresh the Meilisearch Cloud session.",
         "id": "auth refresh",
       },
       {
-        "description": "Say whether a session of \`auth login\` exists and whether the authorization server still accepts it, and who it logs in.",
+        "description": "Show the Meilisearch Cloud session.",
         "id": "auth status",
       },
       {
-        "description": "Cancel the enqueued and processing tasks matched by --ids, --statuses, --types and the other filters of the route.",
-        "id": "cancel tasks",
+        "description": "List the batches of tasks.",
+        "id": "batch list",
         "routes": [
-          "POST /tasks/cancel",
+          "GET /batches",
         ],
       },
       {
-        "description": "Print the config file path and its projects as JSON, keys masked.",
+        "description": "Get one batch of tasks.",
+        "id": "batch view",
+        "routes": [
+          "GET /batches/{batch_id}",
+        ],
+      },
+      {
+        "description": "List the projects of the config file.",
         "id": "config list",
       },
       {
-        "description": "Set a project in the config file, creating the file owner-only; refuses a name that exists. Talks to the Management API only with --sync-with-cloud.",
+        "description": "Add a project to the config file.",
         "id": "config set",
       },
       {
-        "description": "Give every Meilisearch Cloud project of the scope an entry of the config file, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.",
+        "description": "Add the Meilisearch Cloud projects to the config file.",
         "id": "config sync-with-cloud",
       },
       {
@@ -3364,12 +3623,19 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         "id": "config unset",
       },
       {
-        "description": "Change the fields given of a project of the config file; refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.",
+        "description": "Change a project of the config file.",
         "id": "config update",
       },
       {
-        "description": "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.",
-        "id": "delete documents",
+        "description": "Add or replace documents in an index.",
+        "id": "document add",
+        "routes": [
+          "POST /indexes/{index_uid}/documents",
+        ],
+      },
+      {
+        "description": "Delete documents from an index.",
+        "id": "document delete",
         "routes": [
           "DELETE /indexes/{index_uid}/documents",
           "POST /indexes/{index_uid}/documents/delete",
@@ -3377,263 +3643,328 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         ],
       },
       {
-        "description": "Delete an index, with its documents, its settings and its task history.",
-        "id": "delete indexes",
+        "description": "List the documents of an index.",
+        "id": "document list",
         "routes": [
-          "DELETE /indexes/{index_uid}",
+          "POST /indexes/{index_uid}/documents/fetch",
         ],
       },
       {
-        "description": "Delete an API key, which stops authenticating every request that carries it.",
-        "id": "delete keys",
+        "description": "Add or update documents in an index.",
+        "id": "document update",
         "routes": [
-          "DELETE /keys/{key}",
+          "PUT /indexes/{index_uid}/documents",
         ],
       },
       {
-        "description": "Delete a Meilisearch Cloud organization. Prints nothing on success.",
-        "id": "delete organizations",
+        "description": "Get one document of an index.",
+        "id": "document view",
         "routes": [
-          "DELETE /api/v2/organizations/{id}",
+          "GET /indexes/{index_uid}/documents/{document_id}",
         ],
       },
       {
-        "description": "Delete a Meilisearch Cloud project, with its data. Prints nothing on success.",
-        "id": "delete projects",
-        "routes": [
-          "DELETE /api/v2/projects/{id}",
-        ],
-      },
-      {
-        "description": "Reset every setting of an index to its default value, which reindexes the documents.",
-        "id": "delete settings",
-        "routes": [
-          "DELETE /indexes/{index_uid}/settings",
-        ],
-      },
-      {
-        "description": "Delete the finished tasks matched by --ids, --statuses, --types and the other filters of the route.",
-        "id": "delete tasks",
-        "routes": [
-          "DELETE /tasks",
-        ],
-      },
-      {
-        "description": "Delete a Meilisearch Cloud team that has no project left. Prints nothing on success.",
-        "id": "delete teams",
-        "routes": [
-          "DELETE /api/v2/teams/{id}",
-        ],
-      },
-      {
-        "description": "Send the documents and the settings of the source instance to the destination instance, and answer the task that does it.",
+        "description": "Export the data of the instance to another instance.",
         "id": "export",
         "routes": [
           "POST /export",
         ],
       },
       {
-        "description": "Search the values of one facet attribute of an index, counted on the documents --q and --filter keep.",
+        "description": "Search the values of a facet.",
         "id": "facet-search",
         "routes": [
           "POST /indexes/{index_uid}/facet-search",
         ],
       },
       {
-        "description": "List the batches of tasks the instance processed, narrowed by --ids, --task-ids, --statuses and the other filters of the route.",
-        "id": "get batches",
-        "routes": [
-          "GET /batches",
-        ],
-      },
-      {
-        "description": "List the documents of an index, narrowed by --ids or by --filter.",
-        "id": "get documents",
-        "routes": [
-          "POST /indexes/{index_uid}/documents/fetch",
-        ],
-      },
-      {
-        "description": "Check that the Meilisearch instance is available.",
-        "id": "get health",
+        "description": "Check that the instance is available.",
+        "id": "health",
         "routes": [
           "GET /health",
         ],
       },
       {
-        "description": "List the indexes of the instance, or get one with --id.",
-        "id": "get indexes",
+        "description": "Create an index.",
+        "id": "index add",
+        "routes": [
+          "POST /indexes",
+        ],
+      },
+      {
+        "description": "Delete an index.",
+        "id": "index delete",
+        "routes": [
+          "DELETE /indexes/{index_uid}",
+        ],
+      },
+      {
+        "description": "List the indexes of the instance.",
+        "id": "index list",
         "routes": [
           "GET /indexes",
+        ],
+      },
+      {
+        "description": "Change the primary key or the name of an index.",
+        "id": "index update",
+        "routes": [
+          "PATCH /indexes/{index_uid}",
+        ],
+      },
+      {
+        "description": "Get one index.",
+        "id": "index view",
+        "routes": [
           "GET /indexes/{index_uid}",
         ],
       },
       {
-        "description": "List the API keys of the instance, or get one with --id.",
-        "id": "get keys",
-        "routes": [
-          "GET /keys",
-          "GET /keys/{key}",
-        ],
-      },
-      {
-        "description": "List the Meilisearch Cloud organizations the token sees, or get one with --id.",
-        "id": "get organizations",
-        "routes": [
-          "GET /api/v2/organizations",
-          "GET /api/v2/organizations/{id}",
-        ],
-      },
-      {
-        "description": "List the Meilisearch Cloud projects the token sees, or get one with --id or --project.",
-        "id": "get projects",
-        "routes": [
-          "GET /api/v2/projects",
-          "GET /api/v2/projects/{id}",
-        ],
-      },
-      {
-        "description": "List the Meilisearch Cloud regions where a project can run.",
-        "id": "get regions",
-        "routes": [
-          "GET /api/v2/regions",
-        ],
-      },
-      {
-        "description": "List the active Meilisearch Cloud resources, the plans a project runs on, with their pricing.",
-        "id": "get resources",
-        "routes": [
-          "GET /api/v2/resources",
-        ],
-      },
-      {
-        "description": "Get every setting of an index, each with its current value or its default.",
-        "id": "get settings",
-        "routes": [
-          "GET /indexes/{index_uid}/settings",
-        ],
-      },
-      {
-        "description": "Get the statistics of the whole instance, or those of one index with --index.",
-        "id": "get stats",
-        "routes": [
-          "GET /stats",
-          "GET /indexes/{index_uid}/stats",
-        ],
-      },
-      {
-        "description": "List the tasks of the instance, narrowed by --ids, --statuses, --types and the other filters of the route.",
-        "id": "get tasks",
-        "routes": [
-          "GET /tasks",
-        ],
-      },
-      {
-        "description": "List the Meilisearch Cloud teams the token sees, or get one with --id.",
-        "id": "get teams",
-        "routes": [
-          "GET /api/v2/teams",
-          "GET /api/v2/teams/{id}",
-        ],
-      },
-      {
-        "description": "Get the version of the Meilisearch instance, with the commit it was built from.",
-        "id": "get version",
+        "description": "Get the version of the instance.",
+        "id": "info",
         "routes": [
           "GET /version",
         ],
       },
       {
-        "description": "Run several search queries in one request, each naming its index in --queries, returned side by side or merged into one ranked list with --federation.",
+        "description": "Create an API key.",
+        "id": "key add",
+        "routes": [
+          "POST /keys",
+        ],
+      },
+      {
+        "description": "Delete an API key.",
+        "id": "key delete",
+        "routes": [
+          "DELETE /keys/{key}",
+        ],
+      },
+      {
+        "description": "List the API keys of the instance.",
+        "id": "key list",
+        "routes": [
+          "GET /keys",
+        ],
+      },
+      {
+        "description": "Change the name or the description of an API key.",
+        "id": "key update",
+        "routes": [
+          "PATCH /keys/{key}",
+        ],
+      },
+      {
+        "description": "Get one API key.",
+        "id": "key view",
+        "routes": [
+          "GET /keys/{key}",
+        ],
+      },
+      {
+        "description": "Run several searches in one request.",
         "id": "multi-search",
         "routes": [
           "POST /multi-search",
         ],
       },
       {
-        "description": "Print one line per command, or one command in full with --command, from the oclif manifest.",
+        "description": "Delete a Meilisearch Cloud organization.",
+        "id": "organization delete",
+        "routes": [
+          "DELETE /api/v2/organizations/{id}",
+        ],
+      },
+      {
+        "description": "List the Meilisearch Cloud organizations.",
+        "id": "organization list",
+        "routes": [
+          "GET /api/v2/organizations",
+        ],
+      },
+      {
+        "description": "Rename a Meilisearch Cloud organization.",
+        "id": "organization update",
+        "routes": [
+          "PATCH /api/v2/organizations/{id}",
+        ],
+      },
+      {
+        "description": "Get one Meilisearch Cloud organization.",
+        "id": "organization view",
+        "routes": [
+          "GET /api/v2/organizations/{id}",
+        ],
+      },
+      {
+        "description": "Create a Meilisearch Cloud project.",
+        "id": "project add",
+        "routes": [
+          "POST /api/v2/projects",
+        ],
+      },
+      {
+        "description": "Delete a Meilisearch Cloud project and its data.",
+        "id": "project delete",
+        "routes": [
+          "DELETE /api/v2/projects/{id}",
+        ],
+      },
+      {
+        "description": "List the Meilisearch Cloud projects.",
+        "id": "project list",
+        "routes": [
+          "GET /api/v2/projects",
+        ],
+      },
+      {
+        "description": "Rename a Meilisearch Cloud project.",
+        "id": "project update",
+        "routes": [
+          "PATCH /api/v2/projects/{id}",
+        ],
+      },
+      {
+        "description": "Get one Meilisearch Cloud project.",
+        "id": "project view",
+        "routes": [
+          "GET /api/v2/projects/{id}",
+        ],
+      },
+      {
+        "description": "List the Meilisearch Cloud regions.",
+        "id": "region list",
+        "routes": [
+          "GET /api/v2/regions",
+        ],
+      },
+      {
+        "description": "List the Meilisearch Cloud resources.",
+        "id": "resource list",
+        "routes": [
+          "GET /api/v2/resources",
+        ],
+      },
+      {
+        "description": "Describe the commands as JSON.",
         "id": "schema",
       },
       {
-        "description": "Search the documents of an index, with --q and the search parameters of the route.",
+        "description": "Search the documents of an index.",
         "id": "search",
         "routes": [
           "POST /indexes/{index_uid}/search",
         ],
       },
       {
-        "description": "Find the documents an index holds that are closest to one of its documents, named by --id and compared with --embedder.",
+        "description": "Reset the settings of an index.",
+        "id": "settings delete",
+        "routes": [
+          "DELETE /indexes/{index_uid}/settings",
+        ],
+      },
+      {
+        "description": "Change the settings of an index.",
+        "id": "settings update",
+        "routes": [
+          "PATCH /indexes/{index_uid}/settings",
+        ],
+      },
+      {
+        "description": "Get the settings of an index.",
+        "id": "settings view",
+        "routes": [
+          "GET /indexes/{index_uid}/settings",
+        ],
+      },
+      {
+        "description": "Find the documents similar to one document.",
         "id": "similar",
         "routes": [
           "POST /indexes/{index_uid}/similar",
         ],
       },
       {
-        "description": "Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. An interactive command, for humans: an agent never runs it.",
-        "id": "teleport",
-      },
-      {
-        "description": "Add documents to an index, merging their fields into the ones that already have the same primary key.",
-        "id": "update documents",
+        "description": "Get the statistics of the instance, or of one index.",
+        "id": "stats",
         "routes": [
-          "PUT /indexes/{index_uid}/documents",
+          "GET /stats",
+          "GET /indexes/{index_uid}/stats",
         ],
       },
       {
-        "description": "Change the primary key of an index with --primary-key, or rename it with --new-id.",
-        "id": "update indexes",
+        "description": "Cancel tasks.",
+        "id": "task cancel",
         "routes": [
-          "PATCH /indexes/{index_uid}",
+          "POST /tasks/cancel",
         ],
       },
       {
-        "description": "Change the name or the description of an API key, the two fields the route takes, and reset one with the value null.",
-        "id": "update keys",
+        "description": "Delete finished tasks.",
+        "id": "task delete",
         "routes": [
-          "PATCH /keys/{key}",
+          "DELETE /tasks",
         ],
       },
       {
-        "description": "Rename a Meilisearch Cloud organization.",
-        "id": "update organizations",
+        "description": "List the tasks of the instance.",
+        "id": "task list",
         "routes": [
-          "PATCH /api/v2/organizations/{id}",
+          "GET /tasks",
         ],
       },
       {
-        "description": "Rename a Meilisearch Cloud project.",
-        "id": "update projects",
+        "description": "Get one task.",
+        "id": "task view",
         "routes": [
-          "PATCH /api/v2/projects/{id}",
+          "GET /tasks/{task_id}",
         ],
       },
       {
-        "description": "Change the settings given, leave the others as they are, and reset one with the value null.",
-        "id": "update settings",
+        "description": "Create a Meilisearch Cloud team.",
+        "id": "team add",
         "routes": [
-          "PATCH /indexes/{index_uid}/settings",
+          "POST /api/v2/teams",
         ],
       },
       {
-        "description": "Rename a Meilisearch Cloud team, or give it to another of its members.",
-        "id": "update teams",
+        "description": "Delete a Meilisearch Cloud team.",
+        "id": "team delete",
+        "routes": [
+          "DELETE /api/v2/teams/{id}",
+        ],
+      },
+      {
+        "description": "List the Meilisearch Cloud teams.",
+        "id": "team list",
+        "routes": [
+          "GET /api/v2/teams",
+        ],
+      },
+      {
+        "description": "Rename a Meilisearch Cloud team, or change its owner.",
+        "id": "team update",
         "routes": [
           "PATCH /api/v2/teams/{id}",
         ],
       },
+      {
+        "description": "Get one Meilisearch Cloud team.",
+        "id": "team view",
+        "routes": [
+          "GET /api/v2/teams/{id}",
+        ],
+      },
+      {
+        "description": "Interactive command. Move a project to Meilisearch Cloud.",
+        "id": "teleport",
+      },
+      {
+        "description": "Print the version of the CLI.",
+        "id": "version",
+      },
     ],
     "globalFlags": [
-      {
-        "char": "o",
-        "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
-        "helpValue": "<mode>",
-        "name": "output",
-        "options": [
-          "json",
-          "ndjson",
-        ],
-        "type": "option",
-      },
       {
         "description": "Print every HTTP request and response on stderr, secrets redacted.",
         "name": "debug",

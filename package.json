@@ -17,7 +17,7 @@
   },
   "packageManager": "pnpm@11.21.0",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "node -e \"fs.rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json",
     "prepack": "pnpm build",
     "archives": "NPM_CONFIG_WORKSPACE_DIR=$PWD/tmp/meili oclif pack tarballs --targets darwin-arm64,darwin-x64,linux-x64,linux-arm64 --no-xz --parallel",
     "gen:management": "pnpm --package=typescript@5.9.3 --package=@hey-api/openapi-ts@0.99.0 dlx openapi-ts",
@@ -42,25 +42,43 @@
     "helpClass": "./dist/lib/help",
     "topics": {
       "auth": {
-        "description": "Log in to Meilisearch Cloud, check the session, refresh it and log out. These commands are for humans: an agent uses the credentials file a human logged in with."
+        "description": "Log in to Meilisearch Cloud, check the session, refresh it and log out."
+      },
+      "batch": {
+        "description": "Batches of tasks the instance processed."
       },
       "config": {
-        "description": "Projects of the config file, which holds API keys and decides where every command goes. An agent works with the file it was given and changes nothing in it unless the human asked for it explicitly."
+        "description": "Projects of the config file, which holds API keys and decides where every command goes."
       },
-      "get": {
-        "description": "Read a resource: the list, or one item with --id."
+      "document": {
+        "description": "Documents of an index. The commands that write answer with a task: they print it and return at once, and --wait polls it to a final status instead. A delete command requires --yes."
       },
-      "add": {
-        "description": "Add a resource, or content to one that exists. The Meilisearch API answers with a task: the command prints it and returns at once, and --wait polls it to a final status instead."
+      "index": {
+        "description": "Indexes of the instance. The commands that write answer with a task: they print it and return at once, and --wait polls it to a final status instead. A delete command requires --yes."
       },
-      "update": {
-        "description": "Change a resource, merging what is given into what is there. The Meilisearch API answers with a task: the command prints it and returns at once, and --wait polls it to a final status instead."
+      "key": {
+        "description": "API keys of the instance. Each answer includes the `key` field, a working credential. A delete command requires --yes."
       },
-      "delete": {
-        "description": "Remove a resource. Every command of this topic requires --yes on the command line: a flag written with the command, never a question the CLI asks."
+      "organization": {
+        "description": "Meilisearch Cloud organizations. A delete command requires --yes."
       },
-      "cancel": {
-        "description": "Stop a resource that is still running. The Meilisearch API answers with a task: the command prints it and returns at once, and --wait polls it to a final status instead."
+      "project": {
+        "description": "Meilisearch Cloud projects. A delete command requires --yes."
+      },
+      "region": {
+        "description": "Meilisearch Cloud regions, where a project can run."
+      },
+      "resource": {
+        "description": "Meilisearch Cloud resources, the plans a project runs on."
+      },
+      "settings": {
+        "description": "Settings of an index. The commands that write answer with a task: they print it and return at once, and --wait polls it to a final status instead. A delete command requires --yes."
+      },
+      "task": {
+        "description": "Tasks of the instance: what the instance did with each write, and what it still has to do. `cancel` and `delete` answer with a task: they print it and return at once, and --wait polls it to a final status instead. A delete command requires --yes."
+      },
+      "team": {
+        "description": "Meilisearch Cloud teams. A delete command requires --yes."
       }
     }
   },

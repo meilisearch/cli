@@ -5,13 +5,11 @@ import { refreshSession } from "../../lib/session.js";
 export default class AuthRefresh extends BaseCommand {
   static api: Api = "none";
 
-  static override description =
-    "Trade the refresh token of the stored session for a new access token, before it expires.";
+  static override description = `Refresh the Meilisearch Cloud session.
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-  ];
+Trades the refresh token of the stored session for a new access token, before it expires.`;
+
+  static override examples = ["<%= config.bin %> <%= command.id %>"];
 
   async run(): Promise<void> {
     const { path, session } = this.credentialsFile();

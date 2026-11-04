@@ -54,12 +54,12 @@ const SUPPORT = "support@meilisearch.com";
 const TIPS = [
   `Choose the best plan for your usage: ${PRICING_URL}`,
   "Meilisearch Cloud upgrades your project to new Meilisearch versions automatically, at the time you schedule.",
-  "`meili get indexes --project <name>` lists the indexes of the project.",
+  "`meili index list --project <name>` lists the indexes of the project.",
   "Monitor and manage your project from the Meilisearch Cloud dashboard.",
-  "`meili get tasks --project <name> --statuses enqueued,processing` lists the tasks not finished yet.",
+  "`meili task list --project <name> --statuses enqueued,processing` lists the tasks not finished yet.",
   "Meilisearch Cloud shows the usage analytics of your project, like the most searched queries.",
-  "`meili get stats --project <name>` shows the number of documents of each index.",
-  "`meili get tasks --project <name> --statuses failed` lists the tasks that failed.",
+  "`meili stats --project <name>` shows the number of documents of each index.",
+  "`meili task list --project <name> --statuses failed` lists the tasks that failed.",
   "`meili config list` shows the projects of your config file.",
 ];
 const TIP_MS = 8000;
@@ -80,7 +80,7 @@ const NEVER = () => new MeiliCliError("cli_internal", "A wait without a deadline
 
 /** What an agent runs in place of `teleport`. */
 const WITHOUT_TELEPORT =
-  "Run `meili auth login`, then `meili add projects --name <name> --team-id <id> --resource-id <id> --sync-config --wait`, then `meili export --project <source> --project-destination <name> --wait`, then `meili get tasks --project <name> --statuses enqueued,processing` until it lists no task.";
+  "Run `meili auth login`, then `meili project add --name <name> --team-id <id> --resource-id <id> --sync-config --wait`, then `meili export --project <source> --project-destination <name> --wait`, then `meili task list --project <name> --statuses enqueued,processing` until it lists no task.";
 
 /** The project whose data moves, and how to reach it. `name` is its entry in the config file, if any. */
 interface Source {
@@ -92,12 +92,13 @@ interface Source {
 export default class Teleport extends BaseCommand {
   static api: Api = "none";
 
-  static override description =
-    `Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. An interactive command, for humans: an agent never runs it.
+  static override description = `Interactive command. Move a project to Meilisearch Cloud.
+
+Moves the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal.
 
 It checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.
 
-An agent does the same without questions. ${WITHOUT_TELEPORT}`;
+The same steps, without questions: ${WITHOUT_TELEPORT}`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
@@ -128,7 +129,7 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     if (process.stdin.isTTY !== true || process.stderr.isTTY !== true) {
       throw new MeiliCliError(
         "cli_usage",
-        "`meili teleport` asks questions, so it runs only in a terminal, for a human.",
+        "`meili teleport` asks questions, so it runs only in a terminal.",
         { hint: WITHOUT_TELEPORT },
       );
     }
@@ -370,7 +371,7 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
     }
   }
 
-  /** Adds the project as an entry named after it, as `add projects --sync-config` does. */
+  /** Adds the project as an entry named after it, as `project add --sync-config` does. */
   private addToConfigFile(
     project: ReachableProject,
     apiKey: string | undefined,
@@ -634,6 +635,6 @@ async function followIndexing(client: Meilisearch, entry: string): Promise<void>
     problem(`Task ${task.uid} (${task.type}) failed: ${task.error?.message ?? "no error message"}`);
   }
   throw new MeiliCliError("cli_task_failed", `${tasks(failed.total)} failed in project ${entry}.`, {
-    hint: `Run \`meili get tasks --project ${entry} --statuses failed\` to see them.`,
+    hint: `Run \`meili task list --project ${entry} --statuses failed\` to see them.`,
   });
 }

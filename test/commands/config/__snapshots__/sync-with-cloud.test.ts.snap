@@ -24,32 +24,26 @@ exports[`meili config sync-with-cloud > passes the API's error body through and 
 `;
 
 exports[`meili config sync-with-cloud > prints its help without any network call 1`] = `
-"Give every Meilisearch Cloud project of the scope an entry of the config file, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.
+"Add the Meilisearch Cloud projects to the config file.
 
 USAGE
-  $ meili config sync-with-cloud [-o <mode>] [--debug] [--all] [--team-ids <ids>]
+  $ meili config sync-with-cloud [--debug] [--all] [--team-ids <ids>]
     [--project-name <name>] [--project-url <url>]
 
 FLAGS
-  -o, --output=<mode>        json (default): one document, the API body as it
-                             is, indented in a terminal, compact when piped.
-                             ndjson: one item per line, list commands only,
-                             streams with --all.
-      --all                  Every project the token sees.
-      --debug                Print every HTTP request and response on stderr,
-                             secrets redacted.
-      --project-name=<name>  The projects with exactly this name, in any team.
-      --project-url=<url>    The project with this URL, same scheme and host.
-      --team-ids=<ids>       The projects of these teams, comma-separated.
+  --all                  Every project the token sees.
+  --debug                Print every HTTP request and response on stderr,
+                         secrets redacted.
+  --project-name=<name>  The projects with exactly this name, in any team.
+  --project-url=<url>    The project with this URL, same scheme and host.
+  --team-ids=<ids>       The projects of these teams, comma-separated.
 
 DESCRIPTION
-  Give every Meilisearch Cloud project of the scope an entry of the config file,
-  with its cloud identifiers, and its master key when the entry has no key.
-  Never replaces a key, never removes an entry. Prints one item per project.
+  Add the Meilisearch Cloud projects to the config file.
 
-  The file holds API keys and decides where every later command goes, for every
-  process that reads it: an agent runs this only when the human asked for it
-  explicitly.
+  Gives every project of the scope an entry, with its cloud identifiers, and its
+  master key when the entry has no key. Never replaces a key, never removes an
+  entry. Prints one item per project.
 
 EXAMPLES
   $ meili config sync-with-cloud --all
@@ -58,7 +52,7 @@ EXAMPLES
 
   $ meili config sync-with-cloud --project-name prod
 
-  $ meili config sync-with-cloud --project-url https://ms-abc.sfo.meilisearch.io --output json
+  $ meili config sync-with-cloud --project-url https://ms-abc.sfo.meilisearch.io
 
 "
 `;

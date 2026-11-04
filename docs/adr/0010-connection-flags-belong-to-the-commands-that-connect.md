@@ -1,4 +1,4 @@
-# ADR 0010: Two global flags, and a connection group on the commands that reach a project
+# ADR 0010: One global flag, and a connection group on the commands that reach a project
 
 Status: accepted. Date: 2026-10-21.
 
@@ -18,11 +18,11 @@ Alternatives considered:
 
 ## Decision
 
-- **Two flags are global**, on every command, whatever it talks to: `--output`, because every command returns an answer, and `--debug`, because every command can be traced. `commands.md` keeps them in the "Global flags" table.
+- **One flag is global**, on every command, whatever it talks to: `--debug`, because every command can be traced. `commands.md` keeps it in the "Global flags" table.
 
 - **The three connection flags become a shared group**, `BaseCommand.connectionFlags`, next to the groups of the write commands and of the body input. A command spreads it when it talks to a Meilisearch project. No other command does: a command that resolves no project offers no way to name one.
 
-- **The group sits in a command's own `flags`, not in `baseFlags`.** ADR 0008 prints the detail of a command from the flags its class declares. So connection flags in `baseFlags` would be invisible to `meili schema --command "get indexes"`. That is where an agent looks to learn how to reach a project. The index still prints the global flags once, and there are now two of them.
+- **The group sits in a command's own `flags`, not in `baseFlags`.** ADR 0008 prints the detail of a command from the flags its class declares. So connection flags in `baseFlags` would be invisible to `meili schema --command "get indexes"`. That is where an agent looks to learn how to reach a project. The index still prints the global flags once, and there is now one of them.
 
 - **`meili config set` declares its own three.** It writes a project into the config file instead of connecting to one. `--project` is the name to set, `--project-url` the URL to store, and `--project-api-key` the key, where `-` reads the key from stdin to keep it out of the shell history. This also makes the rule testable without a list of exceptions. The connection group is on the commands whose `static api` is `meilisearch`, and on `config set`, which declares the three flags in its own flags.
 
@@ -31,7 +31,7 @@ Alternatives considered:
 ## Consequences
 
 - `meili auth`, `meili schema`, `config list` and `config unset` no longer show three flags they ignore. `meili get indexes --help` is unchanged: oclif renders a leaf command's base flags and own flags in the same list.
-- `meili schema` prints two global flags instead of five. The connection flags appear in the detail of the commands that take them, which is where they are usable.
+- `meili schema` prints one global flag instead of five. The connection flags appear in the detail of the commands that take them, which is where they are usable.
 - Nothing changes in how a project is resolved. ADR 0005 still fully applies, and `config.md` does not change.
 - Two sentences of accepted ADRs now describe a time when the three flags were global: the consequence line of ADR 0005, and the context and one example of ADR 0008. They are not edited. Neither ADR is superseded, since this one changes none of their decisions. It decides which commands carry the flags, which neither of them had decided.
 - A new command that talks to a project must spread the group. If it forgets, the failure is visible: the command cannot reach any project, and the contract test names it.

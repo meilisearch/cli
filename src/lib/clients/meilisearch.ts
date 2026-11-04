@@ -23,7 +23,7 @@ export function createMeilisearchClient(options: MeilisearchClientOptions): Meil
 }
 
 /**
- * `POST /indexes/{index}/documents/fetch`, the one route `get documents`
+ * `POST /indexes/{index}/documents/fetch`, the one route `document list`
  * covers. `getDocuments` of meilisearch-js takes it only when the query carries
  * a filter and falls back to the GET twin otherwise, which the CLI does not
  * implement (docs/contract/commands.md, exceptions).
@@ -56,7 +56,7 @@ export function fetchStats(
 }
 
 /**
- * `GET /keys`, the list route of `get keys`. `getKeys` of meilisearch-js
+ * `GET /keys`, the list route of `key list`. `getKeys` of meilisearch-js
  * rewrites `createdAt` and `updatedAt` into `Date` objects, which JSON writes
  * back with milliseconds where the API answered nanoseconds: the agent would
  * read a value the API never sent, against the pass-through of

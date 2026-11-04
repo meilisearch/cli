@@ -1,0 +1,49 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili team update > passes the API's error body through on an unknown id, with exit 4 1`] = `
+{
+  "exitCode": 4,
+  "stderr": "{"error":{"code":"team_not_found","type":"invalid_request","message":"Team not found.","link":"https://www.meilisearch.com/docs/reference/errors#team_not_found"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili team update > prints its help without any network call 1`] = `
+"Rename a Meilisearch Cloud team, or change its owner.
+
+USAGE
+  $ meili team update --id <id> [--debug] [--name <name>] [--owner-id
+    <uuid>] [--file <path> | --data <json>]
+
+FLAGS
+  --data=<json>      Inline JSON body.
+  --debug            Print every HTTP request and response on stderr, secrets
+                     redacted.
+  --file=<path>      Read the body from a file. \`-\` reads from stdin.
+  --id=<id>          (required) The team to update.
+  --name=<name>      New name of the team.
+  --owner-id=<uuid>  UUID of the new owner, who must already be a member of the
+                     team.
+
+DESCRIPTION
+  Rename a Meilisearch Cloud team, or change its owner.
+
+EXAMPLES
+  $ meili team update --id 12 --name renamed
+
+  $ meili team update --id 12 --owner-id 5b7c2f1e-8a3d-4e6f-9b0a-1c2d3e4f5a6b
+
+  $ meili team update --id 12 --data '{"name":"renamed"}'
+
+"
+`;
+
+exports[`meili team update > sends the new name and owner for the team of --id, and prints the team updated 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"id":12,"name":"renamed","organizationId":1,"ownerId":"user-2","isAdmin":true}
+",
+}
+`;

@@ -37,8 +37,6 @@ describe("meili facet-search", () => {
       "genres",
       "--facet-query",
       "ac",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();
@@ -110,22 +108,6 @@ describe("meili facet-search", () => {
     ).toEqual([{ facetName: "authors" }]);
   });
 
-  it("refuses --output ndjson: the response is facet hits, not a list envelope", async () => {
-    server.use(meilisearchHandlers.facetSearch(facetHits));
-    const result = await runCommand(FacetSearch, [
-      "--index",
-      "movies",
-      "--facet-name",
-      "genres",
-      "--output",
-      "ndjson",
-      ...project,
-    ]);
-    expect(result.exitCode).toBe(2);
-    expect(result.stdout).toBe("");
-    expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
-  });
-
   it("passes the API error of an attribute that is not filterable through and exits 1", async () => {
     server.use(
       meilisearchHandlers.apiError("/indexes/movies/facet-search", 400, {
@@ -141,8 +123,6 @@ describe("meili facet-search", () => {
       "movies",
       "--facet-name",
       "title",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();

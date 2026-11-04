@@ -1,0 +1,44 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili project delete > passes the API's error body through on a 403, with exit 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili project delete > prints its help without any network call 1`] = `
+"Delete a Meilisearch Cloud project and its data.
+
+USAGE
+  $ meili project delete --yes [--debug] [--project <name>] [--id <id>]
+    [--sync-config]
+
+FLAGS
+  --debug           Print every HTTP request and response on stderr, secrets
+                    redacted.
+  --id=<id>         The project to delete, or give --project <name> and its
+                    cloud.id from the config file.
+  --project=<name>  A project of the config file, whose cloud.id names the Cloud
+                    project, in place of --id.
+  --sync-config     Remove the project's entry from the config file: the entry
+                    --project names, or the one whose cloud.id is --id.
+  --yes             (required) Confirm the deletion. Nothing is sent to the API
+                    without it.
+
+DESCRIPTION
+  Delete a Meilisearch Cloud project and its data.
+
+  Prints nothing on success.
+
+EXAMPLES
+  $ meili project delete --id 343 --yes
+
+  $ meili project delete --project staging --yes
+
+  $ meili project delete --project staging --yes --sync-config
+
+"
+`;

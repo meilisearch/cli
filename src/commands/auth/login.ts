@@ -6,12 +6,12 @@ import { logInWithBrowser } from "../../lib/login.js";
 export default class AuthLogin extends BaseCommand {
   static api: Api = "none";
 
-  static override description =
-    "Log in to Meilisearch Cloud with a browser, and store the token for the management commands.";
+  static override description = `Log in to Meilisearch Cloud in a browser.
+
+Stores the token for the management commands.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
     "<%= config.bin %> <%= command.id %> --no-browser",
   ];
 

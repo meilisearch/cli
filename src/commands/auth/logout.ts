@@ -7,13 +7,11 @@ import { removeCredentialsFile } from "../../lib/session.js";
 export default class AuthLogout extends BaseCommand {
   static api: Api = "none";
 
-  static override description =
-    "Revoke the token of `auth login` and forget it. Does nothing when nobody is logged in.";
+  static override description = `Log out of Meilisearch Cloud.
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-  ];
+Revokes the token of \`auth login\` and forgets it. Does nothing when nobody is logged in.`;
+
+  static override examples = ["<%= config.bin %> <%= command.id %>"];
 
   async run(): Promise<void> {
     const { path, session } = this.credentialsFile();

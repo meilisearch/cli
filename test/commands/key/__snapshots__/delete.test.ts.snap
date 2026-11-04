@@ -1,0 +1,50 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili key delete > passes an authentication error through with a hint and exits 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\`."}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili key delete > prints its help without any network call 1`] = `
+"Delete an API key.
+
+USAGE
+  $ meili key delete --id <key> --yes [--debug] [--project-url <url>]
+    [--project-api-key <key>] [--project <name>]
+
+FLAGS
+  --debug                  Print every HTTP request and response on stderr,
+                           secrets redacted.
+  --id=<key>               (required) The key to delete, by its uid or by its
+                           key value.
+  --project=<name>         A project of the config file. Cannot be combined with
+                           --project-url. One of --project or --project-url is
+                           required.
+  --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+  --project-url=<url>      Project URL, the Meilisearch instance to talk to. One
+                           of --project or --project-url is required.
+  --yes                    (required) Confirm the deletion. Nothing is sent to
+                           the API without it.
+
+DESCRIPTION
+  Delete an API key.
+
+  Every request that carries the key fails afterwards.
+
+EXAMPLES
+  $ meili key delete --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes
+
+"
+`;
+
+exports[`meili key delete > writes nothing on stdout and exits 0, the route answering 204 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "",
+}
+`;

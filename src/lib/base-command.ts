@@ -22,7 +22,7 @@ import {
 } from "./config.js";
 import { MeiliCliError, toRenderedError, writeError, writeNotice, writeWarning } from "./errors.js";
 import { readStdin } from "./input.js";
-import { type OutputMode, resolveOutputMode, writeData } from "./output.js";
+import { writeData } from "./output.js";
 import { iteratePages, type ListPage, mergePages } from "./pagination.js";
 import {
   credentialsFilePath,
@@ -36,6 +36,13 @@ import { isPromptExit } from "./terminal.js";
 /** The API a command talks to. `none` commands work offline. */
 export type Api = "meilisearch" | "management" | "none";
 
+/** The statics every command declares beyond oclif's, as the manifest carries them. */
+export type LoadableCommand = Command.Loadable & {
+  api: Api;
+  routes: readonly string[];
+  keyActions: readonly string[];
+};
+
 export type GlobalFlags = Interfaces.InferredFlags<
   typeof BaseCommand.baseFlags &
     typeof BaseCommand.connectionFlags &
@@ -46,7 +53,7 @@ export type GlobalFlags = Interfaces.InferredFlags<
 /** The two flags a list route declares whichever way it pages, shared by both groups below. */
 const LIMIT_FLAG = Flags.integer({ description: "Passed to the API.", helpValue: "<n>" });
 const ALL_FLAG = Flags.boolean({
-  description: "Fetch every page. Streams with ndjson, buffers into one array with json.",
+  description: "Fetch every page, and print them as one list.",
 });
 
 export interface WaitFlagValues {
@@ -60,9 +67,10 @@ export abstract class BaseCommand extends Command {
 
   /**
    * The routes an API command covers, `METHOD /path` as written in the OpenAPI
-   * document: every route of its verb and resource. The command name and flags
-   * derive from them (docs/contract/commands.md, "Naming rules"), and the flags
-   * given select the route. Commands with `api = "none"` leave it empty.
+   * document: every route of its resource and verb. The command name and flags
+   * derive from them (docs/contract/commands.md, "Naming rules"), and when there
+   * are several, the flags given select the route. Commands with `api = "none"`
+   * leave it empty.
    */
   static routes: readonly string[] = [];
 
@@ -77,13 +85,6 @@ export abstract class BaseCommand extends Command {
 
   /** The global flags of docs/contract/commands.md, in the same order: on every command. */
   static override baseFlags = {
-    output: Flags.option({
-      char: "o",
-      options: ["json", "ndjson"] as const,
-      description:
-        "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
-      helpValue: "<mode>",
-    })(),
     debug: Flags.boolean({
       description: "Print every HTTP request and response on stderr, secrets redacted.",
     }),
@@ -190,7 +191,6 @@ export abstract class BaseCommand extends Command {
   };
 
   protected globalFlags!: GlobalFlags;
-  protected outputMode!: OutputMode;
   /** Set when `static api` is `meilisearch`. */
   protected meilisearch!: Meilisearch;
   /** Set when `static api` is `management`. Passed to the generated SDK functions, which throw contract errors. */
@@ -214,7 +214,6 @@ export abstract class BaseCommand extends Command {
       strict: this.ctor.strict,
     });
     this.globalFlags = flags as GlobalFlags;
-    this.outputMode = resolveOutputMode({ flag: this.globalFlags.output, env: this.env });
     // Before any client: `auth login` talks to the authorization server with no client at all.
     if (this.globalFlags.debug) installHttpTrace();
 
@@ -333,18 +332,14 @@ export abstract class BaseCommand extends Command {
   }
 
   /** Writes the API response as it is. Read commands end with this call. */
-  protected async output(data: unknown, options: { supportsNdjson?: boolean } = {}): Promise<void> {
-    writeData(data, {
-      mode: this.outputMode,
-      stdoutIsTTY: process.stdout.isTTY === true,
-      supportsNdjson: options.supportsNdjson ?? false,
-    });
+  protected async output(data: unknown): Promise<void> {
+    writeData(data);
   }
 
   /**
-   * Writes one page, or every page with `--all`. `json` prints the envelope,
-   * `ndjson` one item per line, streamed with `--all`. List routes end with
-   * this call. `fetchPage` is one API call, returning the API body as it is.
+   * Writes one page as the API sent it, or every page with `--all`, merged into
+   * one envelope. List routes end with this call. `fetchPage` is one API call,
+   * returning the API body as it is.
    */
   protected async outputList<Q>(
     fetchPage: (query: Q) => Promise<ListPage>,
@@ -353,27 +348,12 @@ export abstract class BaseCommand extends Command {
     nextQuery: (query: Q, page: ListPage) => Q | undefined,
   ): Promise<void> {
     if (!all) {
-      await this.outputPage(await fetchPage(query));
-      return;
-    }
-    if (this.outputMode === "ndjson") {
-      for await (const page of iteratePages(fetchPage, query, nextQuery)) {
-        await this.output(page.results, { supportsNdjson: true });
-      }
+      await this.output(await fetchPage(query));
       return;
     }
     const pages: ListPage[] = [];
     for await (const page of iteratePages(fetchPage, query, nextQuery)) pages.push(page);
     await this.output(mergePages(pages));
-  }
-
-  /**
-   * Writes one page as the API sent it: the envelope with `json`, its `results`
-   * with `ndjson`. The list commands of the Management API end with this call,
-   * because they have no paging flags yet (output.md, "Pagination").
-   */
-  protected async outputPage(page: ListPage): Promise<void> {
-    await this.output(this.outputMode === "ndjson" ? page.results : page, { supportsNdjson: true });
   }
 
   /** The `--timeout` of `--wait`, or `MEILI_TIMEOUT`, or the default, in milliseconds. */
@@ -402,7 +382,7 @@ export abstract class BaseCommand extends Command {
       throw new MeiliCliError(
         "cli_task_failed",
         `Task ${finalTask.uid} finished with status ${finalTask.status}.`,
-        { hint: `Run \`meili get tasks --ids ${finalTask.uid}\` to see the error details.` },
+        { hint: `Run \`meili task view --id ${finalTask.uid}\` to see the error details.` },
       );
     }
   }

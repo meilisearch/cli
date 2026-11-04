@@ -1,0 +1,47 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili team add > passes the API's 403 through on a body it cannot read, with exit 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"forbidden","type":"auth","message":"Forbidden.","link":"https://www.meilisearch.com/docs/reference/errors#forbidden"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili team add > prints its help without any network call 1`] = `
+"Create a Meilisearch Cloud team.
+
+USAGE
+  $ meili team add [--debug] [--name <name>] [--organization-id <id>]
+    [--file <path> | --data <json>]
+
+FLAGS
+  --data=<json>           Inline JSON body.
+  --debug                 Print every HTTP request and response on stderr,
+                          secrets redacted.
+  --file=<path>           Read the body from a file. \`-\` reads from stdin.
+  --name=<name>           Name of the team.
+  --organization-id=<id>  Organization that owns the team.
+
+DESCRIPTION
+  Create a Meilisearch Cloud team.
+
+  Creates it in an organization.
+
+EXAMPLES
+  $ meili team add --name search --organization-id 1
+
+  $ meili team add --data '{"name":"search","organizationId":1}'
+
+"
+`;
+
+exports[`meili team add > sends the flags as a flat body with the token, and prints the team created 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"id":12,"name":"Docs","organizationId":1,"ownerId":"user-1","isAdmin":true}
+",
+}
+`;

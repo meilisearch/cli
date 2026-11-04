@@ -4,11 +4,12 @@ import { redactBody } from "../../lib/config.js";
 export default class ConfigList extends BaseCommand {
   static api: Api = "none";
 
-  static override description = "Print the config file path and its projects as JSON, keys masked.";
+  static override description = `List the projects of the config file.
+
+Prints the path of the file and its projects as JSON, keys masked.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
     "MEILI_CONFIG=./meili.json <%= config.bin %> <%= command.id %>",
   ];
 

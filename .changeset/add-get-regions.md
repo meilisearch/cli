@@ -2,4 +2,4 @@
 "@meilisearch/cli": minor
 ---
 
-Add `meili get regions`.
+Add `meili region list`.

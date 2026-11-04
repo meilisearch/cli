@@ -1,5 +1,5 @@
 /**
- * `--wait` and `--timeout`: for asynchronous Meilisearch tasks, and for `add projects`. See docs/contract/output.md.
+ * `--wait` and `--timeout`: for asynchronous Meilisearch tasks, and for `project add`. See docs/contract/output.md.
  */
 import type { Meilisearch, Task } from "meilisearch";
 import { MeiliCliError } from "./errors.js";
@@ -96,7 +96,7 @@ export function waitForTask(
       new MeiliCliError(
         "cli_timeout",
         `Task ${uid} did not reach a final status within ${formatDuration(options.timeoutMs)}. It keeps running on the server.`,
-        { hint: `Run \`meili get tasks --ids ${uid}\` to check its status.` },
+        { hint: `Run \`meili task view --id ${uid}\` to check its status.` },
       ),
     options,
   );

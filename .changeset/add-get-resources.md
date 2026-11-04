@@ -2,4 +2,4 @@
 "@meilisearch/cli": minor
 ---
 
-Add `meili get resources`.
+Add `meili resource list`.

@@ -27,8 +27,6 @@ describe.skipIf(!meilisearchUp)("meili export against a real Meilisearch", () =>
       remote,
       "--indexes",
       JSON.stringify({ [absent]: {} }),
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -50,8 +48,6 @@ describe.skipIf(!meilisearchUp)("meili export against a real Meilisearch", () =>
       "--indexes",
       JSON.stringify({ [absent]: {} }),
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -77,8 +73,6 @@ describe.skipIf(!meilisearchUp)("meili export against a real Meilisearch", () =>
         "--indexes",
         JSON.stringify({ [absent]: {} }),
         "--wait",
-        "--output",
-        "json",
       ],
       config.env,
     );
@@ -91,14 +85,7 @@ describe.skipIf(!meilisearchUp)("meili export against a real Meilisearch", () =>
   });
 
   it("passes the error of a url that is not a string through and exits 1", async () => {
-    const result = await runBinary([
-      "export",
-      "--data",
-      '{"url":true}',
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["export", "--data", '{"url":true}', ...project]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("invalid_export_url");

@@ -1,12 +1,13 @@
 ## What
 
-<!-- One sentence. Example: Add `meili get stats`. -->
+<!-- One sentence. Example: Add `meili stats`. -->
 
 ## Contract
 
-- [ ] The command name and flags derive from its routes by the naming rules of `docs/contract/commands.md`, and each route is reachable by a distinct set of flags, or the exception is recorded with its reason (or this pull request changes the contract and nothing else)
+- [ ] The command name and flags derive from its routes by the naming rules of `docs/contract/commands.md`, or the name the maintainers chose is recorded as an exception with its reason; each route is reachable by a distinct set of flags (or this pull request changes the contract and nothing else)
 - [ ] Output goes through `src/lib/output.ts`, errors through `src/lib/errors.ts`
-- [ ] The command never waits for a human: no prompt, no question, no `$EDITOR`; a `delete` command spreads `BaseCommand.confirmFlags` and its examples carry `--yes`
+- [ ] The command never waits for a human: no prompt, no question, no `$EDITOR`, unless it is an interactive command of ADR 0015; a `delete` command spreads `BaseCommand.confirmFlags` and its examples carry `--yes`
+- [ ] The description starts with one short sentence, the summary that `meili --help` shows; the detail goes in the next paragraph. It says whether the command is interactive, never who it is for
 - [ ] The command never speaks HTTP itself: the SDK or the generated client only, no `fetch` outside `src/lib/clients/`
 
 ## Tests

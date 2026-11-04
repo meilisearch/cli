@@ -1,25 +1,21 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`meili config list > prints its help without any network call 1`] = `
-"Print the config file path and its projects as JSON, keys masked.
+"List the projects of the config file.
 
 USAGE
-  $ meili config list [-o <mode>] [--debug]
+  $ meili config list [--debug]
 
 FLAGS
-  -o, --output=<mode>  json (default): one document, the API body as it is,
-                       indented in a terminal, compact when piped. ndjson: one
-                       item per line, list commands only, streams with --all.
-      --debug          Print every HTTP request and response on stderr, secrets
-                       redacted.
+  --debug  Print every HTTP request and response on stderr, secrets redacted.
 
 DESCRIPTION
-  Print the config file path and its projects as JSON, keys masked.
+  List the projects of the config file.
+
+  Prints the path of the file and its projects as JSON, keys masked.
 
 EXAMPLES
   $ meili config list
-
-  $ meili config list --output json
 
   MEILI_CONFIG=./meili.json meili config list
 

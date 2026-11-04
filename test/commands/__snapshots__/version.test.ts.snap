@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili version > prints its help without any network call 1`] = `
+"Print the version of the CLI.
+
+USAGE
+  $ meili version [--debug]
+
+FLAGS
+  --debug  Print every HTTP request and response on stderr, secrets redacted.
+
+DESCRIPTION
+  Print the version of the CLI.
+
+EXAMPLES
+  $ meili version
+
+"
+`;

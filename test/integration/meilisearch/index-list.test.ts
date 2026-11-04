@@ -1,0 +1,37 @@
+import { randomUUID } from "node:crypto";
+import { Meilisearch } from "meilisearch";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { runBinary } from "../../helpers/run-binary.js";
+import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
+
+const meilisearchUp = await meilisearchAvailable();
+
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
+const suffix = randomUUID().slice(0, 8);
+const uids = [`meili-cli-test-${suffix}-a`, `meili-cli-test-${suffix}-b`];
+
+describe.skipIf(!meilisearchUp)("meili index list against a real Meilisearch", () => {
+  const client = new Meilisearch({ host: MEILISEARCH_URL, apiKey: MASTER_KEY });
+
+  beforeAll(async () => {
+    await Promise.all(uids.map((uid) => client.createIndex(uid, { primaryKey: "id" }).waitTask()));
+  });
+
+  afterAll(async () => {
+    await Promise.all(uids.map((uid) => client.deleteIndex(uid).waitTask()));
+  });
+
+  it("returns the API envelope with the created indexes", async () => {
+    const result = await runBinary(["index", "list", "--all", ...project]);
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toBe("");
+    const page = JSON.parse(result.stdout) as {
+      results: Array<{ uid: string; primaryKey?: string }>;
+      total: number;
+    };
+    const ours = page.results.filter((index) => uids.includes(index.uid));
+    expect(ours.map((index) => index.uid).sort()).toEqual([...uids].sort());
+    expect(ours.every((index) => index.primaryKey === "id")).toBe(true);
+    expect(page.total).toBeGreaterThanOrEqual(2);
+  });
+});

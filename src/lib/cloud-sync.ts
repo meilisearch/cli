@@ -170,7 +170,7 @@ export function waitForProject(
       new MeiliCliError(
         "cli_timeout",
         `Project ${id} did not reach status running or failed within ${formatDuration(options.timeoutMs)}. Its creation goes on on the server.`,
-        { hint: `Run \`meili get projects --id ${id}\` to check its status.` },
+        { hint: `Run \`meili project view --id ${id}\` to check its status.` },
       ),
     { ...options, initialIntervalMs: 1000, maxIntervalMs: 5000 },
   );

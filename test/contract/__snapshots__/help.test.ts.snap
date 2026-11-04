@@ -1,44 +1,69 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`--help > lays out a topic: the usage, the global flags, then the commands 1`] = `
-"Read a resource: the list, or one item with --id.
+"Indexes of the instance. The commands that write answer with a task: they print it and return at once, and --wait polls it to a final status instead. A delete command requires --yes.
 
 USAGE
-  $ meili get COMMAND
+  $ meili index COMMAND
 
 GLOBAL FLAGS
-  -o, --output=<mode>  json (default): one document, the API body as it is,
-                       indented in a terminal, compact when piped. ndjson: one
-                       item per line, list commands only, streams with --all.
-  --debug              Print every HTTP request and response on stderr, secrets
-                       redacted.
+  --debug  Print every HTTP request and response on stderr, secrets redacted.
 
 COMMANDS
-  get batches        List the batches of tasks the instance processed, narrowed
-                     by --ids, --task-ids, --statuses and the other filters of
-                     the route.
-  get documents      List the documents of an index, narrowed by --ids or by
-                     --filter.
-  get health         Check that the Meilisearch instance is available.
-  get indexes        List the indexes of the instance, or get one with --id.
-  get keys           List the API keys of the instance, or get one with --id.
-  get organizations  List the Meilisearch Cloud organizations the token sees, or
-                     get one with --id.
-  get projects       List the Meilisearch Cloud projects the token sees, or get
-                     one with --id or --project.
-  get regions        List the Meilisearch Cloud regions where a project can run.
-  get resources      List the active Meilisearch Cloud resources, the plans a
-                     project runs on, with their pricing.
-  get settings       Get every setting of an index, each with its current value
-                     or its default.
-  get stats          Get the statistics of the whole instance, or those of one
-                     index with --index.
-  get tasks          List the tasks of the instance, narrowed by --ids,
-                     --statuses, --types and the other filters of the route.
-  get teams          List the Meilisearch Cloud teams the token sees, or get one
-                     with --id.
-  get version        Get the version of the Meilisearch instance, with the
-                     commit it was built from.
+  index add     Create an index.
+  index delete  Delete an index.
+  index list    List the indexes of the instance.
+  index update  Change the primary key or the name of an index.
+  index view    Get one index.
+
+"
+`;
+
+exports[`--help > lays out the root help: the resources by API, then the global flags and the variables 1`] = `
+"The Meilisearch command line tool.
+
+USAGE
+  $ meili <command> <subcommand> [flags]
+
+CLI COMMANDS
+  auth      login, logout, refresh, status
+  config    list, update, set, sync-with-cloud, unset
+  schema    Describe the commands as JSON.
+  teleport  Interactive command. Move a project to Meilisearch Cloud.
+  version   Print the version of the CLI.
+
+MEILISEARCH COMMANDS
+  batch         list, view
+  document      list, view, add, update, delete
+  export        Export the data of the instance to another instance.
+  facet-search  Search the values of a facet.
+  health        Check that the instance is available.
+  index         list, view, add, update, delete
+  info          Get the version of the instance.
+  key           list, view, add, update, delete
+  multi-search  Run several searches in one request.
+  search        Search the documents of an index.
+  settings      view, update, delete
+  similar       Find the documents similar to one document.
+  stats         Get the statistics of the instance, or of one index.
+  task          list, view, delete, cancel
+
+CLOUD MANAGEMENT COMMANDS
+  organization  list, view, update, delete
+  project       list, view, add, update, delete
+  region        list
+  resource      list
+  team          list, view, add, update, delete
+
+GLOBAL FLAGS
+  --debug  Print every HTTP request and response on stderr, secrets redacted.
+
+ENVIRONMENT VARIABLES
+  MEILI_CONFIG        Config file path. Default ~/.config/meili/config.json.
+                      Give each agent its own file, read-only.
+  MEILI_TIMEOUT       Default --timeout for --wait.
+  MEILI_NO_ANALYTICS  \`true\` or \`1\` turns off the anonymous usage data the CLI
+                      sends. \`DO_NOT_TRACK=1\` and \`CI\` turn it off too.
 
 "
 `;

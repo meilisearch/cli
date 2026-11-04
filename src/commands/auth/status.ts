@@ -6,13 +6,11 @@ import { ensureFreshSession, sessionUser } from "../../lib/session.js";
 export default class AuthStatus extends BaseCommand {
   static api: Api = "none";
 
-  static override description =
-    "Say whether a session of `auth login` exists and whether the authorization server still accepts it, and who it logs in.";
+  static override description = `Show the Meilisearch Cloud session.
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-  ];
+Says whether a session of \`auth login\` exists, whether the authorization server still accepts it, and who it logs in.`;
+
+  static override examples = ["<%= config.bin %> <%= command.id %>"];
 
   async run(): Promise<void> {
     const { path, session } = this.credentialsFile();

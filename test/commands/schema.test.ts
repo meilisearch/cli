@@ -21,7 +21,7 @@ describe("meili schema", () => {
     ) as { commands: Record<string, unknown> };
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(Schema, ["--output", "json"]);
+      result = await runCommand(Schema, []);
     });
     expect(requests).toBe(0);
     expect(result?.exitCode).toBe(0);
@@ -45,7 +45,7 @@ describe("meili schema", () => {
   });
 
   it("prints the flags a command declares itself, not the global ones it inherits", async () => {
-    const result = await runCommand(Schema, ["--command", "config set", "--output", "json"]);
+    const result = await runCommand(Schema, ["--command", "config set"]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const command = JSON.parse(result.stdout) as {
@@ -86,7 +86,7 @@ describe("meili schema", () => {
   });
 
   it("refuses an unknown command with cli_usage and exit 2", async () => {
-    const result = await runCommand(Schema, ["--command", "get indexs", "--output", "json"]);
+    const result = await runCommand(Schema, ["--command", "get indexs"]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr)).toMatchSnapshot();

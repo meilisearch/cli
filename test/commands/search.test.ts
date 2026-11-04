@@ -30,15 +30,7 @@ describe("meili search", () => {
 
   it("prints the API envelope as it is in JSON", async () => {
     server.use(meilisearchHandlers.search(hits));
-    const result = await runCommand(Search, [
-      "--index",
-      "movies",
-      "--q",
-      "nosferatu",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(Search, ["--index", "movies", "--q", "nosferatu", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -137,20 +129,6 @@ describe("meili search", () => {
     }
   });
 
-  it("refuses --output ndjson: the response is hits, not a list envelope", async () => {
-    server.use(meilisearchHandlers.search(hits));
-    const result = await runCommand(Search, [
-      "--index",
-      "movies",
-      "--output",
-      "ndjson",
-      ...project,
-    ]);
-    expect(result.exitCode).toBe(2);
-    expect(result.stdout).toBe("");
-    expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
-  });
-
   it("passes the API error of a missing index through and exits 4", async () => {
     server.use(
       meilisearchHandlers.apiError("/indexes/missing/search", 404, {
@@ -160,7 +138,7 @@ describe("meili search", () => {
         link: "https://docs.meilisearch.com/errors#index_not_found",
       }),
     );
-    const result = await runCommand(Search, ["--index", "missing", "--output", "json", ...project]);
+    const result = await runCommand(Search, ["--index", "missing", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

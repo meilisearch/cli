@@ -15,14 +15,14 @@ export default class Export extends BaseCommand {
 
   static keyActions = ["export"];
 
-  static override description =
-    `Send the documents and the settings of the source instance to the destination instance, and answer the task that does it.
+  static override description = `Export the data of the instance to another instance.
+
+Sends the documents and the settings to the destination instance, and prints the task that does it.
 
 The source is the project this command connects to, named by --project, --project-url and --project-api-key as on every command: it receives the request and does the export. The destination is --url with --api-key, or --project-destination, an entry of the config file. --indexes narrows the export to the indexes those patterns match.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
-    "<%= config.bin %> <%= command.id %> --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json",
     "<%= config.bin %> <%= command.id %> --project staging --project-destination prod",
     `<%= config.bin %> <%= command.id %> --project prod --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait`,
     "<%= config.bin %> <%= command.id %> --project prod --url http://localhost:7701 --payload-size 24MiB",

@@ -4,7 +4,6 @@ import { cloudEntry, findProjectByUrl } from "../../lib/cloud-sync.js";
 import {
   assertNoProject,
   assertProjectUrl,
-  CONFIG_FILE_WARNING,
   type ProjectEntry,
   writeConfigFile,
 } from "../../lib/config.js";
@@ -13,16 +12,14 @@ import { readStdin } from "../../lib/input.js";
 export default class ConfigSet extends BaseCommand {
   static api: Api = "none";
 
-  static override description =
-    `Set a project in the config file, creating the file owner-only; refuses a name that exists. Talks to the Management API only with --sync-with-cloud.
+  static override description = `Add a project to the config file.
 
-${CONFIG_FILE_WARNING}`;
+Creates the file, owner-only, and refuses a name that exists. Talks to the Management API only with --sync-with-cloud.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700",
     "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
     "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
-    "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700 --output json",
   ];
 
   static override flags = {

@@ -39,7 +39,7 @@ describe("meili export", () => {
 
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.export(exporting));
-    const result = await runCommand(Export, ["--url", remote, "--output", "json", ...project]);
+    const result = await runCommand(Export, ["--url", remote, ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -101,7 +101,7 @@ describe("meili export", () => {
 
   it("refuses --project-destination with --url, and a name the config file does not have", async () => {
     const config = tempConfig("refused.json", { prod: { url: remote } });
-    const source = ["--project-url", MEILISEARCH_URL, "--output", "json"];
+    const source = ["--project-url", MEILISEARCH_URL];
     const both = await runCommand(
       Export,
       [...source, "--project-destination", "prod", "--url", remote],
@@ -125,14 +125,7 @@ describe("meili export", () => {
         makeTask({ uid: 7, status: "succeeded", indexUid: null, type: exportType }),
       ]),
     );
-    const result = await runCommand(Export, [
-      "--url",
-      remote,
-      "--wait",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(Export, ["--url", remote, "--wait", ...project]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid: 7, status: "succeeded" });
   });
@@ -146,13 +139,7 @@ describe("meili export", () => {
         link: "https://docs.meilisearch.com/errors#invalid_export_url",
       }),
     );
-    const result = await runCommand(Export, [
-      "--data",
-      '{"url":true}',
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(Export, ["--data", '{"url":true}', ...project]);
     expect(result).toMatchSnapshot();
   });
 });

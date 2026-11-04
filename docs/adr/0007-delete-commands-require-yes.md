@@ -1,6 +1,6 @@
 # ADR 0007: Delete commands require `--yes`
 
-Status: accepted. Date: 2026-10-15. One point is superseded by ADR 0013: the `masterKey` that `add projects` prints is masked, no longer passed through unchanged.
+Status: accepted. Date: 2026-10-15. One point is superseded by ADR 0013: the `masterKey` that `add projects` prints is masked, no longer passed through unchanged. ADR 0018 moves the delete commands to files named `delete.ts`, and the contract test checks these files.
 
 Supersedes ADR 0002, whose rules it keeps except the one about confirmation.
 
@@ -17,7 +17,7 @@ A deletion is the only action of the CLI that the next command cannot undo. Mist
 The rules in `docs/contract/output.md` and `docs/contract/config.md` are the public contract of the CLI. In short:
 
 - stdout is data only, stderr is everything else
-- `json` is the default output mode, in a terminal or not. `ndjson` streams lists. There is no other format
+- every command writes JSON, in a terminal or not. There is no other format
 - API responses pass through unchanged, with no wrapper and no renaming
 - errors are JSON on stderr with `code`, `type`, `message`, `link`, `hint`
 - exit codes are stable and documented

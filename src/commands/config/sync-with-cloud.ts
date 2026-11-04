@@ -13,7 +13,6 @@ import {
 } from "../../lib/cloud-sync.js";
 import {
   assertProjectUrl,
-  CONFIG_FILE_WARNING,
   type ConfigFile,
   entriesOfCloudId,
   type ProjectEntry,
@@ -26,16 +25,15 @@ const SCOPES = ["all", "team-ids", "project-name", "project-url"];
 export default class ConfigSyncWithCloud extends BaseCommand {
   static api: Api = "management";
 
-  static override description =
-    `Give every Meilisearch Cloud project of the scope an entry of the config file, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.
+  static override description = `Add the Meilisearch Cloud projects to the config file.
 
-${CONFIG_FILE_WARNING}`;
+Gives every project of the scope an entry, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --all",
     "<%= config.bin %> <%= command.id %> --team-ids 12,13",
     "<%= config.bin %> <%= command.id %> --project-name prod",
-    "<%= config.bin %> <%= command.id %> --project-url https://ms-abc.sfo.meilisearch.io --output json",
+    "<%= config.bin %> <%= command.id %> --project-url https://ms-abc.sfo.meilisearch.io",
   ];
 
   static override flags = {
@@ -137,7 +135,7 @@ ${CONFIG_FILE_WARNING}`;
     if (report.some((each) => each.action !== "unchanged")) {
       writeConfigFile({ path: file.path, projects: entries });
     }
-    await this.output(report, { supportsNdjson: true });
+    await this.output(report);
   }
 }
 

@@ -157,7 +157,7 @@ function renderApiError(
 
 /**
  * Converts anything thrown during a command into a contract error. `commandIds`
- * are the commands of the manifest, `get indexes`, for the hint of an unknown command.
+ * are the commands of the manifest, `index list`, for the hint of an unknown command.
  * `managementTokenFromEnv` says the Management API token came from
  * `MEILI_MANAGEMENT_TOKEN`, which a new login would not replace.
  */
@@ -165,6 +165,7 @@ export function toRenderedError(
   error: unknown,
   commandIds: readonly string[] = [],
   managementTokenFromEnv = false,
+  argv: readonly string[] = [],
 ): RenderedError {
   if (error instanceof MeiliCliError) {
     return { body: error.toBody(), exitCode: error.exitCode, stack: error.stack };
@@ -227,16 +228,12 @@ export function toRenderedError(
     // oclif colors parts of its messages in a terminal: the JSON carries none of it.
     const cleaned = stripVTControlCharacters(error.message).replace(HELP_SUFFIX, "");
     const typed = cleaned.match(NOT_FOUND)?.[1]?.replaceAll(":", " ");
-    const closest = typed === undefined ? undefined : closestCommand(typed, commandIds);
     return {
       body: {
         code: "cli_usage",
         type: "cli",
         message: typed === undefined ? cleaned : `Command \`${typed}\` not found.`,
-        hint:
-          closest === undefined
-            ? "Run `meili --help` or `meili <command> --help` to see the usage."
-            : `Did you mean \`meili ${closest}\`?`,
+        hint: notFoundHint(typed, commandIds, argv),
       },
       exitCode: EXIT_CODES.usage,
       stack: error.stack,
@@ -256,17 +253,65 @@ export function toRenderedError(
   };
 }
 
-/** oclif joins command ids with ":" in its messages; the CLI uses spaces. */
-const NOT_FOUND = /^command (\S+) not found$/;
+/** oclif joins command ids with ":" in its messages, or with spaces when no topic matches. */
+const NOT_FOUND = /^command (.+) not found$/;
 
-/** The command closest to what was typed, when it is close enough to be a typo. */
-export function closestCommand(typed: string, commandIds: readonly string[]): string | undefined {
-  const tolerance = Math.max(2, Math.floor(typed.length / 3));
+/**
+ * The hint of an unknown command. A command followed by a value is a
+ * positional argument, which meili never takes. Anything else is a typo, the
+ * order of another CLI, or both.
+ */
+function notFoundHint(
+  typed: string | undefined,
+  commandIds: readonly string[],
+  argv: readonly string[],
+): string {
+  const command = commandIds.find((id) => typed?.startsWith(`${id} `));
+  if (command !== undefined) {
+    return `\`meili ${command}\` takes no positional argument: give each value with its flag. Run \`meili ${command} --help\` to see them.`;
+  }
+  // `--id` names one item: `meili get indexes --id movies` is `meili index view --id movies`.
+  const oneItem = argv.some((arg) => arg === "--id" || arg.startsWith("--id="));
+  const closest = typed === undefined ? undefined : closestCommand(typed, commandIds, oneItem);
+  return closest === undefined
+    ? "Run `meili --help` or `meili <command> --help` to see the usage."
+    : `Did you mean \`meili ${closest}\`?`;
+}
+
+/** Words of other CLIs, and the word of meili they mean. */
+const SYNONYMS: Record<string, string> = {
+  get: "list",
+  ls: "list",
+  show: "view",
+  create: "add",
+  edit: "update",
+  remove: "delete",
+  rm: "delete",
+};
+
+/**
+ * The command closest to what was typed, when it is close enough to be a typo.
+ * What was typed is also read with the words of other CLIs translated, in the
+ * reverse order, and word by word: `get indexes` finds `index list`, `index
+ * create` finds `index add`, `get health` finds `health`.
+ */
+export function closestCommand(
+  typed: string,
+  commandIds: readonly string[],
+  oneItem = false,
+): string | undefined {
+  const words = typed
+    .split(" ")
+    .map((word) => (oneItem && word === "get" ? "view" : (SYNONYMS[word] ?? word)));
+  const variants = new Set([typed, words.join(" "), [...words].reverse().join(" "), ...words]);
   let best: { id: string; distance: number } | undefined;
-  for (const id of commandIds) {
-    const distance = editDistance(typed, id);
-    if (distance <= tolerance && (best === undefined || distance < best.distance)) {
-      best = { id, distance };
+  for (const variant of variants) {
+    const tolerance = Math.max(2, Math.floor(variant.length / 3));
+    for (const id of commandIds) {
+      const distance = editDistance(variant, id);
+      if (distance <= tolerance && (best === undefined || distance < best.distance)) {
+        best = { id, distance };
+      }
     }
   }
   return best?.id;
@@ -368,7 +413,7 @@ export function handleFatalError(
   argv: readonly string[],
   commandIds: readonly string[],
 ): void {
-  const rendered = toRenderedError(error, commandIds);
+  const rendered = toRenderedError(error, commandIds, false, argv);
   if (!(error instanceof Errors.ExitError)) {
     writeError(rendered, {
       pretty: process.stderr.isTTY === true,

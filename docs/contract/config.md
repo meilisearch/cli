@@ -31,7 +31,7 @@ The path is `$MEILI_CONFIG` if set, else `$XDG_CONFIG_HOME/meili/config.json`, e
 - `url` is required. `apiKey` and `cloud` are optional. `cloud` holds the identifiers of the project in Meilisearch Cloud: `id`, an integer, required; `teamId`, an integer, optional; `teamName`, a string, optional. The CLI writes `cloud` from the Management API, see "Cloud projects". `teamId` and `teamName` are for the person who reads the file; no command reads them. The file holds nothing else: no current project, no default entry.
 - The file holds API keys, so it belongs to one user, and only that user can read it: mode `600`, or `400` for a file that an agent must not change. When others can read the file, the CLI writes a warning on stderr with the `chmod` command to run (`output.md`, "Warnings"), and continues. On Windows, file modes do not exist, so there is no check. A missing file is not an error: the CLI behaves as if there were no file.
 - Invalid JSON, or a shape other than the one above, fails with `cli_config` and the path of the file.
-- The file is shared state: whoever writes it affects every process that reads it. Give an agent its own file through `MEILI_CONFIG`. A human prepares that file and mounts it read-only in the agent's sandbox. Never give the agent the human's file. An agent adds, removes or changes a project, or changes the permissions of the file, only when the human explicitly asked for it: the file decides where every later command goes, for every process that reads it. `meili --help`, the help of the `config` commands and `meili schema` say so.
+- The file is shared state: whoever writes it affects every process that reads it. Give an agent its own file through `MEILI_CONFIG`. A human prepares that file and mounts it read-only in the agent's sandbox. Never give the agent the human's file. An agent adds, removes or changes a project, or changes the permissions of the file, only when the human explicitly asked for it: the file decides where every later command goes, for every process that reads it. The description of `MEILI_CONFIG` in `meili --help` says so.
 - `meili config list`, `meili config set`, `meili config update`, `meili config unset` and `meili config sync-with-cloud` manage the file, see `commands.md`. `config set` refuses a name that already exists. `config update` refuses a name that does not exist. Each command does one thing.
 
 ## Resolution: the command line names the project
@@ -48,11 +48,11 @@ A missing key is not an error at resolution time. The API answers 401, and the C
 
 ## Cloud projects
 
-A management command acts on a project of Meilisearch Cloud. The project is identified by its integer `id`: `meili update projects --id 343`. The Cloud dashboard does not show the id, so the config file stores it as `cloud.id`, and `--project <name>` passes it to the command: `meili update projects --project prod --name renamed`. See ADR 0011.
+A management command acts on a project of Meilisearch Cloud. The project is identified by its integer `id`: `meili project update --id 343`. The Cloud dashboard does not show the id, so the config file stores it as `cloud.id`, and `--project <name>` passes it to the command: `meili project update --project prod --name renamed`. See ADR 0011.
 
 - `--project` and `--id` together are a `cli_usage` error, exit 2: the name and the id contradict each other. Giving neither flag is also `cli_usage`.
 - An entry without `cloud` is a `cli_config` error, exit 2, "Project `<name>` has no cloud identifiers", with a hint to `meili config update --project <name> --sync-with-cloud`. When a command runs, the CLI never finds the id by itself, from the URL or in any other way.
-- A management command that does not act on a project, `add projects`, does not offer `--project` at all. The flag is not silently ignored there: it does not exist.
+- A management command that does not act on a project, `project add`, does not offer `--project` at all. The flag is not silently ignored there: it does not exist.
 
 ### Writing `cloud`
 
@@ -61,7 +61,7 @@ A management command acts on a project of Meilisearch Cloud. The project is iden
 1. `meili config sync-with-cloud (--all | --team-ids <ids> | --project-name <name> | --project-url <url>)`: every Cloud project of the scope gets an entry, see below.
 2. `meili config set --project <name> --project-url <url> --sync-with-cloud`: the new entry is the Cloud project whose URL is `<url>`, with the same scheme and host.
 3. `meili config update --project <name> --sync-with-cloud`: the entry is synced with its project. This is the project of its `cloud.id`, else the project of its URL, after the other flags are applied to the URL.
-4. `--sync-config` on the project commands. `meili add projects … --sync-config` adds the created project as an entry with the project's name, its URL, its master key as `apiKey`, and its `cloud`. `meili update projects … --name <name> --sync-config` renames the project's entry to the new name and refreshes its `cloud`. `meili delete projects … --sync-config` removes the entry. The entry is the one that `--project` names, or else the one whose `cloud.id` is `--id`. These cases are an error before the call: no entry, several entries, a missing `--name` on `update`, or a new name that the file already has. In that case nothing is sent. The file is written only after the API has answered. On `add`, a name that the file already has is a `cli_config` error before the project is created.
+4. `--sync-config` on the project commands. `meili project add … --sync-config` adds the created project as an entry with the project's name, its URL, its master key as `apiKey`, and its `cloud`. `meili project update … --name <name> --sync-config` renames the project's entry to the new name and refreshes its `cloud`. `meili project delete … --sync-config` removes the entry. The entry is the one that `--project` names, or else the one whose `cloud.id` is `--id`. These cases are an error before the call: no entry, several entries, a missing `--name` on `update`, or a new name that the file already has. In that case nothing is sent. The file is written only after the API has answered. On `add`, a name that the file already has is a `cli_config` error before the project is created.
 
 The same rules apply to all four:
 
@@ -90,7 +90,7 @@ For each project of the scope:
 
 Entries whose project is not in the scope, or is no longer in the Cloud, stay unchanged and are not reported.
 
-On stdout, the command prints one item per project of the scope that has an entry, in the order of the API. `ndjson` prints one item per line.
+On stdout, the command prints one item per project of the scope that has an entry, in the order of the API.
 
 ```json
 [
@@ -169,13 +169,12 @@ A command cannot build a client by itself. Commands with `api = "none"` (`schema
 | `MEILI_MANAGEMENT_URL` | Management API base URL. Default `https://api.meilisearch.com`. For development and tests. |
 | `MEILI_MANAGEMENT_CLIENT_ID` | OAuth application that the `auth login` command uses to identify itself. Default: `meilisearch-cli`, the application of this CLI. For development and tests. |
 | `MEILI_MANAGEMENT_DASHBOARD_URL` | Dashboard URL, which hosts the consent page of `auth login`. Default `https://cloud.meilisearch.com`. For development and tests. |
-| `MEILI_OUTPUT` | Default output mode: `json` or `ndjson`. |
 | `MEILI_TIMEOUT` | Default `--timeout` for `--wait`. |
 | `MEILI_NO_ANALYTICS` | `true` or `1` turns off the anonymous usage data the CLI sends, see "Analytics". |
 
-`meili --help` documents every variable. Adding a variable is a contract change.
+`meili --help` documents every variable except the `MEILI_MANAGEMENT_*` ones, which are for development and tests: `CONTRIBUTING.md` documents them. Adding a variable is a contract change.
 
-A variable that has the same role as a flag takes its name from the flag: `MEILI_` followed by the flag name in upper snake case. For example `--output` and `MEILI_OUTPUT`, `--timeout` and `MEILI_TIMEOUT`. Some variables and flags have no pair:
+A variable that has the same role as a flag takes its name from the flag: `MEILI_` followed by the flag name in upper snake case. For example `--timeout` and `MEILI_TIMEOUT`. Some variables and flags have no pair:
 
 - `MEILI_CONFIG` has no flag, because the file is chosen per process.
 - `MEILI_NO_ANALYTICS` has no flag, because it is set once, for every process. Meilisearch uses the same name for the same purpose.
@@ -187,7 +186,7 @@ The contract tests check the pairs.
 ## Secrets
 
 - The CLI holds credentials to reach an API: the keys of the config file and the tokens of the credentials file. These credentials never appear on stdout, on stderr, in `--debug` traces, in error messages or in snapshots. When the CLI must show one, it shows only the last four characters: `****1a2b`. `meili config list` masks keys in the same way.
-- A credential that an API *returns* is data, not one of these credentials. The `keys` commands print the `key` field as the API returns it, like every field of every other response (`output.md`, Pass-through). One exception: `add projects` masks the `masterKey` of the project it creates. Nobody runs that command to read this key, unlike `get keys`. `--sync-config`, or `config sync-with-cloud` later, writes the key to the config file without printing it (ADR 0013). Otherwise, the CLI hides nothing from the agent it works for. Redaction applies to the credentials the CLI holds, in the headers and body fields that the next bullet lists, never to the data stream. A credential that the agent passes itself goes where its route puts it. `get keys --id <key value>` puts the key in the request path, so a `--debug` trace prints it there. This exposes the key no more than before: it is already visible in the process list.
+- A credential that an API *returns* is data, not one of these credentials. The `key` commands print the `key` field as the API returns it, like every field of every other response (`output.md`, Pass-through). One exception: `project add` masks the `masterKey` of the project it creates. Nobody runs that command to read this key, unlike `key list`. `--sync-config`, or `config sync-with-cloud` later, writes the key to the config file without printing it (ADR 0013). Otherwise, the CLI hides nothing from the agent it works for. Redaction applies to the credentials the CLI holds, in the headers and body fields that the next bullet lists, never to the data stream. A credential that the agent passes itself goes where its route puts it. `key view --id <key value>` puts the key in the request path, so a `--debug` trace prints it there. This exposes the key no more than before: it is already visible in the process list.
 - `--debug` redacts the `Authorization`, `Cookie` and `Set-Cookie` headers, because a session cookie of the authorization server is a credential like any other. It also redacts every field named `apiKey`, `apikey`, `masterKey`, `key`, `token`, `access_token`, `refresh_token` in request and response bodies. `apikey` is how the Management API spells the master key of a project. `masterKey` is how the same API spells the same key when it returns a project. `access_token` and `refresh_token` are how the authorization server spells its tokens. A form-encoded body, the format the token endpoint takes, is never printed. The redaction lives in `src/lib/config.ts` and is tested.
 - The CLI reads keys from the config file, and from nowhere else on disk. It warns when others can read the file. Passing a key in a flag is allowed. The documentation says that the key is then visible in the process list and in the shell history. `--project-api-key -` reads the key from stdin instead.
 

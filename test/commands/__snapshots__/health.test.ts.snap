@@ -1,0 +1,56 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili health > passes an API error through and exits 1 1`] = `
+{
+  "exitCode": 1,
+  "stderr": "{"error":{"code":"internal","type":"internal","message":"An internal error has occurred. \`Index creation\` failed.","link":"https://docs.meilisearch.com/errors#internal"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili health > prints its help without any network call 1`] = `
+"Check that the instance is available.
+
+USAGE
+  $ meili health [--debug] [--project-url <url>] [--project-api-key
+    <key>] [--project <name>]
+
+FLAGS
+  --debug                  Print every HTTP request and response on stderr,
+                           secrets redacted.
+  --project=<name>         A project of the config file. Cannot be combined with
+                           --project-url. One of --project or --project-url is
+                           required.
+  --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+  --project-url=<url>      Project URL, the Meilisearch instance to talk to. One
+                           of --project or --project-url is required.
+
+DESCRIPTION
+  Check that the instance is available.
+
+EXAMPLES
+  $ meili health --project prod
+
+  $ meili health --project-url http://localhost:7700
+
+"
+`;
+
+exports[`meili health > prints the health of the instance as JSON 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"status":"available"}
+",
+}
+`;
+
+exports[`meili health > reports a connection failure with cli_network and exits 6 1`] = `
+{
+  "exitCode": 6,
+  "stderr": "{"error":{"code":"cli_network","type":"cli","message":"Cannot connect to http://meili.test:7700/health: Failed to fetch."}}
+",
+  "stdout": "",
+}
+`;
