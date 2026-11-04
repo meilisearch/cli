@@ -247,12 +247,16 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
       { page: 1 },
     );
     let name = firstName;
-    let resourceId =
-      resources.find((resource) => resource.plan === "free_trial")?.id ??
-      (await choosePlan(resources, "This region has no free trial."));
+    const trialId = resources.find((resource) => resource.plan === "free_trial")?.id;
+    let resourceId = trialId ?? (await choosePlan(resources, "This region has no free trial."));
     for (;;) {
       try {
-        return await postApiV2Projects({ client, body: { name, teamId: team.id, resourceId } });
+        const project = await postApiV2Projects({
+          client,
+          body: { name, teamId: team.id, resourceId },
+        });
+        if (resourceId === trialId) say(`${name} is a free trial project: free for 14 days.`);
+        return project;
       } catch (error) {
         const code = apiErrorCode(error);
         if (code === "user_not_entitled_to_free_trial") {
