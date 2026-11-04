@@ -40,7 +40,7 @@ meili add projects --name demo --team-id 12 --resource-id 3 --sync-config   # cr
 
 ## From self-hosted to Meilisearch Cloud
 
-Meilisearch Cloud upgrades and monitors your project for you, and shows how it is searched. Try it free for 14 days, then [choose your plan](https://www.meilisearch.com/pricing).
+Meilisearch Cloud upgrades and monitors your project for you, shows how it is searched, and is [free for 14 days](https://www.meilisearch.com/pricing).
 
 `meili teleport` moves the data of a self-hosted Meilisearch, local or in production, to a new Meilisearch Cloud project. It asks its questions in the terminal:
 
