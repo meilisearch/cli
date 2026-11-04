@@ -6,8 +6,10 @@
  *   pnpm openapi               both documents (management only if a GitHub token is available)
  *   pnpm openapi:meilisearch        the Meilisearch API document of the latest Meilisearch release,
  *                              or of the release named by MEILISEARCH_VERSION (for example v1.54.2)
- *   pnpm openapi:management    the management document, from the private meilisearch-cloud
- *                              repository: MEILI_BOT_GH_PAT, else GITHUB_TOKEN, else `gh auth token`
+ *   pnpm openapi:management    the management document, from the private meilisearch-cloud repository
+ *
+ * Both read GitHub with MEILI_BOT_GH_PAT, else GITHUB_TOKEN, else `gh auth token`. Without a token,
+ * GitHub limits the requests and answers 403 at times. The management document needs one.
  */
 import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -44,7 +46,7 @@ async function downloadMeilisearch() {
   const release = await githubFetch(
     `https://api.github.com/repos/meilisearch/meilisearch/releases/${tag ? `tags/${tag}` : "latest"}`,
     "application/vnd.github+json",
-    process.env.GITHUB_TOKEN,
+    githubToken(),
   ).then((response) => response.json());
   const asset = (release.assets ?? []).find((candidate) => candidate.name === ENGINE_ASSET);
   if (!asset) throw new Error(`release ${release.tag_name} has no ${ENGINE_ASSET} asset`);
@@ -54,7 +56,7 @@ async function downloadMeilisearch() {
   save("meilisearch", await response.json());
 }
 
-function managementToken() {
+function githubToken() {
   if (process.env.MEILI_BOT_GH_PAT) return process.env.MEILI_BOT_GH_PAT;
   if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
   try {
@@ -68,7 +70,7 @@ function managementToken() {
 }
 
 async function downloadManagement() {
-  const token = managementToken();
+  const token = githubToken();
   if (!token) {
     console.error(
       "openapi/management.json: skipped, no GitHub token. Run `gh auth login`, or set MEILI_BOT_GH_PAT, to read the private meilisearch-cloud repository.",

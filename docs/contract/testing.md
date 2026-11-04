@@ -48,7 +48,7 @@ They also keep code and docs in sync:
 
 These tests parse the Markdown tables. Keep the tables in their current format: one variable, one code or one exception per row, in backticks.
 
-They read the OpenAPI documents in `openapi/`. `pnpm openapi` downloads them, and they are never committed. A missing document makes the tests fail; they are not skipped. CI runs `pnpm openapi` first, with the `MEILI_BOT_GH_PAT` secret for the private management document, and the `GITHUB_TOKEN` of the workflow for the Meilisearch release: without a token, GitHub limits the requests and answers 403 at times.
+They read the OpenAPI documents in `openapi/`. `pnpm openapi` downloads them, and they are never committed. A missing document makes the tests fail; they are not skipped. CI runs `pnpm openapi` first, with the `MEILI_BOT_GH_PAT` secret. It reads the private management document, and the Meilisearch release too: without a token, GitHub limits the requests and answers 403 at times.
 
 ## What runs where
 
