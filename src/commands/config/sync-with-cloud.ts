@@ -13,7 +13,6 @@ import {
 } from "../../lib/cloud-sync.js";
 import {
   assertProjectUrl,
-  CONFIG_FILE_WARNING,
   type ConfigFile,
   entriesOfCloudId,
   type ProjectEntry,
@@ -28,9 +27,7 @@ export default class ConfigSyncWithCloud extends BaseCommand {
 
   static override description = `Add the Meilisearch Cloud projects to the config file.
 
-Gives every project of the scope an entry, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.
-
-${CONFIG_FILE_WARNING}`;
+Gives every project of the scope an entry, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --all",

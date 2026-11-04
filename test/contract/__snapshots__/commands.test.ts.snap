@@ -244,9 +244,7 @@ Prints the path of the file and its projects as JSON, keys masked.",
       "api": "none",
       "description": "Add a project to the config file.
 
-Creates the file, owner-only, and refuses a name that exists. Talks to the Management API only with --sync-with-cloud.
-
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+Creates the file, owner-only, and refuses a name that exists. Talks to the Management API only with --sync-with-cloud.",
       "examples": [
         "meili config set --project local --project-url http://localhost:7700",
         "meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
@@ -285,9 +283,7 @@ The file holds API keys and decides where every later command goes, for every pr
       "api": "management",
       "description": "Add the Meilisearch Cloud projects to the config file.
 
-Gives every project of the scope an entry, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.
-
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+Gives every project of the scope an entry, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.",
       "examples": [
         "meili config sync-with-cloud --all",
         "meili config sync-with-cloud --team-ids 12,13",
@@ -323,9 +319,7 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "none",
-      "description": "Remove a project from the config file.
-
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+      "description": "Remove a project from the config file.",
       "examples": [
         "meili config unset --project prod",
       ],
@@ -344,9 +338,7 @@ The file holds API keys and decides where every later command goes, for every pr
       "api": "none",
       "description": "Change a project of the config file.
 
-Changes the fields given, and refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.
-
-The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
+Changes the fields given, and refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.",
       "examples": [
         "meili config update --project prod --sync-with-cloud",
         "meili config update --project prod --project-api-key - < key.txt",

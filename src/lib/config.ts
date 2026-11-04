@@ -362,10 +362,6 @@ export function assertProjectUrl(value: string): void {
   }
 }
 
-/** In the help of every command that writes the config file (config.md, "Config file"). */
-export const CONFIG_FILE_WARNING =
-  "The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.";
-
 /** The named entry, or `cli_config` with the path and the names the file has. */
 export function projectOf(file: ConfigFile, name: string): ProjectEntry {
   const entry = file.projects[name];

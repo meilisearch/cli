@@ -4,7 +4,6 @@ import { cloudEntry, findProjectByUrl } from "../../lib/cloud-sync.js";
 import {
   assertNoProject,
   assertProjectUrl,
-  CONFIG_FILE_WARNING,
   type ProjectEntry,
   writeConfigFile,
 } from "../../lib/config.js";
@@ -15,9 +14,7 @@ export default class ConfigSet extends BaseCommand {
 
   static override description = `Add a project to the config file.
 
-Creates the file, owner-only, and refuses a name that exists. Talks to the Management API only with --sync-with-cloud.
-
-${CONFIG_FILE_WARNING}`;
+Creates the file, owner-only, and refuses a name that exists. Talks to the Management API only with --sync-with-cloud.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700",

@@ -4,7 +4,6 @@ import { getApiV2ProjectsById } from "../../lib/clients/management/generated/sdk
 import { cloudEntry, findProjectByUrl, warnUrlAnomaly } from "../../lib/cloud-sync.js";
 import {
   assertProjectUrl,
-  CONFIG_FILE_WARNING,
   type ProjectEntry,
   projectOf,
   writeConfigFile,
@@ -16,9 +15,7 @@ export default class ConfigUpdate extends BaseCommand {
 
   static override description = `Change a project of the config file.
 
-Changes the fields given, and refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.
-
-${CONFIG_FILE_WARNING}`;
+Changes the fields given, and refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --sync-with-cloud",
