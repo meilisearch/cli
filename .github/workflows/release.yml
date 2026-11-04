@@ -10,9 +10,51 @@ jobs:
     uses: ./.github/workflows/test.yml
     secrets: inherit
 
-  release:
-    name: Version Packages pull request, or publish on npm
+  changesets:
+    name: Look for changesets
     needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      pending: ${{ steps.pending.outputs.pending }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      # The same test as changesets/action: a changeset is a Markdown file of .changeset/ other than README.md.
+      - id: pending
+        run: |
+          if find .changeset -name '*.md' ! -name README.md | grep -q .; then pending=true; else pending=false; fi
+          echo "pending=$pending" >> "$GITHUB_OUTPUT"
+
+  version-pr:
+    name: Open the Version Packages pull request
+    needs: changesets
+    if: needs.changesets.outputs.pending == 'true'
+    runs-on: ubuntu-latest
+    concurrency: release
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          # A pull request opened with the workflow token runs no workflow, so CI would never test it.
+          github-token: ${{ secrets.MEILI_BOT_GH_PAT }}
+          # The manifest holds the version, and CI checks that it matches the code.
+          version-script: pnpm changeset version && pnpm gen:manifest
+
+  publish:
+    name: Publish on npm
+    needs: changesets
+    if: needs.changesets.outputs.pending == 'false'
     runs-on: ubuntu-latest
     concurrency: release
     permissions:
@@ -31,13 +73,11 @@ jobs:
       - name: npm 11, for trusted publishing; Node 22 comes with npm 10
         run: npm install -g npm@11.21.1
       - run: pnpm install --frozen-lockfile
+      # Publishes the version when it is not on npm yet, with its tag and its GitHub release.
       - id: changesets
         uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
-          # A pull request opened with the workflow token runs no workflow, so CI would never test it.
           github-token: ${{ secrets.MEILI_BOT_GH_PAT }}
-          # The manifest holds the version, and CI checks that it matches the code.
-          version-script: pnpm changeset version && pnpm gen:manifest
           # npm authenticates with the OIDC token of the job: trusted publishing, set up on npmjs.com.
           publish-script: pnpm changeset publish
       - id: version
@@ -45,8 +85,8 @@ jobs:
 
   binaries:
     name: Publish GitHub release assets
-    needs: release
-    if: needs.release.outputs.published == 'true'
+    needs: publish
+    if: needs.publish.outputs.published == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -72,12 +112,12 @@ jobs:
           gh release upload "v$VERSION" meili-*.tar.gz SHA256SUMS
         env:
           GH_TOKEN: ${{ secrets.MEILI_BOT_GH_PAT }}
-          VERSION: ${{ needs.release.outputs.version }}
+          VERSION: ${{ needs.publish.outputs.version }}
 
   homebrew:
     name: Formula pushed to meilisearch/homebrew-tap
-    needs: release
-    if: needs.release.outputs.published == 'true'
+    needs: publish
+    if: needs.publish.outputs.published == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -97,4 +137,4 @@ jobs:
           git push
         env:
           GH_TOKEN: ${{ secrets.MEILI_BOT_GH_PAT }}
-          VERSION: ${{ needs.release.outputs.version }}
+          VERSION: ${{ needs.publish.outputs.version }}
