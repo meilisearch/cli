@@ -40,7 +40,7 @@ function enabled(env: Env): boolean {
   return !(
     isOn(env[ENV.NO_ANALYTICS]) ||
     isOn(env.DO_NOT_TRACK) ||
-    nonEmpty(env.CI) !== undefined ||
+    env.CI !== undefined ||
     (managementUrl !== undefined && managementUrl !== DEFAULT_MANAGEMENT_URL)
   );
 }

@@ -118,6 +118,7 @@ describe("analytics", () => {
     { MEILI_NO_ANALYTICS: "1" },
     { DO_NOT_TRACK: "1" },
     { CI: "true" },
+    { CI: "" },
     { MEILI_MANAGEMENT_URL: "https://staging.test" },
   ])("sends nothing and writes no id with %o", async (overrides) => {
     server.use(meilisearchHandlers.health());
