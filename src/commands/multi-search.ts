@@ -11,8 +11,9 @@ export default class MultiSearch extends BaseCommand {
 
   static keyActions = ["search"];
 
-  static override description =
-    "Run several search queries in one request, each naming its index in --queries, returned side by side or merged into one ranked list with --federation.";
+  static override description = `Run several searches in one request.
+
+Each query of --queries names its index. The results come side by side, or merged into one ranked list with --federation.`;
 
   static override examples = [
     '<%= config.bin %> <%= command.id %> --project prod --queries \'[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]\'',

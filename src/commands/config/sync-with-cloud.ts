@@ -26,8 +26,9 @@ const SCOPES = ["all", "team-ids", "project-name", "project-url"];
 export default class ConfigSyncWithCloud extends BaseCommand {
   static api: Api = "management";
 
-  static override description =
-    `Give every Meilisearch Cloud project of the scope an entry of the config file, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.
+  static override description = `Add the Meilisearch Cloud projects to the config file.
+
+Gives every project of the scope an entry, with its cloud identifiers, and its master key when the entry has no key. Never replaces a key, never removes an entry. Prints one item per project.
 
 ${CONFIG_FILE_WARNING}`;
 

@@ -11,8 +11,9 @@ export default class FacetSearch extends BaseCommand {
 
   static keyActions = ["search"];
 
-  static override description =
-    "Search the values of one facet attribute of an index, counted on the documents --q and --filter keep.";
+  static override description = `Search the values of a facet.
+
+Counts the values on the documents that --q and --filter keep.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac",

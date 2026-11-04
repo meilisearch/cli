@@ -10,7 +10,7 @@ exports[`meili search > passes the API error of a missing index through and exit
 `;
 
 exports[`meili search > prints its help without any network call 1`] = `
-"Search the documents of an index, with --q and the search parameters of the route.
+"Search the documents of an index.
 
 USAGE
   $ meili search --index <index> [-o <mode>] [--debug]
@@ -27,100 +27,130 @@ USAGE
     [--show-performance-details] [--file <path> | --data <json>]
 
 FLAGS
-  -o, --output=<mode>                     json (default): one document, the API
-                                          body as it is, indented in a terminal,
-                                          compact when piped. ndjson: one item
-                                          per line, list commands only, streams
-                                          with --all.
-      --attributes-to-crop=<fields>       Attributes to crop in _formatted,
-                                          comma-separated, each optionally as
-                                          \`attribute:length\`.
-      --attributes-to-highlight=<fields>  Attributes to highlight in _formatted,
-                                          comma-separated.
-      --attributes-to-retrieve=<fields>   Document attributes to return,
-                                          comma-separated. Defaults to the
-                                          displayed ones.
-      --attributes-to-search-on=<fields>  Restrict the search to these
-                                          searchable attributes,
-                                          comma-separated.
-      --crop-length=<n>                   Maximum number of words in a cropped
-                                          value, 10 by default.
-      --crop-marker=<string>              String marking where a cropped value
-                                          was cut, \`…\` by default.
-      --data=<json>                       Inline JSON body.
-      --debug                             Print every HTTP request and response
-                                          on stderr, secrets redacted.
-      --distinct=<attribute>              Return one document per value of this
-                                          attribute, which must be filterable.
-      --facets=<facets>                   Attributes to count in
-                                          facetDistribution, comma-separated.
-                                          Patterns such as \`*\` are accepted.
-      --file=<path>                       Read the body from a file. \`-\` reads
-                                          from stdin.
-      --filter=<filter>                   Filter expression, for example \`rating
-                                          > 4\`. Its array-of-arrays form goes
-                                          through --data.
-      --highlight-post-tag=<string>       String inserted after each highlighted
-                                          term, \`</em>\` by default.
-      --highlight-pre-tag=<string>        String inserted before each
-                                          highlighted term, \`<em>\` by default.
-      --hits-per-page=<n>                 Number of documents per page, used
-                                          with --page. 0 counts without
-                                          returning any.
-      --hybrid=<json>                     Hybrid search as JSON, for example
-                                          \`{"embedder":"default","semanticRatio"
-                                          :0.5}\`.
-      --index=<index>                     (required) The index to search in.
-      --limit=<n>                         Maximum number of documents to return,
-                                          20 by default. Ignored when --page or
-                                          --hits-per-page is given.
-      --locales=<locales>                 ISO-639 locales of the query,
-                                          comma-separated, instead of
-                                          auto-detection.
-      --matching-strategy=<option>        How query terms are relaxed when there
-                                          are not enough results.
-                                          <options: last|all|frequency>
-      --offset=<n>                        Number of documents to skip. Ignored
-                                          when --page or --hits-per-page is
-                                          given.
-      --page=<n>                          Page to return, 1-indexed. The
-                                          response then carries totalHits and
-                                          totalPages instead of
-                                          estimatedTotalHits.
-      --project=<name>                    A project of the config file. Cannot
-                                          be combined with --project-url. One of
-                                          --project or --project-url is
-                                          required.
-      --project-api-key=<key>             Project API key. \`-\` reads it from
-                                          stdin.
-      --project-url=<url>                 Project URL, the Meilisearch instance
-                                          to talk to. One of --project or
-                                          --project-url is required.
-      --q=<query>                         The search terms. Omit it for a
-                                          placeholder search, which returns
-                                          everything.
-      --ranking-score-threshold=<number>  Drop the hits whose ranking score is
-                                          below this value, between 0.0 and 1.0.
-      --retrieve-vectors                  Add _vectors to each hit, the
-                                          embeddings of the document.
-      --show-matches-position             Add _matchesPosition to each hit, the
-                                          byte offset of every matched term.
-      --show-performance-details          Add performanceDetails to the
-                                          response, a timing breakdown of the
-                                          query.
-      --show-ranking-score                Add _rankingScore to each hit, between
-                                          0.0 and 1.0.
-      --show-ranking-score-details        Add _rankingScoreDetails to each hit,
-                                          the score of every ranking rule.
-      --sort=<sort>                       Attributes to sort on,
-                                          comma-separated, each as
-                                          \`attribute:asc\` or \`:desc\`.
-      --vector=<numbers>                  Query vector for a user-provided
-                                          embedder, comma-separated numbers.
+  -o, --output=<mode>
+      json (default): one document, the API body as it is, indented in a terminal,
+      compact when piped. ndjson: one item per line, only for the commands that
+      print a list of items, streams with --all.
+
+  --attributes-to-crop=<fields>
+      Attributes to crop in _formatted, comma-separated, each optionally as
+      \`attribute:length\`.
+
+  --attributes-to-highlight=<fields>
+      Attributes to highlight in _formatted, comma-separated.
+
+  --attributes-to-retrieve=<fields>
+      Document attributes to return, comma-separated. Defaults to the displayed
+      ones.
+
+  --attributes-to-search-on=<fields>
+      Restrict the search to these searchable attributes, comma-separated.
+
+  --crop-length=<n>
+      Maximum number of words in a cropped value, 10 by default.
+
+  --crop-marker=<string>
+      String marking where a cropped value was cut, \`…\` by default.
+
+  --data=<json>
+      Inline JSON body.
+
+  --debug
+      Print every HTTP request and response on stderr, secrets redacted.
+
+  --distinct=<attribute>
+      Return one document per value of this attribute, which must be filterable.
+
+  --facets=<facets>
+      Attributes to count in facetDistribution, comma-separated. Patterns such as
+      \`*\` are accepted.
+
+  --file=<path>
+      Read the body from a file. \`-\` reads from stdin.
+
+  --filter=<filter>
+      Filter expression, for example \`rating > 4\`. Its array-of-arrays form goes
+      through --data.
+
+  --highlight-post-tag=<string>
+      String inserted after each highlighted term, \`</em>\` by default.
+
+  --highlight-pre-tag=<string>
+      String inserted before each highlighted term, \`<em>\` by default.
+
+  --hits-per-page=<n>
+      Number of documents per page, used with --page. 0 counts without returning
+      any.
+
+  --hybrid=<json>
+      Hybrid search as JSON, for example
+      \`{"embedder":"default","semanticRatio":0.5}\`.
+
+  --index=<index>
+      (required) The index to search in.
+
+  --limit=<n>
+      Maximum number of documents to return, 20 by default. Ignored when --page or
+      --hits-per-page is given.
+
+  --locales=<locales>
+      ISO-639 locales of the query, comma-separated, instead of auto-detection.
+
+  --matching-strategy=<option>
+      How query terms are relaxed when there are not enough results.
+      <options: last|all|frequency>
+
+  --offset=<n>
+      Number of documents to skip. Ignored when --page or --hits-per-page is
+      given.
+
+  --page=<n>
+      Page to return, 1-indexed. The response then carries totalHits and
+      totalPages instead of estimatedTotalHits.
+
+  --project=<name>
+      A project of the config file. Cannot be combined with --project-url. One of
+      --project or --project-url is required.
+
+  --project-api-key=<key>
+      Project API key. \`-\` reads it from stdin.
+
+  --project-url=<url>
+      Project URL, the Meilisearch instance to talk to. One of --project or
+      --project-url is required.
+
+  --q=<query>
+      The search terms. Omit it for a placeholder search, which returns
+      everything.
+
+  --ranking-score-threshold=<number>
+      Drop the hits whose ranking score is below this value, between 0.0 and 1.0.
+
+  --retrieve-vectors
+      Add _vectors to each hit, the embeddings of the document.
+
+  --show-matches-position
+      Add _matchesPosition to each hit, the byte offset of every matched term.
+
+  --show-performance-details
+      Add performanceDetails to the response, a timing breakdown of the query.
+
+  --show-ranking-score
+      Add _rankingScore to each hit, between 0.0 and 1.0.
+
+  --show-ranking-score-details
+      Add _rankingScoreDetails to each hit, the score of every ranking rule.
+
+  --sort=<sort>
+      Attributes to sort on, comma-separated, each as \`attribute:asc\` or \`:desc\`.
+
+  --vector=<numbers>
+      Query vector for a user-provided embedder, comma-separated numbers.
 
 DESCRIPTION
-  Search the documents of an index, with --q and the search parameters of the
-  route.
+  Search the documents of an index.
+
+  --q and the search parameters of the route shape the search.
 
 EXAMPLES
   $ meili search --project prod --index movies --q nosferatu

@@ -39,13 +39,41 @@ export const LITERAL_VERBS: readonly string[] = [
   "export",
 ];
 
-const METHOD_VERBS: Record<Method, string> = {
-  GET: "get",
+/** The verb of the other methods; `GET` is `list` or `view` (rule 1). */
+const METHOD_VERBS: Record<Exclude<Method, "GET">, string> = {
   POST: "add",
   PUT: "update",
   PATCH: "update",
   DELETE: "delete",
 };
+
+/**
+ * The CLI name of each collection of the APIs, its singular (rule 2). A
+ * resource that is not in this table is one object and keeps its API name:
+ * `settings`, `stats`, `health`. A new collection adds a row.
+ */
+const COLLECTIONS = new Map(
+  Object.entries({
+    batches: "batch",
+    documents: "document",
+    dumps: "dump",
+    fields: "field",
+    indexes: "index",
+    keys: "key",
+    organizations: "organization",
+    projects: "project",
+    regions: "region",
+    resources: "resource",
+    snapshots: "snapshot",
+    "team-members": "team-member",
+    teams: "team",
+    tasks: "task",
+    webhooks: "webhook",
+  }),
+);
+
+/** Objects whose only command is `view`: the command is the resource alone, `meili health` (rule 2). */
+const VIEW_ONLY: readonly string[] = ["health", "stats", "me", "cost", "usage"];
 
 /**
  * API parameters that carry identifiers, and what they identify (rule 5): the
@@ -198,61 +226,56 @@ export const ROUTE_EXCEPTIONS: readonly RouteException[] = [
   },
   {
     route: "POST /swap-indexes",
-    command: "swap indexes --indexes",
+    command: "index swap --indexes",
     reason:
       "The literal holds the verb and the resource. `--indexes a,b` swaps one pair; several pairs go through `--data` or `--file`.",
   },
   {
+    route: "GET /version",
+    command: "info",
+    reason:
+      "`meili version` prints the version of the CLI. `info` describes the instance: its version and the commit it was built from.",
+  },
+  {
     route: "GET /indexes/{index_uid}/documents",
     command: null,
-    reason: "Covered by `get documents`, which uses the fetch route and its body.",
+    reason: "Covered by `document list`, which uses the fetch route and its body.",
   },
   {
     route: "POST /indexes/{index_uid}/documents/fetch",
-    command: "get documents --index",
-    reason:
-      "A POST that lists: filters, fields and pagination travel in its body. `--id` is an alias of `--ids`.",
-  },
-  {
-    route: "GET /indexes/{index_uid}/documents/{document_id}",
-    command: null,
-    reason: "Covered by `get documents --ids`.",
+    command: "document list --index",
+    reason: "A POST that lists: filters, fields and pagination travel in its body.",
   },
   {
     route: "DELETE /indexes/{index_uid}/documents/{document_id}",
     command: null,
-    reason: "Covered by `delete documents --ids`.",
+    reason: "Covered by `document delete --ids`.",
   },
   {
     route: "POST /indexes/{index_uid}/documents/delete-batch",
-    command: "delete documents --ids",
+    command: "document delete --ids",
     reason:
       "The body is an array of identifiers without a name; `--ids` is the name of the fetch route.",
   },
   {
     route: "POST /indexes/{index_uid}/fields",
-    command: "get fields --index",
+    command: "field list --index",
     reason: "A POST that lists.",
   },
   {
     route: "* /indexes/{index_uid}/settings/*",
     command: null,
-    reason: "`update settings` sends any subset of the settings; `null` resets one of them.",
-  },
-  {
-    route: "GET /tasks/{task_id}",
-    command: null,
-    reason: "Covered by `get tasks --ids`, which filters `uids`.",
-  },
-  {
-    route: "GET /batches/{batch_id}",
-    command: null,
-    reason: "Covered by `get batches --ids`.",
+    reason: "`settings update` sends any subset of the settings; `null` resets one of them.",
   },
   {
     route: "POST /tasks/compact",
-    command: "compact tasks",
+    command: "task compact",
     reason: "Experimental (`taskQueueCompactionRoute`), kept on purpose.",
+  },
+  {
+    route: "PATCH /api/v2/projects/{projectId}/version",
+    command: null,
+    reason: "Not needed for now. `meili version` prints the version of the CLI.",
   },
   {
     route: "GET /api/v2/meilisearch-versions",
@@ -329,7 +352,7 @@ function findRouteException(route: Route): RouteException | undefined {
   return ROUTE_EXCEPTIONS.find((exception) => matchesRoutePattern(exception.route, key));
 }
 
-/** `"get documents --index"` is the command `get documents` with the flag `index`. */
+/** `"document list --index"` is the command `document list` with the flag `index`. */
 function parseCommand(command: string): { id: string; flags: string[] } {
   const [id = command, ...flags] = command.split(" --");
   return { id, flags };
@@ -359,29 +382,30 @@ export function toKebabCase(name: string): string {
     .toLowerCase();
 }
 
-/** `indexes` gives `index`, `batches` gives `batch`, `keys` gives `key`. */
-export function singular(word: string): string {
-  if (word.endsWith("ies")) return `${word.slice(0, -3)}y`;
-  if (/(xes|ches|shes|sses)$/.test(word)) return word.slice(0, -2);
-  if (word.endsWith("s") && !word.endsWith("ss")) return word.slice(0, -1);
-  return word;
+/** The CLI name of an API resource: `indexes` gives `index`, `settings` stays `settings`. */
+function resourceName(apiName: string): string {
+  return COLLECTIONS.get(apiName) ?? apiName;
 }
 
 /**
- * The command id of a route before exceptions: the verb, then the resource
- * (rules 1 and 2). `GET /indexes/{index_uid}` is `get indexes`,
- * `POST /tasks/cancel` is `cancel tasks`, `POST /export` is `export`.
+ * The command id of a route before exceptions: the resource, then the verb
+ * (rules 1 and 2). `GET /indexes` is `index list`, `GET /indexes/{index_uid}`
+ * is `index view`, `POST /tasks/cancel` is `task cancel`, `GET /health` is
+ * `health`, `POST /export` is `export`.
  */
 export function deriveCommandId(route: Route): string {
-  const literals = pathSegments(route.path)
-    .filter((segment) => !isParameter(segment))
-    .map(toKebabCase);
-  const last = literals.at(-1);
-  if (last !== undefined && LITERAL_VERBS.includes(last)) {
+  const segments = pathSegments(route.path);
+  const literals = segments.filter((segment) => !isParameter(segment)).map(toKebabCase);
+  const last = literals.at(-1) ?? "";
+  if (LITERAL_VERBS.includes(last)) {
     const resource = literals.at(-2);
-    return resource === undefined ? last : `${last} ${resource}`;
+    return resource === undefined ? last : `${resourceName(resource)} ${last}`;
   }
-  return [METHOD_VERBS[route.method], last].filter((word) => word !== undefined).join(" ");
+  const resource = resourceName(last);
+  if (route.method !== "GET") return `${resource} ${METHOD_VERBS[route.method]}`;
+  if (VIEW_ONLY.includes(resource)) return resource;
+  const isList = COLLECTIONS.has(last) && !isParameter(segments.at(-1) ?? "");
+  return `${resource} ${isList ? "list" : "view"}`;
 }
 
 /**
@@ -396,43 +420,41 @@ export function commandIdFor(route: Route): string | null {
   return deriveCommandId(route);
 }
 
-/** The second word of a command id: `documents` in `get documents`, undefined for `search`. */
-function resourceOf(commandId: string): string | undefined {
-  return commandId.split(" ")[1];
+/** The first word of a command id: `document` in `document list`, `search` for `search`. */
+function resourceOf(commandId: string): string {
+  return commandId.split(" ")[0] ?? commandId;
 }
 
 /**
  * The flags that carry the path parameters of a route, in path order (rule 4):
  * `id` for the parameter of the command's own resource, the singular of the
  * collection for a parent. `GET /indexes/{index_uid}/documents/{document_id}`
- * under `delete documents` gives `["index", "id"]`.
+ * under `document view` gives `["index", "id"]`.
  */
 export function pathFlagsForRoute(route: Route, commandId: string): string[] {
   const resource = resourceOf(commandId);
   const segments = pathSegments(route.path);
   return segments.flatMap((segment, index) => {
     if (!isParameter(segment)) return [];
-    const collection = toKebabCase(segments[index - 1] ?? "");
+    const collection = resourceName(toKebabCase(segments[index - 1] ?? ""));
     if (collection === resource) return ["id"];
     // On the Management API a parent parameter keeps its API name, `{projectId}` is
     // `--project-id`: `--project` is the global flag that names a config file entry.
-    return [
-      VERSION_PREFIX.test(route.path) ? toKebabCase(segment.slice(1, -1)) : singular(collection),
-    ];
+    return [VERSION_PREFIX.test(route.path) ? toKebabCase(segment.slice(1, -1)) : collection];
   });
 }
 
 /**
  * The flag of a Management API route that identifies a Cloud project, which
  * `--project <name>` can fill from the config file (rule 4): `id` on the
- * `projects` commands, `project-id` under a project, nothing otherwise.
+ * `project` commands, `project-id` under a project, nothing otherwise.
  */
 export function projectFlagForRoute(route: Route): "id" | "project-id" | undefined {
   const commandId = VERSION_PREFIX.test(route.path) ? commandIdFor(route) : null;
   if (commandId === null) return undefined;
   const flags = pathFlagsForRoute(route, commandId);
   if (flags.includes("project-id")) return "project-id";
-  return resourceOf(commandId) === "projects" && flags.includes("id") ? "id" : undefined;
+  return resourceOf(commandId) === "project" && flags.includes("id") ? "id" : undefined;
 }
 
 function resolveSchema(
@@ -465,7 +487,7 @@ function bodyFields(spec: OpenApiDocument, operation: OpenApiOperation): string[
  * The flags a route accepts besides its path flags (rules 5 and 6): its query
  * parameters and body fields in kebab-case, the identifiers among them named
  * by what they identify with the API spelling as an alias, the `--new-id` of
- * `update indexes`, and the flags of its exception.
+ * `index update`, and the flags of its exception.
  */
 export function flagsForRoute(spec: OpenApiDocument, route: Route, commandId: string): Set<string> {
   const operation = findOperation(spec, route);
@@ -483,8 +505,7 @@ export function flagsForRoute(spec: OpenApiDocument, route: Route, commandId: st
   for (const name of [...query, ...bodyFields(spec, operation)]) {
     const identifier = IDENTIFIERS[name];
     if (identifier !== undefined) {
-      const own =
-        identifier.of === "own" || (resource !== undefined && identifier.of === singular(resource));
+      const own = identifier.of === "own" || identifier.of === resource;
       if (own && identifier.flag === "id" && hasPathId) flags.add("new-id");
       else flags.add(own ? identifier.flag : `${identifier.of}-${identifier.flag}`);
     }
@@ -493,10 +514,7 @@ export function flagsForRoute(spec: OpenApiDocument, route: Route, commandId: st
   return flags;
 }
 
-/**
- * Every flag a command accepts, over all of its routes, with `--id` as an
- * alias of `--ids` when no route takes a path `id` (rule 4).
- */
+/** Every flag a command accepts, over all of its routes. */
 export function flagsForCommand(
   spec: OpenApiDocument,
   routes: readonly Route[],
@@ -507,8 +525,6 @@ export function flagsForCommand(
     for (const flag of pathFlagsForRoute(route, commandId)) flags.add(flag);
     for (const flag of flagsForRoute(spec, route, commandId)) flags.add(flag);
   }
-  const hasPathId = routes.some((route) => pathFlagsForRoute(route, commandId).includes("id"));
-  if (flags.has("ids") && !hasPathId) flags.add("id");
   return flags;
 }
 

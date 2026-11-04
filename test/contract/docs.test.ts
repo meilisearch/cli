@@ -81,7 +81,7 @@ describe("the guides cite things that exist", () => {
     for (const line of readDoc("README.md").split("\n")) {
       if (line.includes("not shipped")) continue;
       for (const span of codeSpans(line)) {
-        const id = span.match(/^meili ([a-z-]+(?: [a-z-]+)?)/)?.[1];
+        const id = span.match(/^meili ([a-z][a-z-]*(?: [a-z][a-z-]*)?)/)?.[1];
         if (id === undefined || id.startsWith("-")) continue;
         expect(manifestIds, `README shows \`${span}\`, which is not a command`).toContain(id);
       }

@@ -2,4 +2,4 @@
 "@meilisearch/cli": minor
 ---
 
-Add `meili get teams`, `meili add teams --organization-id <id>`, `meili update teams --id <id>` and `meili delete teams --id <id> --yes`.
+Add `meili team list`, `meili team view --id <id>`, `meili team add --organization-id <id>`, `meili team update --id <id>` and `meili team delete --id <id> --yes`.

@@ -22,7 +22,7 @@ if (!specs.meilisearch) {
   process.exit(1);
 }
 
-/** Command id, `get indexes`, to the routes its class declares. */
+/** Command id, `index list`, to the routes its class declares. */
 const implemented = new Map();
 for (const file of await Array.fromAsync(glob("dist/commands/**/*.js", { cwd: ROOT }))) {
   const command = (await import(pathToFileURL(join(ROOT, file)).href)).default;

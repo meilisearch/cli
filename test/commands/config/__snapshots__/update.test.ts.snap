@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`meili config update > prints its help without any network call 1`] = `
-"Change the fields given of a project of the config file; refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.
+"Change a project of the config file.
 
 USAGE
   $ meili config update --project <name> [-o <mode>] [--debug]
@@ -10,8 +10,8 @@ USAGE
 FLAGS
   -o, --output=<mode>          json (default): one document, the API body as it
                                is, indented in a terminal, compact when piped.
-                               ndjson: one item per line, list commands only,
-                               streams with --all.
+                               ndjson: one item per line, only for the commands
+                               that print a list of items, streams with --all.
       --debug                  Print every HTTP request and response on stderr,
                                secrets redacted.
       --project=<name>         (required) Name of the project to change.
@@ -23,8 +23,10 @@ FLAGS
                                entry has no key. Never replaces a key.
 
 DESCRIPTION
-  Change the fields given of a project of the config file; refuses a name that
-  does not exist. Talks to the Management API only with --sync-with-cloud.
+  Change a project of the config file.
+
+  Changes the fields given, and refuses a name that does not exist. Talks to the
+  Management API only with --sync-with-cloud.
 
   The file holds API keys and decides where every later command goes, for every
   process that reads it: an agent runs this only when the human asked for it

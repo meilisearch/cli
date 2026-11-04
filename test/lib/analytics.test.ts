@@ -2,7 +2,7 @@ import { existsSync, mkdtempSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { HttpResponse, http } from "msw";
 import { describe, expect, it, vi } from "vitest";
-import GetHealth from "../../src/commands/get/health.js";
+import Health from "../../src/commands/health.js";
 import {
   flagNames,
   identify,
@@ -53,12 +53,16 @@ const health = ["--project-url", MEILISEARCH_URL, "-o", "json"];
 
 describe("analytics", () => {
   it("sends one cli_command_run with the names of the flags, never their values", async () => {
-    server.use(meilisearchHandlers.health());
+    server.use(meilisearchHandlers.indexes([]));
     const batches = posthog();
-    // Through oclif, which gives the command its id.
-    const result = await runCli(["get", "health", ...health], { env: analyticsEnv() });
+    // Through oclif, which gives the command its id, `index:list`.
+    const result = await runCli(["index", "list", ...health], { env: analyticsEnv() });
 
-    expect(result).toEqual({ stdout: '{"status":"available"}\n', stderr: "", exitCode: 0 });
+    expect(result).toEqual({
+      stdout: '{"results":[],"offset":0,"limit":20,"total":0}\n',
+      stderr: "",
+      exitCode: 0,
+    });
     expect(batches).toHaveLength(1);
     expect(batches[0]?.api_key).toMatch(/^phc_/);
     expect(batches[0]?.batch).toEqual([
@@ -67,7 +71,7 @@ describe("analytics", () => {
         distinct_id: expect.stringMatching(/^[0-9a-f-]{36}$/),
         timestamp: expect.any(String),
         properties: expect.objectContaining({
-          command: "get health",
+          command: "index list",
           flags: ["project-url", "output"],
           exit_code: 0,
           site: "cli",
@@ -83,8 +87,8 @@ describe("analytics", () => {
     const batches = posthog();
     const env = analyticsEnv();
     Object.defineProperty(process.stderr, "isTTY", { value: true, configurable: true });
-    const first = await runCommand(GetHealth, health, { env });
-    const second = await runCommand(GetHealth, health, { env });
+    const first = await runCommand(Health, health, { env });
+    const second = await runCommand(Health, health, { env });
     Object.defineProperty(process.stderr, "isTTY", { value: undefined, configurable: true });
 
     const file = readJson(join(dirname(env.MEILI_CONFIG as string), "analytics.json"));
@@ -104,7 +108,7 @@ describe("analytics", () => {
       }),
     );
     const batches = posthog();
-    const result = await runCommand(GetHealth, health, { env: analyticsEnv() });
+    const result = await runCommand(Health, health, { env: analyticsEnv() });
 
     expect(result.exitCode).toBe(1);
     expect(batches[0]?.batch[0]?.properties).toMatchObject({
@@ -123,7 +127,7 @@ describe("analytics", () => {
   ])("sends nothing and writes no id with %o", async (overrides) => {
     server.use(meilisearchHandlers.health());
     const env = analyticsEnv(overrides);
-    const requests = await countRequests(() => runCommand(GetHealth, health, { env }));
+    const requests = await countRequests(() => runCommand(Health, health, { env }));
 
     expect(requests).toBe(1);
     expect(existsSync(join(dirname(env.MEILI_CONFIG as string), "analytics.json"))).toBe(false);
@@ -134,7 +138,7 @@ describe("analytics", () => {
       meilisearchHandlers.health(),
       http.post(`${ANALYTICS_URL}/batch/`, () => HttpResponse.error()),
     );
-    const result = await runCommand(GetHealth, health, { env: analyticsEnv() });
+    const result = await runCommand(Health, health, { env: analyticsEnv() });
 
     expect(result).toEqual({ stdout: '{"status":"available"}\n', stderr: "", exitCode: 0 });
   });
@@ -162,13 +166,13 @@ describe("analytics", () => {
     server.use(meilisearchHandlers.health());
     const batches = posthog();
     const env = analyticsEnv();
-    await runCommand(GetHealth, health, { env });
+    await runCommand(Health, health, { env });
     const anonymous = batches[0]?.batch[0]?.distinct_id;
 
     const userId = await identify(env, async () => "user-uuid");
     storeSession(env, "https://api.meilisearch.com", { userId });
     await sendAnalytics(env, { command: "auth login" });
-    await runCommand(GetHealth, health, { env });
+    await runCommand(Health, health, { env });
 
     expect(userId).toBe("user-uuid");
     expect(batches[1]?.batch[0]).toMatchObject({
@@ -194,9 +198,9 @@ describe("analytics", () => {
     server.use(meilisearchHandlers.health());
     const batches = posthog();
     const env = analyticsEnv();
-    await runCommand(GetHealth, health, { env });
+    await runCommand(Health, health, { env });
     resetAnonymousId(env);
-    await runCommand(GetHealth, health, { env });
+    await runCommand(Health, health, { env });
 
     expect(batches[1]?.batch[0]?.distinct_id).not.toBe(batches[0]?.batch[0]?.distinct_id);
   });

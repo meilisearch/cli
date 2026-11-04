@@ -76,10 +76,10 @@ describe("MeiliCliError", () => {
   it("accepts an explicit exit code and a hint", () => {
     const error = new MeiliCliError("cli_config", "Index `x` not found.", {
       exitCode: EXIT_CODES.notFound,
-      hint: "Run `meili get indexes`.",
+      hint: "Run `meili index list`.",
     });
     expect(error.exitCode).toBe(4);
-    expect(error.toBody().hint).toBe("Run `meili get indexes`.");
+    expect(error.toBody().hint).toBe("Run `meili index list`.");
   });
 });
 
@@ -158,17 +158,40 @@ describe("toRenderedError", () => {
   });
 
   it("suggests the closest command when the typo is small, and never asks", () => {
-    const commandIds = ["get health", "get indexes", "delete indexes", "schema"];
-    const close = toRenderedError(
-      new Errors.CLIError("command delete:index not found"),
-      commandIds,
+    const commandIds = ["health", "index list", "index add", "schema"];
+    const hint = (message: string) =>
+      toRenderedError(new Errors.CLIError(message), commandIds).body.hint;
+    expect(hint("command index:lst not found")).toBe("Did you mean `meili index list`?");
+    expect(hint("command frobnicate not found")).toContain("--help");
+  });
+
+  it("finds the command behind the old order, a plural or the verb of another CLI", () => {
+    const commandIds = ["health", "index list", "index add", "schema"];
+    const hint = (typed: string) =>
+      toRenderedError(new Errors.CLIError(`command ${typed} not found`), commandIds).body.hint;
+    expect(hint("get indexes")).toBe("Did you mean `meili index list`?");
+    expect(hint("indexes list")).toBe("Did you mean `meili index list`?");
+    expect(hint("index create")).toBe("Did you mean `meili index add`?");
+    expect(hint("get health")).toBe("Did you mean `meili health`?");
+  });
+
+  it("reads an old `get` given --id as `view`", () => {
+    const rendered = toRenderedError(
+      new Errors.CLIError("command get indexes not found"),
+      ["index list", "index view"],
+      false,
+      ["get", "indexes", "--id", "movies"],
     );
-    expect(close.body.hint).toBe("Did you mean `meili delete indexes`?");
-    expect(
-      toRenderedError(new Errors.CLIError("command get:indexs not found"), commandIds).body.hint,
-    ).toBe("Did you mean `meili get indexes`?");
-    const far = toRenderedError(new Errors.CLIError("command frobnicate not found"), commandIds);
-    expect(far.body.hint).toContain("--help");
+    expect(rendered.body.hint).toBe("Did you mean `meili index view`?");
+  });
+
+  it("says that a command takes no positional argument", () => {
+    const rendered = toRenderedError(new Errors.CLIError("command index list movies not found"), [
+      "index list",
+    ]);
+    expect(rendered.body.hint).toBe(
+      "`meili index list` takes no positional argument: give each value with its flag. Run `meili index list --help` to see them.",
+    );
   });
 
   it("keeps the exit code of an ExitError, which was rendered upstream", () => {

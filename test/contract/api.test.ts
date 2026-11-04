@@ -16,7 +16,6 @@ import {
   flagsForRoute,
   hasRoute,
   keyActionsForRoutes,
-  LITERAL_VERBS,
   matchesRoutePattern,
   type OpenApiDocument,
   parseRoute,
@@ -72,7 +71,6 @@ const globalFlags = [
   ...Object.keys(BaseCommand.baseFlags),
   ...Object.keys(BaseCommand.connectionFlags),
 ];
-const VERBS = ["get", "add", "update", "delete", ...LITERAL_VERBS];
 
 /** The commands of the "Commands without an API" table of commands.md. */
 const listedCommands = tableRows(
@@ -182,16 +180,17 @@ describe("commands without an API", () => {
     ...derived.meilisearch.keys(),
     ...(derived.management?.keys() ?? []),
   ]);
+  const apiResources = new Set([...apiCommands].map((id) => id.split(" ")[0]));
   const withoutRoute = commands.filter(
     ({ id, command }) => command.api === "none" || listedCommands.includes(id),
   );
   for (const { id, command } of withoutRoute) {
-    it(`meili ${id} has no route, is in the table of commands.md and takes neither the name of an API command nor a verb`, () => {
+    it(`meili ${id} has no route, is in the table of commands.md and takes neither the name of an API command nor of an API resource`, () => {
       expect(command.routes ?? []).toEqual([]);
       expect(listedCommands).toContain(id);
       expect(command.keyActions ?? []).toEqual([]);
       expect(apiCommands).not.toContain(id);
-      expect(VERBS).not.toContain(id.split(" ")[0]);
+      expect(apiResources).not.toContain(id.split(" ")[0]);
     });
   }
   it("the table of commands.md lists only commands that exist", () => {

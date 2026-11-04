@@ -1,0 +1,82 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili project add > fails with cli_timeout and exit 5 when the project is not running within --timeout 1`] = `
+{
+  "exitCode": 5,
+  "stderr": "{"error":{"code":"cli_timeout","type":"cli","message":"Project 343 did not reach status running or failed within 50ms. Its creation goes on on the server.","hint":"Run \`meili project view --id 343\` to check its status."}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili project add > passes the API's error body through on a 403, with exit 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili project add > prints its help without any network call 1`] = `
+"Create a Meilisearch Cloud project.
+
+USAGE
+  $ meili project add [-o <mode>] [--debug] [--name <name>] [--team-id
+    <id>] [--resource-id <id>] [--ms-version <version>] [--sync-config]
+    [--timeout <duration> --wait] [--file <path> | --data <json>]
+
+FLAGS
+  -o, --output=<mode>         json (default): one document, the API body as it
+                              is, indented in a terminal, compact when piped.
+                              ndjson: one item per line, only for the commands
+                              that print a list of items, streams with --all.
+      --data=<json>           Inline JSON body.
+      --debug                 Print every HTTP request and response on stderr,
+                              secrets redacted.
+      --file=<path>           Read the body from a file. \`-\` reads from stdin.
+      --ms-version=<version>  Meilisearch version of the project, the latest by
+                              default.
+      --name=<name>           Name of the project.
+      --resource-id=<id>      Resource of the project: its plan and its region.
+      --sync-config           Add the project to the config file, as an entry
+                              named after it with its URL, its master key and
+                              its cloud identifiers.
+      --team-id=<id>          Team that owns the project.
+      --timeout=<duration>    Maximum wait time, for example 30s, 2m. Default
+                              10m. Only with --wait.
+      --wait                  Poll the project until its status is running or
+                              failed, then print it.
+
+DESCRIPTION
+  Create a Meilisearch Cloud project.
+
+  Creates it in a team, on a resource. The master key is printed masked: give
+  --sync-config to write it to the config file instead.
+
+EXAMPLES
+  $ meili project add --name demo --team-id 12 --resource-id 3
+
+  $ meili project add --name demo --team-id 12 --resource-id 3 --output json
+
+  $ meili project add --name demo --team-id 12 --resource-id 3 --sync-config
+
+  $ meili project add --name demo --team-id 12 --resource-id 3 --wait --sync-config
+
+  $ meili project add --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0
+
+  $ meili project add --data '{"name":"demo","teamId":12,"resourceId":3}'
+
+  $ meili project add --file project.json --name other-name
+
+"
+`;
+
+exports[`meili project add > sends the flags as the project body with the token, and prints the project created 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"id":343,"name":"demo","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","masterKey":"****9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","plan":"build","regionId":1}}
+",
+}
+`;

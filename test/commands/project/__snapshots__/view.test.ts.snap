@@ -1,0 +1,52 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili project view > gets one project with --id, or with --project and its cloud.id 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"id":344,"name":"staging","projectUid":"ms-abc","url":"https://ms-def.sfo.meilisearch.io","masterKey":"projectmasterkey9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","plan":"build","regionId":1}}
+",
+}
+`;
+
+exports[`meili project view > passes the API's error body through on an unknown id, with exit 3 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili project view > prints its help without any network call 1`] = `
+"Get one Meilisearch Cloud project.
+
+USAGE
+  $ meili project view [-o <mode>] [--debug] [--project <name>] [--id <id>]
+
+FLAGS
+  -o, --output=<mode>   json (default): one document, the API body as it is,
+                        indented in a terminal, compact when piped. ndjson: one
+                        item per line, only for the commands that print a list
+                        of items, streams with --all.
+      --debug           Print every HTTP request and response on stderr, secrets
+                        redacted.
+      --id=<id>         The project to get, or give --project <name> and its
+                        cloud.id from the config file.
+      --project=<name>  A project of the config file, whose cloud.id names the
+                        Cloud project, in place of --id.
+
+DESCRIPTION
+  Get one Meilisearch Cloud project.
+
+  --id or --project names it.
+
+EXAMPLES
+  $ meili project view --id 343
+
+  $ meili project view --id 343 --output json
+
+  $ meili project view --project prod
+
+"
+`;

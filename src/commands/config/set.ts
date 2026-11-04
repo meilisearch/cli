@@ -13,8 +13,9 @@ import { readStdin } from "../../lib/input.js";
 export default class ConfigSet extends BaseCommand {
   static api: Api = "none";
 
-  static override description =
-    `Set a project in the config file, creating the file owner-only; refuses a name that exists. Talks to the Management API only with --sync-with-cloud.
+  static override description = `Add a project to the config file.
+
+Creates the file, owner-only, and refuses a name that exists. Talks to the Management API only with --sync-with-cloud.
 
 ${CONFIG_FILE_WARNING}`;
 

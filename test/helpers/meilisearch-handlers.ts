@@ -76,13 +76,7 @@ export const meilisearchHandlers = {
     ),
 
   /** `GET /indexes/{uid}` answering the index from `all`, or the 404 body of Meilisearch. */
-  index: (all: IndexObject[]) =>
-    http.get(`${MEILISEARCH_URL}/indexes/:uid`, ({ params }) => {
-      const found = all.find((index) => index.uid === params.uid);
-      return found === undefined
-        ? HttpResponse.json(indexNotFoundError(String(params.uid)), { status: 404 })
-        : HttpResponse.json(found);
-    }),
+  index: (all: IndexObject[]) => unitRoute("/indexes/:id", "index", all, (index) => index.uid),
 
   /** `POST /indexes`, the creation route. */
   indexCreate: (task: EnqueuedTask) =>
@@ -116,6 +110,10 @@ export const meilisearchHandlers = {
         total: matching.length,
       });
     }),
+
+  /** `GET /indexes/{uid}/documents/{id}` answering the document from `all`, or the 404 body of Meilisearch. */
+  document: (all: RecordAny[]) =>
+    unitRoute("/indexes/:uid/documents/:id", "document", all, (document) => document.id),
 
   /** `POST /indexes/{uid}/documents`, the addition route. */
   documentsAdd: (task: EnqueuedTask) =>
@@ -223,6 +221,12 @@ export const meilisearchHandlers = {
       HttpResponse.json(cursorPage(all, request.url, "batchUids")),
     ),
 
+  /** `GET /tasks/{uid}` answering the task from `all`, or the 404 body of Meilisearch. */
+  task: (all: Task[]) => unitRoute("/tasks/:id", "task", all, (task) => task.uid),
+
+  /** `GET /batches/{uid}` answering the batch from `all`, or the 404 body of Meilisearch. */
+  batch: (all: Batch[]) => unitRoute("/batches/:id", "batch", all, (batch) => batch.uid),
+
   /** `GET /keys`, the same offset paging as the indexes. */
   keys: (all: Key[]) =>
     http.get(`${MEILISEARCH_URL}/keys`, ({ request }) =>
@@ -294,14 +298,27 @@ export const apiKeyNotFoundError: MeilisearchErrorResponse = {
   link: "https://docs.meilisearch.com/errors#api_key_not_found",
 };
 
-/** The error body Meilisearch returns for an index that does not exist. */
-function indexNotFoundError(uid: string): MeilisearchErrorResponse {
+/** The 404 body Meilisearch returns for a `resource` that does not exist: `index_not_found`, `task_not_found`. */
+function notFoundError(resource: string, message: string): MeilisearchErrorResponse {
   return {
-    message: `Index \`${uid}\` not found.`,
-    code: "index_not_found",
+    message,
+    code: `${resource}_not_found`,
     type: "invalid_request",
-    link: "https://docs.meilisearch.com/errors#index_not_found",
+    link: `https://docs.meilisearch.com/errors#${resource}_not_found`,
   };
+}
+
+/** `GET <path>` answering the item of `all` whose identifier is `:id`, or the 404 body of `resource`. */
+function unitRoute<T>(path: string, resource: string, all: T[], idOf: (item: T) => unknown) {
+  return http.get(`${MEILISEARCH_URL}${path}`, ({ params }) => {
+    const found = all.find((item) => String(idOf(item)) === params.id);
+    const name = `${resource[0]?.toUpperCase()}${resource.slice(1)}`;
+    return found === undefined
+      ? HttpResponse.json(notFoundError(resource, `${name} \`${params.id}\` not found.`), {
+          status: 404,
+        })
+      : HttpResponse.json(found);
+  });
 }
 
 export function makeIndex(uid: string, primaryKey?: string): IndexObject {

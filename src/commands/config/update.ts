@@ -14,8 +14,9 @@ import { readStdin } from "../../lib/input.js";
 export default class ConfigUpdate extends BaseCommand {
   static api: Api = "none";
 
-  static override description =
-    `Change the fields given of a project of the config file; refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.
+  static override description = `Change a project of the config file.
+
+Changes the fields given, and refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.
 
 ${CONFIG_FILE_WARNING}`;
 

@@ -38,7 +38,7 @@ export interface WriteDataOptions {
   mode: OutputMode;
   /** Indent the JSON. True when stdout is a TTY. */
   stdoutIsTTY: boolean;
-  /** Only list commands support `ndjson`. Defaults to false. */
+  /** Only the commands that print a list of items support `ndjson`. Defaults to false. */
   supportsNdjson?: boolean;
 }
 
@@ -50,7 +50,7 @@ export function formatData(value: unknown, options: WriteDataOptions): string {
   if (options.supportsNdjson !== true) {
     throw new MeiliCliError(
       "cli_usage",
-      "The `ndjson` output mode is only available on list commands. Use `--output json`.",
+      "The `ndjson` output mode is only available on the commands that print a list of items. Use `--output json`.",
     );
   }
   const items = Array.isArray(value) ? value : [value];

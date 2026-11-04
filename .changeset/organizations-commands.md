@@ -2,4 +2,4 @@
 "@meilisearch/cli": minor
 ---
 
-Add `meili get organizations`, `meili update organizations --id <id>` and `meili delete organizations --id <id> --yes`.
+Add `meili organization list`, `meili organization view --id <id>`, `meili organization update --id <id>` and `meili organization delete --id <id> --yes`.

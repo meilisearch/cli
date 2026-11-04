@@ -11,8 +11,9 @@ export default class Search extends BaseCommand {
 
   static keyActions = ["search"];
 
-  static override description =
-    "Search the documents of an index, with --q and the search parameters of the route.";
+  static override description = `Search the documents of an index.
+
+--q and the search parameters of the route shape the search.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --q nosferatu",

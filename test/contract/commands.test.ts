@@ -141,7 +141,7 @@ describe("delete commands require --yes (ADR 0007)", () => {
       expect(
         module.default?.flags?.yes?.required === true,
         `${file}: --yes is required on the commands of the verb delete, and only there`,
-      ).toBe(file.startsWith("src/commands/delete/"));
+      ).toBe(file.endsWith("/delete.ts"));
     }
   });
 });

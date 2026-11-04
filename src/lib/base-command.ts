@@ -36,6 +36,13 @@ import { isPromptExit } from "./terminal.js";
 /** The API a command talks to. `none` commands work offline. */
 export type Api = "meilisearch" | "management" | "none";
 
+/** The statics every command declares beyond oclif's, as the manifest carries them. */
+export type LoadableCommand = Command.Loadable & {
+  api: Api;
+  routes: readonly string[];
+  keyActions: readonly string[];
+};
+
 export type GlobalFlags = Interfaces.InferredFlags<
   typeof BaseCommand.baseFlags &
     typeof BaseCommand.connectionFlags &
@@ -60,9 +67,10 @@ export abstract class BaseCommand extends Command {
 
   /**
    * The routes an API command covers, `METHOD /path` as written in the OpenAPI
-   * document: every route of its verb and resource. The command name and flags
-   * derive from them (docs/contract/commands.md, "Naming rules"), and the flags
-   * given select the route. Commands with `api = "none"` leave it empty.
+   * document: every route of its resource and verb. The command name and flags
+   * derive from them (docs/contract/commands.md, "Naming rules"), and when there
+   * are several, the flags given select the route. Commands with `api = "none"`
+   * leave it empty.
    */
   static routes: readonly string[] = [];
 
@@ -81,7 +89,7 @@ export abstract class BaseCommand extends Command {
       char: "o",
       options: ["json", "ndjson"] as const,
       description:
-        "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+        "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
       helpValue: "<mode>",
     })(),
     debug: Flags.boolean({
@@ -402,7 +410,7 @@ export abstract class BaseCommand extends Command {
       throw new MeiliCliError(
         "cli_task_failed",
         `Task ${finalTask.uid} finished with status ${finalTask.status}.`,
-        { hint: `Run \`meili get tasks --ids ${finalTask.uid}\` to see the error details.` },
+        { hint: `Run \`meili task view --id ${finalTask.uid}\` to see the error details.` },
       );
     }
   }

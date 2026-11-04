@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`meili auth refresh > prints its help without any network call 1`] = `
-"Trade the refresh token of the stored session for a new access token, before it expires.
+"Refresh the Meilisearch Cloud session.
 
 USAGE
   $ meili auth refresh [-o <mode>] [--debug]
@@ -9,12 +9,15 @@ USAGE
 FLAGS
   -o, --output=<mode>  json (default): one document, the API body as it is,
                        indented in a terminal, compact when piped. ndjson: one
-                       item per line, list commands only, streams with --all.
+                       item per line, only for the commands that print a list of
+                       items, streams with --all.
       --debug          Print every HTTP request and response on stderr, secrets
                        redacted.
 
 DESCRIPTION
-  Trade the refresh token of the stored session for a new access token, before
+  Refresh the Meilisearch Cloud session.
+
+  Trades the refresh token of the stored session for a new access token, before
   it expires.
 
 EXAMPLES

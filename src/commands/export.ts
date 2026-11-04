@@ -15,8 +15,9 @@ export default class Export extends BaseCommand {
 
   static keyActions = ["export"];
 
-  static override description =
-    `Send the documents and the settings of the source instance to the destination instance, and answer the task that does it.
+  static override description = `Export the data of the instance to another instance.
+
+Sends the documents and the settings to the destination instance, and prints the task that does it.
 
 The source is the project this command connects to, named by --project, --project-url and --project-api-key as on every command: it receives the request and does the export. The destination is --url with --api-key, or --project-destination, an entry of the config file. --indexes narrows the export to the indexes those patterns match.`;
 

@@ -10,7 +10,7 @@ exports[`meili config set > keeps the key given, and writes the entry without a 
 `;
 
 exports[`meili config set > prints its help without any network call 1`] = `
-"Set a project in the config file, creating the file owner-only; refuses a name that exists. Talks to the Management API only with --sync-with-cloud.
+"Add a project to the config file.
 
 USAGE
   $ meili config set --project <name> --project-url <url> [-o <mode>]
@@ -19,8 +19,8 @@ USAGE
 FLAGS
   -o, --output=<mode>          json (default): one document, the API body as it
                                is, indented in a terminal, compact when piped.
-                               ndjson: one item per line, list commands only,
-                               streams with --all.
+                               ndjson: one item per line, only for the commands
+                               that print a list of items, streams with --all.
       --debug                  Print every HTTP request and response on stderr,
                                secrets redacted.
       --project=<name>         (required) Name of the project to set.
@@ -32,8 +32,10 @@ FLAGS
                                entry has no key. Never replaces a key.
 
 DESCRIPTION
-  Set a project in the config file, creating the file owner-only; refuses a name
-  that exists. Talks to the Management API only with --sync-with-cloud.
+  Add a project to the config file.
+
+  Creates the file, owner-only, and refuses a name that exists. Talks to the
+  Management API only with --sync-with-cloud.
 
   The file holds API keys and decides where every later command goes, for every
   process that reads it: an agent runs this only when the human asked for it

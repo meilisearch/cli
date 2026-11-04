@@ -1,0 +1,54 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili task view > passes the 404 of an unknown task through and exits 4 1`] = `
+{
+  "exitCode": 4,
+  "stderr": "{"error":{"code":"task_not_found","type":"invalid_request","message":"Task \`7\` not found.","link":"https://docs.meilisearch.com/errors#task_not_found"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili task view > prints its help without any network call 1`] = `
+"Get one task.
+
+USAGE
+  $ meili task view --id <uid> [-o <mode>] [--debug] [--project-url
+    <url>] [--project-api-key <key>] [--project <name>]
+
+FLAGS
+  -o, --output=<mode>          json (default): one document, the API body as it
+                               is, indented in a terminal, compact when piped.
+                               ndjson: one item per line, only for the commands
+                               that print a list of items, streams with --all.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --id=<uid>               (required) The task uid.
+      --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. One of --project or
+                               --project-url is required.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
+
+DESCRIPTION
+  Get one task.
+
+  Prints its status and its error.
+
+EXAMPLES
+  $ meili task view --project prod --id 42
+
+  $ meili task view --project prod --id 42 --output json
+
+"
+`;
+
+exports[`meili task view > prints the task as the API returns it, with no list envelope 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"indexUid":"movies","type":"indexCreation","enqueuedAt":"2026-09-24T10:00:00Z","startedAt":null,"finishedAt":null,"duration":null,"batchUid":null,"canceledBy":null,"uid":42,"status":"failed"}
+",
+}
+`;

@@ -1,7 +1,7 @@
 /** Secrets never reach stderr, not even in --debug traces. */
 import { describe, expect, it } from "vitest";
-import AddProjects from "../../src/commands/add/projects.js";
-import Health from "../../src/commands/get/health.js";
+import Health from "../../src/commands/health.js";
+import ProjectAdd from "../../src/commands/project/add.js";
 import { MANAGEMENT_URL, managementHandlers, project } from "../helpers/management-handlers.js";
 import { MEILISEARCH_URL, meilisearchHandlers } from "../helpers/meilisearch-handlers.js";
 import { server, useMockServer } from "../helpers/msw.js";
@@ -48,13 +48,9 @@ describe("--debug", () => {
 
   it("masks the management token and the project's masterKey in the trace and on stdout", async () => {
     server.use(managementHandlers.createProject());
-    const result = await runCommand(
-      AddProjects,
-      ["--debug", "--name", "demo", "--output", "json"],
-      {
-        env: { MEILI_MANAGEMENT_TOKEN: SECRET, MEILI_MANAGEMENT_URL: MANAGEMENT_URL },
-      },
-    );
+    const result = await runCommand(ProjectAdd, ["--debug", "--name", "demo", "--output", "json"], {
+      env: { MEILI_MANAGEMENT_TOKEN: SECRET, MEILI_MANAGEMENT_URL: MANAGEMENT_URL },
+    });
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toContain(`> POST ${MANAGEMENT_URL}/api/v2/projects`);
     expect(result.stderr).toContain("> authorization: Bearer ****1a2b");

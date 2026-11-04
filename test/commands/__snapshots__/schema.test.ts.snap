@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`meili schema > prints its help without any network call 1`] = `
-"Print one line per command, or one command in full with --command, from the oclif manifest.
+"Describe the commands as JSON.
 
 USAGE
   $ meili schema [-o <mode>] [--debug] [--command <command>]
@@ -9,8 +9,8 @@ USAGE
 FLAGS
   -o, --output=<mode>      json (default): one document, the API body as it is,
                            indented in a terminal, compact when piped. ndjson:
-                           one item per line, list commands only, streams with
-                           --all.
+                           one item per line, only for the commands that print a
+                           list of items, streams with --all.
       --command=<command>  Print this command in full instead of the index: its
                            API, its routes, its key actions, the flags it
                            declares itself and its examples.
@@ -18,7 +18,9 @@ FLAGS
                            secrets redacted.
 
 DESCRIPTION
-  Print one line per command, or one command in full with --command, from the
+  Describe the commands as JSON.
+
+  Prints one line per command, or one command in full with --command, from the
   oclif manifest.
 
 EXAMPLES
@@ -26,7 +28,7 @@ EXAMPLES
 
   $ meili schema --output json
 
-  $ meili schema --command "get indexes"
+  $ meili schema --command "index list"
 
   $ meili schema | jq '.commands[].id'
 
@@ -37,7 +39,7 @@ exports[`meili schema > refuses an unknown command with cli_usage and exit 2 1`]
 {
   "error": {
     "code": "cli_usage",
-    "hint": "Did you mean \`meili schema --command "get indexes"\`?",
+    "hint": "Did you mean \`meili schema --command "index list"\`?",
     "message": "\`get indexs\` is not a command of meili.",
     "type": "cli",
   },

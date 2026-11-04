@@ -39,7 +39,16 @@ export const DEFAULT_MANAGEMENT_CLIENT_ID = "meilisearch-cli";
  * `flag` names the flag that carries the same setting: the two share their name,
  * `MEILI_` plus the flag name in upper snake case (CLAUDE.md, rule 14).
  */
-export const ENV_VARS: ReadonlyArray<{ name: string; description: string; flag?: string }> = [
+/**
+ * The variables of docs/contract/config.md. A `development` one is for working on
+ * the CLI: `CONTRIBUTING.md` documents it, and `meili --help` leaves it out.
+ */
+export const ENV_VARS: ReadonlyArray<{
+  name: string;
+  description: string;
+  flag?: string;
+  development?: true;
+}> = [
   {
     name: ENV.CONFIG,
     description:
@@ -49,19 +58,23 @@ export const ENV_VARS: ReadonlyArray<{ name: string; description: string; flag?:
     name: ENV.MANAGEMENT_TOKEN,
     description:
       "Management API token, in place of the session of `auth login`. For development and tests.",
+    development: true,
   },
   {
     name: ENV.MANAGEMENT_URL,
     description: `Management API base URL. Default ${DEFAULT_MANAGEMENT_URL}. For development and tests.`,
+    development: true,
   },
   {
     name: ENV.MANAGEMENT_CLIENT_ID,
     description:
       "OAuth application the `auth login` command identifies itself with. Default: `meilisearch-cli`, the one of this CLI. For development and tests.",
+    development: true,
   },
   {
     name: ENV.MANAGEMENT_DASHBOARD_URL,
     description: `Dashboard URL, which hosts the consent page of \`auth login\`. Default ${DEFAULT_MANAGEMENT_DASHBOARD_URL}. For development and tests.`,
+    development: true,
   },
   { name: ENV.OUTPUT, description: "Default output mode: json or ndjson.", flag: "output" },
   { name: ENV.TIMEOUT, description: "Default --timeout for --wait.", flag: "timeout" },

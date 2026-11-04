@@ -3,8 +3,8 @@
  * `DELETE /tasks` and `GET /batches` take the same query parameters, so the
  * four commands spread the same flags and build the same query. Only the two
  * identifier flags differ: named by what they identify, bare `uids` are task
- * uids everywhere, so `get tasks` reads them as `--ids` and the batches as
- * `--batch-ids`, and `get batches` the other way round
+ * uids everywhere, so `task list` reads them as `--ids` and the batches as
+ * `--batch-ids`, and `batch list` the other way round
  * (docs/contract/commands.md, rule 5). The API spelling stays an alias.
  */
 import { Flags, type Interfaces } from "@oclif/core";
@@ -60,7 +60,7 @@ const queueFilterFlags = {
 
 export const taskFilterFlags = {
   ids: Flags.string({
-    aliases: ["uids", "id"],
+    aliases: ["uids"],
     description: "Task uids to match, comma-separated. `*` matches every one.",
     helpValue: "<uids>",
   }),
@@ -74,7 +74,7 @@ export const taskFilterFlags = {
 
 export const batchFilterFlags = {
   ids: Flags.string({
-    aliases: ["batch-uids", "id"],
+    aliases: ["batch-uids"],
     description: "Batch uids to match, comma-separated. `*` matches every one.",
     helpValue: "<uids>",
   }),

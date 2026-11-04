@@ -1,6 +1,6 @@
 ## What
 
-<!-- One sentence. Example: Add `meili get stats`. -->
+<!-- One sentence. Example: Add `meili stats`. -->
 
 ## Contract
 

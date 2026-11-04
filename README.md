@@ -50,11 +50,11 @@ The config file is `~/.config/meili/config.json` by default. `MEILI_CONFIG` sets
 **3. Run commands**, naming the project with `--project`:
 
 ```sh
-meili get indexes --project prod
+meili index list --project prod
 meili search --project prod --index movies --q "star wars"
-meili add documents --project local --index movies --file movies.json --wait
-meili update projects --project prod --name renamed   # a management command, on the Cloud project of the entry
-meili add projects --name demo --team-id 12 --resource-id 3 --sync-config   # creates a Cloud project and adds it to the file
+meili document add --project local --index movies --file movies.json --wait
+meili project update --project prod --name renamed   # a management command, on the Cloud project of the entry
+meili project add --name demo --team-id 12 --resource-id 3 --sync-config   # creates a Cloud project and adds it to the file
 ```
 
 `--project` is required on every command. Without a config file, give the instance directly: `--project-url <url> --project-api-key <key>`.
@@ -75,20 +75,20 @@ It asks for the project to move, from the config file or by its URL and key. It 
 
 ```sh
 meili auth login   # a human logs in once, in a browser
-meili add projects --name cloud --team-id <id> --resource-id <id> --sync-config --wait
+meili project add --name cloud --team-id <id> --resource-id <id> --sync-config --wait
 meili export --project local --project-destination cloud --wait
-meili get tasks --project cloud --statuses enqueued,processing   # run it again until it lists no task
+meili task list --project cloud --statuses enqueued,processing   # run it again until it lists no task
 ```
 
-The team id and the resource id can be fetched with `meili get teams` and `meili get resources`.
+The team id and the resource id can be fetched with `meili team list` and `meili resource list`.
 
 ## Documentation
 
 ```sh
 meili --help             # every command, global flag and environment variable
-meili get indexes --help # one command: flags, examples
+meili index list --help  # one command: flags, examples
 meili schema             # the command tree as JSON, one entry per command with its routes
-meili schema --command "get indexes" # one command in full, as JSON
+meili schema --command "index list" # one command in full, as JSON
 ```
 
 ## Analytics

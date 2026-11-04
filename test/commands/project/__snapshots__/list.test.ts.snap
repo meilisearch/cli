@@ -1,0 +1,51 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili project list > exits 6 on a 401 without a body 1`] = `
+{
+  "exitCode": 6,
+  "stderr": "{"error":{"code":"cli_network","type":"cli","message":"The server at https://management.test/api/v2/projects answered HTTP 401 without a Management API error body."}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili project list > lists the projects in the envelope the API returns, with no paging flag yet 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "{"page":1,"limit":20,"total":2,"totalPages":1,"results":[{"id":343,"name":"demo","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","masterKey":"projectmasterkey9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","plan":"build","regionId":1}},{"id":344,"name":"staging","projectUid":"ms-abc","url":"https://ms-def.sfo.meilisearch.io","masterKey":"projectmasterkey9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","plan":"build","regionId":1}}]}
+",
+}
+`;
+
+exports[`meili project list > prints its help without any network call 1`] = `
+"List the Meilisearch Cloud projects.
+
+USAGE
+  $ meili project list [-o <mode>] [--debug] [--team-id <id>]
+
+FLAGS
+  -o, --output=<mode>  json (default): one document, the API body as it is,
+                       indented in a terminal, compact when piped. ndjson: one
+                       item per line, only for the commands that print a list of
+                       items, streams with --all.
+      --debug          Print every HTTP request and response on stderr, secrets
+                       redacted.
+      --team-id=<id>   Only the projects of this team.
+
+DESCRIPTION
+  List the Meilisearch Cloud projects.
+
+  Only the projects the token sees.
+
+EXAMPLES
+  $ meili project list
+
+  $ meili project list --output json
+
+  $ meili project list --team-id 12
+
+  $ meili project list --output ndjson
+
+"
+`;
