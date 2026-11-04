@@ -15,11 +15,11 @@ export default class Search extends BaseCommand {
     "Search the documents of an index, with --q and the search parameters of the route.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --index movies --q nosferatu",
-    "<%= config.bin %> <%= command.id %> --index movies --q nosferatu --output json",
-    "<%= config.bin %> <%= command.id %> --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
-    "<%= config.bin %> <%= command.id %> --index movies --facets genres --attributes-to-retrieve id,title",
-    '<%= config.bin %> <%= command.id %> --index movies --data \'{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}\'',
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --q nosferatu",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --q nosferatu --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --facets genres --attributes-to-retrieve id,title",
+    '<%= config.bin %> <%= command.id %> --project prod --index movies --data \'{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}\'',
   ];
 
   static override flags = {

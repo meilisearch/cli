@@ -14,6 +14,7 @@ import {
   configFilePath,
   ENV,
   type Env,
+  nonEmpty,
   readConfigFile,
   resolveCloudProjectId,
   resolveProjectConnection,
@@ -250,7 +251,11 @@ export abstract class BaseCommand extends Command {
   /** Renders every error as the contract says, then exits with its code. */
   protected override async catch(error: unknown): Promise<never> {
     if (error instanceof Errors.ExitError) throw error;
-    const rendered = toRenderedError(error);
+    const rendered = toRenderedError(
+      error,
+      [],
+      nonEmpty(this.env[ENV.MANAGEMENT_TOKEN]) !== undefined,
+    );
     writeError(rendered, {
       pretty: process.stderr.isTTY === true,
       debug: this.globalFlags?.debug ?? this.argv.includes("--debug"),

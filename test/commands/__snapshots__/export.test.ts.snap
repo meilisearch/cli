@@ -66,17 +66,17 @@ DESCRIPTION
   export to the indexes those patterns match.
 
 EXAMPLES
-  $ meili export --url https://ms-1234.heaven.meilisearch.com --api-key <key>
+  $ meili export --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key>
 
-  $ meili export --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json
+  $ meili export --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json
 
   $ meili export --project staging --project-destination prod
 
-  $ meili export --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait
+  $ meili export --project prod --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait
 
-  $ meili export --url http://localhost:7701 --payload-size 24MiB
+  $ meili export --project prod --url http://localhost:7701 --payload-size 24MiB
 
-  $ meili export --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'
+  $ meili export --project prod --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'
 
 "
 `;

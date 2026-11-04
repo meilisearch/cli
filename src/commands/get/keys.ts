@@ -15,11 +15,11 @@ export default class GetKeys extends BaseCommand {
 The answer is the API body as it is, so it carries the \`key\` field of every key it returns: credentials that work, on stdout, like any other data.`;
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-    "<%= config.bin %> <%= command.id %> --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
-    "<%= config.bin %> <%= command.id %> --limit 5 --offset 10",
-    "<%= config.bin %> <%= command.id %> --all --output ndjson",
+    "<%= config.bin %> <%= command.id %> --project prod",
+    "<%= config.bin %> <%= command.id %> --project prod --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
+    "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10",
+    "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson",
   ];
 
   static override flags = {

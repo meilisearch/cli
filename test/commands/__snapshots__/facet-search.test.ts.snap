@@ -81,13 +81,13 @@ DESCRIPTION
   --q and --filter keep.
 
 EXAMPLES
-  $ meili facet-search --index movies --facet-name genres --facet-query ac
+  $ meili facet-search --project prod --index movies --facet-name genres --facet-query ac
 
-  $ meili facet-search --index movies --facet-name genres --facet-query ac --output json
+  $ meili facet-search --project prod --index movies --facet-name genres --facet-query ac --output json
 
-  $ meili facet-search --index movies --facet-name genres --q horror --filter 'rating > 4'
+  $ meili facet-search --project prod --index movies --facet-name genres --q horror --filter 'rating > 4'
 
-  $ meili facet-search --index movies --data '{"facetName":"genres","facetQuery":"ac"}'
+  $ meili facet-search --project prod --index movies --data '{"facetName":"genres","facetQuery":"ac"}'
 
 "
 `;

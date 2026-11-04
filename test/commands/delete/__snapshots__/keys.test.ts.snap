@@ -38,9 +38,9 @@ DESCRIPTION
   Delete an API key, which stops authenticating every request that carries it.
 
 EXAMPLES
-  $ meili delete keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes
+  $ meili delete keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes
 
-  $ meili delete keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json
+  $ meili delete keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json
 
 "
 `;

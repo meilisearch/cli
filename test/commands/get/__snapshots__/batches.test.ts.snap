@@ -76,17 +76,17 @@ DESCRIPTION
   --task-ids, --statuses and the other filters of the route.
 
 EXAMPLES
-  $ meili get batches
+  $ meili get batches --project prod
 
-  $ meili get batches --output json
+  $ meili get batches --project prod --output json
 
-  $ meili get batches --ids 7
+  $ meili get batches --project prod --ids 7
 
-  $ meili get batches --task-ids 42
+  $ meili get batches --project prod --task-ids 42
 
-  $ meili get batches --statuses failed --index-ids movies --limit 5
+  $ meili get batches --project prod --statuses failed --index-ids movies --limit 5
 
-  $ meili get batches --all --output ndjson
+  $ meili get batches --project prod --all --output ndjson
 
 "
 `;

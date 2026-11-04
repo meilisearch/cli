@@ -113,6 +113,20 @@ describe("static api", () => {
   });
 });
 
+describe("every example of a Meilisearch command names its project (config.md, Resolution)", () => {
+  it("with --project or --project-url, since nothing else gives one", async () => {
+    for await (const file of glob("src/commands/**/*.ts", { cwd: PROJECT_ROOT })) {
+      const { default: command } = (await import(join(PROJECT_ROOT, file))) as {
+        default: { api?: unknown; examples?: string[] };
+      };
+      if (command.api !== "meilisearch") continue;
+      for (const example of command.examples ?? []) {
+        expect(example, `${file}: ${example}`).toMatch(/--project(-url)? /);
+      }
+    }
+  });
+});
+
 describe("delete commands require --yes (ADR 0007)", () => {
   it("every command of the verb delete declares it, and no other command does", async () => {
     for await (const file of glob("src/commands/**/*.ts", { cwd: PROJECT_ROOT })) {

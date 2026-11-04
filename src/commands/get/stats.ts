@@ -13,10 +13,10 @@ export default class GetStats extends BaseCommand {
     "Get the statistics of the whole instance, or those of one index with --index.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-    "<%= config.bin %> <%= command.id %> --index movies",
-    "<%= config.bin %> <%= command.id %> --index movies --size-format human --show-internal-database-sizes",
+    "<%= config.bin %> <%= command.id %> --project prod",
+    "<%= config.bin %> <%= command.id %> --project prod --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --size-format human --show-internal-database-sizes",
   ];
 
   static override flags = {

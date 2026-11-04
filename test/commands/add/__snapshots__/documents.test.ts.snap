@@ -52,15 +52,15 @@ DESCRIPTION
   primary key.
 
 EXAMPLES
-  $ meili add documents --index movies --file movies.json
+  $ meili add documents --project prod --index movies --file movies.json
 
-  $ meili add documents --index movies --file movies.json --output json
+  $ meili add documents --project prod --index movies --file movies.json --output json
 
-  cat movies.json | meili add documents --index movies --file -
+  cat movies.json | meili add documents --project prod --index movies --file -
 
-  $ meili add documents --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id
+  $ meili add documents --project prod --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id
 
-  $ meili add documents --index movies --file movies.json --wait
+  $ meili add documents --project prod --index movies --file movies.json --wait
 
 "
 `;

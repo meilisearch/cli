@@ -45,13 +45,13 @@ DESCRIPTION
   returned side by side or merged into one ranked list with --federation.
 
 EXAMPLES
-  $ meili multi-search --queries '[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]'
+  $ meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]'
 
-  $ meili multi-search --queries '[{"indexUid":"movies","q":"nosferatu"}]' --output json
+  $ meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"}]' --output json
 
-  $ meili multi-search --queries '[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]' --federation '{"limit":5}'
+  $ meili multi-search --project prod --queries '[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]' --federation '{"limit":5}'
 
-  cat queries.json | meili multi-search --file -
+  cat queries.json | meili multi-search --project prod --file -
 
 "
 `;

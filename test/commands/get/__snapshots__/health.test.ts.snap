@@ -34,9 +34,9 @@ DESCRIPTION
   Check that the Meilisearch instance is available.
 
 EXAMPLES
-  $ meili get health
+  $ meili get health --project prod
 
-  $ meili get health --output json
+  $ meili get health --project prod --output json
 
   $ meili get health --project-url http://localhost:7700
 

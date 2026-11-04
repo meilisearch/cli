@@ -75,13 +75,13 @@ DESCRIPTION
   filters of the route.
 
 EXAMPLES
-  $ meili delete tasks --ids 42,1344 --yes
+  $ meili delete tasks --project prod --ids 42,1344 --yes
 
-  $ meili delete tasks --ids 42 --yes --output json
+  $ meili delete tasks --project prod --ids 42 --yes --output json
 
-  $ meili delete tasks --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes
+  $ meili delete tasks --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes
 
-  $ meili delete tasks --index-ids movies --yes --wait
+  $ meili delete tasks --project prod --index-ids movies --yes --wait
 
 "
 `;

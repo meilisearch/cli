@@ -23,15 +23,20 @@ describe("ManagementApiError", () => {
     link: "https://docs.meilisearch.com/errors#project_not_accessible",
   };
 
-  it("passes the API's error body through, like a Meilisearch one", () => {
+  it("passes the API's error body through, like a Meilisearch one, with no hint on a 403", () => {
     const rendered = toRenderedError(
       new ManagementApiError(403, forbidden, "https://m/api/v2/projects/343"),
     );
-    expect(rendered.body).toEqual({
-      ...forbidden,
-      hint: expect.stringContaining("meili auth login"),
-    });
+    expect(rendered.body).toEqual(forbidden);
     expect(rendered.exitCode).toBe(3);
+  });
+
+  it("hints a new login on a 401, or the variable when the token came from it", () => {
+    const unauthorized = new ManagementApiError(401, forbidden, "https://m/api/v2/projects");
+    expect(toRenderedError(unauthorized).body.hint).toBe("Run `meili auth login` to log in again.");
+    expect(toRenderedError(unauthorized, [], true).body.hint).toContain(
+      "Unset or replace `MEILI_MANAGEMENT_TOKEN`",
+    );
   });
 
   it("calls an answer without an error body a network error, not the API speaking", () => {

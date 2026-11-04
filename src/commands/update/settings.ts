@@ -15,11 +15,11 @@ export default class UpdateSettings extends BaseCommand {
     "Change the settings given, leave the others as they are, and reset one with the value null.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --index movies --searchable-attributes title,overview",
-    "<%= config.bin %> <%= command.id %> --index movies --filterable-attributes genres,release_date --output json",
-    "<%= config.bin %> <%= command.id %> --index movies --stop-words null",
-    "<%= config.bin %> <%= command.id %> --index movies --typo-tolerance '{\"enabled\":false}' --wait",
-    "<%= config.bin %> <%= command.id %> --index movies --file settings.json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --searchable-attributes title,overview",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --filterable-attributes genres,release_date --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --stop-words null",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --typo-tolerance '{\"enabled\":false}' --wait",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --file settings.json",
   ];
 
   static override flags = {

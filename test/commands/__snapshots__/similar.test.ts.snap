@@ -73,13 +73,13 @@ DESCRIPTION
   named by --id and compared with --embedder.
 
 EXAMPLES
-  $ meili similar --index movies --id 143 --embedder default
+  $ meili similar --project prod --index movies --id 143 --embedder default
 
-  $ meili similar --index movies --id 143 --embedder default --output json
+  $ meili similar --project prod --index movies --id 143 --embedder default --output json
 
-  $ meili similar --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5
+  $ meili similar --project prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5
 
-  $ meili similar --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'
+  $ meili similar --project prod --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'
 
 "
 `;

@@ -53,11 +53,11 @@ DESCRIPTION
   takes, and reset one with the value null.
 
 EXAMPLES
-  $ meili update keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'
+  $ meili update keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'
 
-  $ meili update keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly' --output json
+  $ meili update keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly' --output json
 
-  $ meili update keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null
+  $ meili update keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null
 
 "
 `;

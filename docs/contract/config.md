@@ -108,7 +108,7 @@ The credential is a bearer token, sent as `Authorization: Bearer <token>`: the O
 1. Environment variable: `MEILI_MANAGEMENT_TOKEN`, a personal access token, for development and tests against another Cloud. Only an administrator can create one in the dashboard today, so it is not a way in for users, and no flag stands for it.
 2. The session of `meili auth login`, in the credentials file below
 
-If nothing is found, the CLI fails before any network call with `cli_auth_missing` and exit code 3, with a hint to `meili auth login`.
+If nothing is found, the CLI fails before any network call with `cli_auth_missing` and exit code 3, with a hint to `meili auth login`. A 401 from the API hints `meili auth login` too, or, when `MEILI_MANAGEMENT_TOKEN` is set, to unset or replace it, since a new login would not replace it. A 403 has no hint: it is a right the account lacks, and no credential grants it.
 
 The base URL is the one the session was issued by. With `MEILI_MANAGEMENT_TOKEN`, it is `MEILI_MANAGEMENT_URL`, for development and tests, and defaults to `https://api.meilisearch.com`; with a session, `MEILI_MANAGEMENT_URL` must name the Cloud that issued it, see below. No flag stands for it. Every path starts with `/api/v2`. It must be HTTPS, unless its host is `localhost`, `127.0.0.1` or `::1`: anything else would send the token in the clear, and is `cli_usage` before any network call.
 

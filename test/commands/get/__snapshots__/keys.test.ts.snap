@@ -62,15 +62,15 @@ DESCRIPTION
   key it returns: credentials that work, on stdout, like any other data.
 
 EXAMPLES
-  $ meili get keys
+  $ meili get keys --project prod
 
-  $ meili get keys --output json
+  $ meili get keys --project prod --output json
 
-  $ meili get keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60
+  $ meili get keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60
 
-  $ meili get keys --limit 5 --offset 10
+  $ meili get keys --project prod --limit 5 --offset 10
 
-  $ meili get keys --all --output ndjson
+  $ meili get keys --project prod --all --output ndjson
 
 "
 `;

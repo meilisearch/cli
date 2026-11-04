@@ -128,15 +128,15 @@ const HELP_SUFFIX = /\n?See more help with --help\.?\s*$/;
 
 /**
  * Both APIs answer the same error object, so both are rendered the same way:
- * the body passed through, a hint on a credential error, and the exit code of
- * the status. No error body at all is a proxy or a wrong URL, not the API.
+ * the body passed through, the API's hint for that status, and the exit code
+ * of the status. No error body at all is a proxy or a wrong URL, not the API.
  */
 function renderApiError(
   error: Error,
   status: number,
   url: string,
   sent: unknown,
-  api: { name: string; hint: string },
+  api: { name: string; hint: (status: number) => string | undefined },
 ): RenderedError {
   const body = parseErrorBody(sent);
   if (body === undefined) {
@@ -150,15 +150,22 @@ function renderApiError(
       stack: error.stack,
     };
   }
-  if (status === 401 || status === 403) body.hint = api.hint;
+  const hint = api.hint(status);
+  if (hint !== undefined) body.hint = hint;
   return { body, exitCode: apiExitCode(status), stack: error.stack };
 }
 
 /**
  * Converts anything thrown during a command into a contract error. `commandIds`
  * are the commands of the manifest, `get indexes`, for the hint of an unknown command.
+ * `managementTokenFromEnv` says the Management API token came from
+ * `MEILI_MANAGEMENT_TOKEN`, which a new login would not replace.
  */
-export function toRenderedError(error: unknown, commandIds: readonly string[] = []): RenderedError {
+export function toRenderedError(
+  error: unknown,
+  commandIds: readonly string[] = [],
+  managementTokenFromEnv = false,
+): RenderedError {
   if (error instanceof MeiliCliError) {
     return { body: error.toBody(), exitCode: error.exitCode, stack: error.stack };
   }
@@ -166,14 +173,23 @@ export function toRenderedError(error: unknown, commandIds: readonly string[] = 
   if (error instanceof MeilisearchApiError) {
     return renderApiError(error, error.response.status, error.response.url, error.cause, {
       name: "Meilisearch",
-      hint: "Provide an API key with `--project-api-key <key>`.",
+      hint: (status) =>
+        status === 401 || status === 403
+          ? "Provide an API key with `--project-api-key <key>`."
+          : undefined,
     });
   }
 
   if (error instanceof ManagementApiError) {
     return renderApiError(error, error.status, error.url, error.body, {
       name: "Management API",
-      hint: "Run `meili auth login` to log in again.",
+      // A 403 is a right the account lacks: no new credential grants it.
+      hint: (status) =>
+        status !== 401
+          ? undefined
+          : managementTokenFromEnv
+            ? "Unset or replace `MEILI_MANAGEMENT_TOKEN`: it is used in place of the session of `meili auth login`."
+            : "Run `meili auth login` to log in again.",
     });
   }
 

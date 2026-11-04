@@ -73,13 +73,13 @@ DESCRIPTION
   and the other filters of the route.
 
 EXAMPLES
-  $ meili cancel tasks --ids 42,1344
+  $ meili cancel tasks --project prod --ids 42,1344
 
-  $ meili cancel tasks --ids 42 --output json
+  $ meili cancel tasks --project prod --ids 42 --output json
 
-  $ meili cancel tasks --statuses enqueued --index-ids movies
+  $ meili cancel tasks --project prod --statuses enqueued --index-ids movies
 
-  $ meili cancel tasks --statuses processing --wait
+  $ meili cancel tasks --project prod --statuses processing --wait
 
 "
 `;

@@ -76,17 +76,17 @@ DESCRIPTION
   other filters of the route.
 
 EXAMPLES
-  $ meili get tasks
+  $ meili get tasks --project prod
 
-  $ meili get tasks --output json
+  $ meili get tasks --project prod --output json
 
-  $ meili get tasks --ids 42
+  $ meili get tasks --project prod --ids 42
 
-  $ meili get tasks --statuses failed,canceled --limit 5
+  $ meili get tasks --project prod --statuses failed,canceled --limit 5
 
-  $ meili get tasks --index-ids movies --types documentAdditionOrUpdate
+  $ meili get tasks --project prod --index-ids movies --types documentAdditionOrUpdate
 
-  $ meili get tasks --all --output ndjson
+  $ meili get tasks --project prod --all --output ndjson
 
 "
 `;

@@ -45,11 +45,11 @@ DESCRIPTION
   documents.
 
 EXAMPLES
-  $ meili delete settings --index movies --yes
+  $ meili delete settings --project prod --index movies --yes
 
-  $ meili delete settings --index movies --yes --output json
+  $ meili delete settings --project prod --index movies --yes --output json
 
-  $ meili delete settings --index movies --yes --wait
+  $ meili delete settings --project prod --index movies --yes --wait
 
 "
 `;

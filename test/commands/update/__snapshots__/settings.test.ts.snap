@@ -112,15 +112,15 @@ DESCRIPTION
   the value null.
 
 EXAMPLES
-  $ meili update settings --index movies --searchable-attributes title,overview
+  $ meili update settings --project prod --index movies --searchable-attributes title,overview
 
-  $ meili update settings --index movies --filterable-attributes genres,release_date --output json
+  $ meili update settings --project prod --index movies --filterable-attributes genres,release_date --output json
 
-  $ meili update settings --index movies --stop-words null
+  $ meili update settings --project prod --index movies --stop-words null
 
-  $ meili update settings --index movies --typo-tolerance '{"enabled":false}' --wait
+  $ meili update settings --project prod --index movies --typo-tolerance '{"enabled":false}' --wait
 
-  $ meili update settings --index movies --file settings.json
+  $ meili update settings --project prod --index movies --file settings.json
 
 "
 `;

@@ -17,7 +17,7 @@ exports[`meili config sync-with-cloud > gives every project an entry: the one th
 exports[`meili config sync-with-cloud > passes the API's error body through and writes nothing on a 403 of the list 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible","hint":"Run \`meili auth login\` to log in again."}}
+  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible"}}
 ",
   "stdout": "",
 }

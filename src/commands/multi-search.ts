@@ -15,10 +15,10 @@ export default class MultiSearch extends BaseCommand {
     "Run several search queries in one request, each naming its index in --queries, returned side by side or merged into one ranked list with --federation.";
 
   static override examples = [
-    '<%= config.bin %> <%= command.id %> --queries \'[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]\'',
-    '<%= config.bin %> <%= command.id %> --queries \'[{"indexUid":"movies","q":"nosferatu"}]\' --output json',
-    '<%= config.bin %> <%= command.id %> --queries \'[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]\' --federation \'{"limit":5}\'',
-    "cat queries.json | <%= config.bin %> <%= command.id %> --file -",
+    '<%= config.bin %> <%= command.id %> --project prod --queries \'[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]\'',
+    '<%= config.bin %> <%= command.id %> --project prod --queries \'[{"indexUid":"movies","q":"nosferatu"}]\' --output json',
+    '<%= config.bin %> <%= command.id %> --project prod --queries \'[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]\' --federation \'{"limit":5}\'',
+    "cat queries.json | <%= config.bin %> <%= command.id %> --project prod --file -",
   ];
 
   static override flags = {

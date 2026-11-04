@@ -42,11 +42,11 @@ DESCRIPTION
   Delete an index, with its documents, its settings and its task history.
 
 EXAMPLES
-  $ meili delete indexes --id movies --yes
+  $ meili delete indexes --project prod --id movies --yes
 
-  $ meili delete indexes --id movies --yes --output json
+  $ meili delete indexes --project prod --id movies --yes --output json
 
-  $ meili delete indexes --id movies --yes --wait
+  $ meili delete indexes --project prod --id movies --yes --wait
 
 "
 `;

@@ -19,11 +19,11 @@ export default class DeleteDocuments extends BaseCommand {
     "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --index movies --ids 42,1344 --yes",
-    "<%= config.bin %> <%= command.id %> --index movies --ids 42 --yes --output json",
-    "<%= config.bin %> <%= command.id %> --index movies --filter 'rating < 2' --yes",
-    "<%= config.bin %> <%= command.id %> --index movies --file ids.json --yes",
-    "<%= config.bin %> <%= command.id %> --index movies --all --yes --wait",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42,1344 --yes",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42 --yes --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --filter 'rating < 2' --yes",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --file ids.json --yes",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --all --yes --wait",
   ];
 
   static override flags = {

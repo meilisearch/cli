@@ -35,9 +35,9 @@ DESCRIPTION
   from.
 
 EXAMPLES
-  $ meili get version
+  $ meili get version --project prod
 
-  $ meili get version --output json
+  $ meili get version --project prod --output json
 
 "
 `;

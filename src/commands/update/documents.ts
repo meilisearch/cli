@@ -15,11 +15,11 @@ export default class UpdateDocuments extends BaseCommand {
     "Add documents to an index, merging their fields into the ones that already have the same primary key.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --index movies --file changes.json",
-    "<%= config.bin %> <%= command.id %> --index movies --file changes.json --output json",
-    "cat changes.json | <%= config.bin %> <%= command.id %> --index movies --file -",
-    '<%= config.bin %> <%= command.id %> --index movies --data \'[{"id":1,"rating":4}]\'',
-    "<%= config.bin %> <%= command.id %> --index movies --file changes.json --wait",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json --output json",
+    "cat changes.json | <%= config.bin %> <%= command.id %> --project prod --index movies --file -",
+    '<%= config.bin %> <%= command.id %> --project prod --index movies --data \'[{"id":1,"rating":4}]\'',
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json --wait",
   ];
 
   static override flags = {

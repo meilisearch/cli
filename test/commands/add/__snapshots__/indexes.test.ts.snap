@@ -45,11 +45,11 @@ DESCRIPTION
   Create an empty index, named by --id, with --primary-key as its primary key.
 
 EXAMPLES
-  $ meili add indexes --id movies
+  $ meili add indexes --project prod --id movies
 
-  $ meili add indexes --id movies --primary-key id --output json
+  $ meili add indexes --project prod --id movies --primary-key id --output json
 
-  $ meili add indexes --id movies --wait
+  $ meili add indexes --project prod --id movies --wait
 
 "
 `;

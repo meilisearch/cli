@@ -14,10 +14,10 @@ export default class UpdateIndexes extends BaseCommand {
     "Change the primary key of an index with --primary-key, or rename it with --new-id.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --id movies --primary-key movie_id",
-    "<%= config.bin %> <%= command.id %> --id movies --primary-key movie_id --output json",
-    "<%= config.bin %> <%= command.id %> --id movies --new-id films",
-    "<%= config.bin %> <%= command.id %> --id movies --new-id films --wait",
+    "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key movie_id",
+    "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key movie_id --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --id movies --new-id films",
+    "<%= config.bin %> <%= command.id %> --project prod --id movies --new-id films --wait",
   ];
 
   static override flags = {

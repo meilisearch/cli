@@ -53,15 +53,15 @@ DESCRIPTION
   have the same primary key.
 
 EXAMPLES
-  $ meili update documents --index movies --file changes.json
+  $ meili update documents --project prod --index movies --file changes.json
 
-  $ meili update documents --index movies --file changes.json --output json
+  $ meili update documents --project prod --index movies --file changes.json --output json
 
-  cat changes.json | meili update documents --index movies --file -
+  cat changes.json | meili update documents --project prod --index movies --file -
 
-  $ meili update documents --index movies --data '[{"id":1,"rating":4}]'
+  $ meili update documents --project prod --index movies --data '[{"id":1,"rating":4}]'
 
-  $ meili update documents --index movies --file changes.json --wait
+  $ meili update documents --project prod --index movies --file changes.json --wait
 
 "
 `;

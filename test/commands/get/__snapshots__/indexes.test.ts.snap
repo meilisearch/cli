@@ -59,15 +59,15 @@ DESCRIPTION
   List the indexes of the instance, or get one with --id.
 
 EXAMPLES
-  $ meili get indexes
+  $ meili get indexes --project prod
 
-  $ meili get indexes --output json
+  $ meili get indexes --project prod --output json
 
-  $ meili get indexes --id movies
+  $ meili get indexes --project prod --id movies
 
-  $ meili get indexes --limit 5 --offset 10
+  $ meili get indexes --project prod --limit 5 --offset 10
 
-  $ meili get indexes --all --output ndjson
+  $ meili get indexes --project prod --all --output ndjson
 
 "
 `;

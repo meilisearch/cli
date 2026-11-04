@@ -14,9 +14,9 @@ export default class AddIndexes extends BaseCommand {
     "Create an empty index, named by --id, with --primary-key as its primary key.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --id movies",
-    "<%= config.bin %> <%= command.id %> --id movies --primary-key id --output json",
-    "<%= config.bin %> <%= command.id %> --id movies --wait",
+    "<%= config.bin %> <%= command.id %> --project prod --id movies",
+    "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key id --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --id movies --wait",
   ];
 
   static override flags = {

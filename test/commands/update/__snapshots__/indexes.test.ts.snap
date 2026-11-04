@@ -47,13 +47,13 @@ DESCRIPTION
   --new-id.
 
 EXAMPLES
-  $ meili update indexes --id movies --primary-key movie_id
+  $ meili update indexes --project prod --id movies --primary-key movie_id
 
-  $ meili update indexes --id movies --primary-key movie_id --output json
+  $ meili update indexes --project prod --id movies --primary-key movie_id --output json
 
-  $ meili update indexes --id movies --new-id films
+  $ meili update indexes --project prod --id movies --new-id films
 
-  $ meili update indexes --id movies --new-id films --wait
+  $ meili update indexes --project prod --id movies --new-id films --wait
 
 "
 `;

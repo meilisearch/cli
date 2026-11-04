@@ -12,7 +12,7 @@ exports[`meili get projects > lists the projects in the envelope the API returns
 exports[`meili get projects > passes the API's error body through on an unknown id, with exit 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible","hint":"Run \`meili auth login\` to log in again."}}
+  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible"}}
 ",
   "stdout": "",
 }

@@ -11,8 +11,8 @@ export default class GetVersion extends BaseCommand {
     "Get the version of the Meilisearch instance, with the commit it was built from.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
+    "<%= config.bin %> <%= command.id %> --project prod",
+    "<%= config.bin %> <%= command.id %> --project prod --output json",
   ];
 
   static override flags = { ...BaseCommand.connectionFlags };

@@ -54,13 +54,13 @@ DESCRIPTION
   other data.
 
 EXAMPLES
-  $ meili add keys --actions search --indexes movies --expires-at null
+  $ meili add keys --project prod --actions search --indexes movies --expires-at null
 
-  $ meili add keys --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json
+  $ meili add keys --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json
 
-  $ meili add keys --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'
+  $ meili add keys --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'
 
-  $ meili add keys --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'
+  $ meili add keys --project prod --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'
 
 "
 `;

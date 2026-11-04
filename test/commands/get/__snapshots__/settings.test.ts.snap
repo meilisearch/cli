@@ -35,9 +35,9 @@ DESCRIPTION
   Get every setting of an index, each with its current value or its default.
 
 EXAMPLES
-  $ meili get settings --index movies
+  $ meili get settings --project prod --index movies
 
-  $ meili get settings --index movies --output json
+  $ meili get settings --project prod --index movies --output json
 
 "
 `;

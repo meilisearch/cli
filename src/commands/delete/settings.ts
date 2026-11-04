@@ -12,9 +12,9 @@ export default class DeleteSettings extends BaseCommand {
     "Reset every setting of an index to its default value, which reindexes the documents.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --index movies --yes",
-    "<%= config.bin %> <%= command.id %> --index movies --yes --output json",
-    "<%= config.bin %> <%= command.id %> --index movies --yes --wait",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --yes",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --yes --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --yes --wait",
   ];
 
   static override flags = {

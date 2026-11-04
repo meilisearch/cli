@@ -15,11 +15,11 @@ export default class AddDocuments extends BaseCommand {
     "Add documents to an index, replacing the ones that already have the same primary key.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --index movies --file movies.json",
-    "<%= config.bin %> <%= command.id %> --index movies --file movies.json --output json",
-    "cat movies.json | <%= config.bin %> <%= command.id %> --index movies --file -",
-    '<%= config.bin %> <%= command.id %> --index movies --data \'[{"id":1,"title":"Nosferatu"}]\' --primary-key id',
-    "<%= config.bin %> <%= command.id %> --index movies --file movies.json --wait",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json --output json",
+    "cat movies.json | <%= config.bin %> <%= command.id %> --project prod --index movies --file -",
+    '<%= config.bin %> <%= command.id %> --project prod --index movies --data \'[{"id":1,"title":"Nosferatu"}]\' --primary-key id',
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json --wait",
   ];
 
   static override flags = {

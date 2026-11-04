@@ -123,15 +123,15 @@ DESCRIPTION
   route.
 
 EXAMPLES
-  $ meili search --index movies --q nosferatu
+  $ meili search --project prod --index movies --q nosferatu
 
-  $ meili search --index movies --q nosferatu --output json
+  $ meili search --project prod --index movies --q nosferatu --output json
 
-  $ meili search --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5
+  $ meili search --project prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5
 
-  $ meili search --index movies --facets genres --attributes-to-retrieve id,title
+  $ meili search --project prod --index movies --facets genres --attributes-to-retrieve id,title
 
-  $ meili search --index movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'
+  $ meili search --project prod --index movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'
 
 "
 `;
