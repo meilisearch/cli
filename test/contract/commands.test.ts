@@ -36,6 +36,8 @@ const manifest = JSON.parse(
   readFileSync(join(PROJECT_ROOT, "oclif.manifest.json"), "utf8"),
 ) as Manifest;
 const commandsDoc = readDoc("docs/contract/commands.md");
+/** The interactive commands of ADR 0015, for humans only. */
+const INTERACTIVE_COMMANDS = ["teleport"];
 
 describe("oclif.manifest.json", () => {
   it("`meili schema` is a snapshot, the index and every command in full, so a renamed command or flag is visible in review", async () => {
@@ -63,6 +65,8 @@ describe("oclif.manifest.json", () => {
         typeof example === "string" ? example : example.command,
       );
       expect(examples.length, `${id} needs at least two examples`).toBeGreaterThanOrEqual(2);
+      // An interactive command prints no data, only questions and progress for a human (ADR 0015).
+      if (INTERACTIVE_COMMANDS.includes(id)) continue;
       expect(
         examples.some((example) => example.includes("--output json")),
         `${id} needs an example with --output json`,

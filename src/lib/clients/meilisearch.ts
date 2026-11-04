@@ -1,5 +1,10 @@
 /** Builds the meilisearch-js client from a resolved project connection. */
-import { type DocumentsQuery, type EnqueuedTask, Meilisearch } from "meilisearch";
+import {
+  type DocumentsQuery,
+  type EnqueuedTask,
+  Meilisearch,
+  MeilisearchApiError,
+} from "meilisearch";
 import type { ListPage } from "../pagination.js";
 
 export interface MeilisearchClientOptions {
@@ -76,4 +81,19 @@ export function triggerExport(
   body: Record<string, unknown>,
 ): Promise<EnqueuedTask> {
   return client.httpRequest.post({ path: "export", body });
+}
+
+/**
+ * `POST /export` with no body, which tells whether the instance has the route
+ * and the key may call it, and exports nothing: the instance checks the key,
+ * then answers 400 `missing_payload` without enqueuing a task. A 404, 401 or
+ * 403 is thrown, as is any other error.
+ */
+export async function probeExport(client: Meilisearch): Promise<void> {
+  try {
+    await client.httpRequest.post({ path: "export" });
+  } catch (error) {
+    if (error instanceof MeilisearchApiError && error.cause?.code === "missing_payload") return;
+    throw error;
+  }
 }

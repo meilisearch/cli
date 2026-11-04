@@ -1,25 +1,11 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import {
-  getApiV2ProjectsById,
-  postApiV2Projects,
-} from "../../lib/clients/management/generated/sdk.gen.js";
-import type {
-  PostApiV2ProjectsData,
-  Project,
-} from "../../lib/clients/management/generated/types.gen.js";
-import { cloudOf, readTeamNames } from "../../lib/cloud-sync.js";
+import { postApiV2Projects } from "../../lib/clients/management/generated/sdk.gen.js";
+import type { PostApiV2ProjectsData } from "../../lib/clients/management/generated/types.gen.js";
+import { cloudOf, readTeamNames, waitForProject } from "../../lib/cloud-sync.js";
 import { assertNoProject, type ConfigFile, maskSecret, writeConfigFile } from "../../lib/config.js";
 import { MeiliCliError, writeNotice } from "../../lib/errors.js";
 import { readBodyWithFields } from "../../lib/input.js";
-import { formatDuration, pollUntil } from "../../lib/tasks.js";
-
-/** The statuses `--wait` stops at: the project serves, or its creation failed. */
-const FINAL_STATUSES: ReadonlySet<string> = new Set(["running", "failed"]);
-
-/** Creating a project takes minutes: polls start at 1 s apart and grow to 5 s. */
-const INITIAL_INTERVAL_MS = 1000;
-const MAX_INTERVAL_MS = 5000;
 
 export default class AddProjects extends BaseCommand {
   static api: Api = "management";
@@ -87,7 +73,14 @@ export default class AddProjects extends BaseCommand {
     }
     const created = await postApiV2Projects({ client: this.managementClient, body });
     const project =
-      timeoutMs === undefined ? created : await this.waitForProject(created.id, timeoutMs);
+      timeoutMs === undefined
+        ? created
+        : await waitForProject(this.managementClient, created.id, {
+            timeoutMs,
+            onProgress: (current) => {
+              writeNotice(`waiting for project ${created.id}, status ${current.status}`);
+            },
+          });
     await this.output(
       project.masterKey === undefined
         ? project
@@ -124,27 +117,5 @@ export default class AddProjects extends BaseCommand {
         [sync.entry]: { url: project.url, apiKey: created.masterKey, cloud },
       },
     });
-  }
-
-  /** The project once `running` or `failed`, as `GET /api/v2/projects/{id}` returns it: without its master key. */
-  private async waitForProject(id: number, timeoutMs: number): Promise<Project> {
-    return pollUntil(
-      () => getApiV2ProjectsById({ client: this.managementClient, path: { id } }),
-      (current) => FINAL_STATUSES.has(current.status),
-      () =>
-        new MeiliCliError(
-          "cli_timeout",
-          `Project ${id} did not reach status running or failed within ${formatDuration(timeoutMs)}. Its creation goes on on the server.`,
-          { hint: `Run \`meili get projects --id ${id}\` to check its status.` },
-        ),
-      {
-        timeoutMs,
-        initialIntervalMs: INITIAL_INTERVAL_MS,
-        maxIntervalMs: MAX_INTERVAL_MS,
-        onProgress: (current) => {
-          writeNotice(`waiting for project ${id}, status ${current.status}`);
-        },
-      },
-    );
   }
 }
