@@ -9,7 +9,7 @@ const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_K
 
 describe.skipIf(!meilisearchUp)("meili info against a real Meilisearch", () => {
   it("returns the version of the instance as the API wrote it", async () => {
-    const result = await runBinary(["info", "--output", "json", ...project]);
+    const result = await runBinary(["info", ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const body = JSON.parse(result.stdout) as Version;
@@ -24,8 +24,6 @@ describe.skipIf(!meilisearchUp)("meili info against a real Meilisearch", () => {
       MEILISEARCH_URL,
       "--project-api-key",
       "not-the-master-key",
-      "--output",
-      "json",
     ]);
     expect(result.exitCode).toBe(3);
     expect(result.stdout).toBe("");

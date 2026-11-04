@@ -17,7 +17,6 @@ export default class Search extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --q nosferatu",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --q nosferatu --output json",
     "<%= config.bin %> <%= command.id %> --project prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
     "<%= config.bin %> <%= command.id %> --project prod --index movies --facets genres --attributes-to-retrieve id,title",
     '<%= config.bin %> <%= command.id %> --project prod --index movies --data \'{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}\'',

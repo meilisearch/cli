@@ -15,7 +15,7 @@ A user with data in a Meilisearch instance, local or in production, wants to try
 An interactive command asks questions in a terminal and guides a human through several steps. ADR 0002 and ADR 0007 say that no command asks a question. They keep holding for every other command. An interactive command follows these rules:
 
 - **It runs only when stdin and stderr are terminals.** Otherwise, it fails with `cli_usage`, exit 2, and the hint gives the commands that do the same without questions. An agent that runs it by mistake gets the answer it needs.
-- **Everything it shows goes to stderr**: questions, progress, messages, errors. stdout stays empty, so rule 1 holds. Its JSON output mode has no effect.
+- **Everything it shows goes to stderr**: questions, progress, messages, errors. stdout stays empty, so rule 1 holds.
 - **In a terminal, its errors are text for a human.** When stderr is not a terminal, they are the JSON of the contract, as on every command.
 - **Its questions use `@inquirer/prompts`**, to choose with the arrow keys, through `src/lib/terminal.ts`. A progress bar is drawn by the CLI, with no dependency.
 - **It is listed in "Commands without an API" of `commands.md`**, with the commands that do the same without questions.

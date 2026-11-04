@@ -16,11 +16,9 @@ export default class BatchList extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod",
-    "<%= config.bin %> <%= command.id %> --project prod --output json",
     "<%= config.bin %> <%= command.id %> --project prod --ids 7",
     "<%= config.bin %> <%= command.id %> --project prod --task-ids 42",
     "<%= config.bin %> <%= command.id %> --project prod --statuses failed --index-ids movies --limit 5",
-    "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson",
   ];
 
   static override flags = {

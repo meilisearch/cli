@@ -38,15 +38,7 @@ describe("meili key update", () => {
 
   it("prints the key the API returned, as it returned it", async () => {
     server.use(meilisearchHandlers.keyUpdate(updated));
-    const result = await runCommand(KeyUpdate, [
-      "--id",
-      uid,
-      "--name",
-      "CI indexer",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(KeyUpdate, ["--id", uid, "--name", "CI indexer", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -67,8 +59,6 @@ describe("meili key update", () => {
       "nope",
       "--name",
       "CI indexer",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();
@@ -76,15 +66,7 @@ describe("meili key update", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError(`/keys/${uid}`, 403, invalidApiKeyError));
-    const result = await runCommand(KeyUpdate, [
-      "--id",
-      uid,
-      "--name",
-      "CI indexer",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(KeyUpdate, ["--id", uid, "--name", "CI indexer", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

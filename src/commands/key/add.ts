@@ -19,7 +19,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes movies --expires-at null",
-    "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z",
     "<%= config.bin %> <%= command.id %> --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
     '<%= config.bin %> <%= command.id %> --project prod --data \'{"actions":["search"],"indexes":["movies"],"expiresAt":null}\'',
   ];
@@ -47,11 +47,11 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
       helpValue: "<date>",
     }),
     name: Flags.string({
-      description: "Name of the key, for a human reading the list.",
+      description: "Name of the key.",
       helpValue: "<name>",
     }),
     description: Flags.string({
-      description: "Description of the key, for a human reading the list.",
+      description: "Description of the key.",
       helpValue: "<text>",
     }),
     ...BaseCommand.bodyInputFlags,

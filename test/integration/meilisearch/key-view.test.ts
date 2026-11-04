@@ -29,27 +29,19 @@ describe.skipIf(!meilisearchUp)("meili key view against a real Meilisearch", () 
   });
 
   it("gets one key by its uid", async () => {
-    const result = await runBinary(["key", "view", "--id", uid, "--output", "json", ...project]);
+    const result = await runBinary(["key", "view", "--id", uid, ...project]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid, key: value, actions: ["search"] });
   });
 
   it("gets the same key by its key value", async () => {
-    const result = await runBinary(["key", "view", "--id", value, "--output", "json", ...project]);
+    const result = await runBinary(["key", "view", "--id", value, ...project]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid });
   });
 
   it("exits 4 with the API error when the key does not exist", async () => {
-    const result = await runBinary([
-      "key",
-      "view",
-      "--id",
-      randomUUID(),
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["key", "view", "--id", randomUUID(), ...project]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("api_key_not_found");

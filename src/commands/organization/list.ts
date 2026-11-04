@@ -10,14 +10,10 @@ export default class OrganizationList extends BaseCommand {
 
 Only the organizations the token sees.`;
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-    "<%= config.bin %> <%= command.id %> --output ndjson",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %>"];
 
   async run(): Promise<void> {
     await this.parse(OrganizationList);
-    await this.outputPage(await getApiV2Organizations({ client: this.managementClient }));
+    await this.output(await getApiV2Organizations({ client: this.managementClient }));
   }
 }

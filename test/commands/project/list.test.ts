@@ -24,24 +24,21 @@ describe("meili project list", () => {
 
   it("lists the projects in the envelope the API returns, with no paging flag yet", async () => {
     server.use(managementHandlers.listProjects([project, staging]));
-    const result = await runCommand(ProjectList, ["--output", "json"], { env });
+    const result = await runCommand(ProjectList, [], { env });
     expect(result).toMatchSnapshot();
   });
 
-  it("passes --team-id to the list route, and prints one project per line in ndjson", async () => {
+  it("passes --team-id to the list route", async () => {
     const received: ReceivedRequest[] = [];
     server.use(managementHandlers.listProjects([project, staging], received));
-    const result = await runCommand(ProjectList, ["--team-id", "12", "--output", "ndjson"], {
-      env,
-    });
+    const result = await runCommand(ProjectList, ["--team-id", "12"], { env });
     expect(result.exitCode).toBe(0);
     expect(received[0]?.url).toBe(`${MANAGEMENT_URL}/api/v2/projects?teamId=12`);
-    expect(result.stdout).toBe(`${JSON.stringify(project)}\n${JSON.stringify(staging)}\n`);
   });
 
   it("exits 6 on a 401 without a body", async () => {
     server.use(managementHandlers.apiError("/api/v2/projects", 401));
-    const result = await runCommand(ProjectList, ["--output", "json"], { env });
+    const result = await runCommand(ProjectList, [], { env });
     expect(result).toMatchSnapshot();
   });
 });

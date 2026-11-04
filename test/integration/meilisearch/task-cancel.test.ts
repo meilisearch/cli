@@ -31,8 +31,6 @@ describe.skipIf(!meilisearchUp)("meili task cancel against a real Meilisearch", 
       "--ids",
       String(created),
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -45,15 +43,7 @@ describe.skipIf(!meilisearchUp)("meili task cancel against a real Meilisearch", 
   });
 
   it("prints the enqueued task and returns at once without --wait", async () => {
-    const result = await runBinary([
-      "task",
-      "cancel",
-      "--ids",
-      String(created),
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["task", "cancel", "--ids", String(created), ...project]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({
       type: "taskCancelation",
@@ -62,7 +52,7 @@ describe.skipIf(!meilisearchUp)("meili task cancel against a real Meilisearch", 
   });
 
   it("exits 1 with the API error when no filter is given", async () => {
-    const result = await runBinary(["task", "cancel", "--output", "json", ...project]);
+    const result = await runBinary(["task", "cancel", ...project]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("missing_task_filters");

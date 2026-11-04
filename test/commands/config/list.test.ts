@@ -18,7 +18,7 @@ describe("meili config list", () => {
 
   it("prints the path and no project when there is no file", async () => {
     const path = join(scrubbedHome, "missing.json");
-    const result = await runCommand(ConfigList, ["--output", "json"], {
+    const result = await runCommand(ConfigList, [], {
       env: { MEILI_CONFIG: path },
     });
     expect(result).toEqual({
@@ -37,7 +37,7 @@ describe("meili config list", () => {
         prod: { url: "https://prod.example.com", apiKey: "supersecretkey1a2b" },
       },
     });
-    const result = await runCommand(ConfigList, ["--output", "json"], {
+    const result = await runCommand(ConfigList, [], {
       env: { MEILI_CONFIG: path },
     });
     expect(result.exitCode).toBe(0);
@@ -57,7 +57,7 @@ describe("meili config list", () => {
       const path = join(scrubbedHome, "open.json");
       writeConfigFile({ path, projects: { local: { url: "http://localhost:7700" } } });
       chmodSync(path, 0o644);
-      const result = await runCommand(ConfigList, ["--output", "json"], {
+      const result = await runCommand(ConfigList, [], {
         env: { MEILI_CONFIG: path },
       });
       expect(result).toEqual({

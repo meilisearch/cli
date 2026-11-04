@@ -34,16 +34,7 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
   });
 
   it("returns the hits of --q with the API envelope", async () => {
-    const result = await runBinary([
-      "search",
-      "--index",
-      uid,
-      "--q",
-      "nosferatu",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["search", "--index", uid, "--q", "nosferatu", ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const body = JSON.parse(result.stdout) as SearchResponse;
@@ -53,7 +44,7 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
   });
 
   it("returns every document for a placeholder search", async () => {
-    const result = await runBinary(["search", "--index", uid, "--output", "json", ...project]);
+    const result = await runBinary(["search", "--index", uid, ...project]);
     expect(result.exitCode).toBe(0);
     expect((JSON.parse(result.stdout) as SearchResponse).hits).toHaveLength(3);
   });
@@ -71,8 +62,6 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
       "id",
       "--facets",
       "genre",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -90,8 +79,6 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
       "2",
       "--hits-per-page",
       "2",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -110,8 +97,6 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
       '{"q":"solaris","limit":1}',
       "--q",
       "nosferatu",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -127,8 +112,6 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
       uid,
       "--ranking-score-threshold",
       "abc",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(1);
@@ -143,8 +126,6 @@ describe.skipIf(!meilisearchUp)("meili search against a real Meilisearch", () =>
       `${uid}-missing`,
       "--q",
       "nosferatu",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(4);

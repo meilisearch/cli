@@ -28,7 +28,7 @@ describe("meili config set", () => {
     const path = join(scrubbedHome, "new", "config.json");
     const result = await runCommand(
       ConfigSet,
-      ["--project", "local", "--project-url", "http://localhost:7700", "--output", "json"],
+      ["--project", "local", "--project-url", "http://localhost:7700"],
       { env: { MEILI_CONFIG: path } },
     );
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
@@ -84,7 +84,7 @@ describe("meili config set", () => {
 
     const member = await runCommand(
       ConfigSet,
-      ["--project", "member", "--project-url", url, "--sync-with-cloud", "--output", "json"],
+      ["--project", "member", "--project-url", url, "--sync-with-cloud"],
       { env },
     );
     expect(member).toMatchSnapshot();

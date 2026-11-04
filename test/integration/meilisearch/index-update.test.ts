@@ -30,8 +30,6 @@ describe.skipIf(!meilisearchUp)("meili index update against a real Meilisearch",
       "--primary-key",
       "id",
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -52,8 +50,6 @@ describe.skipIf(!meilisearchUp)("meili index update against a real Meilisearch",
       "--new-id",
       renamed,
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -69,8 +65,6 @@ describe.skipIf(!meilisearchUp)("meili index update against a real Meilisearch",
       "--primary-key",
       "id",
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(7);

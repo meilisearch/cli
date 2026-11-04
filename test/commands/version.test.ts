@@ -16,17 +16,12 @@ describe("meili version", () => {
   it("prints the version of the CLI as JSON, without any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(Version, ["--output", "json"]);
+      result = await runCommand(Version, []);
     });
     expect(requests).toBe(0);
     expect(result?.exitCode).toBe(0);
     expect(JSON.parse(result?.stdout ?? "")).toEqual({
       version: expect.stringMatching(/^\d+\.\d+\.\d+/),
     });
-  });
-
-  it("rejects ndjson, which is for lists", async () => {
-    const result = await runCommand(Version, ["--output", "ndjson"]);
-    expect(result).toMatchSnapshot();
   });
 });

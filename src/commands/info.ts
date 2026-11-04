@@ -11,10 +11,7 @@ export default class Info extends BaseCommand {
 
 Prints the version of Meilisearch and the commit it was built from.`;
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %> --project prod",
-    "<%= config.bin %> <%= command.id %> --project prod --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %> --project prod"];
 
   static override flags = { ...BaseCommand.connectionFlags };
 

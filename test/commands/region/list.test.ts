@@ -22,20 +22,13 @@ describe("meili region list", () => {
 
   it("lists the regions in the envelope the API returns, with no paging flag yet", async () => {
     server.use(managementHandlers.listRegions([region, frankfurt]));
-    const result = await runCommand(RegionList, ["--output", "json"], { env });
+    const result = await runCommand(RegionList, [], { env });
     expect(result).toMatchSnapshot();
-  });
-
-  it("prints one region per line in ndjson", async () => {
-    server.use(managementHandlers.listRegions([region, frankfurt]));
-    const result = await runCommand(RegionList, ["--output", "ndjson"], { env });
-    expect(result.exitCode).toBe(0);
-    expect(result.stdout).toBe(`${JSON.stringify(region)}\n${JSON.stringify(frankfurt)}\n`);
   });
 
   it("exits 6 on the 401 without a body that the document declares", async () => {
     server.use(managementHandlers.apiError("/api/v2/regions", 401));
-    const result = await runCommand(RegionList, ["--output", "json"], { env });
+    const result = await runCommand(RegionList, [], { env });
     expect(result).toMatchSnapshot();
   });
 });

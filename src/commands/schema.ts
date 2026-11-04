@@ -16,7 +16,6 @@ Prints one line per command, or one command in full with --command, from the ocl
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
     '<%= config.bin %> <%= command.id %> --command "index list"',
     "<%= config.bin %> <%= command.id %> | jq '.commands[].id'",
   ];

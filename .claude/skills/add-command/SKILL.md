@@ -16,7 +16,7 @@ Work through the steps in order. Every check below is enforced by `pnpm test` th
 
 - `CLAUDE.md`, fully. The non-negotiable rules are the review checklist.
 - `docs/contract/commands.md`: the grammar, the eleven naming rules, the exceptions table, the shared flag groups and the commands without an API.
-- `docs/contract/output.md`: output modes, pass-through, errors, exit codes, asynchronous operations, destructive commands, input, pagination. The sections that match your routes are the specification of your command.
+- `docs/contract/output.md`: output format, pass-through, errors, exit codes, asynchronous operations, destructive commands, input, pagination. The sections that match your routes are the specification of your command.
 - `docs/contract/testing.md`: what the three test levels must contain.
 - `docs/adr/`: skim the titles, read the ones your change touches. The contract says what the CLI promises; the ADRs say what was already decided, and which alternatives were refused and why. Contradicting one is a new ADR, not a silent change.
 
@@ -73,7 +73,7 @@ Then fill the class:
 - `static routes = ["GET /stats", "GET /indexes/{index_uid}/stats"]`: every route of the command, as written in the OpenAPI document. `test/contract/api.test.ts` checks that each exists, that the command name derives from them, that no route of the document is missing, and that each route is reachable by a distinct set of flags.
 - `static keyActions = ["stats.get"]`: the key actions the routes require, the specific one of each. Read the `security` of each route in the OpenAPI document, `GET /stats` carries `["stats.get", "stats.*", "*"]`, and keep the first entry, the most specific one. Leave it out when every route declares `security: []` (`GET /health`) and on the Management API, whose document declares no key action. `test/contract/api.test.ts` checks it against the document, so a wrong action fails the tests, it does not reach an agent.
 - `static override description`: one sentence, ends with a period. It says what each flag combination does: "Get the statistics of the whole instance, or those of one index with --index."
-- `static override examples`: at least two, one of them with `--output json`, and one per route. Use `<%= config.bin %> <%= command.id %>`.
+- `static override examples`: at least one, and one per route. Use `<%= config.bin %> <%= command.id %>`.
 - `static override flags`: the path flags first (`index: Flags.string(...)` for a parent, `id: Flags.string(...)` for the resource itself, each with `required: true` only when every route of the command takes it), then the query parameters and body fields in kebab-case of the API name, plus the shared groups. Identifier parameters are `id`, `ids`, `batch-ids`, `index-ids`, `task-ids` by what they identify, with the API spelling as `aliases: ["uids"]`. Flags that call for different routes are `exclusive` of each other (`ids`, `filter`, `all` on `document delete`), so that giving two is a usage error. Reuse the shared groups by spreading them: `BaseCommand.paginationFlags` (`--limit`, `--offset`, `--all`), `BaseCommand.waitFlags` (`--wait`, `--timeout`), `BaseCommand.bodyInputFlags` (`--file`, `--data`), `BaseCommand.confirmFlags` (`--yes`) on every command of the verb `delete`. A route that paginates with `from` (tasks, batches) needs its own group, added to `BaseCommand` with the first such command. Never give a flag a function as `default`: oclif would then load the class to render `--help`.
 - Value types (rule 7): `Flags.boolean` for a boolean, `Flags.integer` for an integer, `Flags.string` for a string, a comma-separated `Flags.string` for an array of scalars, a JSON-text `Flags.string` for an object or a nested array. The value `null` sends a JSON null.
 - `run()`: `const { flags } = await this.parse(ClassName)`, then one branch per route, selected by the flags (`stats` without `--index` calls `GET /stats`, with it `GET /indexes/{index_uid}/stats`), one call on `this.meilisearch` (a Management API command: one generated SDK function with `{ client: this.managementClient, path, query, body }`) and one of the `output*` calls per branch. For lists, pass the query built from the flags, `{ limit: flags.limit, offset: flags.offset }` (the SDK drops undefined values), and `nextOffsetQuery` from `src/lib/pagination.ts`.
@@ -87,7 +87,7 @@ Never, in a command file: `console.log`, `process.stdout.write`, `this.log`, `fe
 Copy `test/commands/health.test.ts` (or `test/commands/index/list.test.ts` for a list command). It must contain, each as a snapshot:
 
 1. `--help`: `runCli(["task", "list", "--help"])`, exit 0, empty stderr, stdout snapshot.
-2. one success in `--output json` per route: `runCommand(ClassName, [...argv, "--output", "json", "--project-url", MEILISEARCH_URL])`, snapshot of `{ stdout, stderr, exitCode }`.
+2. one success per route: `runCommand(ClassName, [...argv, "--project-url", MEILISEARCH_URL])`, snapshot of `{ stdout, stderr, exitCode }`.
 3. one error: an API error body passed through (exit 1, 3 or 4 by status) or a network failure (exit 6).
 
 Add the msw handler for each route in `test/helpers/meilisearch-handlers.ts`, parameterized (status, body, pagination) so that other tests reuse it. Handlers use the fake host `MEILISEARCH_URL`; nothing real goes out, an unhandled request fails the test. A Management API command copies `test/commands/project/list.test.ts` instead: its handlers live in `test/helpers/management-handlers.ts`, follow `openapi/management.json`, and the command runs with `env: managementEnv`, the token and the fake host `MANAGEMENT_URL`.
@@ -135,7 +135,7 @@ So that a red `pnpm test` reads as a message, not as flakiness:
 - the exceptions table of `commands.md` equals `ROUTE_EXCEPTIONS` in the code, and every exception matches a route of the documents
 - a command without API is not named after an API command or resource
 - every command class exports `static api` in `meilisearch | management | none`
-- every command has a description and two examples, one with `--output json`; every flag has a description, and a flag with a value a `helpValue` or options
+- every command has a description and an example; every flag has a description, and a flag with a value a `helpValue` or options
 - every command in `src/commands/` has its test file in `test/commands/`
 - every path, `pnpm` script and `BaseCommand` member the guides cite exists; a path cited before it exists is listed as planned in `test/contract/docs.test.ts`, and the test asks to remove it from the list once it exists
 - every command exposes the global flags of `commands.md`; a parent path parameter is a required flag when every route of the command takes it; no command has a positional argument

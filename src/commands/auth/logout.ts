@@ -11,10 +11,7 @@ export default class AuthLogout extends BaseCommand {
 
 Revokes the token of \`auth login\` and forgets it. Does nothing when nobody is logged in.`;
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %>"];
 
   async run(): Promise<void> {
     const { path, session } = this.credentialsFile();

@@ -9,10 +9,7 @@ export default class AuthRefresh extends BaseCommand {
 
 Trades the refresh token of the stored session for a new access token, before it expires.`;
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %>"];
 
   async run(): Promise<void> {
     const { path, session } = this.credentialsFile();

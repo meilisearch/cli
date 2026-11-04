@@ -24,7 +24,7 @@ describe("meili batch list", () => {
 
   it("prints the API envelope as it is in JSON", async () => {
     server.use(meilisearchHandlers.batches(five));
-    const result = await runCommand(BatchList, ["--output", "json", ...project]);
+    const result = await runCommand(BatchList, [...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -84,38 +84,16 @@ describe("meili batch list", () => {
     server.use(meilisearchHandlers.batches(five));
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(BatchList, [
-        "--all",
-        "--limit",
-        "2",
-        "--output",
-        "json",
-        ...project,
-      ]);
+      result = await runCommand(BatchList, ["--all", "--limit", "2", ...project]);
     });
     expect(requests).toBe(3);
     expect(result?.exitCode).toBe(0);
     expect(JSON.parse(result?.stdout ?? "")).toEqual({ results: five, total: 5, next: null });
   });
 
-  it("streams every batch with --all in ndjson", async () => {
-    server.use(meilisearchHandlers.batches(five));
-    const result = await runCommand(BatchList, [
-      "--all",
-      "--limit",
-      "2",
-      "--output",
-      "ndjson",
-      ...project,
-    ]);
-    expect(result.exitCode).toBe(0);
-    const lines = result.stdout.trimEnd().split("\n");
-    expect(lines.map((line) => (JSON.parse(line) as { uid: number }).uid)).toEqual([5, 4, 3, 2, 1]);
-  });
-
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/batches", 403, invalidApiKeyError));
-    const result = await runCommand(BatchList, ["--output", "json", ...project]);
+    const result = await runCommand(BatchList, [...project]);
     expect(result).toMatchSnapshot();
   });
 });

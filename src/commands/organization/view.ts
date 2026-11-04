@@ -9,10 +9,7 @@ export default class OrganizationView extends BaseCommand {
 
   static override description = "Get one Meilisearch Cloud organization.";
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %> --id 7",
-    "<%= config.bin %> <%= command.id %> --id 7 --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %> --id 7"];
 
   static override flags = {
     id: Flags.integer({

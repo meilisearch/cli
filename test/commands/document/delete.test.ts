@@ -74,8 +74,6 @@ describe("meili document delete", () => {
       "--ids",
       "42,1344",
       "--yes",
-      "--output",
-      "json",
     ]);
     expect(sent).toBe('POST /indexes/movies/documents/delete-batch ["42","1344"]');
     expect(printed).toMatchSnapshot();
@@ -89,8 +87,6 @@ describe("meili document delete", () => {
       "--filter",
       "rating < 2",
       "--yes",
-      "--output",
-      "json",
     ]);
     expect(sent).toBe('POST /indexes/movies/documents/delete {"filter":"rating < 2"}');
     expect(printed).toMatchSnapshot();
@@ -98,14 +94,7 @@ describe("meili document delete", () => {
 
   it("takes the route that deletes every document with --all, and prints the task it answered", async () => {
     useDeleteRoutes();
-    const { sent, printed } = await sentAndPrinted([
-      "--index",
-      "movies",
-      "--all",
-      "--yes",
-      "--output",
-      "json",
-    ]);
+    const { sent, printed } = await sentAndPrinted(["--index", "movies", "--all", "--yes"]);
     expect(sent).toBe("DELETE /indexes/movies/documents");
     expect(printed).toMatchSnapshot();
   });
@@ -199,8 +188,6 @@ describe("meili document delete", () => {
       "--ids",
       "42",
       "--yes",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();

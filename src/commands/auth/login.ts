@@ -12,7 +12,6 @@ Stores the token for the management commands.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
     "<%= config.bin %> <%= command.id %> --no-browser",
   ];
 

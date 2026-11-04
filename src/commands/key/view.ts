@@ -14,7 +14,6 @@ The answer is the API body as it is, so it carries the \`key\` field: a credenti
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
-    "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --output json",
   ];
 
   static override flags = {

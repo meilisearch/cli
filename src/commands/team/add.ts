@@ -15,7 +15,6 @@ Creates it in an organization.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --name search --organization-id 1",
-    "<%= config.bin %> <%= command.id %> --name search --organization-id 1 --output json",
     '<%= config.bin %> <%= command.id %> --data \'{"name":"search","organizationId":1}\'',
   ];
 

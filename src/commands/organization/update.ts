@@ -13,7 +13,6 @@ export default class OrganizationUpdate extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --id 7 --name Acme",
-    "<%= config.bin %> <%= command.id %> --id 7 --name Acme --output json",
     '<%= config.bin %> <%= command.id %> --id 7 --data \'{"name":"Acme"}\'',
   ];
 

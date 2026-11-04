@@ -9,10 +9,7 @@ export default class ConfigUnset extends BaseCommand {
 
 ${CONFIG_FILE_WARNING}`;
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %> --project prod",
-    "<%= config.bin %> <%= command.id %> --project prod --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %> --project prod"];
 
   static override flags = {
     project: Flags.string({

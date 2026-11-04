@@ -13,7 +13,6 @@ export default class TeamUpdate extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --id 12 --name renamed",
-    "<%= config.bin %> <%= command.id %> --id 12 --name renamed --output json",
     "<%= config.bin %> <%= command.id %> --id 12 --owner-id 5b7c2f1e-8a3d-4e6f-9b0a-1c2d3e4f5a6b",
     '<%= config.bin %> <%= command.id %> --id 12 --data \'{"name":"renamed"}\'',
   ];

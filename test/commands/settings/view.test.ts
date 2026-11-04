@@ -36,13 +36,7 @@ describe("meili settings view", () => {
 
   it("prints the settings as the API returned them", async () => {
     server.use(meilisearchHandlers.settings(settings));
-    const result = await runCommand(SettingsView, [
-      "--index",
-      "movies",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(SettingsView, ["--index", "movies", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -65,13 +59,7 @@ describe("meili settings view", () => {
         link: "https://docs.meilisearch.com/errors#index_not_found",
       }),
     );
-    const result = await runCommand(SettingsView, [
-      "--index",
-      "missing",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(SettingsView, ["--index", "missing", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

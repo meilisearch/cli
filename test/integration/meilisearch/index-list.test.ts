@@ -22,7 +22,7 @@ describe.skipIf(!meilisearchUp)("meili index list against a real Meilisearch", (
   });
 
   it("returns the API envelope with the created indexes", async () => {
-    const result = await runBinary(["index", "list", "--all", "--output", "json", ...project]);
+    const result = await runBinary(["index", "list", "--all", ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const page = JSON.parse(result.stdout) as {
@@ -33,24 +33,5 @@ describe.skipIf(!meilisearchUp)("meili index list against a real Meilisearch", (
     expect(ours.map((index) => index.uid).sort()).toEqual([...uids].sort());
     expect(ours.every((index) => index.primaryKey === "id")).toBe(true);
     expect(page.total).toBeGreaterThanOrEqual(2);
-  });
-
-  it("streams every index as ndjson with --all", async () => {
-    const result = await runBinary([
-      "index",
-      "list",
-      "--all",
-      "--limit",
-      "1",
-      "--output",
-      "ndjson",
-      ...project,
-    ]);
-    expect(result.exitCode).toBe(0);
-    const seen = result.stdout
-      .trimEnd()
-      .split("\n")
-      .map((line) => (JSON.parse(line) as { uid: string }).uid);
-    for (const uid of uids) expect(seen).toContain(uid);
   });
 });

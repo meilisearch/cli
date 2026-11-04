@@ -45,8 +45,6 @@ describe.skipIf(!meilisearchUp)("meili multi-search against a real Meilisearch",
         { indexUid: movies, q: "nosferatu" },
         { indexUid: books, q: "nosferatu" },
       ]),
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -66,8 +64,6 @@ describe.skipIf(!meilisearchUp)("meili multi-search against a real Meilisearch",
       ]),
       "--federation",
       "{}",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -83,8 +79,6 @@ describe.skipIf(!meilisearchUp)("meili multi-search against a real Meilisearch",
       JSON.stringify({ queries: [{ indexUid: books, q: "nosferatu" }] }),
       "--queries",
       JSON.stringify([{ indexUid: movies, q: "solaris" }]),
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -94,7 +88,7 @@ describe.skipIf(!meilisearchUp)("meili multi-search against a real Meilisearch",
   });
 
   it("lets the API name the missing queries when neither --queries nor a body is given", async () => {
-    const result = await runBinary(["multi-search", "--output", "json", ...project]);
+    const result = await runBinary(["multi-search", ...project]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.message).toBe("Missing field `queries`");
@@ -105,8 +99,6 @@ describe.skipIf(!meilisearchUp)("meili multi-search against a real Meilisearch",
       "multi-search",
       "--queries",
       JSON.stringify([{ indexUid: `${movies}-missing`, q: "nosferatu" }]),
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(1);

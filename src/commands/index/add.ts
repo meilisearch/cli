@@ -16,7 +16,7 @@ export default class IndexAdd extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --id movies",
-    "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key id --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key id",
     "<%= config.bin %> <%= command.id %> --project prod --id movies --wait",
   ];
 

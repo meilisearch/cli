@@ -25,7 +25,7 @@ describe("meili team update", () => {
     server.use(managementHandlers.updateTeam(received));
     const result = await runCommand(
       TeamUpdate,
-      ["--id", "12", "--name", "renamed", "--owner-id", "user-2", "--output", "json"],
+      ["--id", "12", "--name", "renamed", "--owner-id", "user-2"],
       { env },
     );
     expect(result).toMatchSnapshot();
@@ -36,11 +36,7 @@ describe("meili team update", () => {
 
   it("passes the API's error body through on an unknown id, with exit 4", async () => {
     server.use(managementHandlers.apiError("/api/v2/teams/999", 404, teamNotFound));
-    const result = await runCommand(
-      TeamUpdate,
-      ["--id", "999", "--name", "renamed", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(TeamUpdate, ["--id", "999", "--name", "renamed"], { env });
     expect(result).toMatchSnapshot();
   });
 });

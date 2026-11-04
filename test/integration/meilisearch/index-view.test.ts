@@ -22,29 +22,13 @@ describe.skipIf(!meilisearchUp)("meili index view against a real Meilisearch", (
   });
 
   it("gets one index with --id", async () => {
-    const result = await runBinary([
-      "index",
-      "view",
-      "--id",
-      uids[0] ?? "",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["index", "view", "--id", uids[0] ?? "", ...project]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid: uids[0], primaryKey: "id" });
   });
 
   it("exits 4 with the API error when the --id does not exist", async () => {
-    const result = await runBinary([
-      "index",
-      "view",
-      "--id",
-      `${uids[0]}-missing`,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["index", "view", "--id", `${uids[0]}-missing`, ...project]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("index_not_found");

@@ -22,15 +22,7 @@ describe("meili document view", () => {
 
   it("prints the document as the API returns it", async () => {
     server.use(meilisearchHandlers.document(documents));
-    const result = await runCommand(DocumentView, [
-      "--index",
-      "movies",
-      "--id",
-      "2",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(DocumentView, ["--index", "movies", "--id", "2", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -57,15 +49,7 @@ describe("meili document view", () => {
 
   it("passes the 404 of an unknown document through and exits 4", async () => {
     server.use(meilisearchHandlers.document(documents));
-    const result = await runCommand(DocumentView, [
-      "--index",
-      "movies",
-      "--id",
-      "99",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(DocumentView, ["--index", "movies", "--id", "99", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

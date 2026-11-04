@@ -29,17 +29,7 @@ describe.skipIf(!meilisearchUp)("meili key update against a real Meilisearch", (
 
   it("changes the name and answers the key as the API returns it", async () => {
     const name = `meili-cli-test-renamed-${uid.slice(0, 8)}`;
-    const result = await runBinary([
-      "key",
-      "update",
-      "--id",
-      uid,
-      "--name",
-      name,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["key", "update", "--id", uid, "--name", name, ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     expect(JSON.parse(result.stdout)).toMatchObject({ uid, name });
@@ -53,8 +43,6 @@ describe.skipIf(!meilisearchUp)("meili key update against a real Meilisearch", (
       uid,
       "--description",
       "null",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -69,8 +57,6 @@ describe.skipIf(!meilisearchUp)("meili key update against a real Meilisearch", (
       randomUUID(),
       "--name",
       "nope",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(4);

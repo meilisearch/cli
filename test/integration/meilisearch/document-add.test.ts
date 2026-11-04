@@ -26,17 +26,7 @@ describe.skipIf(!meilisearchUp)("meili document add against a real Meilisearch",
   });
 
   it("enqueues a task and returns at once, without --wait", async () => {
-    const result = await runBinary([
-      "document",
-      "add",
-      "--index",
-      uid,
-      "--file",
-      file,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["document", "add", "--index", uid, "--file", file, ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const task = JSON.parse(result.stdout) as { taskUid: number; status: string; type: string };
@@ -46,7 +36,7 @@ describe.skipIf(!meilisearchUp)("meili document add against a real Meilisearch",
 
   it("reads the documents from stdin with --file -, and --wait prints the final task", async () => {
     const result = await runBinary(
-      ["document", "add", "--index", uid, "--file", "-", "--wait", "--output", "json", ...project],
+      ["document", "add", "--index", uid, "--file", "-", "--wait", ...project],
       {},
       JSON.stringify([{ id: 2, title: "Alien" }]),
     );
@@ -64,8 +54,6 @@ describe.skipIf(!meilisearchUp)("meili document add against a real Meilisearch",
       "--data",
       '[{"id":1,"rating":5}]',
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -81,8 +69,6 @@ describe.skipIf(!meilisearchUp)("meili document add against a real Meilisearch",
       "--data",
       '[{"title":"no primary key here"}]',
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(7);

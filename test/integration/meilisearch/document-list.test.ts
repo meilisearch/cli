@@ -31,15 +31,7 @@ describe.skipIf(!meilisearchUp)("meili document list against a real Meilisearch"
   });
 
   it("returns the API envelope with every document", async () => {
-    const result = await runBinary([
-      "document",
-      "list",
-      "--index",
-      uid,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["document", "list", "--index", uid, ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     expect(JSON.parse(result.stdout)).toEqual({
@@ -58,8 +50,6 @@ describe.skipIf(!meilisearchUp)("meili document list against a real Meilisearch"
       uid,
       "--ids",
       "1,3",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -79,8 +69,6 @@ describe.skipIf(!meilisearchUp)("meili document list against a real Meilisearch"
       "rating:desc",
       "--fields",
       "id",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -88,34 +76,8 @@ describe.skipIf(!meilisearchUp)("meili document list against a real Meilisearch"
     expect(page.results).toEqual([{ id: 2 }, { id: 1 }]);
   });
 
-  it("streams every document as ndjson with --all", async () => {
-    const result = await runBinary([
-      "document",
-      "list",
-      "--index",
-      uid,
-      "--all",
-      "--limit",
-      "1",
-      "--output",
-      "ndjson",
-      ...project,
-    ]);
-    expect(result.exitCode).toBe(0);
-    const lines = result.stdout.trimEnd().split("\n");
-    expect(lines.map((line) => (JSON.parse(line) as { id: number }).id)).toEqual([1, 2, 3]);
-  });
-
   it("exits 4 with the API error when the index does not exist", async () => {
-    const result = await runBinary([
-      "document",
-      "list",
-      "--index",
-      `${uid}-missing`,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["document", "list", "--index", `${uid}-missing`, ...project]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("index_not_found");

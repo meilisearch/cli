@@ -37,8 +37,6 @@ describe("meili similar", () => {
       "143",
       "--embedder",
       "default",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();
@@ -114,24 +112,6 @@ describe("meili similar", () => {
     ).toEqual([{ id: "143", embedder: "default", rankingScoreThreshold: "abc" }]);
   });
 
-  it("refuses --output ndjson: the response is hits, not a list envelope", async () => {
-    server.use(meilisearchHandlers.similar(hits));
-    const result = await runCommand(Similar, [
-      "--index",
-      "movies",
-      "--id",
-      "143",
-      "--embedder",
-      "default",
-      "--output",
-      "ndjson",
-      ...project,
-    ]);
-    expect(result.exitCode).toBe(2);
-    expect(result.stdout).toBe("");
-    expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
-  });
-
   it("passes the API error of a missing index through and exits 4", async () => {
     server.use(
       meilisearchHandlers.apiError("/indexes/missing/similar", 404, {
@@ -148,8 +128,6 @@ describe("meili similar", () => {
       "143",
       "--embedder",
       "default",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();

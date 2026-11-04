@@ -90,11 +90,10 @@ function verbs(commands: LoadableCommand[]): string {
     .join(", ");
 }
 
-/** `-o, --output=<mode>` and its description, in the order of the contract table. */
+/** `--debug` and its description, in the order of the contract table. */
 function globalFlagRows(): [string, string][] {
-  return Object.entries(BaseCommand.baseFlags).map(([name, flag]) => {
-    const short = flag.char === undefined ? "" : `-${flag.char}, `;
-    const value = flag.type === "option" ? `=${flag.helpValue}` : "";
-    return [`${short}--${name}${value}`, flag.description ?? ""];
-  });
+  return Object.entries(BaseCommand.baseFlags).map(([name, flag]) => [
+    `--${name}`,
+    flag.description ?? "",
+  ]);
 }

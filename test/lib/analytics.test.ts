@@ -49,7 +49,7 @@ function analyticsEnv(overrides: Record<string, string> = {}): Record<string, st
   return { MEILI_NO_ANALYTICS: undefined, MEILI_CONFIG: join(dir, "config.json"), ...overrides };
 }
 
-const health = ["--project-url", MEILISEARCH_URL, "-o", "json"];
+const health = ["--project-url", MEILISEARCH_URL];
 
 describe("analytics", () => {
   it("sends one cli_command_run with the names of the flags, never their values", async () => {
@@ -72,7 +72,7 @@ describe("analytics", () => {
         timestamp: expect.any(String),
         properties: expect.objectContaining({
           command: "index list",
-          flags: ["project-url", "output"],
+          flags: ["project-url"],
           exit_code: 0,
           site: "cli",
           $process_person_profile: false,
@@ -206,10 +206,10 @@ describe("analytics", () => {
   });
 
   it("names only the flags the command declares", () => {
-    const flags = { output: { char: "o" }, browser: { allowNo: true }, q: {} };
+    const flags = { index: { char: "i" }, browser: { allowNo: true }, q: {} };
     expect(
-      flagNames(["-o", "json", "--no-browser", "--q=--secret", "--secret", "--q"], flags),
-    ).toEqual(["output", "no-browser", "q"]);
+      flagNames(["-i", "movies", "--no-browser", "--q=--secret", "--secret", "--q"], flags),
+    ).toEqual(["index", "no-browser", "q"]);
   });
 
   it("records the id of the option chosen, and the question left with Ctrl-C", async () => {

@@ -30,7 +30,7 @@ describe.skipIf(!meilisearchUp)("meili stats against a real Meilisearch", () => 
   });
 
   it("returns the statistics of the instance, with one entry per index", async () => {
-    const result = await runBinary(["stats", "--output", "json", ...project]);
+    const result = await runBinary(["stats", ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const body = JSON.parse(result.stdout) as Stats;
@@ -39,7 +39,7 @@ describe.skipIf(!meilisearchUp)("meili stats against a real Meilisearch", () => 
   });
 
   it("returns the statistics of one index with --index", async () => {
-    const result = await runBinary(["stats", "--index", uid, "--output", "json", ...project]);
+    const result = await runBinary(["stats", "--index", uid, ...project]);
     expect(result.exitCode).toBe(0);
     const body = JSON.parse(result.stdout) as IndexStats;
     expect(body.numberOfDocuments).toBe(2);
@@ -54,8 +54,6 @@ describe.skipIf(!meilisearchUp)("meili stats against a real Meilisearch", () => 
       "--size-format",
       "human",
       "--show-internal-database-sizes",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -65,14 +63,7 @@ describe.skipIf(!meilisearchUp)("meili stats against a real Meilisearch", () => 
   });
 
   it("exits 4 with the API error when the index does not exist", async () => {
-    const result = await runBinary([
-      "stats",
-      "--index",
-      `${uid}-missing`,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["stats", "--index", `${uid}-missing`, ...project]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("index_not_found");

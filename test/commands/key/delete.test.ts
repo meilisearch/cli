@@ -23,14 +23,7 @@ describe("meili key delete", () => {
 
   it("writes nothing on stdout and exits 0, the route answering 204", async () => {
     server.use(meilisearchHandlers.keyDelete());
-    const result = await runCommand(KeyDelete, [
-      "--id",
-      uid,
-      "--yes",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(KeyDelete, ["--id", uid, "--yes", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -57,14 +50,7 @@ describe("meili key delete", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError(`/keys/${uid}`, 403, invalidApiKeyError));
-    const result = await runCommand(KeyDelete, [
-      "--id",
-      uid,
-      "--yes",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(KeyDelete, ["--id", uid, "--yes", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

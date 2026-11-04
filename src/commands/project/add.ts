@@ -18,7 +18,6 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3",
-    "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --output json",
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --sync-config",
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --wait --sync-config",
     "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",

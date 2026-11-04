@@ -14,7 +14,6 @@ Every request that carries the key fails afterwards.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
-    "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json",
   ];
 
   static override flags = {

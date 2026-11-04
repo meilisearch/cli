@@ -24,14 +24,7 @@ describe("meili task delete", () => {
 
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.tasksDelete(deleting));
-    const result = await runCommand(TaskDelete, [
-      "--ids",
-      "42,1344",
-      "--yes",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(TaskDelete, ["--ids", "42,1344", "--yes", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -70,7 +63,7 @@ describe("meili task delete", () => {
   it("refuses to run without a filter, before any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(TaskDelete, ["--yes", "--output", "json", ...project]);
+      result = await runCommand(TaskDelete, ["--yes", ...project]);
     });
     expect(requests).toBe(0);
     expect(result).toMatchSnapshot();
@@ -78,14 +71,7 @@ describe("meili task delete", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/tasks", 403, invalidApiKeyError));
-    const result = await runCommand(TaskDelete, [
-      "--ids",
-      "42",
-      "--yes",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(TaskDelete, ["--ids", "42", "--yes", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

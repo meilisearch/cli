@@ -50,7 +50,7 @@ describe("meili auth login", () => {
     const server = await startAuthorizationServer();
     const env = cloudEnv(server);
     try {
-      const result = await runCommand(AuthLogin, ["--no-browser", "--output", "json"], {
+      const result = await runCommand(AuthLogin, ["--no-browser"], {
         env,
         onStderr: browser(),
       });

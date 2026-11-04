@@ -17,7 +17,7 @@ Changes the settings given and leaves the others. The value null resets one.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --searchable-attributes title,overview",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --filterable-attributes genres,release_date --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --filterable-attributes genres,release_date",
     "<%= config.bin %> <%= command.id %> --project prod --index movies --stop-words null",
     "<%= config.bin %> <%= command.id %> --project prod --index movies --typo-tolerance '{\"enabled\":false}' --wait",
     "<%= config.bin %> <%= command.id %> --project prod --index movies --file settings.json",

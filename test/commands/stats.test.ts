@@ -33,13 +33,13 @@ describe("meili stats", () => {
 
   it("prints the statistics of the instance as the API returned them", async () => {
     server.use(meilisearchHandlers.stats(stats));
-    const result = await runCommand(Stats, ["--output", "json", ...project]);
+    const result = await runCommand(Stats, [...project]);
     expect(result).toMatchSnapshot();
   });
 
   it("prints the statistics of one index with --index", async () => {
     server.use(meilisearchHandlers.indexStats(indexStats));
-    const result = await runCommand(Stats, ["--index", "movies", "--output", "json", ...project]);
+    const result = await runCommand(Stats, ["--index", "movies", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -71,7 +71,7 @@ describe("meili stats", () => {
         link: "https://docs.meilisearch.com/errors#index_not_found",
       }),
     );
-    const result = await runCommand(Stats, ["--index", "missing", "--output", "json", ...project]);
+    const result = await runCommand(Stats, ["--index", "missing", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

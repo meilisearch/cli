@@ -13,33 +13,28 @@ exports[`meili stats > prints its help without any network call 1`] = `
 "Get the statistics of the instance, or of one index.
 
 USAGE
-  $ meili stats [-o <mode>] [--debug] [--project-url <url>]
-    [--project-api-key <key>] [--project <name>] [--index <index>]
-    [--show-internal-database-sizes] [--size-format raw|human]
+  $ meili stats [--debug] [--project-url <url>] [--project-api-key
+    <key>] [--project <name>] [--index <index>] [--show-internal-database-sizes]
+    [--size-format raw|human]
 
 FLAGS
-  -o, --output=<mode>                 json (default): one document, the API body
-                                      as it is, indented in a terminal, compact
-                                      when piped. ndjson: one item per line,
-                                      only for the commands that print a list of
-                                      items, streams with --all.
-      --debug                         Print every HTTP request and response on
-                                      stderr, secrets redacted.
-      --index=<index>                 The index to read the statistics of.
-                                      Without it, the whole instance.
-      --project=<name>                A project of the config file. Cannot be
-                                      combined with --project-url. One of
-                                      --project or --project-url is required.
-      --project-api-key=<key>         Project API key. \`-\` reads it from stdin.
-      --project-url=<url>             Project URL, the Meilisearch instance to
-                                      talk to. One of --project or --project-url
-                                      is required.
-      --show-internal-database-sizes  Add internalDatabaseSizes to the response,
-                                      the size of each internal database.
-      --size-format=<option>          How the sizes are written: raw (default),
-                                      a number of bytes, or human, a string with
-                                      its unit.
-                                      <options: raw|human>
+  --debug                         Print every HTTP request and response on
+                                  stderr, secrets redacted.
+  --index=<index>                 The index to read the statistics of. Without
+                                  it, the whole instance.
+  --project=<name>                A project of the config file. Cannot be
+                                  combined with --project-url. One of --project
+                                  or --project-url is required.
+  --project-api-key=<key>         Project API key. \`-\` reads it from stdin.
+  --project-url=<url>             Project URL, the Meilisearch instance to talk
+                                  to. One of --project or --project-url is
+                                  required.
+  --show-internal-database-sizes  Add internalDatabaseSizes to the response, the
+                                  size of each internal database.
+  --size-format=<option>          How the sizes are written: raw (default), a
+                                  number of bytes, or human, a string with its
+                                  unit.
+                                  <options: raw|human>
 
 DESCRIPTION
   Get the statistics of the instance, or of one index.
@@ -48,8 +43,6 @@ DESCRIPTION
 
 EXAMPLES
   $ meili stats --project prod
-
-  $ meili stats --project prod --output json
 
   $ meili stats --project prod --index movies
 

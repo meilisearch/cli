@@ -128,11 +128,10 @@ A route gets an explicit exception, with a reason, when the maintainers choose a
 
 ## Global flags
 
-These two flags work on every command, whatever it talks to.
+This flag works on every command, whatever it talks to.
 
 | Flag | Meaning |
 |---|---|
-| `-o, --output <mode>` | `json` (default) or `ndjson`. See `output.md`. |
 | `--debug` | Print every HTTP request and response on stderr, secrets redacted. |
 
 ## Shared flag groups
@@ -168,7 +167,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 |---|---|
 | `--limit <n>` | Passed to the API. |
 | `--offset <n>` or `--from <uid>` | Passed to the API. The name is the API parameter name for that route. |
-| `--all` | Fetch every page. With `ndjson`, stream the items. With `json`, buffer them into one array. On `document delete`, select the route that deletes every document. |
+| `--all` | Fetch every page, and print them as one list. On `document delete`, select the route that deletes every document. |
 
 **Body input** (commands that send a JSON body):
 

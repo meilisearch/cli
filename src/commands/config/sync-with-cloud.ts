@@ -36,7 +36,7 @@ ${CONFIG_FILE_WARNING}`;
     "<%= config.bin %> <%= command.id %> --all",
     "<%= config.bin %> <%= command.id %> --team-ids 12,13",
     "<%= config.bin %> <%= command.id %> --project-name prod",
-    "<%= config.bin %> <%= command.id %> --project-url https://ms-abc.sfo.meilisearch.io --output json",
+    "<%= config.bin %> <%= command.id %> --project-url https://ms-abc.sfo.meilisearch.io",
   ];
 
   static override flags = {
@@ -138,7 +138,7 @@ ${CONFIG_FILE_WARNING}`;
     if (report.some((each) => each.action !== "unchanged")) {
       writeConfigFile({ path: file.path, projects: entries });
     }
-    await this.output(report, { supportsNdjson: true });
+    await this.output(report);
   }
 }
 

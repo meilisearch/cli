@@ -31,7 +31,7 @@ describe("meili key view", () => {
 
   it("gets one key by its uid, as the API returns it", async () => {
     server.use(meilisearchHandlers.key(both));
-    const result = await runCommand(KeyView, ["--id", search.uid, "--output", "json", ...project]);
+    const result = await runCommand(KeyView, ["--id", search.uid, ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -46,7 +46,7 @@ describe("meili key view", () => {
 
   it("passes the 404 of an unknown key through and exits 4", async () => {
     server.use(meilisearchHandlers.key(both));
-    const result = await runCommand(KeyView, ["--id", "nope", "--output", "json", ...project]);
+    const result = await runCommand(KeyView, ["--id", "nope", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

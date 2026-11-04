@@ -44,8 +44,6 @@ describe.skipIf(!meilisearchUp)("meili similar against a real Meilisearch", () =
       "1",
       "--embedder",
       "manual",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -70,8 +68,6 @@ describe.skipIf(!meilisearchUp)("meili similar against a real Meilisearch", () =
       "id",
       "--limit",
       "1",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -88,8 +84,6 @@ describe.skipIf(!meilisearchUp)("meili similar against a real Meilisearch", () =
       JSON.stringify({ id: 1, embedder: "manual", limit: 1 }),
       "--id",
       "3",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -107,8 +101,6 @@ describe.skipIf(!meilisearchUp)("meili similar against a real Meilisearch", () =
       "404",
       "--embedder",
       "manual",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(1);
@@ -125,8 +117,6 @@ describe.skipIf(!meilisearchUp)("meili similar against a real Meilisearch", () =
       "1",
       "--embedder",
       "manual",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(4);

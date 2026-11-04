@@ -22,16 +22,12 @@ exports[`meili project list > prints its help without any network call 1`] = `
 "List the Meilisearch Cloud projects.
 
 USAGE
-  $ meili project list [-o <mode>] [--debug] [--team-id <id>]
+  $ meili project list [--debug] [--team-id <id>]
 
 FLAGS
-  -o, --output=<mode>  json (default): one document, the API body as it is,
-                       indented in a terminal, compact when piped. ndjson: one
-                       item per line, only for the commands that print a list of
-                       items, streams with --all.
-      --debug          Print every HTTP request and response on stderr, secrets
-                       redacted.
-      --team-id=<id>   Only the projects of this team.
+  --debug         Print every HTTP request and response on stderr, secrets
+                  redacted.
+  --team-id=<id>  Only the projects of this team.
 
 DESCRIPTION
   List the Meilisearch Cloud projects.
@@ -41,11 +37,7 @@ DESCRIPTION
 EXAMPLES
   $ meili project list
 
-  $ meili project list --output json
-
   $ meili project list --team-id 12
-
-  $ meili project list --output ndjson
 
 "
 `;

@@ -31,8 +31,6 @@ describe.skipIf(!meilisearchUp)("meili settings update against a real Meilisearc
       "--typo-tolerance",
       '{"enabled":false}',
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -57,8 +55,6 @@ describe.skipIf(!meilisearchUp)("meili settings update against a real Meilisearc
       "--stop-words",
       "null",
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -76,8 +72,6 @@ describe.skipIf(!meilisearchUp)("meili settings update against a real Meilisearc
       "--proximity-precision",
       "byNothing",
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(1);

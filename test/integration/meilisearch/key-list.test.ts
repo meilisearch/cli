@@ -29,7 +29,7 @@ describe.skipIf(!meilisearchUp)("meili key list against a real Meilisearch", () 
   });
 
   it("lists the keys with their key value, which the CLI does not mask", async () => {
-    const result = await runBinary(["key", "list", "--all", "--output", "json", ...project]);
+    const result = await runBinary(["key", "list", "--all", ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const page = JSON.parse(result.stdout) as { results: Array<{ uid: string; key: string }> };

@@ -4,22 +4,17 @@ This file defines what `meili` writes, where it writes it, and in which format. 
 
 ## Streams
 
-- stdout carries data only. One command writes one JSON document (or one NDJSON stream). Nothing else, ever.
+- stdout carries data only. One command writes one JSON document. Nothing else, ever.
 - stderr carries everything else: errors, warnings, progress, debug traces, deprecation notices.
-- A command that produces no data (for example a delete that the API answers with 204) writes nothing on stdout in `json` mode and exits with code 0. It may write one line on stderr when stderr is a TTY.
+- A command that produces no data (for example a delete that the API answers with 204) writes nothing on stdout and exits with code 0. It may write one line on stderr when stderr is a TTY.
 - A command that waits for a human, `auth login`, writes on stderr what that human must act on, TTY or not. The URL to approve must reach a person even when the output is piped.
 - An interactive command, such as `teleport`, writes its questions, its progress and its messages on stderr, and nothing on stdout. It is for humans, so the rules of this file for readability do not bind it: in a terminal, it may use colors, symbols and animations. `NO_COLOR` removes the colors. Its errors are text for a human. Without a terminal, it fails with the JSON error of this file. See ADR 0015.
 
-## Output modes
+## Format
 
-`--output <mode>` selects the mode. `MEILI_OUTPUT` sets the default. Without either, the mode is `json`, in a terminal or not: an agent never depends on how its stdout is attached.
+Every command writes JSON, in a terminal or not. It is compact (one line) when stdout is not a TTY, and indented with two spaces when it is. Field order and names are the API's.
 
-| Mode | Rule |
-|---|---|
-| `json` | One JSON document. Compact (one line) when stdout is not a TTY, indented with two spaces when it is. Field order and names are the API's. |
-| `ndjson` | One JSON object per line. Only the `list` commands support it. Each line is one item of the API `results` array. With `--all`, lines stream as pages arrive. |
-
-There is no table mode and no color, except on the stderr of an interactive command. In a terminal the JSON is indented, and this makes it readable.
+There is no other format, no table and no color, except on the stderr of an interactive command. In a terminal the JSON is indented, and this makes it readable.
 
 ## Pass-through
 
@@ -119,8 +114,8 @@ Destructive commands are the commands of the verb `delete`, as `commands.md` der
 ## Pagination
 
 - `--limit` and `--offset` (or `--from` for tasks and batches) are passed to the API unchanged.
-- `--all` follows the API pagination until the end. With `ndjson`, the items stream. With `json`, the CLI returns the envelope of the last page, with `results` replaced by the full list and without the fields that describe one page: `limit` and `offset`, or `limit` and `from` on the routes that page with a cursor.
-- The list commands of the Management API do not offer these flags yet. The Management API numbers its pages instead of counting an offset, and the flags wait until the two APIs page the same way. Each command prints the first page as the API sends it, envelope included, and `ndjson` streams the `results` of that page.
+- `--all` follows the API pagination until the end. The CLI returns the envelope of the last page, with `results` replaced by the full list and without the fields that describe one page: `limit` and `offset`, or `limit` and `from` on the routes that page with a cursor.
+- The list commands of the Management API do not offer these flags yet. The Management API numbers its pages instead of counting an offset, and the flags wait until the two APIs page the same way. Each command prints the first page as the API sends it, envelope included.
 
 ## Help
 

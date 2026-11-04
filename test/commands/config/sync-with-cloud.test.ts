@@ -55,7 +55,7 @@ describe("meili config sync-with-cloud", () => {
       prod: { url: "https://ms-abc.sfo.meilisearch.io" },
       docs: docsEntry,
     });
-    const result = await runCommand(ConfigSyncWithCloud, ["--all", "--output", "json"], {
+    const result = await runCommand(ConfigSyncWithCloud, ["--all"], {
       env: { ...managementEnv, ...env },
     });
     expect(result).toMatchSnapshot();
@@ -88,19 +88,12 @@ describe("meili config sync-with-cloud", () => {
       managementHandlers.listTeams(teams),
     );
     const { path, env } = tempConfig("sync-teams.json", {});
-    const result = await runCommand(
-      ConfigSyncWithCloud,
-      ["--team-ids", "12", "--output", "ndjson"],
-      { env: { ...managementEnv, ...env } },
-    );
+    const result = await runCommand(ConfigSyncWithCloud, ["--team-ids", "12"], {
+      env: { ...managementEnv, ...env },
+    });
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
-    expect(
-      result.stdout
-        .trim()
-        .split("\n")
-        .map((line) => JSON.parse(line)),
-    ).toEqual([
+    expect(JSON.parse(result.stdout)).toEqual([
       { project: "demo", cloud: { id: 343, ...team12 }, action: "added", apiKey: "written" },
       { project: "docs", cloud: { id: 344, ...team12 }, action: "added", apiKey: "written" },
     ]);
@@ -122,11 +115,9 @@ describe("meili config sync-with-cloud", () => {
       cloud: { id: 344, teamId: 12, teamName: "Search" },
     };
     const { path, env } = tempConfig("sync-unchanged.json", { docs: entry });
-    const result = await runCommand(
-      ConfigSyncWithCloud,
-      ["--project-name", "docs", "--output", "json"],
-      { env: { ...managementEnv, ...env } },
-    );
+    const result = await runCommand(ConfigSyncWithCloud, ["--project-name", "docs"], {
+      env: { ...managementEnv, ...env },
+    });
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toEqual([
       { project: "docs", cloud: entry.cloud, action: "unchanged", apiKey: "kept" },
@@ -197,7 +188,7 @@ describe("meili config sync-with-cloud", () => {
   it("passes the API's error body through and writes nothing on a 403 of the list", async () => {
     server.use(managementHandlers.apiError("/api/v2/projects", 403, forbidden));
     const { path, env } = tempConfig("sync-forbidden.json", {});
-    const result = await runCommand(ConfigSyncWithCloud, ["--all", "--output", "json"], {
+    const result = await runCommand(ConfigSyncWithCloud, ["--all"], {
       env: { ...managementEnv, ...env },
     });
     expect(result).toMatchSnapshot();

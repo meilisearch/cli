@@ -5,10 +5,7 @@ export default class Version extends BaseCommand {
 
   static override description = "Print the version of the CLI.";
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %>"];
 
   async run(): Promise<void> {
     await this.parse(Version);

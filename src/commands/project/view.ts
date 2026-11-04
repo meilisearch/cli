@@ -13,7 +13,6 @@ export default class ProjectView extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --id 343",
-    "<%= config.bin %> <%= command.id %> --id 343 --output json",
     "<%= config.bin %> <%= command.id %> --project prod",
   ];
 

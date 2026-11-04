@@ -43,8 +43,6 @@ describe("meili index update", () => {
       "movies",
       "--primary-key",
       "movie_id",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();
@@ -87,8 +85,6 @@ describe("meili index update", () => {
       "movies",
       "--primary-key",
       "id",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();

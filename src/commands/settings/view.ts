@@ -12,10 +12,7 @@ export default class SettingsView extends BaseCommand {
 
 Each setting has its current value or its default.`;
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %> --project prod --index movies",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %> --project prod --index movies"];
 
   static override flags = {
     ...BaseCommand.connectionFlags,

@@ -18,7 +18,7 @@ describe("meili auth status", () => {
     const path = storeSession(env, server.url, { accessToken: "access-token-live" });
     server.accept("access-token-live");
     try {
-      const result = await runCommand(AuthStatus, ["--output", "json"], { env });
+      const result = await runCommand(AuthStatus, [], { env });
       expect(result.exitCode).toBe(0);
       expect(result.stderr).toBe("");
       expect(JSON.parse(result.stdout)).toEqual({
@@ -34,7 +34,7 @@ describe("meili auth status", () => {
   });
 
   it("answers with the error alone when nobody is logged in", async () => {
-    const result = await runCommand(AuthStatus, ["--output", "json"], { env: sessionHome() });
+    const result = await runCommand(AuthStatus, [], { env: sessionHome() });
     expect(result.exitCode).toBe(3);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_auth_missing");
@@ -45,7 +45,7 @@ describe("meili auth status", () => {
     const env = sessionHome();
     storeSession(env, server.url, { accessToken: "access-token-revoked" });
     try {
-      const result = await runCommand(AuthStatus, ["--output", "json"], { env });
+      const result = await runCommand(AuthStatus, [], { env });
       expect(result.exitCode).toBe(3);
       expect(result.stdout).toBe("");
       const { error } = JSON.parse(result.stderr) as { error: { code: string; hint: string } };

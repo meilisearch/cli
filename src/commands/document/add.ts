@@ -17,7 +17,6 @@ A document replaces the one that has the same primary key.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json --output json",
     "cat movies.json | <%= config.bin %> <%= command.id %> --project prod --index movies --file -",
     '<%= config.bin %> <%= command.id %> --project prod --index movies --data \'[{"id":1,"title":"Nosferatu"}]\' --primary-key id',
     "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json --wait",

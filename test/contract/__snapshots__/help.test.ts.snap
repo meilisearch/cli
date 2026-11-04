@@ -7,12 +7,7 @@ USAGE
   $ meili index COMMAND
 
 GLOBAL FLAGS
-  -o, --output=<mode>  json (default): one document, the API body as it is,
-                       indented in a terminal, compact when piped. ndjson: one
-                       item per line, only for the commands that print a list of
-                       items, streams with --all.
-  --debug              Print every HTTP request and response on stderr, secrets
-                       redacted.
+  --debug  Print every HTTP request and response on stderr, secrets redacted.
 
 COMMANDS
   index add     Create an index.
@@ -34,7 +29,7 @@ CLI COMMANDS
   auth      login, logout, refresh, status
   config    list, update, set, sync-with-cloud, unset
   schema    Describe the commands as JSON.
-  teleport  Move a project to Meilisearch Cloud, for humans only.
+  teleport  Interactive command. Move a project to Meilisearch Cloud.
   version   Print the version of the CLI.
 
 MEILISEARCH COMMANDS
@@ -61,17 +56,11 @@ CLOUD MANAGEMENT COMMANDS
   team          list, view, add, update, delete
 
 GLOBAL FLAGS
-  -o, --output=<mode>  json (default): one document, the API body as it is,
-                       indented in a terminal, compact when piped. ndjson: one
-                       item per line, only for the commands that print a list of
-                       items, streams with --all.
-  --debug              Print every HTTP request and response on stderr, secrets
-                       redacted.
+  --debug  Print every HTTP request and response on stderr, secrets redacted.
 
 ENVIRONMENT VARIABLES
   MEILI_CONFIG        Config file path. Default ~/.config/meili/config.json.
                       Give each agent its own file, read-only.
-  MEILI_OUTPUT        Default output mode: json or ndjson.
   MEILI_TIMEOUT       Default --timeout for --wait.
   MEILI_NO_ANALYTICS  \`true\` or \`1\` turns off the anonymous usage data the CLI
                       sends. \`DO_NOT_TRACK=1\` and \`CI\` turn it off too.

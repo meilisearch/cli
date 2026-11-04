@@ -23,13 +23,13 @@ describe("meili index view", () => {
 
   it("gets one index with --id, as the API returns it", async () => {
     server.use(meilisearchHandlers.index(three));
-    const result = await runCommand(IndexView, ["--id", "books", "--output", "json", ...project]);
+    const result = await runCommand(IndexView, ["--id", "books", ...project]);
     expect(result).toMatchSnapshot();
   });
 
   it("passes the 404 of an unknown --id through and exits 4", async () => {
     server.use(meilisearchHandlers.index(three));
-    const result = await runCommand(IndexView, ["--id", "nope", "--output", "json", ...project]);
+    const result = await runCommand(IndexView, ["--id", "nope", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

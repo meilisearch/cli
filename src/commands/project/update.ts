@@ -21,7 +21,6 @@ export default class ProjectUpdate extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --id 343 --name renamed",
-    "<%= config.bin %> <%= command.id %> --id 343 --name renamed --output json",
     "<%= config.bin %> <%= command.id %> --project prod --name renamed",
     "<%= config.bin %> <%= command.id %> --project prod --name renamed --sync-config",
     '<%= config.bin %> <%= command.id %> --id 343 --data \'{"name":"renamed"}\'',

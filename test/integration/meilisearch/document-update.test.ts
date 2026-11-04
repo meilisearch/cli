@@ -33,8 +33,6 @@ describe.skipIf(!meilisearchUp)("meili document update against a real Meilisearc
       "--data",
       '[{"id":1,"rating":4}]',
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -50,8 +48,6 @@ describe.skipIf(!meilisearchUp)("meili document update against a real Meilisearc
       uid,
       "--data",
       '[{"id":2,"title":"Solaris"}]',
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -63,15 +59,7 @@ describe.skipIf(!meilisearchUp)("meili document update against a real Meilisearc
   });
 
   it("exits 2 without documents, and sends nothing", async () => {
-    const result = await runBinary([
-      "document",
-      "update",
-      "--index",
-      uid,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["document", "update", "--index", uid, ...project]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");

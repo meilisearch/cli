@@ -22,13 +22,13 @@ describe("meili info", () => {
 
   it("prints the version as the API returned it", async () => {
     server.use(meilisearchHandlers.version());
-    const result = await runCommand(Info, ["--output", "json", ...project]);
+    const result = await runCommand(Info, [...project]);
     expect(result).toMatchSnapshot();
   });
 
   it("passes the API error of a key the instance refuses through and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/version", 403, invalidApiKeyError));
-    const result = await runCommand(Info, ["--output", "json", ...project]);
+    const result = await runCommand(Info, [...project]);
     expect(result).toMatchSnapshot();
   });
 });

@@ -36,7 +36,7 @@ describe("meili index add", () => {
 
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.indexCreate(created));
-    const result = await runCommand(IndexAdd, ["--id", "movies", "--output", "json", ...project]);
+    const result = await runCommand(IndexAdd, ["--id", "movies", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -79,7 +79,7 @@ describe("meili index add", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/indexes", 403, invalidApiKeyError));
-    const result = await runCommand(IndexAdd, ["--id", "movies", "--output", "json", ...project]);
+    const result = await runCommand(IndexAdd, ["--id", "movies", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

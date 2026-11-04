@@ -35,8 +35,6 @@ describe("meili document add", () => {
       "movies",
       "--data",
       documents,
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();
@@ -117,8 +115,6 @@ describe("meili document add", () => {
       "--data",
       documents,
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -136,8 +132,6 @@ describe("meili document add", () => {
       "--data",
       documents,
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(7);
@@ -159,8 +153,6 @@ describe("meili document add", () => {
       "nope",
       "--data",
       documents,
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();

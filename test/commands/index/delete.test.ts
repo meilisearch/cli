@@ -24,14 +24,7 @@ describe("meili index delete", () => {
 
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.indexDelete(deleted));
-    const result = await runCommand(IndexDelete, [
-      "--id",
-      "movies",
-      "--yes",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(IndexDelete, ["--id", "movies", "--yes", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -58,14 +51,7 @@ describe("meili index delete", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/indexes/movies", 403, invalidApiKeyError));
-    const result = await runCommand(IndexDelete, [
-      "--id",
-      "movies",
-      "--yes",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(IndexDelete, ["--id", "movies", "--yes", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

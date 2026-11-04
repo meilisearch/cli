@@ -49,8 +49,6 @@ describe("meili key add", () => {
       "movies",
       "--expires-at",
       "null",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();
@@ -135,8 +133,6 @@ describe("meili key add", () => {
       "*",
       "--expires-at",
       "null",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();

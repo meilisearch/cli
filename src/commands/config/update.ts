@@ -23,7 +23,7 @@ ${CONFIG_FILE_WARNING}`;
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --sync-with-cloud",
     "<%= config.bin %> <%= command.id %> --project prod --project-api-key - < key.txt",
-    "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7701 --output json",
+    "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7701",
   ];
 
   static override flags = {

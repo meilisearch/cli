@@ -20,7 +20,6 @@ export const ENV = {
   MANAGEMENT_URL: "MEILI_MANAGEMENT_URL",
   MANAGEMENT_CLIENT_ID: "MEILI_MANAGEMENT_CLIENT_ID",
   MANAGEMENT_DASHBOARD_URL: "MEILI_MANAGEMENT_DASHBOARD_URL",
-  OUTPUT: "MEILI_OUTPUT",
   TIMEOUT: "MEILI_TIMEOUT",
   NO_ANALYTICS: "MEILI_NO_ANALYTICS",
 } as const;
@@ -76,7 +75,6 @@ export const ENV_VARS: ReadonlyArray<{
     description: `Dashboard URL, which hosts the consent page of \`auth login\`. Default ${DEFAULT_MANAGEMENT_DASHBOARD_URL}. For development and tests.`,
     development: true,
   },
-  { name: ENV.OUTPUT, description: "Default output mode: json or ndjson.", flag: "output" },
   { name: ENV.TIMEOUT, description: "Default --timeout for --wait.", flag: "timeout" },
   {
     name: ENV.NO_ANALYTICS,

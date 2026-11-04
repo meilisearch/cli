@@ -22,13 +22,13 @@ describe("meili project view", () => {
 
   it("gets one project with --id, or with --project and its cloud.id", async () => {
     server.use(managementHandlers.getProject([project, staging]));
-    const byId = await runCommand(ProjectView, ["--id", "344", "--output", "json"], { env });
+    const byId = await runCommand(ProjectView, ["--id", "344"], { env });
     expect(byId).toMatchSnapshot();
 
     const { env: configEnv } = tempConfig("projects.json", {
       demo: { url: "https://ms-abc.sfo.meilisearch.io", cloud: { id: 343 } },
     });
-    const byName = await runCommand(ProjectView, ["--project", "demo", "--output", "json"], {
+    const byName = await runCommand(ProjectView, ["--project", "demo"], {
       env: { ...env, ...configEnv },
     });
     expect(byName.stdout).toBe(`${JSON.stringify(project)}\n`);
@@ -36,7 +36,7 @@ describe("meili project view", () => {
 
   it("passes the API's error body through on an unknown id, with exit 3", async () => {
     server.use(managementHandlers.getProject([project]));
-    const result = await runCommand(ProjectView, ["--id", "999", "--output", "json"], { env });
+    const result = await runCommand(ProjectView, ["--id", "999"], { env });
     expect(result).toMatchSnapshot();
   });
 });

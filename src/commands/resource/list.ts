@@ -13,7 +13,6 @@ The active plans a project runs on, with their pricing.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
     "<%= config.bin %> <%= command.id %> --region-id 1",
   ];
 
@@ -26,7 +25,7 @@ The active plans a project runs on, with their pricing.`;
 
   async run(): Promise<void> {
     const { flags } = await this.parse(ResourceList);
-    await this.outputPage(
+    await this.output(
       await getApiV2Resources({
         client: this.managementClient,
         query: { regionId: flags["region-id"] },

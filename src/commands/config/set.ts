@@ -23,7 +23,6 @@ ${CONFIG_FILE_WARNING}`;
     "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700",
     "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
     "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
-    "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700 --output json",
   ];
 
   static override flags = {

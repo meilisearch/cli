@@ -16,8 +16,6 @@ describe("--debug", () => {
     server.use(meilisearchHandlers.health());
     const result = await runCommand(Health, [
       "--debug",
-      "--output",
-      "json",
       "--project-url",
       MEILISEARCH_URL,
       "--project-api-key",
@@ -37,7 +35,7 @@ describe("--debug", () => {
     const { env } = tempConfig("redaction.json", {
       prod: { url: MEILISEARCH_URL, apiKey: SECRET },
     });
-    const result = await runCommand(Health, ["--debug", "--output", "json", "--project", "prod"], {
+    const result = await runCommand(Health, ["--debug", "--project", "prod"], {
       env,
     });
     expect(result.exitCode).toBe(0);
@@ -48,7 +46,7 @@ describe("--debug", () => {
 
   it("masks the management token and the project's masterKey in the trace and on stdout", async () => {
     server.use(managementHandlers.createProject());
-    const result = await runCommand(ProjectAdd, ["--debug", "--name", "demo", "--output", "json"], {
+    const result = await runCommand(ProjectAdd, ["--debug", "--name", "demo"], {
       env: { MEILI_MANAGEMENT_TOKEN: SECRET, MEILI_MANAGEMENT_URL: MANAGEMENT_URL },
     });
     expect(result.exitCode).toBe(0);

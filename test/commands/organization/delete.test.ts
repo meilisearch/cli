@@ -24,21 +24,13 @@ describe("meili organization delete", () => {
 
   it("deletes the organization of --id and prints nothing", async () => {
     server.use(managementHandlers.deleteOrganization());
-    const result = await runCommand(
-      OrganizationDelete,
-      ["--id", "1", "--yes", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(OrganizationDelete, ["--id", "1", "--yes"], { env });
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
   });
 
   it("passes the API's error body through when the organization has projects, with exit 1", async () => {
     server.use(managementHandlers.apiError("/api/v2/organizations/1", 422, hasProjects));
-    const result = await runCommand(
-      OrganizationDelete,
-      ["--id", "1", "--yes", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(OrganizationDelete, ["--id", "1", "--yes"], { env });
     expect(result).toMatchSnapshot();
   });
 });

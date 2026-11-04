@@ -25,15 +25,7 @@ describe.skipIf(!meilisearchUp)("meili settings view against a real Meilisearch"
   });
 
   it("returns every setting, the ones set and the defaults", async () => {
-    const result = await runBinary([
-      "settings",
-      "view",
-      "--index",
-      uid,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["settings", "view", "--index", uid, ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     expect(JSON.parse(result.stdout)).toMatchObject({
@@ -44,15 +36,7 @@ describe.skipIf(!meilisearchUp)("meili settings view against a real Meilisearch"
   });
 
   it("exits 4 with the API error when the index does not exist", async () => {
-    const result = await runBinary([
-      "settings",
-      "view",
-      "--index",
-      `${uid}-missing`,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["settings", "view", "--index", `${uid}-missing`, ...project]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("index_not_found");

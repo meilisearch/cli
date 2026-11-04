@@ -13,9 +13,7 @@ Only the projects the token sees.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
     "<%= config.bin %> <%= command.id %> --team-id 12",
-    "<%= config.bin %> <%= command.id %> --output ndjson",
   ];
 
   static override flags = {
@@ -27,7 +25,7 @@ Only the projects the token sees.`;
 
   async run(): Promise<void> {
     const { flags } = await this.parse(ProjectList);
-    await this.outputPage(
+    await this.output(
       await getApiV2Projects({
         client: this.managementClient,
         query: { teamId: flags["team-id"] },

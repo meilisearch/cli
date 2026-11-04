@@ -25,21 +25,13 @@ describe("meili index list", () => {
 
   it("prints the API envelope as it is in JSON", async () => {
     server.use(meilisearchHandlers.indexes(three));
-    const result = await runCommand(IndexList, ["--output", "json", ...project]);
+    const result = await runCommand(IndexList, [...project]);
     expect(result).toMatchSnapshot();
   });
 
   it("passes --limit and --offset to the API", async () => {
     server.use(meilisearchHandlers.indexes(five));
-    const result = await runCommand(IndexList, [
-      "--limit",
-      "2",
-      "--offset",
-      "1",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(IndexList, ["--limit", "2", "--offset", "1", ...project]);
     expect(result.exitCode).toBe(0);
     const page = JSON.parse(result.stdout) as {
       results: Array<{ uid: string }>;
@@ -51,73 +43,26 @@ describe("meili index list", () => {
     expect(page).toMatchObject({ offset: 1, limit: 2, total: 5 });
   });
 
-  it("prints one item per line in ndjson", async () => {
-    server.use(meilisearchHandlers.indexes(three));
-    const result = await runCommand(IndexList, ["--output", "ndjson", ...project]);
-    expect(result.exitCode).toBe(0);
-    const lines = result.stdout.trimEnd().split("\n");
-    expect(lines).toHaveLength(3);
-    expect(lines.map((line) => (JSON.parse(line) as { uid: string }).uid)).toEqual([
-      "movies",
-      "books",
-      "songs",
-    ]);
-  });
-
   it("follows every page with --all and merges them into one envelope in JSON", async () => {
     server.use(meilisearchHandlers.indexes(five));
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(IndexList, [
-        "--all",
-        "--limit",
-        "2",
-        "--output",
-        "json",
-        ...project,
-      ]);
+      result = await runCommand(IndexList, ["--all", "--limit", "2", ...project]);
     });
     expect(requests).toBe(3);
     expect(result?.exitCode).toBe(0);
     expect(JSON.parse(result?.stdout ?? "")).toEqual({ results: five, total: 5 });
   });
 
-  it("streams every page with --all in ndjson", async () => {
-    server.use(meilisearchHandlers.indexes(five));
-    const result = await runCommand(IndexList, [
-      "--all",
-      "--limit",
-      "2",
-      "--output",
-      "ndjson",
-      ...project,
-    ]);
-    expect(result.exitCode).toBe(0);
-    const lines = result.stdout.trimEnd().split("\n");
-    expect(lines).toHaveLength(5);
-    expect(lines.map((line) => (JSON.parse(line) as { uid: string }).uid)).toEqual([
-      "movies",
-      "books",
-      "songs",
-      "games",
-      "shows",
-    ]);
-  });
-
   it("handles an empty instance", async () => {
     server.use(meilisearchHandlers.indexes([]));
-    expect(await runCommand(IndexList, ["--output", "json", ...project])).toEqual({
+    expect(await runCommand(IndexList, [...project])).toEqual({
       stdout: '{"results":[],"offset":0,"limit":20,"total":0}\n',
       stderr: "",
       exitCode: 0,
     });
-    expect(await runCommand(IndexList, ["--all", "--output", "json", ...project])).toEqual({
+    expect(await runCommand(IndexList, ["--all", ...project])).toEqual({
       stdout: '{"results":[],"total":0}\n',
-      stderr: "",
-      exitCode: 0,
-    });
-    expect(await runCommand(IndexList, ["--all", "--output", "ndjson", ...project])).toEqual({
-      stdout: "",
       stderr: "",
       exitCode: 0,
     });
@@ -125,12 +70,12 @@ describe("meili index list", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/indexes", 403, invalidApiKeyError));
-    const result = await runCommand(IndexList, ["--output", "json", ...project]);
+    const result = await runCommand(IndexList, [...project]);
     expect(result).toMatchSnapshot();
   });
 
   it("rejects a non-integer --limit with cli_usage", async () => {
-    const result = await runCommand(IndexList, ["--limit", "many", "--output", "json", ...project]);
+    const result = await runCommand(IndexList, ["--limit", "many", ...project]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");

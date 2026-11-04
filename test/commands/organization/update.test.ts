@@ -23,11 +23,9 @@ describe("meili organization update", () => {
   it("sends the new name for the organization of --id, and prints the organization updated", async () => {
     const received: ReceivedRequest[] = [];
     server.use(managementHandlers.updateOrganization(received));
-    const result = await runCommand(
-      OrganizationUpdate,
-      ["--id", "1", "--name", "Renamed", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(OrganizationUpdate, ["--id", "1", "--name", "Renamed"], {
+      env,
+    });
     expect(result).toMatchSnapshot();
     expect(received[0]?.url).toBe(`${MANAGEMENT_URL}/api/v2/organizations/1`);
     expect(received[0]?.body).toEqual({ name: "Renamed" });
@@ -35,11 +33,7 @@ describe("meili organization update", () => {
 
   it("passes the API's error body through on a 403, with exit 3", async () => {
     server.use(managementHandlers.apiError("/api/v2/organizations/1", 403, forbidden));
-    const result = await runCommand(
-      OrganizationUpdate,
-      ["--id", "1", "--name", "x", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(OrganizationUpdate, ["--id", "1", "--name", "x"], { env });
     expect(result).toMatchSnapshot();
   });
 });

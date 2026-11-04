@@ -10,14 +10,10 @@ export default class RegionList extends BaseCommand {
 
 The regions where a project can run.`;
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-    "<%= config.bin %> <%= command.id %> --output ndjson",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %>"];
 
   async run(): Promise<void> {
     await this.parse(RegionList);
-    await this.outputPage(await getApiV2Regions({ client: this.managementClient }));
+    await this.output(await getApiV2Regions({ client: this.managementClient }));
   }
 }

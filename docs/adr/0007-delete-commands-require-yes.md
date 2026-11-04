@@ -17,7 +17,7 @@ A deletion is the only action of the CLI that the next command cannot undo. Mist
 The rules in `docs/contract/output.md` and `docs/contract/config.md` are the public contract of the CLI. In short:
 
 - stdout is data only, stderr is everything else
-- `json` is the default output mode, in a terminal or not. `ndjson` streams lists. There is no other format
+- every command writes JSON, in a terminal or not. There is no other format
 - API responses pass through unchanged, with no wrapper and no renaming
 - errors are JSON on stderr with `code`, `type`, `message`, `link`, `hint`
 - exit codes are stable and documented

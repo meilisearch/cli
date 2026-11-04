@@ -13,24 +13,12 @@ describe.skipIf(!meilisearchUp)("meili health against a real Meilisearch", () =>
   });
 
   it("works without an API key, since /health is public", async () => {
-    const result = await runBinary([
-      "health",
-      "--project-url",
-      MEILISEARCH_URL,
-      "--output",
-      "json",
-    ]);
+    const result = await runBinary(["health", "--project-url", MEILISEARCH_URL]);
     expect(result.exitCode).toBe(0);
   });
 
   it("exits 6 with cli_network on stderr when nothing listens, and keeps stdout empty", async () => {
-    const result = await runBinary([
-      "health",
-      "--project-url",
-      "http://127.0.0.1:1",
-      "--output",
-      "json",
-    ]);
+    const result = await runBinary(["health", "--project-url", "http://127.0.0.1:1"]);
     expect(result.exitCode).toBe(6);
     expect(result.stdout).toBe("");
     const error = JSON.parse(result.stderr) as { error: { code: string; type: string } };

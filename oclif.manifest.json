@@ -6,23 +6,9 @@
       "description": "Log in to Meilisearch Cloud in a browser.\n\nStores the token for the management commands.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
         "<%= config.bin %> <%= command.id %> --no-browser"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -119,7 +105,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -140,7 +126,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -185,23 +171,9 @@
       "args": {},
       "description": "Log out of Meilisearch Cloud.\n\nRevokes the token of `auth login` and forgets it. Does nothing when nobody is logged in.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json"
+        "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -292,7 +264,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -313,7 +285,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -358,23 +330,9 @@
       "args": {},
       "description": "Refresh the Meilisearch Cloud session.\n\nTrades the refresh token of the stored session for a new access token, before it expires.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json"
+        "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -465,7 +423,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -486,7 +444,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -531,23 +489,9 @@
       "args": {},
       "description": "Show the Meilisearch Cloud session.\n\nSays whether a session of `auth login` exists, whether the authorization server still accepts it, and who it logs in.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json"
+        "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -638,7 +582,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -659,7 +603,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -705,26 +649,11 @@
       "description": "List the batches of tasks.\n\n--ids, --task-ids, --statuses and the other filters of the route narrow the list.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --output json",
         "<%= config.bin %> <%= command.id %> --project prod --ids 7",
         "<%= config.bin %> <%= command.id %> --project prod --task-ids 42",
-        "<%= config.bin %> <%= command.id %> --project prod --statuses failed --index-ids movies --limit 5",
-        "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson"
+        "<%= config.bin %> <%= command.id %> --project prod --statuses failed --index-ids movies --limit 5"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -883,7 +812,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "allowNo": false,
           "type": "boolean"
@@ -976,7 +905,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -997,7 +926,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -1042,23 +971,9 @@
       "args": {},
       "description": "Get one batch of tasks.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --project prod --id 7",
-        "<%= config.bin %> <%= command.id %> --project prod --id 7 --output json"
+        "<%= config.bin %> <%= command.id %> --project prod --id 7"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -1186,7 +1101,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -1207,7 +1122,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -1253,23 +1168,9 @@
       "description": "List the projects of the config file.\n\nPrints the path of the file and its projects as JSON, keys masked.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
         "MEILI_CONFIG=./meili.json <%= config.bin %> <%= command.id %>"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -1360,7 +1261,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -1381,7 +1282,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -1428,23 +1329,9 @@
       "examples": [
         "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700",
         "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
-        "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
-        "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700 --output json"
+        "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -1567,7 +1454,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -1588,7 +1475,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -1636,22 +1523,9 @@
         "<%= config.bin %> <%= command.id %> --all",
         "<%= config.bin %> <%= command.id %> --team-ids 12,13",
         "<%= config.bin %> <%= command.id %> --project-name prod",
-        "<%= config.bin %> <%= command.id %> --project-url https://ms-abc.sfo.meilisearch.io --output json"
+        "<%= config.bin %> <%= command.id %> --project-url https://ms-abc.sfo.meilisearch.io"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -1772,7 +1646,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -1793,7 +1667,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -1838,23 +1712,9 @@
       "args": {},
       "description": "Remove a project from the config file.\n\nThe file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --output json"
+        "<%= config.bin %> <%= command.id %> --project prod"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -1954,7 +1814,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -1975,7 +1835,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -2022,22 +1882,9 @@
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --sync-with-cloud",
         "<%= config.bin %> <%= command.id %> --project prod --project-api-key - < key.txt",
-        "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7701 --output json"
+        "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7701"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -2159,7 +2006,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -2180,7 +2027,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -2226,25 +2073,11 @@
       "description": "Add or replace documents in an index.\n\nA document replaces the one that has the same primary key.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json --output json",
         "cat movies.json | <%= config.bin %> <%= command.id %> --project prod --index movies --file -",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --data '[{\"id\":1,\"title\":\"Nosferatu\"}]' --primary-key id",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json --wait"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -2430,7 +2263,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -2451,7 +2284,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -2497,25 +2330,12 @@
       "description": "Delete documents from an index.\n\nDeletes the documents named by --ids, matched by --filter, or every one of them with --all.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42,1344 --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42 --yes --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42 --yes",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --filter 'rating < 2' --yes",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --file ids.json --yes",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --all --yes --wait"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -2732,7 +2552,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -2753,7 +2573,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -2799,25 +2619,10 @@
       "description": "List the documents of an index.\n\n--ids or --filter narrow the list.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --output json",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42,1344 --fields id,title",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --filter 'rating > 4' --sort rating:desc",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --all --output ndjson"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --filter 'rating > 4' --sort rating:desc"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -2912,7 +2717,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "allowNo": false,
           "type": "boolean"
@@ -3024,7 +2829,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -3045,7 +2850,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -3091,25 +2896,11 @@
       "description": "Add or update documents in an index.\n\nThe fields of a document are merged into the one that has the same primary key.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json --output json",
         "cat changes.json | <%= config.bin %> <%= command.id %> --project prod --index movies --file -",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --data '[{\"id\":1,\"rating\":4}]'",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json --wait"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -3295,7 +3086,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -3316,7 +3107,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -3362,22 +3153,9 @@
       "description": "Get one document of an index.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --id 42",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --id 42 --fields id,title --output json"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --id 42 --fields id,title"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -3528,7 +3306,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -3549,7 +3327,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -3595,26 +3373,12 @@
       "description": "Export the data of the instance to another instance.\n\nSends the documents and the settings to the destination instance, and prints the task that does it.\n\nThe source is the project this command connects to, named by --project, --project-url and --project-api-key as on every command: it receives the request and does the export. The destination is --url with --api-key, or --project-destination, an entry of the config file. --indexes narrows the export to the indexes those patterns match.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
-        "<%= config.bin %> <%= command.id %> --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json",
         "<%= config.bin %> <%= command.id %> --project staging --project-destination prod",
         "<%= config.bin %> <%= command.id %> --project prod --url http://localhost:7701 --indexes '{\"movies\":{\"filter\":\"rating > 4\"}}' --wait",
         "<%= config.bin %> <%= command.id %> --project prod --url http://localhost:7701 --payload-size 24MiB",
         "<%= config.bin %> <%= command.id %> --project prod --data '{\"url\":\"http://localhost:7701\",\"indexes\":{\"*\":{\"overrideSettings\":true}}}'"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -3816,7 +3580,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -3837,7 +3601,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -3882,24 +3646,10 @@
       "description": "Search the values of a facet.\n\nCounts the values on the documents that --q and --filter keep.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac --output json",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --data '{\"facetName\":\"genres\",\"facetQuery\":\"ac\"}'"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -4136,7 +3886,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -4157,7 +3907,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -4202,23 +3952,9 @@
       "description": "Check that the instance is available.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --output json",
         "<%= config.bin %> <%= command.id %> --project-url http://localhost:7700"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -4335,7 +4071,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -4356,7 +4092,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -4401,23 +4137,10 @@
       "description": "Create an index.\n\n--id names it, and --primary-key sets its primary key.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --id movies",
-        "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key id --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key id",
         "<%= config.bin %> <%= command.id %> --project prod --id movies --wait"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -4592,7 +4315,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -4613,7 +4336,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -4659,23 +4382,9 @@
       "description": "Delete an index.\n\nDeletes its documents, its settings and its task history too.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --id movies --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --id movies --yes --output json",
         "<%= config.bin %> <%= command.id %> --project prod --id movies --yes --wait"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -4827,7 +4536,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -4848,7 +4557,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -4894,24 +4603,9 @@
       "description": "List the indexes of the instance.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --output json",
-        "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10",
-        "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson"
+        "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -4959,7 +4653,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "allowNo": false,
           "type": "boolean"
@@ -5052,7 +4746,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -5073,7 +4767,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -5119,24 +4813,10 @@
       "description": "Change the primary key or the name of an index.\n\n--primary-key changes the primary key, and --new-id renames the index.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key movie_id",
-        "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key movie_id --output json",
         "<%= config.bin %> <%= command.id %> --project prod --id movies --new-id films",
         "<%= config.bin %> <%= command.id %> --project prod --id movies --new-id films --wait"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -5319,7 +4999,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -5340,7 +5020,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -5385,23 +5065,9 @@
       "args": {},
       "description": "Get one index.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --project prod --id movies",
-        "<%= config.bin %> <%= command.id %> --project prod --id movies --output json"
+        "<%= config.bin %> <%= command.id %> --project prod --id movies"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -5529,7 +5195,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -5550,7 +5216,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -5595,23 +5261,9 @@
       "args": {},
       "description": "Get the version of the instance.\n\nPrints the version of Meilisearch and the commit it was built from.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --output json"
+        "<%= config.bin %> <%= command.id %> --project prod"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -5730,7 +5382,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -5751,7 +5403,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -5796,24 +5448,11 @@
       "description": "Create an API key.\n\nThe key runs --actions on --indexes until --expires-at.\n\nThe answer carries the `key` field, the credential itself, on stdout like any other data.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes movies --expires-at null",
-        "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z",
         "<%= config.bin %> <%= command.id %> --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
         "<%= config.bin %> <%= command.id %> --project prod --data '{\"actions\":[\"search\"],\"indexes\":[\"movies\"],\"expiresAt\":null}'"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -5880,7 +5519,7 @@
           "type": "option"
         },
         "name": {
-          "description": "Name of the key, for a human reading the list.",
+          "description": "Name of the key.",
           "name": "name",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -5888,7 +5527,7 @@
           "type": "option"
         },
         "description": {
-          "description": "Description of the key, for a human reading the list.",
+          "description": "Description of the key.",
           "name": "description",
           "hasDynamicHelp": false,
           "helpValue": "<text>",
@@ -6002,7 +5641,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -6023,7 +5662,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -6068,23 +5707,9 @@
       "args": {},
       "description": "Delete an API key.\n\nEvery request that carries the key fails afterwards.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json"
+        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -6219,7 +5844,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -6240,7 +5865,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -6286,24 +5911,9 @@
       "description": "List the API keys of the instance.\n\nThe answer is the API body as it is, so it carries the `key` field of every key it returns: credentials that work, on stdout, like any other data.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --output json",
-        "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10",
-        "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson"
+        "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -6351,7 +5961,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "allowNo": false,
           "type": "boolean"
@@ -6444,7 +6054,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -6465,7 +6075,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -6511,23 +6121,10 @@
       "description": "Change the name or the description of an API key.\n\nThese are the two fields the route takes. The value null resets one.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
-        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly' --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly'",
         "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -6690,7 +6287,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -6711,7 +6308,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -6756,23 +6353,9 @@
       "args": {},
       "description": "Get one API key.\n\nThe answer is the API body as it is, so it carries the `key` field: a credential that works, on stdout, like any other data.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
-        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --output json"
+        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -6900,7 +6483,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -6921,7 +6504,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -6967,24 +6550,11 @@
       "description": "Run several searches in one request.\n\nEach query of --queries names its index. The results come side by side, or merged into one ranked list with --federation.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --queries '[{\"indexUid\":\"movies\",\"q\":\"nosferatu\"},{\"indexUid\":\"books\",\"q\":\"nosferatu\"}]'",
-        "<%= config.bin %> <%= command.id %> --project prod --queries '[{\"indexUid\":\"movies\",\"q\":\"nosferatu\"}]' --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --queries '[{\"indexUid\":\"movies\",\"q\":\"nosferatu\"}]'",
         "<%= config.bin %> <%= command.id %> --project prod --queries '[{\"indexUid\":\"movies\",\"q\":\"horror\"},{\"indexUid\":\"books\",\"q\":\"horror\"}]' --federation '{\"limit\":5}'",
         "cat queries.json | <%= config.bin %> <%= command.id %> --project prod --file -"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -7138,7 +6708,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -7159,7 +6729,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -7203,23 +6773,9 @@
       "args": {},
       "description": "Delete a Meilisearch Cloud organization.\n\nPrints nothing on success.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --id 7 --yes",
-        "<%= config.bin %> <%= command.id %> --id 7 --yes --output json"
+        "<%= config.bin %> <%= command.id %> --id 7 --yes"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -7328,7 +6884,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -7349,7 +6905,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -7394,24 +6950,9 @@
       "args": {},
       "description": "List the Meilisearch Cloud organizations.\n\nOnly the organizations the token sees.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
-        "<%= config.bin %> <%= command.id %> --output ndjson"
+        "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -7504,7 +7045,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -7525,7 +7066,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -7571,23 +7112,9 @@
       "description": "Rename a Meilisearch Cloud organization.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --id 7 --name Acme",
-        "<%= config.bin %> <%= command.id %> --id 7 --name Acme --output json",
         "<%= config.bin %> <%= command.id %> --id 7 --data '{\"name\":\"Acme\"}'"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -7716,7 +7243,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -7737,7 +7264,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -7782,23 +7309,9 @@
       "args": {},
       "description": "Get one Meilisearch Cloud organization.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --id 7",
-        "<%= config.bin %> <%= command.id %> --id 7 --output json"
+        "<%= config.bin %> <%= command.id %> --id 7"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -7900,7 +7413,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -7921,7 +7434,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -7967,7 +7480,6 @@
       "description": "Create a Meilisearch Cloud project.\n\nCreates it in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3",
-        "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --output json",
         "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --sync-config",
         "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --wait --sync-config",
         "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
@@ -7975,19 +7487,6 @@
         "<%= config.bin %> <%= command.id %> --file project.json --name other-name"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -8154,7 +7653,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -8175,7 +7674,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -8221,24 +7720,10 @@
       "description": "Delete a Meilisearch Cloud project and its data.\n\nPrints nothing on success.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --id 343 --yes",
-        "<%= config.bin %> <%= command.id %> --id 343 --yes --output json",
         "<%= config.bin %> <%= command.id %> --project staging --yes",
         "<%= config.bin %> <%= command.id %> --project staging --yes --sync-config"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -8360,7 +7845,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -8381,7 +7866,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -8427,24 +7912,9 @@
       "description": "List the Meilisearch Cloud projects.\n\nOnly the projects the token sees.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
-        "<%= config.bin %> <%= command.id %> --team-id 12",
-        "<%= config.bin %> <%= command.id %> --output ndjson"
+        "<%= config.bin %> <%= command.id %> --team-id 12"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -8545,7 +8015,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -8566,7 +8036,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -8612,25 +8082,11 @@
       "description": "Rename a Meilisearch Cloud project.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --id 343 --name renamed",
-        "<%= config.bin %> <%= command.id %> --id 343 --name renamed --output json",
         "<%= config.bin %> <%= command.id %> --project prod --name renamed",
         "<%= config.bin %> <%= command.id %> --project prod --name renamed --sync-config",
         "<%= config.bin %> <%= command.id %> --id 343 --data '{\"name\":\"renamed\"}'"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -8772,7 +8228,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -8793,7 +8249,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -8839,23 +8295,9 @@
       "description": "Get one Meilisearch Cloud project.\n\n--id or --project names it.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --id 343",
-        "<%= config.bin %> <%= command.id %> --id 343 --output json",
         "<%= config.bin %> <%= command.id %> --project prod"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -8964,7 +8406,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -8985,7 +8427,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -9030,24 +8472,9 @@
       "args": {},
       "description": "List the Meilisearch Cloud regions.\n\nThe regions where a project can run.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
-        "<%= config.bin %> <%= command.id %> --output ndjson"
+        "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -9140,7 +8567,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -9161,7 +8588,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -9207,23 +8634,9 @@
       "description": "List the Meilisearch Cloud resources.\n\nThe active plans a project runs on, with their pricing.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
         "<%= config.bin %> <%= command.id %> --region-id 1"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -9324,7 +8737,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -9345,7 +8758,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -9391,24 +8804,10 @@
       "description": "Describe the commands as JSON.\n\nPrints one line per command, or one command in full with --command, from the oclif manifest.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
         "<%= config.bin %> <%= command.id %> --command \"index list\"",
         "<%= config.bin %> <%= command.id %> | jq '.commands[].id'"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -9507,7 +8906,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -9528,7 +8927,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -9573,25 +8972,11 @@
       "description": "Search the documents of an index.\n\n--q and the search parameters of the route shape the search.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --q nosferatu",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --q nosferatu --output json",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --facets genres --attributes-to-retrieve id,title",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --data '{\"q\":\"nosferatu\",\"hybrid\":{\"embedder\":\"default\",\"semanticRatio\":0.5}}'"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -9948,7 +9333,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -9969,7 +9354,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -10014,23 +9399,9 @@
       "description": "Reset the settings of an index.\n\nEvery setting goes back to its default value, which reindexes the documents.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --yes --output json",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --yes --wait"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -10182,7 +9553,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -10203,7 +9574,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -10249,25 +9620,12 @@
       "description": "Change the settings of an index.\n\nChanges the settings given and leaves the others. The value null resets one.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --searchable-attributes title,overview",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --filterable-attributes genres,release_date --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --filterable-attributes genres,release_date",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --stop-words null",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --typo-tolerance '{\"enabled\":false}' --wait",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --file settings.json"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -10607,7 +9965,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -10628,7 +9986,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -10673,23 +10031,9 @@
       "args": {},
       "description": "Get the settings of an index.\n\nEach setting has its current value or its default.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --project prod --index movies",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --output json"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -10817,7 +10161,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -10838,7 +10182,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -10884,24 +10228,10 @@
       "description": "Find the documents similar to one document.\n\n--id names the document, and --embedder the embedder that compares them.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --id 143 --embedder default",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --id 143 --embedder default --output json",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --data '{\"id\":143,\"embedder\":\"default\",\"retrieveVectors\":true}'"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -11128,7 +10458,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -11149,7 +10479,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -11194,24 +10524,10 @@
       "description": "Get the statistics of the instance, or of one index.\n\n--index names the index.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --output json",
         "<%= config.bin %> <%= command.id %> --project prod --index movies",
         "<%= config.bin %> <%= command.id %> --project prod --index movies --size-format human --show-internal-database-sizes"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -11356,7 +10672,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -11377,7 +10693,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -11422,24 +10738,11 @@
       "description": "Cancel tasks.\n\nCancels the enqueued and processing tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --ids 42,1344",
-        "<%= config.bin %> <%= command.id %> --project prod --ids 42 --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --ids 42",
         "<%= config.bin %> <%= command.id %> --project prod --statuses enqueued --index-ids movies",
         "<%= config.bin %> <%= command.id %> --project prod --statuses processing --wait"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -11680,7 +10983,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -11701,7 +11004,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -11747,24 +11050,11 @@
       "description": "Delete finished tasks.\n\nDeletes the finished tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --ids 42,1344 --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --ids 42 --yes --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --ids 42 --yes",
         "<%= config.bin %> <%= command.id %> --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
         "<%= config.bin %> <%= command.id %> --project prod --index-ids movies --yes --wait"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -12012,7 +11302,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -12033,7 +11323,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -12079,26 +11369,11 @@
       "description": "List the tasks of the instance.\n\n--ids, --statuses, --types and the other filters of the route narrow the list.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --output json",
         "<%= config.bin %> <%= command.id %> --project prod --ids 42",
         "<%= config.bin %> <%= command.id %> --project prod --statuses failed,canceled --limit 5",
-        "<%= config.bin %> <%= command.id %> --project prod --index-ids movies --types documentAdditionOrUpdate",
-        "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson"
+        "<%= config.bin %> <%= command.id %> --project prod --index-ids movies --types documentAdditionOrUpdate"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -12257,7 +11532,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "allowNo": false,
           "type": "boolean"
@@ -12350,7 +11625,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -12371,7 +11646,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -12416,23 +11691,9 @@
       "args": {},
       "description": "Get one task.\n\nPrints its status and its error.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --project prod --id 42",
-        "<%= config.bin %> <%= command.id %> --project prod --id 42 --output json"
+        "<%= config.bin %> <%= command.id %> --project prod --id 42"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -12560,7 +11821,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -12581,7 +11842,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -12627,23 +11888,9 @@
       "description": "Create a Meilisearch Cloud team.\n\nCreates it in an organization.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --name search --organization-id 1",
-        "<%= config.bin %> <%= command.id %> --name search --organization-id 1 --output json",
         "<%= config.bin %> <%= command.id %> --data '{\"name\":\"search\",\"organizationId\":1}'"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -12771,7 +12018,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -12792,7 +12039,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -12837,23 +12084,9 @@
       "args": {},
       "description": "Delete a Meilisearch Cloud team.\n\nThe team must have no project left. Prints nothing on success.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --id 12 --yes",
-        "<%= config.bin %> <%= command.id %> --id 12 --yes --output json"
+        "<%= config.bin %> <%= command.id %> --id 12 --yes"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -12962,7 +12195,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -12983,7 +12216,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -13028,24 +12261,9 @@
       "args": {},
       "description": "List the Meilisearch Cloud teams.\n\nOnly the teams the token sees.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
-        "<%= config.bin %> <%= command.id %> --output ndjson"
+        "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -13138,7 +12356,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -13159,7 +12377,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -13205,24 +12423,10 @@
       "description": "Rename a Meilisearch Cloud team, or change its owner.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --id 12 --name renamed",
-        "<%= config.bin %> <%= command.id %> --id 12 --name renamed --output json",
         "<%= config.bin %> <%= command.id %> --id 12 --owner-id 5b7c2f1e-8a3d-4e6f-9b0a-1c2d3e4f5a6b",
         "<%= config.bin %> <%= command.id %> --id 12 --data '{\"name\":\"renamed\"}'"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -13359,7 +12563,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -13380,7 +12584,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -13425,23 +12629,9 @@
       "args": {},
       "description": "Get one Meilisearch Cloud team.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --id 12",
-        "<%= config.bin %> <%= command.id %> --id 12 --output json"
+        "<%= config.bin %> <%= command.id %> --id 12"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -13543,7 +12733,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -13564,7 +12754,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -13607,25 +12797,12 @@
     "teleport": {
       "aliases": [],
       "args": {},
-      "description": "Move a project to Meilisearch Cloud, for humans only.\n\nMoves the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. An interactive command: an agent never runs it.\n\nIt checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.\n\nAn agent does the same without questions. Run `meili auth login`, then `meili project add --name <name> --team-id <id> --resource-id <id> --sync-config --wait`, then `meili export --project <source> --project-destination <name> --wait`, then `meili task list --project <name> --statuses enqueued,processing` until it lists no task.",
+      "description": "Interactive command. Move a project to Meilisearch Cloud.\n\nMoves the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal.\n\nIt checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.\n\nThe same steps, without questions: Run `meili auth login`, then `meili project add --name <name> --team-id <id> --resource-id <id> --sync-config --wait`, then `meili export --project <source> --project-destination <name> --wait`, then `meili task list --project <name> --statuses enqueued,processing` until it lists no task.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
         "<%= config.bin %> <%= command.id %> --project local"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -13724,7 +12901,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -13745,7 +12922,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -13789,23 +12966,9 @@
       "args": {},
       "description": "Print the version of the CLI.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json"
+        "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
-        "output": {
-          "char": "o",
-          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-          "name": "output",
-          "hasDynamicHelp": false,
-          "helpValue": "<mode>",
-          "multiple": false,
-          "options": [
-            "json",
-            "ndjson"
-          ],
-          "type": "option"
-        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -13896,7 +13059,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }
@@ -13917,7 +13080,7 @@
           "type": "option"
         },
         "all": {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "allowNo": false,
           "type": "boolean"
         }

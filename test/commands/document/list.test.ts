@@ -35,13 +35,7 @@ describe("meili document list", () => {
 
   it("prints the API envelope as it is in JSON", async () => {
     server.use(meilisearchHandlers.documentsFetch(documents));
-    const result = await runCommand(DocumentList, [
-      "--index",
-      "movies",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(DocumentList, ["--index", "movies", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -130,21 +124,6 @@ describe("meili document list", () => {
     expect(JSON.parse(result?.stderr ?? "").error.code).toBe("cli_input_invalid");
   });
 
-  it("prints one document per line in ndjson", async () => {
-    server.use(meilisearchHandlers.documentsFetch(documents));
-    const result = await runCommand(DocumentList, [
-      "--index",
-      "movies",
-      "--output",
-      "ndjson",
-      ...project,
-    ]);
-    expect(result.exitCode).toBe(0);
-    const lines = result.stdout.trimEnd().split("\n");
-    expect(lines).toHaveLength(3);
-    expect(lines.map((line) => (JSON.parse(line) as { id: number }).id)).toEqual([1, 2, 3]);
-  });
-
   it("follows every page with --all and merges them into one envelope in JSON", async () => {
     server.use(meilisearchHandlers.documentsFetch(documents));
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
@@ -155,8 +134,6 @@ describe("meili document list", () => {
         "--all",
         "--limit",
         "2",
-        "--output",
-        "json",
         ...project,
       ]);
     });
@@ -169,13 +146,7 @@ describe("meili document list", () => {
     server.use(
       meilisearchHandlers.apiError("/indexes/movies/documents/fetch", 403, invalidApiKeyError),
     );
-    const result = await runCommand(DocumentList, [
-      "--index",
-      "movies",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(DocumentList, ["--index", "movies", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

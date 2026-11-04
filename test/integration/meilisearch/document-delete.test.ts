@@ -49,8 +49,6 @@ describe.skipIf(!meilisearchUp)("meili document delete against a real Meilisearc
       "1,2",
       "--yes",
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -68,8 +66,6 @@ describe.skipIf(!meilisearchUp)("meili document delete against a real Meilisearc
       "rating < 2",
       "--yes",
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -86,8 +82,6 @@ describe.skipIf(!meilisearchUp)("meili document delete against a real Meilisearc
       idsFile,
       "--yes",
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -104,8 +98,6 @@ describe.skipIf(!meilisearchUp)("meili document delete against a real Meilisearc
       "--all",
       "--yes",
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -113,16 +105,7 @@ describe.skipIf(!meilisearchUp)("meili document delete against a real Meilisearc
   });
 
   it("exits 2 and deletes nothing without --yes", async () => {
-    const result = await runBinary([
-      "document",
-      "delete",
-      "--index",
-      uid,
-      "--all",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["document", "delete", "--index", uid, "--all", ...project]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
@@ -130,16 +113,7 @@ describe.skipIf(!meilisearchUp)("meili document delete against a real Meilisearc
   });
 
   it("exits 2 and deletes nothing without a selector", async () => {
-    const result = await runBinary([
-      "document",
-      "delete",
-      "--index",
-      uid,
-      "--yes",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["document", "delete", "--index", uid, "--yes", ...project]);
     expect(result.exitCode).toBe(2);
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
     expect(await remainingIds()).toEqual([1, 2, 3]);

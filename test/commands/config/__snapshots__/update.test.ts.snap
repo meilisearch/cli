@@ -4,23 +4,19 @@ exports[`meili config update > prints its help without any network call 1`] = `
 "Change a project of the config file.
 
 USAGE
-  $ meili config update --project <name> [-o <mode>] [--debug]
-    [--project-url <url>] [--project-api-key <key>] [--sync-with-cloud]
+  $ meili config update --project <name> [--debug] [--project-url <url>]
+    [--project-api-key <key>] [--sync-with-cloud]
 
 FLAGS
-  -o, --output=<mode>          json (default): one document, the API body as it
-                               is, indented in a terminal, compact when piped.
-                               ndjson: one item per line, only for the commands
-                               that print a list of items, streams with --all.
-      --debug                  Print every HTTP request and response on stderr,
-                               secrets redacted.
-      --project=<name>         (required) Name of the project to change.
-      --project-api-key=<key>  New API key of the project. \`-\` reads it from
-                               stdin, out of the shell history.
-      --project-url=<url>      New URL of the project.
-      --sync-with-cloud        Write the entry's cloud identifiers from
-                               Meilisearch Cloud, and its master key when the
-                               entry has no key. Never replaces a key.
+  --debug                  Print every HTTP request and response on stderr,
+                           secrets redacted.
+  --project=<name>         (required) Name of the project to change.
+  --project-api-key=<key>  New API key of the project. \`-\` reads it from stdin,
+                           out of the shell history.
+  --project-url=<url>      New URL of the project.
+  --sync-with-cloud        Write the entry's cloud identifiers from Meilisearch
+                           Cloud, and its master key when the entry has no key.
+                           Never replaces a key.
 
 DESCRIPTION
   Change a project of the config file.
@@ -37,7 +33,7 @@ EXAMPLES
 
   $ meili config update --project prod --project-api-key - < key.txt
 
-  $ meili config update --project local --project-url http://localhost:7701 --output json
+  $ meili config update --project local --project-url http://localhost:7701
 
 "
 `;

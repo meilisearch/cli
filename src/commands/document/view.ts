@@ -13,7 +13,7 @@ export default class DocumentView extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --id 42",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --id 42 --fields id,title --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --id 42 --fields id,title",
   ];
 
   static override flags = {

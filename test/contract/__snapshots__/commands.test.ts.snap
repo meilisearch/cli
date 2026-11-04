@@ -10,7 +10,6 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
 Stores the token for the management commands.",
       "examples": [
         "meili auth login",
-        "meili auth login --output json",
         "meili auth login --no-browser",
       ],
       "flags": [
@@ -29,7 +28,6 @@ Stores the token for the management commands.",
 Revokes the token of \`auth login\` and forgets it. Does nothing when nobody is logged in.",
       "examples": [
         "meili auth logout",
-        "meili auth logout --output json",
       ],
       "flags": [],
       "id": "auth logout",
@@ -41,7 +39,6 @@ Revokes the token of \`auth login\` and forgets it. Does nothing when nobody is 
 Trades the refresh token of the stored session for a new access token, before it expires.",
       "examples": [
         "meili auth refresh",
-        "meili auth refresh --output json",
       ],
       "flags": [],
       "id": "auth refresh",
@@ -53,7 +50,6 @@ Trades the refresh token of the stored session for a new access token, before it
 Says whether a session of \`auth login\` exists, whether the authorization server still accepts it, and who it logs in.",
       "examples": [
         "meili auth status",
-        "meili auth status --output json",
       ],
       "flags": [],
       "id": "auth status",
@@ -65,11 +61,9 @@ Says whether a session of \`auth login\` exists, whether the authorization serve
 --ids, --task-ids, --statuses and the other filters of the route narrow the list.",
       "examples": [
         "meili batch list --project prod",
-        "meili batch list --project prod --output json",
         "meili batch list --project prod --ids 7",
         "meili batch list --project prod --task-ids 42",
         "meili batch list --project prod --statuses failed --index-ids movies --limit 5",
-        "meili batch list --project prod --all --output ndjson",
       ],
       "flags": [
         {
@@ -180,7 +174,7 @@ Says whether a session of \`auth login\` exists, whether the authorization serve
           "type": "option",
         },
         {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "type": "boolean",
         },
@@ -198,7 +192,6 @@ Says whether a session of \`auth login\` exists, whether the authorization serve
       "description": "Get one batch of tasks.",
       "examples": [
         "meili batch view --project prod --id 7",
-        "meili batch view --project prod --id 7 --output json",
       ],
       "flags": [
         {
@@ -242,7 +235,6 @@ Says whether a session of \`auth login\` exists, whether the authorization serve
 Prints the path of the file and its projects as JSON, keys masked.",
       "examples": [
         "meili config list",
-        "meili config list --output json",
         "MEILI_CONFIG=./meili.json meili config list",
       ],
       "flags": [],
@@ -259,7 +251,6 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili config set --project local --project-url http://localhost:7700",
         "meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
         "meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
-        "meili config set --project local --project-url http://localhost:7700 --output json",
       ],
       "flags": [
         {
@@ -301,7 +292,7 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili config sync-with-cloud --all",
         "meili config sync-with-cloud --team-ids 12,13",
         "meili config sync-with-cloud --project-name prod",
-        "meili config sync-with-cloud --project-url https://ms-abc.sfo.meilisearch.io --output json",
+        "meili config sync-with-cloud --project-url https://ms-abc.sfo.meilisearch.io",
       ],
       "flags": [
         {
@@ -337,7 +328,6 @@ The file holds API keys and decides where every later command goes, for every pr
 The file holds API keys and decides where every later command goes, for every process that reads it: an agent runs this only when the human asked for it explicitly.",
       "examples": [
         "meili config unset --project prod",
-        "meili config unset --project prod --output json",
       ],
       "flags": [
         {
@@ -360,7 +350,7 @@ The file holds API keys and decides where every later command goes, for every pr
       "examples": [
         "meili config update --project prod --sync-with-cloud",
         "meili config update --project prod --project-api-key - < key.txt",
-        "meili config update --project local --project-url http://localhost:7701 --output json",
+        "meili config update --project local --project-url http://localhost:7701",
       ],
       "flags": [
         {
@@ -398,7 +388,6 @@ The file holds API keys and decides where every later command goes, for every pr
 A document replaces the one that has the same primary key.",
       "examples": [
         "meili document add --project prod --index movies --file movies.json",
-        "meili document add --project prod --index movies --file movies.json --output json",
         "cat movies.json | meili document add --project prod --index movies --file -",
         "meili document add --project prod --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
         "meili document add --project prod --index movies --file movies.json --wait",
@@ -492,7 +481,7 @@ A document replaces the one that has the same primary key.",
 Deletes the documents named by --ids, matched by --filter, or every one of them with --all.",
       "examples": [
         "meili document delete --project prod --index movies --ids 42,1344 --yes",
-        "meili document delete --project prod --index movies --ids 42 --yes --output json",
+        "meili document delete --project prod --index movies --ids 42 --yes",
         "meili document delete --project prod --index movies --filter 'rating < 2' --yes",
         "meili document delete --project prod --index movies --file ids.json --yes",
         "meili document delete --project prod --index movies --all --yes --wait",
@@ -613,10 +602,8 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
 --ids or --filter narrow the list.",
       "examples": [
         "meili document list --project prod --index movies",
-        "meili document list --project prod --index movies --output json",
         "meili document list --project prod --index movies --ids 42,1344 --fields id,title",
         "meili document list --project prod --index movies --filter 'rating > 4' --sort rating:desc",
-        "meili document list --project prod --index movies --all --output ndjson",
       ],
       "flags": [
         {
@@ -686,7 +673,7 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
           "type": "option",
         },
         {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "type": "boolean",
         },
@@ -722,7 +709,6 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
 The fields of a document are merged into the one that has the same primary key.",
       "examples": [
         "meili document update --project prod --index movies --file changes.json",
-        "meili document update --project prod --index movies --file changes.json --output json",
         "cat changes.json | meili document update --project prod --index movies --file -",
         "meili document update --project prod --index movies --data '[{"id":1,"rating":4}]'",
         "meili document update --project prod --index movies --file changes.json --wait",
@@ -813,7 +799,7 @@ The fields of a document are merged into the one that has the same primary key."
       "description": "Get one document of an index.",
       "examples": [
         "meili document view --project prod --index movies --id 42",
-        "meili document view --project prod --index movies --id 42 --fields id,title --output json",
+        "meili document view --project prod --index movies --id 42 --fields id,title",
       ],
       "flags": [
         {
@@ -878,7 +864,6 @@ Sends the documents and the settings to the destination instance, and prints the
 The source is the project this command connects to, named by --project, --project-url and --project-api-key as on every command: it receives the request and does the export. The destination is --url with --api-key, or --project-destination, an entry of the config file. --indexes narrows the export to the indexes those patterns match.",
       "examples": [
         "meili export --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
-        "meili export --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json",
         "meili export --project staging --project-destination prod",
         "meili export --project prod --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait",
         "meili export --project prod --url http://localhost:7701 --payload-size 24MiB",
@@ -981,7 +966,6 @@ The source is the project this command connects to, named by --project, --projec
 Counts the values on the documents that --q and --filter keep.",
       "examples": [
         "meili facet-search --project prod --index movies --facet-name genres --facet-query ac",
-        "meili facet-search --project prod --index movies --facet-name genres --facet-query ac --output json",
         "meili facet-search --project prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
         "meili facet-search --project prod --index movies --data '{"facetName":"genres","facetQuery":"ac"}'",
       ],
@@ -1109,7 +1093,6 @@ Counts the values on the documents that --q and --filter keep.",
       "description": "Check that the instance is available.",
       "examples": [
         "meili health --project prod",
-        "meili health --project prod --output json",
         "meili health --project-url http://localhost:7700",
       ],
       "flags": [
@@ -1145,7 +1128,7 @@ Counts the values on the documents that --q and --filter keep.",
 --id names it, and --primary-key sets its primary key.",
       "examples": [
         "meili index add --project prod --id movies",
-        "meili index add --project prod --id movies --primary-key id --output json",
+        "meili index add --project prod --id movies --primary-key id",
         "meili index add --project prod --id movies --wait",
       ],
       "flags": [
@@ -1226,7 +1209,6 @@ Counts the values on the documents that --q and --filter keep.",
 Deletes its documents, its settings and its task history too.",
       "examples": [
         "meili index delete --project prod --id movies --yes",
-        "meili index delete --project prod --id movies --yes --output json",
         "meili index delete --project prod --id movies --yes --wait",
       ],
       "flags": [
@@ -1289,9 +1271,7 @@ Deletes its documents, its settings and its task history too.",
       "description": "List the indexes of the instance.",
       "examples": [
         "meili index list --project prod",
-        "meili index list --project prod --output json",
         "meili index list --project prod --limit 5 --offset 10",
-        "meili index list --project prod --all --output ndjson",
       ],
       "flags": [
         {
@@ -1325,7 +1305,7 @@ Deletes its documents, its settings and its task history too.",
           "type": "option",
         },
         {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "type": "boolean",
         },
@@ -1346,7 +1326,6 @@ Deletes its documents, its settings and its task history too.",
 --primary-key changes the primary key, and --new-id renames the index.",
       "examples": [
         "meili index update --project prod --id movies --primary-key movie_id",
-        "meili index update --project prod --id movies --primary-key movie_id --output json",
         "meili index update --project prod --id movies --new-id films",
         "meili index update --project prod --id movies --new-id films --wait",
       ],
@@ -1431,7 +1410,6 @@ Deletes its documents, its settings and its task history too.",
       "description": "Get one index.",
       "examples": [
         "meili index view --project prod --id movies",
-        "meili index view --project prod --id movies --output json",
       ],
       "flags": [
         {
@@ -1475,7 +1453,6 @@ Deletes its documents, its settings and its task history too.",
 Prints the version of Meilisearch and the commit it was built from.",
       "examples": [
         "meili info --project prod",
-        "meili info --project prod --output json",
       ],
       "flags": [
         {
@@ -1514,7 +1491,7 @@ The key runs --actions on --indexes until --expires-at.
 The answer carries the \`key\` field, the credential itself, on stdout like any other data.",
       "examples": [
         "meili key add --project prod --actions search --indexes movies --expires-at null",
-        "meili key add --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json",
+        "meili key add --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z",
         "meili key add --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
         "meili key add --project prod --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'",
       ],
@@ -1562,13 +1539,13 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
           "type": "option",
         },
         {
-          "description": "Name of the key, for a human reading the list.",
+          "description": "Name of the key.",
           "helpValue": "<name>",
           "name": "name",
           "type": "option",
         },
         {
-          "description": "Description of the key, for a human reading the list.",
+          "description": "Description of the key.",
           "helpValue": "<text>",
           "name": "description",
           "type": "option",
@@ -1604,7 +1581,6 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
 Every request that carries the key fails afterwards.",
       "examples": [
         "meili key delete --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
-        "meili key delete --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json",
       ],
       "flags": [
         {
@@ -1654,9 +1630,7 @@ Every request that carries the key fails afterwards.",
 The answer is the API body as it is, so it carries the \`key\` field of every key it returns: credentials that work, on stdout, like any other data.",
       "examples": [
         "meili key list --project prod",
-        "meili key list --project prod --output json",
         "meili key list --project prod --limit 5 --offset 10",
-        "meili key list --project prod --all --output ndjson",
       ],
       "flags": [
         {
@@ -1690,7 +1664,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "type": "boolean",
         },
@@ -1710,7 +1684,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
 These are the two fields the route takes. The value null resets one.",
       "examples": [
         "meili key update --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
-        "meili key update --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly' --output json",
+        "meili key update --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly'",
         "meili key update --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null",
       ],
       "flags": [
@@ -1782,7 +1756,6 @@ These are the two fields the route takes. The value null resets one.",
 The answer is the API body as it is, so it carries the \`key\` field: a credential that works, on stdout, like any other data.",
       "examples": [
         "meili key view --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
-        "meili key view --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --output json",
       ],
       "flags": [
         {
@@ -1826,7 +1799,7 @@ The answer is the API body as it is, so it carries the \`key\` field: a credenti
 Each query of --queries names its index. The results come side by side, or merged into one ranked list with --federation.",
       "examples": [
         "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]'",
-        "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"}]' --output json",
+        "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"}]'",
         "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]' --federation '{"limit":5}'",
         "cat queries.json | meili multi-search --project prod --file -",
       ],
@@ -1892,7 +1865,6 @@ Each query of --queries names its index. The results come side by side, or merge
 Prints nothing on success.",
       "examples": [
         "meili organization delete --id 7 --yes",
-        "meili organization delete --id 7 --yes --output json",
       ],
       "flags": [
         {
@@ -1921,8 +1893,6 @@ Prints nothing on success.",
 Only the organizations the token sees.",
       "examples": [
         "meili organization list",
-        "meili organization list --output json",
-        "meili organization list --output ndjson",
       ],
       "flags": [],
       "id": "organization list",
@@ -1935,7 +1905,6 @@ Only the organizations the token sees.",
       "description": "Rename a Meilisearch Cloud organization.",
       "examples": [
         "meili organization update --id 7 --name Acme",
-        "meili organization update --id 7 --name Acme --output json",
         "meili organization update --id 7 --data '{"name":"Acme"}'",
       ],
       "flags": [
@@ -1978,7 +1947,6 @@ Only the organizations the token sees.",
       "description": "Get one Meilisearch Cloud organization.",
       "examples": [
         "meili organization view --id 7",
-        "meili organization view --id 7 --output json",
       ],
       "flags": [
         {
@@ -2002,7 +1970,6 @@ Only the organizations the token sees.",
 Creates it in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.",
       "examples": [
         "meili project add --name demo --team-id 12 --resource-id 3",
-        "meili project add --name demo --team-id 12 --resource-id 3 --output json",
         "meili project add --name demo --team-id 12 --resource-id 3 --sync-config",
         "meili project add --name demo --team-id 12 --resource-id 3 --wait --sync-config",
         "meili project add --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
@@ -2081,7 +2048,6 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
 Prints nothing on success.",
       "examples": [
         "meili project delete --id 343 --yes",
-        "meili project delete --id 343 --yes --output json",
         "meili project delete --project staging --yes",
         "meili project delete --project staging --yes --sync-config",
       ],
@@ -2122,9 +2088,7 @@ Prints nothing on success.",
 Only the projects the token sees.",
       "examples": [
         "meili project list",
-        "meili project list --output json",
         "meili project list --team-id 12",
-        "meili project list --output ndjson",
       ],
       "flags": [
         {
@@ -2144,7 +2108,6 @@ Only the projects the token sees.",
       "description": "Rename a Meilisearch Cloud project.",
       "examples": [
         "meili project update --id 343 --name renamed",
-        "meili project update --id 343 --name renamed --output json",
         "meili project update --project prod --name renamed",
         "meili project update --project prod --name renamed --sync-config",
         "meili project update --id 343 --data '{"name":"renamed"}'",
@@ -2201,7 +2164,6 @@ Only the projects the token sees.",
 --id or --project names it.",
       "examples": [
         "meili project view --id 343",
-        "meili project view --id 343 --output json",
         "meili project view --project prod",
       ],
       "flags": [
@@ -2230,8 +2192,6 @@ Only the projects the token sees.",
 The regions where a project can run.",
       "examples": [
         "meili region list",
-        "meili region list --output json",
-        "meili region list --output ndjson",
       ],
       "flags": [],
       "id": "region list",
@@ -2246,7 +2206,6 @@ The regions where a project can run.",
 The active plans a project runs on, with their pricing.",
       "examples": [
         "meili resource list",
-        "meili resource list --output json",
         "meili resource list --region-id 1",
       ],
       "flags": [
@@ -2269,7 +2228,6 @@ The active plans a project runs on, with their pricing.",
 Prints one line per command, or one command in full with --command, from the oclif manifest.",
       "examples": [
         "meili schema",
-        "meili schema --output json",
         "meili schema --command "index list"",
         "meili schema | jq '.commands[].id'",
       ],
@@ -2290,7 +2248,6 @@ Prints one line per command, or one command in full with --command, from the ocl
 --q and the search parameters of the route shape the search.",
       "examples": [
         "meili search --project prod --index movies --q nosferatu",
-        "meili search --project prod --index movies --q nosferatu --output json",
         "meili search --project prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
         "meili search --project prod --index movies --facets genres --attributes-to-retrieve id,title",
         "meili search --project prod --index movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'",
@@ -2514,7 +2471,6 @@ Prints one line per command, or one command in full with --command, from the ocl
 Every setting goes back to its default value, which reindexes the documents.",
       "examples": [
         "meili settings delete --project prod --index movies --yes",
-        "meili settings delete --project prod --index movies --yes --output json",
         "meili settings delete --project prod --index movies --yes --wait",
       ],
       "flags": [
@@ -2580,7 +2536,7 @@ Every setting goes back to its default value, which reindexes the documents.",
 Changes the settings given and leaves the others. The value null resets one.",
       "examples": [
         "meili settings update --project prod --index movies --searchable-attributes title,overview",
-        "meili settings update --project prod --index movies --filterable-attributes genres,release_date --output json",
+        "meili settings update --project prod --index movies --filterable-attributes genres,release_date",
         "meili settings update --project prod --index movies --stop-words null",
         "meili settings update --project prod --index movies --typo-tolerance '{"enabled":false}' --wait",
         "meili settings update --project prod --index movies --file settings.json",
@@ -2788,7 +2744,6 @@ Changes the settings given and leaves the others. The value null resets one.",
 Each setting has its current value or its default.",
       "examples": [
         "meili settings view --project prod --index movies",
-        "meili settings view --project prod --index movies --output json",
       ],
       "flags": [
         {
@@ -2832,7 +2787,6 @@ Each setting has its current value or its default.",
 --id names the document, and --embedder the embedder that compares them.",
       "examples": [
         "meili similar --project prod --index movies --id 143 --embedder default",
-        "meili similar --project prod --index movies --id 143 --embedder default --output json",
         "meili similar --project prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
         "meili similar --project prod --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'",
       ],
@@ -2955,7 +2909,6 @@ Each setting has its current value or its default.",
 --index names the index.",
       "examples": [
         "meili stats --project prod",
-        "meili stats --project prod --output json",
         "meili stats --project prod --index movies",
         "meili stats --project prod --index movies --size-format human --show-internal-database-sizes",
       ],
@@ -3016,7 +2969,7 @@ Each setting has its current value or its default.",
 Cancels the enqueued and processing tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
         "meili task cancel --project prod --ids 42,1344",
-        "meili task cancel --project prod --ids 42 --output json",
+        "meili task cancel --project prod --ids 42",
         "meili task cancel --project prod --statuses enqueued --index-ids movies",
         "meili task cancel --project prod --statuses processing --wait",
       ],
@@ -3142,7 +3095,7 @@ Cancels the enqueued and processing tasks matched by --ids, --statuses, --types 
 Deletes the finished tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
         "meili task delete --project prod --ids 42,1344 --yes",
-        "meili task delete --project prod --ids 42 --yes --output json",
+        "meili task delete --project prod --ids 42 --yes",
         "meili task delete --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
         "meili task delete --project prod --index-ids movies --yes --wait",
       ],
@@ -3273,11 +3226,9 @@ Deletes the finished tasks matched by --ids, --statuses, --types and the other f
 --ids, --statuses, --types and the other filters of the route narrow the list.",
       "examples": [
         "meili task list --project prod",
-        "meili task list --project prod --output json",
         "meili task list --project prod --ids 42",
         "meili task list --project prod --statuses failed,canceled --limit 5",
         "meili task list --project prod --index-ids movies --types documentAdditionOrUpdate",
-        "meili task list --project prod --all --output ndjson",
       ],
       "flags": [
         {
@@ -3388,7 +3339,7 @@ Deletes the finished tasks matched by --ids, --statuses, --types and the other f
           "type": "option",
         },
         {
-          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "description": "Fetch every page, and print them as one list.",
           "name": "all",
           "type": "boolean",
         },
@@ -3408,7 +3359,6 @@ Deletes the finished tasks matched by --ids, --statuses, --types and the other f
 Prints its status and its error.",
       "examples": [
         "meili task view --project prod --id 42",
-        "meili task view --project prod --id 42 --output json",
       ],
       "flags": [
         {
@@ -3452,7 +3402,6 @@ Prints its status and its error.",
 Creates it in an organization.",
       "examples": [
         "meili team add --name search --organization-id 1",
-        "meili team add --name search --organization-id 1 --output json",
         "meili team add --data '{"name":"search","organizationId":1}'",
       ],
       "flags": [
@@ -3496,7 +3445,6 @@ Creates it in an organization.",
 The team must have no project left. Prints nothing on success.",
       "examples": [
         "meili team delete --id 12 --yes",
-        "meili team delete --id 12 --yes --output json",
       ],
       "flags": [
         {
@@ -3525,8 +3473,6 @@ The team must have no project left. Prints nothing on success.",
 Only the teams the token sees.",
       "examples": [
         "meili team list",
-        "meili team list --output json",
-        "meili team list --output ndjson",
       ],
       "flags": [],
       "id": "team list",
@@ -3539,7 +3485,6 @@ Only the teams the token sees.",
       "description": "Rename a Meilisearch Cloud team, or change its owner.",
       "examples": [
         "meili team update --id 12 --name renamed",
-        "meili team update --id 12 --name renamed --output json",
         "meili team update --id 12 --owner-id 5b7c2f1e-8a3d-4e6f-9b0a-1c2d3e4f5a6b",
         "meili team update --id 12 --data '{"name":"renamed"}'",
       ],
@@ -3589,7 +3534,6 @@ Only the teams the token sees.",
       "description": "Get one Meilisearch Cloud team.",
       "examples": [
         "meili team view --id 12",
-        "meili team view --id 12 --output json",
       ],
       "flags": [
         {
@@ -3607,13 +3551,13 @@ Only the teams the token sees.",
     },
     {
       "api": "none",
-      "description": "Move a project to Meilisearch Cloud, for humans only.
+      "description": "Interactive command. Move a project to Meilisearch Cloud.
 
-Moves the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. An interactive command: an agent never runs it.
+Moves the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal.
 
 It checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.
 
-An agent does the same without questions. Run \`meili auth login\`, then \`meili project add --name <name> --team-id <id> --resource-id <id> --sync-config --wait\`, then \`meili export --project <source> --project-destination <name> --wait\`, then \`meili task list --project <name> --statuses enqueued,processing\` until it lists no task.",
+The same steps, without questions: Run \`meili auth login\`, then \`meili project add --name <name> --team-id <id> --resource-id <id> --sync-config --wait\`, then \`meili export --project <source> --project-destination <name> --wait\`, then \`meili task list --project <name> --statuses enqueued,processing\` until it lists no task.",
       "examples": [
         "meili teleport",
         "meili teleport --project local",
@@ -3633,7 +3577,6 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
       "description": "Print the version of the CLI.",
       "examples": [
         "meili version",
-        "meili version --output json",
       ],
       "flags": [],
       "id": "version",
@@ -4021,7 +3964,7 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         ],
       },
       {
-        "description": "Move a project to Meilisearch Cloud, for humans only.",
+        "description": "Interactive command. Move a project to Meilisearch Cloud.",
         "id": "teleport",
       },
       {
@@ -4030,17 +3973,6 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
       },
     ],
     "globalFlags": [
-      {
-        "char": "o",
-        "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, only for the commands that print a list of items, streams with --all.",
-        "helpValue": "<mode>",
-        "name": "output",
-        "options": [
-          "json",
-          "ndjson",
-        ],
-        "type": "option",
-      },
       {
         "description": "Print every HTTP request and response on stderr, secrets redacted.",
         "name": "debug",

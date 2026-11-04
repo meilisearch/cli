@@ -32,7 +32,7 @@ describe("meili key list", () => {
 
   it("prints the API envelope as it is, the key of every key included", async () => {
     server.use(meilisearchHandlers.keys(both));
-    const result = await runCommand(KeyList, ["--output", "json", ...project]);
+    const result = await runCommand(KeyList, [...project]);
     expect(result).toMatchSnapshot();
     expect(result.stdout).toContain(search.key);
   });
@@ -41,7 +41,7 @@ describe("meili key list", () => {
     server.use(meilisearchHandlers.keys(both));
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(KeyList, ["--all", "--limit", "1", "--output", "json", ...project]);
+      result = await runCommand(KeyList, ["--all", "--limit", "1", ...project]);
     });
     expect(requests).toBe(2);
     expect(JSON.parse(result?.stdout ?? "")).toEqual({ results: both, total: 2 });
@@ -49,7 +49,7 @@ describe("meili key list", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/keys", 403, invalidApiKeyError));
-    const result = await runCommand(KeyList, ["--output", "json", ...project]);
+    const result = await runCommand(KeyList, [...project]);
     expect(result).toMatchSnapshot();
   });
 });

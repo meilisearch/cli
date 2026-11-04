@@ -39,8 +39,6 @@ describe.skipIf(!meilisearchUp)("meili facet-search against a real Meilisearch",
       "genre",
       "--facet-query",
       "ho",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -57,8 +55,6 @@ describe.skipIf(!meilisearchUp)("meili facet-search against a real Meilisearch",
       uid,
       "--facet-name",
       "genre",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -79,8 +75,6 @@ describe.skipIf(!meilisearchUp)("meili facet-search against a real Meilisearch",
       "genre",
       "--filter",
       "rating > 4.2",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -100,8 +94,6 @@ describe.skipIf(!meilisearchUp)("meili facet-search against a real Meilisearch",
       JSON.stringify({ facetName: "genre", facetQuery: "sc" }),
       "--facet-query",
       "ho",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -116,8 +108,6 @@ describe.skipIf(!meilisearchUp)("meili facet-search against a real Meilisearch",
       uid,
       "--facet-name",
       "title",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(1);
@@ -132,8 +122,6 @@ describe.skipIf(!meilisearchUp)("meili facet-search against a real Meilisearch",
       `${uid}-missing`,
       "--facet-name",
       "genre",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(4);

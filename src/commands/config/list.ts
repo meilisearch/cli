@@ -10,7 +10,6 @@ Prints the path of the file and its projects as JSON, keys masked.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
     "MEILI_CONFIG=./meili.json <%= config.bin %> <%= command.id %>",
   ];
 

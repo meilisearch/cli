@@ -28,8 +28,6 @@ describe("meili document update", () => {
       "movies",
       "--data",
       changes,
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();
@@ -84,8 +82,6 @@ describe("meili document update", () => {
       "nope",
       "--data",
       changes,
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();

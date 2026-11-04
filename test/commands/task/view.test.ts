@@ -23,13 +23,13 @@ describe("meili task view", () => {
 
   it("prints the task as the API returns it, with no list envelope", async () => {
     server.use(meilisearchHandlers.task(tasks));
-    const result = await runCommand(TaskView, ["--id", "42", "--output", "json", ...project]);
+    const result = await runCommand(TaskView, ["--id", "42", ...project]);
     expect(result).toMatchSnapshot();
   });
 
   it("passes the 404 of an unknown task through and exits 4", async () => {
     server.use(meilisearchHandlers.task(tasks));
-    const result = await runCommand(TaskView, ["--id", "7", "--output", "json", ...project]);
+    const result = await runCommand(TaskView, ["--id", "7", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

@@ -22,13 +22,13 @@ describe("meili team list", () => {
 
   it("lists the teams in the envelope the API returns, with no paging flag yet", async () => {
     server.use(managementHandlers.listTeams([team, docs]));
-    const result = await runCommand(TeamList, ["--output", "json"], { env });
+    const result = await runCommand(TeamList, [], { env });
     expect(result).toMatchSnapshot();
   });
 
   it("exits 6 on a 401 without a body", async () => {
     server.use(managementHandlers.apiError("/api/v2/teams", 401));
-    const result = await runCommand(TeamList, ["--output", "json"], { env });
+    const result = await runCommand(TeamList, [], { env });
     expect(result).toMatchSnapshot();
   });
 });

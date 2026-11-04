@@ -36,18 +36,16 @@ const manifest = JSON.parse(
   readFileSync(join(PROJECT_ROOT, "oclif.manifest.json"), "utf8"),
 ) as Manifest;
 const commandsDoc = readDoc("docs/contract/commands.md");
-/** The interactive commands of ADR 0015, for humans only. */
-const INTERACTIVE_COMMANDS = ["teleport"];
 
 describe("oclif.manifest.json", () => {
   it("`meili schema` is a snapshot, the index and every command in full, so a renamed command or flag is visible in review", async () => {
-    const result = await runCommand(Schema, ["--output", "json"]);
+    const result = await runCommand(Schema, []);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const index = JSON.parse(result.stdout) as { commands: Array<{ id: string }> };
     const commands: unknown[] = [];
     for (const { id } of index.commands) {
-      const detail = await runCommand(Schema, ["--command", id, "--output", "json"]);
+      const detail = await runCommand(Schema, ["--command", id]);
       expect(detail.exitCode, `meili schema --command "${id}"`).toBe(0);
       commands.push(JSON.parse(detail.stdout));
     }
@@ -55,7 +53,7 @@ describe("oclif.manifest.json", () => {
     expect({ index, commands }).toMatchSnapshot({ index: { version: expect.any(String) } });
   });
 
-  it("every command has a one-sentence description and at least two examples, one with --output json", () => {
+  it("every command has a one-sentence description and at least one example", () => {
     for (const [id, command] of Object.entries(manifest.commands)) {
       expect(command.description, `${id} has no description`).toBeTruthy();
       expect(
@@ -65,13 +63,7 @@ describe("oclif.manifest.json", () => {
       const examples = (command.examples ?? []).map((example) =>
         typeof example === "string" ? example : example.command,
       );
-      expect(examples.length, `${id} needs at least two examples`).toBeGreaterThanOrEqual(2);
-      // An interactive command prints no data, only questions and progress for a human (ADR 0015).
-      if (INTERACTIVE_COMMANDS.includes(id)) continue;
-      expect(
-        examples.some((example) => example.includes("--output json")),
-        `${id} needs an example with --output json`,
-      ).toBe(true);
+      expect(examples.length, `${id} needs an example`).toBeGreaterThanOrEqual(1);
     }
   });
 

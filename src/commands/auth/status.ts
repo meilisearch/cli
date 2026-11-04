@@ -10,10 +10,7 @@ export default class AuthStatus extends BaseCommand {
 
 Says whether a session of \`auth login\` exists, whether the authorization server still accepts it, and who it logs in.`;
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %>"];
 
   async run(): Promise<void> {
     const { path, session } = this.credentialsFile();

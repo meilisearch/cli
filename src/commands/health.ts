@@ -9,7 +9,6 @@ export default class Health extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod",
-    "<%= config.bin %> <%= command.id %> --project prod --output json",
     "<%= config.bin %> <%= command.id %> --project-url http://localhost:7700",
   ];
 

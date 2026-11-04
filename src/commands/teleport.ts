@@ -92,13 +92,13 @@ interface Source {
 export default class Teleport extends BaseCommand {
   static api: Api = "none";
 
-  static override description = `Move a project to Meilisearch Cloud, for humans only.
+  static override description = `Interactive command. Move a project to Meilisearch Cloud.
 
-Moves the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. An interactive command: an agent never runs it.
+Moves the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal.
 
 It checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.
 
-An agent does the same without questions. ${WITHOUT_TELEPORT}`;
+The same steps, without questions: ${WITHOUT_TELEPORT}`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
@@ -129,7 +129,7 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     if (process.stdin.isTTY !== true || process.stderr.isTTY !== true) {
       throw new MeiliCliError(
         "cli_usage",
-        "`meili teleport` asks questions, so it runs only in a terminal, for a human.",
+        "`meili teleport` asks questions, so it runs only in a terminal.",
         { hint: WITHOUT_TELEPORT },
       );
     }

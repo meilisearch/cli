@@ -10,10 +10,7 @@ export default class BatchView extends BaseCommand {
 
   static override description = "Get one batch of tasks.";
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %> --project prod --id 7",
-    "<%= config.bin %> <%= command.id %> --project prod --id 7 --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %> --project prod --id 7"];
 
   static override flags = {
     ...BaseCommand.connectionFlags,

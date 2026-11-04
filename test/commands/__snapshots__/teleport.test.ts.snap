@@ -152,38 +152,33 @@ exports[`meili teleport > names the failed tasks of the new project, and what ex
 `;
 
 exports[`meili teleport > prints its help without any network call 1`] = `
-"Move a project to Meilisearch Cloud, for humans only.
+"Interactive command. Move a project to Meilisearch Cloud.
 
 USAGE
-  $ meili teleport [-o <mode>] [--debug] [--project <name>]
+  $ meili teleport [--debug] [--project <name>]
 
 FLAGS
-  -o, --output=<mode>   json (default): one document, the API body as it is,
-                        indented in a terminal, compact when piped. ndjson: one
-                        item per line, only for the commands that print a list
-                        of items, streams with --all.
-      --debug           Print every HTTP request and response on stderr, secrets
-                        redacted.
-      --project=<name>  A project of the config file, the one whose data moves
-                        to Meilisearch Cloud. Without it, the command asks.
+  --debug           Print every HTTP request and response on stderr, secrets
+                    redacted.
+  --project=<name>  A project of the config file, the one whose data moves to
+                    Meilisearch Cloud. Without it, the command asks.
 
 DESCRIPTION
-  Move a project to Meilisearch Cloud, for humans only.
+  Interactive command. Move a project to Meilisearch Cloud.
 
   Moves the data of a Meilisearch project to a new Meilisearch Cloud project, by
-  asking questions on the terminal. An interactive command: an agent never runs
-  it.
+  asking questions on the terminal.
 
   It checks that the source can export, logs in to Meilisearch Cloud, creates a
   project in the region, team and plan chosen, adds it to the config file,
   exports the data to it, and waits until the new project has indexed it. It
   refuses to run without a terminal.
 
-  An agent does the same without questions. Run \`meili auth login\`, then \`meili
-  project add --name <name> --team-id <id> --resource-id <id> --sync-config
-  --wait\`, then \`meili export --project <source> --project-destination <name>
-  --wait\`, then \`meili task list --project <name> --statuses
-  enqueued,processing\` until it lists no task.
+  The same steps, without questions: Run \`meili auth login\`, then \`meili project
+  add --name <name> --team-id <id> --resource-id <id> --sync-config --wait\`,
+  then \`meili export --project <source> --project-destination <name> --wait\`,
+  then \`meili task list --project <name> --statuses enqueued,processing\` until
+  it lists no task.
 
 EXAMPLES
   $ meili teleport
@@ -196,7 +191,7 @@ EXAMPLES
 exports[`meili teleport > refuses to run without a terminal, with the JSON error and the commands to run instead 1`] = `
 {
   "exitCode": 2,
-  "stderr": "{"error":{"code":"cli_usage","type":"cli","message":"\`meili teleport\` asks questions, so it runs only in a terminal, for a human.","hint":"Run \`meili auth login\`, then \`meili project add --name <name> --team-id <id> --resource-id <id> --sync-config --wait\`, then \`meili export --project <source> --project-destination <name> --wait\`, then \`meili task list --project <name> --statuses enqueued,processing\` until it lists no task."}}
+  "stderr": "{"error":{"code":"cli_usage","type":"cli","message":"\`meili teleport\` asks questions, so it runs only in a terminal.","hint":"Run \`meili auth login\`, then \`meili project add --name <name> --team-id <id> --resource-id <id> --sync-config --wait\`, then \`meili export --project <source> --project-destination <name> --wait\`, then \`meili task list --project <name> --statuses enqueued,processing\` until it lists no task."}}
 ",
   "stdout": "",
 }

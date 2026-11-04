@@ -28,16 +28,7 @@ describe("meili config update", () => {
     });
     const result = await runCommand(
       ConfigUpdate,
-      [
-        "--project",
-        "prod",
-        "--project-url",
-        "https://q",
-        "--project-api-key",
-        "-",
-        "--output",
-        "json",
-      ],
+      ["--project", "prod", "--project-url", "https://q", "--project-api-key", "-"],
       { env },
     );
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
@@ -81,11 +72,9 @@ describe("meili config update", () => {
     const { path, env } = tempConfig("update-sync-id.json", {
       prod: { url: "https://elsewhere.example.com", apiKey: "mine", cloud: { id: 343 } },
     });
-    const result = await runCommand(
-      ConfigUpdate,
-      ["--project", "prod", "--sync-with-cloud", "--output", "json"],
-      { env: { ...managementEnv, ...env } },
-    );
+    const result = await runCommand(ConfigUpdate, ["--project", "prod", "--sync-with-cloud"], {
+      env: { ...managementEnv, ...env },
+    });
     expect(result).toMatchSnapshot();
     expect(readJson(path)).toEqual({
       projects: {

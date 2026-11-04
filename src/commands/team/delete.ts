@@ -11,10 +11,7 @@ export default class TeamDelete extends BaseCommand {
 
 The team must have no project left. Prints nothing on success.`;
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %> --id 12 --yes",
-    "<%= config.bin %> <%= command.id %> --id 12 --yes --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %> --id 12 --yes"];
 
   static override flags = {
     id: Flags.integer({ description: "The team to delete.", helpValue: "<id>", required: true }),

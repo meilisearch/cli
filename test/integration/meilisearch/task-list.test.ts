@@ -23,16 +23,7 @@ describe.skipIf(!meilisearchUp)("meili task list against a real Meilisearch", ()
   });
 
   it("returns the list envelope filtered by --index-ids", async () => {
-    const result = await runBinary([
-      "task",
-      "list",
-      "--index-ids",
-      uid,
-      "--all",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["task", "list", "--index-ids", uid, "--all", ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const page = JSON.parse(result.stdout) as { results: Array<{ uid: number; type: string }> };
@@ -41,15 +32,7 @@ describe.skipIf(!meilisearchUp)("meili task list against a real Meilisearch", ()
   });
 
   it("narrows the list with --ids", async () => {
-    const result = await runBinary([
-      "task",
-      "list",
-      "--ids",
-      String(created),
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["task", "list", "--ids", String(created), ...project]);
     expect(result.exitCode).toBe(0);
     const page = JSON.parse(result.stdout) as {
       results: Array<{ uid: number; indexUid: string; status: string }>;
@@ -59,37 +42,8 @@ describe.skipIf(!meilisearchUp)("meili task list against a real Meilisearch", ()
     expect(page.results[0]).toMatchObject({ uid: created, indexUid: uid, status: "succeeded" });
   });
 
-  it("streams the tasks of the index as ndjson", async () => {
-    const result = await runBinary([
-      "task",
-      "list",
-      "--index-ids",
-      uid,
-      "--all",
-      "--limit",
-      "1",
-      "--output",
-      "ndjson",
-      ...project,
-    ]);
-    expect(result.exitCode).toBe(0);
-    const uids = result.stdout
-      .trimEnd()
-      .split("\n")
-      .map((line) => (JSON.parse(line) as { uid: number }).uid);
-    expect(uids).toContain(created);
-  });
-
   it("exits 1 with the API error when a filter value is not one the API knows", async () => {
-    const result = await runBinary([
-      "task",
-      "list",
-      "--statuses",
-      "nope",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["task", "list", "--statuses", "nope", ...project]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("invalid_task_statuses");

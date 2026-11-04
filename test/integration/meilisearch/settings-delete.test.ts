@@ -32,8 +32,6 @@ describe.skipIf(!meilisearchUp)("meili settings delete against a real Meilisearc
       uid,
       "--yes",
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);
@@ -53,15 +51,7 @@ describe.skipIf(!meilisearchUp)("meili settings delete against a real Meilisearc
       .index(uid)
       .updateSettings({ stopWords: ["the"] })
       .waitTask();
-    const result = await runBinary([
-      "settings",
-      "delete",
-      "--index",
-      uid,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["settings", "delete", "--index", uid, ...project]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");

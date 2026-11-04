@@ -20,13 +20,13 @@ describe("meili team view", () => {
 
   it("gets one team with --id", async () => {
     server.use(managementHandlers.getTeam());
-    const result = await runCommand(TeamView, ["--id", "13", "--output", "json"], { env });
+    const result = await runCommand(TeamView, ["--id", "13"], { env });
     expect(result).toMatchSnapshot();
   });
 
   it("passes the API's error body through on an unknown id, with exit 4", async () => {
     server.use(managementHandlers.apiError("/api/v2/teams/999", 404, teamNotFound));
-    const result = await runCommand(TeamView, ["--id", "999", "--output", "json"], { env });
+    const result = await runCommand(TeamView, ["--id", "999"], { env });
     expect(result).toMatchSnapshot();
   });
 });

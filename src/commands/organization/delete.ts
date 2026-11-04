@@ -11,10 +11,7 @@ export default class OrganizationDelete extends BaseCommand {
 
 Prints nothing on success.`;
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %> --id 7 --yes",
-    "<%= config.bin %> <%= command.id %> --id 7 --yes --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %> --id 7 --yes"];
 
   static override flags = {
     id: Flags.integer({

@@ -31,8 +31,6 @@ describe.skipIf(!meilisearchUp)("meili key add against a real Meilisearch", () =
       "null",
       "--name",
       `meili-cli-test-key-add-${uid.slice(0, 8)}`,
-      "--output",
-      "json",
       ...project,
     ]);
     created.push(uid);
@@ -55,8 +53,6 @@ describe.skipIf(!meilisearchUp)("meili key add against a real Meilisearch", () =
       "add",
       "--data",
       JSON.stringify({ uid, actions: ["search"], indexes: ["*"], expiresAt: null }),
-      "--output",
-      "json",
       ...project,
     ]);
     created.push(uid);
@@ -65,15 +61,7 @@ describe.skipIf(!meilisearchUp)("meili key add against a real Meilisearch", () =
   });
 
   it("exits 1 with the API error when the body misses a required field", async () => {
-    const result = await runBinary([
-      "key",
-      "add",
-      "--actions",
-      "search",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["key", "add", "--actions", "search", ...project]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("missing_api_key_indexes");

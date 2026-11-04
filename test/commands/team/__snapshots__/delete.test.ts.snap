@@ -13,18 +13,13 @@ exports[`meili team delete > prints its help without any network call 1`] = `
 "Delete a Meilisearch Cloud team.
 
 USAGE
-  $ meili team delete --id <id> --yes [-o <mode>] [--debug]
+  $ meili team delete --id <id> --yes [--debug]
 
 FLAGS
-  -o, --output=<mode>  json (default): one document, the API body as it is,
-                       indented in a terminal, compact when piped. ndjson: one
-                       item per line, only for the commands that print a list of
-                       items, streams with --all.
-      --debug          Print every HTTP request and response on stderr, secrets
-                       redacted.
-      --id=<id>        (required) The team to delete.
-      --yes            (required) Confirm the deletion. Nothing is sent to the
-                       API without it.
+  --debug    Print every HTTP request and response on stderr, secrets redacted.
+  --id=<id>  (required) The team to delete.
+  --yes      (required) Confirm the deletion. Nothing is sent to the API without
+             it.
 
 DESCRIPTION
   Delete a Meilisearch Cloud team.
@@ -33,8 +28,6 @@ DESCRIPTION
 
 EXAMPLES
   $ meili team delete --id 12 --yes
-
-  $ meili team delete --id 12 --yes --output json
 
 "
 `;

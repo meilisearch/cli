@@ -43,8 +43,6 @@ describe("meili settings update", () => {
       "movies",
       "--searchable-attributes",
       "title,overview",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();
@@ -144,8 +142,6 @@ describe("meili settings update", () => {
       "movies",
       "--stop-words",
       "the",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();

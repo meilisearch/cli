@@ -10,10 +10,7 @@ export default class IndexView extends BaseCommand {
 
   static override description = "Get one index.";
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %> --project prod --id movies",
-    "<%= config.bin %> <%= command.id %> --project prod --id movies --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %> --project prod --id movies"];
 
   static override flags = {
     ...BaseCommand.connectionFlags,

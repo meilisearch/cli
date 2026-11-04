@@ -23,34 +23,16 @@ describe.skipIf(!meilisearchUp)("meili key delete against a real Meilisearch", (
   });
 
   it("deletes the key, writes nothing on stdout and exits 0", async () => {
-    const result = await runBinary([
-      "key",
-      "delete",
-      "--id",
-      uid,
-      "--yes",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["key", "delete", "--id", uid, "--yes", ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toBe("");
     expect(result.stderr).toBe("");
-    const gone = await runBinary(["key", "view", "--id", uid, "--output", "json", ...project]);
+    const gone = await runBinary(["key", "view", "--id", uid, ...project]);
     expect(gone.exitCode).toBe(4);
   });
 
   it("exits 4 with the API error when the key does not exist", async () => {
-    const result = await runBinary([
-      "key",
-      "delete",
-      "--id",
-      randomUUID(),
-      "--yes",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["key", "delete", "--id", randomUUID(), "--yes", ...project]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("api_key_not_found");

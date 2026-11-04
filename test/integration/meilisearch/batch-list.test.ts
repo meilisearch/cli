@@ -25,16 +25,7 @@ describe.skipIf(!meilisearchUp)("meili batch list against a real Meilisearch", (
   });
 
   it("returns the list envelope filtered by --index-ids", async () => {
-    const result = await runBinary([
-      "batch",
-      "list",
-      "--index-ids",
-      uid,
-      "--all",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["batch", "list", "--index-ids", uid, "--all", ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const page = JSON.parse(result.stdout) as { results: Array<{ uid: number }> };
@@ -42,15 +33,7 @@ describe.skipIf(!meilisearchUp)("meili batch list against a real Meilisearch", (
   });
 
   it("filters by --ids, the batch uids of the route", async () => {
-    const result = await runBinary([
-      "batch",
-      "list",
-      "--ids",
-      String(batchUid),
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["batch", "list", "--ids", String(batchUid), ...project]);
     expect(result.exitCode).toBe(0);
     const page = JSON.parse(result.stdout) as {
       results: Array<{ uid: number; stats: { indexUids: Record<string, number> } }>;
@@ -62,33 +45,16 @@ describe.skipIf(!meilisearchUp)("meili batch list against a real Meilisearch", (
   });
 
   it("filters by --task-ids, the task uids the batch processed", async () => {
-    const result = await runBinary([
-      "batch",
-      "list",
-      "--task-ids",
-      String(taskUid),
-      "--output",
-      "ndjson",
-      ...project,
-    ]);
+    const result = await runBinary(["batch", "list", "--task-ids", String(taskUid), ...project]);
     expect(result.exitCode).toBe(0);
-    const uids = result.stdout
-      .trimEnd()
-      .split("\n")
-      .map((line) => (JSON.parse(line) as { uid: number }).uid);
+    const uids = (JSON.parse(result.stdout) as { results: Array<{ uid: number }> }).results.map(
+      (batch) => batch.uid,
+    );
     expect(uids).toContain(batchUid);
   });
 
   it("exits 1 with the API error when a filter value is not one the API knows", async () => {
-    const result = await runBinary([
-      "batch",
-      "list",
-      "--statuses",
-      "nope",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["batch", "list", "--statuses", "nope", ...project]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("invalid_task_statuses");

@@ -22,13 +22,13 @@ describe("meili organization view", () => {
 
   it("gets one organization with --id", async () => {
     server.use(managementHandlers.getOrganization([organization, other]));
-    const result = await runCommand(OrganizationView, ["--id", "2", "--output", "json"], { env });
+    const result = await runCommand(OrganizationView, ["--id", "2"], { env });
     expect(result).toMatchSnapshot();
   });
 
   it("passes the API's error body through on an organization it does not show, with exit 3", async () => {
     server.use(managementHandlers.getOrganization([organization]));
-    const result = await runCommand(OrganizationView, ["--id", "999", "--output", "json"], {
+    const result = await runCommand(OrganizationView, ["--id", "999"], {
       env,
     });
     expect(result).toMatchSnapshot();

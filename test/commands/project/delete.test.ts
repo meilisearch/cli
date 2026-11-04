@@ -20,7 +20,7 @@ describe("meili project delete", () => {
 
   it("deletes the project of --id and prints nothing", async () => {
     server.use(managementHandlers.deleteProject());
-    const result = await runCommand(ProjectDelete, ["--id", "343", "--yes", "--output", "json"], {
+    const result = await runCommand(ProjectDelete, ["--id", "343", "--yes"], {
       env,
     });
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
@@ -76,7 +76,7 @@ describe("meili project delete", () => {
 
   it("passes the API's error body through on a 403, with exit 3", async () => {
     server.use(managementHandlers.apiError("/api/v2/projects/343", 403, forbidden));
-    const result = await runCommand(ProjectDelete, ["--id", "343", "--yes", "--output", "json"], {
+    const result = await runCommand(ProjectDelete, ["--id", "343", "--yes"], {
       env,
     });
     expect(result).toMatchSnapshot();

@@ -22,15 +22,7 @@ describe.skipIf(!meilisearchUp)("meili task delete against a real Meilisearch", 
   });
 
   it("exits 2 and deletes nothing without --yes", async () => {
-    const result = await runBinary([
-      "task",
-      "delete",
-      "--ids",
-      String(created),
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["task", "delete", "--ids", String(created), ...project]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
@@ -38,7 +30,7 @@ describe.skipIf(!meilisearchUp)("meili task delete against a real Meilisearch", 
   });
 
   it("exits 2 without a filter, before any network call", async () => {
-    const result = await runBinary(["task", "delete", "--yes", "--output", "json", ...project]);
+    const result = await runBinary(["task", "delete", "--yes", ...project]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
@@ -52,8 +44,6 @@ describe.skipIf(!meilisearchUp)("meili task delete against a real Meilisearch", 
       String(created),
       "--yes",
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);

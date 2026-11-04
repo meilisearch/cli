@@ -25,8 +25,6 @@ describe.skipIf(!meilisearchUp)("meili index add against a real Meilisearch", ()
       "--primary-key",
       "id",
       "--wait",
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result.exitCode).toBe(0);

@@ -31,11 +31,7 @@ describe("meili team add", () => {
   it("sends the flags as a flat body with the token, and prints the team created", async () => {
     const received: ReceivedRequest[] = [];
     server.use(managementHandlers.createTeam(received));
-    const result = await runCommand(
-      TeamAdd,
-      ["--name", "Docs", "--organization-id", "1", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(TeamAdd, ["--name", "Docs", "--organization-id", "1"], { env });
     expect(result).toMatchSnapshot();
     expect(received).toMatchObject([
       { authorization: `Bearer ${MANAGEMENT_TOKEN}`, body: { name: "Docs", organizationId: 1 } },
@@ -44,7 +40,7 @@ describe("meili team add", () => {
 
   it("passes the API's 403 through on a body it cannot read, with exit 3", async () => {
     server.use(managementHandlers.apiError("/api/v2/teams", 403, unreadableBody));
-    const result = await runCommand(TeamAdd, ["--name", "Docs", "--output", "json"], { env });
+    const result = await runCommand(TeamAdd, ["--name", "Docs"], { env });
     expect(result).toMatchSnapshot();
   });
 });

@@ -13,30 +13,24 @@ exports[`meili team update > prints its help without any network call 1`] = `
 "Rename a Meilisearch Cloud team, or change its owner.
 
 USAGE
-  $ meili team update --id <id> [-o <mode>] [--debug] [--name <name>]
-    [--owner-id <uuid>] [--file <path> | --data <json>]
+  $ meili team update --id <id> [--debug] [--name <name>] [--owner-id
+    <uuid>] [--file <path> | --data <json>]
 
 FLAGS
-  -o, --output=<mode>    json (default): one document, the API body as it is,
-                         indented in a terminal, compact when piped. ndjson: one
-                         item per line, only for the commands that print a list
-                         of items, streams with --all.
-      --data=<json>      Inline JSON body.
-      --debug            Print every HTTP request and response on stderr,
-                         secrets redacted.
-      --file=<path>      Read the body from a file. \`-\` reads from stdin.
-      --id=<id>          (required) The team to update.
-      --name=<name>      New name of the team.
-      --owner-id=<uuid>  UUID of the new owner, who must already be a member of
-                         the team.
+  --data=<json>      Inline JSON body.
+  --debug            Print every HTTP request and response on stderr, secrets
+                     redacted.
+  --file=<path>      Read the body from a file. \`-\` reads from stdin.
+  --id=<id>          (required) The team to update.
+  --name=<name>      New name of the team.
+  --owner-id=<uuid>  UUID of the new owner, who must already be a member of the
+                     team.
 
 DESCRIPTION
   Rename a Meilisearch Cloud team, or change its owner.
 
 EXAMPLES
   $ meili team update --id 12 --name renamed
-
-  $ meili team update --id 12 --name renamed --output json
 
   $ meili team update --id 12 --owner-id 5b7c2f1e-8a3d-4e6f-9b0a-1c2d3e4f5a6b
 

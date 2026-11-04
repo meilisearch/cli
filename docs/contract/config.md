@@ -90,7 +90,7 @@ For each project of the scope:
 
 Entries whose project is not in the scope, or is no longer in the Cloud, stay unchanged and are not reported.
 
-On stdout, the command prints one item per project of the scope that has an entry, in the order of the API. `ndjson` prints one item per line.
+On stdout, the command prints one item per project of the scope that has an entry, in the order of the API.
 
 ```json
 [
@@ -169,13 +169,12 @@ A command cannot build a client by itself. Commands with `api = "none"` (`schema
 | `MEILI_MANAGEMENT_URL` | Management API base URL. Default `https://api.meilisearch.com`. For development and tests. |
 | `MEILI_MANAGEMENT_CLIENT_ID` | OAuth application that the `auth login` command uses to identify itself. Default: `meilisearch-cli`, the application of this CLI. For development and tests. |
 | `MEILI_MANAGEMENT_DASHBOARD_URL` | Dashboard URL, which hosts the consent page of `auth login`. Default `https://cloud.meilisearch.com`. For development and tests. |
-| `MEILI_OUTPUT` | Default output mode: `json` or `ndjson`. |
 | `MEILI_TIMEOUT` | Default `--timeout` for `--wait`. |
 | `MEILI_NO_ANALYTICS` | `true` or `1` turns off the anonymous usage data the CLI sends, see "Analytics". |
 
 `meili --help` documents every variable except the `MEILI_MANAGEMENT_*` ones, which are for development and tests: `CONTRIBUTING.md` documents them. Adding a variable is a contract change.
 
-A variable that has the same role as a flag takes its name from the flag: `MEILI_` followed by the flag name in upper snake case. For example `--output` and `MEILI_OUTPUT`, `--timeout` and `MEILI_TIMEOUT`. Some variables and flags have no pair:
+A variable that has the same role as a flag takes its name from the flag: `MEILI_` followed by the flag name in upper snake case. For example `--timeout` and `MEILI_TIMEOUT`. Some variables and flags have no pair:
 
 - `MEILI_CONFIG` has no flag, because the file is chosen per process.
 - `MEILI_NO_ANALYTICS` has no flag, because it is set once, for every process. Meilisearch uses the same name for the same purpose.

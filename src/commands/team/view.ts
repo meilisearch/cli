@@ -9,10 +9,7 @@ export default class TeamView extends BaseCommand {
 
   static override description = "Get one Meilisearch Cloud team.";
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %> --id 12",
-    "<%= config.bin %> <%= command.id %> --id 12 --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %> --id 12"];
 
   static override flags = {
     id: Flags.integer({ required: true, description: "The team to get.", helpValue: "<id>" }),

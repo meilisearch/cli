@@ -19,15 +19,7 @@ describe.skipIf(!meilisearchUp)("meili index delete against a real Meilisearch",
   });
 
   it("exits 2 and deletes nothing without --yes", async () => {
-    const result = await runBinary([
-      "index",
-      "delete",
-      "--id",
-      uid,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["index", "delete", "--id", uid, ...project]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
@@ -35,17 +27,7 @@ describe.skipIf(!meilisearchUp)("meili index delete against a real Meilisearch",
   });
 
   it("deletes the index", async () => {
-    const result = await runBinary([
-      "index",
-      "delete",
-      "--id",
-      uid,
-      "--yes",
-      "--wait",
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runBinary(["index", "delete", "--id", uid, "--yes", "--wait", ...project]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({
       indexUid: uid,

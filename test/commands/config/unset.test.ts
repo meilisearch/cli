@@ -18,7 +18,7 @@ describe("meili config unset", () => {
   it("removes the project and prints nothing", async () => {
     const path = join(scrubbedHome, "projects.json");
     writeConfigFile({ path, projects: { a: { url: "http://a" }, b: { url: "http://b" } } });
-    const result = await runCommand(ConfigUnset, ["--project", "a", "--output", "json"], {
+    const result = await runCommand(ConfigUnset, ["--project", "a"], {
       env: { MEILI_CONFIG: path },
     });
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });

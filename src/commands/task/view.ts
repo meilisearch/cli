@@ -12,10 +12,7 @@ export default class TaskView extends BaseCommand {
 
 Prints its status and its error.`;
 
-  static override examples = [
-    "<%= config.bin %> <%= command.id %> --project prod --id 42",
-    "<%= config.bin %> <%= command.id %> --project prod --id 42 --output json",
-  ];
+  static override examples = ["<%= config.bin %> <%= command.id %> --project prod --id 42"];
 
   static override flags = {
     ...BaseCommand.connectionFlags,

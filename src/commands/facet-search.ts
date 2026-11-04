@@ -17,7 +17,6 @@ Counts the values on the documents that --q and --filter keep.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac --output json",
     "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
     '<%= config.bin %> <%= command.id %> --project prod --index movies --data \'{"facetName":"genres","facetQuery":"ac"}\'',
   ];

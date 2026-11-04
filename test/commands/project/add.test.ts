@@ -29,7 +29,7 @@ describe("meili project add", () => {
     server.use(managementHandlers.createProject(received));
     const result = await runCommand(
       ProjectAdd,
-      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--output", "json"],
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3"],
       { env },
     );
     expect(result).toMatchSnapshot();
@@ -176,7 +176,7 @@ describe("meili project add", () => {
     server.use(...creation("creating", "running"));
     const result = await runCommand(
       ProjectAdd,
-      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--wait", "--output", "json"],
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--wait"],
       { env },
     );
     expect(result.exitCode).toBe(0);
@@ -230,18 +230,7 @@ describe("meili project add", () => {
     const { path, env: configEnv } = tempConfig("wait-failed.json", {});
     const result = await runCommand(
       ProjectAdd,
-      [
-        "--name",
-        "demo",
-        "--team-id",
-        "12",
-        "--resource-id",
-        "3",
-        "--wait",
-        "--sync-config",
-        "--output",
-        "json",
-      ],
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--wait", "--sync-config"],
       { env: { ...env, ...configEnv } },
     );
     expect(result.exitCode).toBe(7);
@@ -267,11 +256,9 @@ describe("meili project add", () => {
 
   it("fails with cli_timeout and exit 5 when the project is not running within --timeout", async () => {
     server.use(...creation("creating"));
-    const result = await runCommand(
-      ProjectAdd,
-      ["--name", "demo", "--wait", "--timeout", "50ms", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(ProjectAdd, ["--name", "demo", "--wait", "--timeout", "50ms"], {
+      env,
+    });
     expect(result).toMatchSnapshot();
   });
 
@@ -301,14 +288,14 @@ describe("meili project add", () => {
 
   it("passes the API's error body through on a 403, with exit 3", async () => {
     server.use(managementHandlers.apiError("/api/v2/projects", 403, forbidden));
-    const result = await runCommand(ProjectAdd, ["--name", "demo", "--output", "json"], {
+    const result = await runCommand(ProjectAdd, ["--name", "demo"], {
       env,
     });
     expect(result).toMatchSnapshot();
   });
 
   it("fails with cli_auth_missing and exit 3 without a token, before any network call", async () => {
-    const result = await runCommand(ProjectAdd, ["--name", "demo", "--output", "json"], {
+    const result = await runCommand(ProjectAdd, ["--name", "demo"], {
       env: { MEILI_MANAGEMENT_URL: MANAGEMENT_URL },
     });
     expect(result.exitCode).toBe(3);

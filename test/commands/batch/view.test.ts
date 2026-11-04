@@ -23,13 +23,13 @@ describe("meili batch view", () => {
 
   it("prints the batch as the API returns it, with no list envelope", async () => {
     server.use(meilisearchHandlers.batch(batches));
-    const result = await runCommand(BatchView, ["--id", "7", "--output", "json", ...project]);
+    const result = await runCommand(BatchView, ["--id", "7", ...project]);
     expect(result).toMatchSnapshot();
   });
 
   it("passes the 404 of an unknown batch through and exits 4", async () => {
     server.use(meilisearchHandlers.batch(batches));
-    const result = await runCommand(BatchView, ["--id", "99", "--output", "json", ...project]);
+    const result = await runCommand(BatchView, ["--id", "99", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

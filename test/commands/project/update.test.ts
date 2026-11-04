@@ -25,11 +25,7 @@ describe("meili project update", () => {
   it("sends the new name for the project of --id, and prints the project updated", async () => {
     const received: ReceivedRequest[] = [];
     server.use(managementHandlers.updateProject(received));
-    const result = await runCommand(
-      ProjectUpdate,
-      ["--id", "343", "--name", "renamed", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(ProjectUpdate, ["--id", "343", "--name", "renamed"], { env });
     expect(result).toMatchSnapshot();
     expect(received[0]?.body).toEqual({ name: "renamed" });
   });
@@ -135,13 +131,9 @@ describe("meili project update", () => {
 
   it("passes the API's error body through on a 403, with exit 3", async () => {
     server.use(managementHandlers.apiError("/api/v2/projects/343", 403, forbidden));
-    const result = await runCommand(
-      ProjectUpdate,
-      ["--id", "343", "--name", "x", "--output", "json"],
-      {
-        env,
-      },
-    );
+    const result = await runCommand(ProjectUpdate, ["--id", "343", "--name", "x"], {
+      env,
+    });
     expect(result).toMatchSnapshot();
   });
 });

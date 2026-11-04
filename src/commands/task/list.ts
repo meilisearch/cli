@@ -16,11 +16,9 @@ export default class TaskList extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod",
-    "<%= config.bin %> <%= command.id %> --project prod --output json",
     "<%= config.bin %> <%= command.id %> --project prod --ids 42",
     "<%= config.bin %> <%= command.id %> --project prod --statuses failed,canceled --limit 5",
     "<%= config.bin %> <%= command.id %> --project prod --index-ids movies --types documentAdditionOrUpdate",
-    "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson",
   ];
 
   static override flags = {

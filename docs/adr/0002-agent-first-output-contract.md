@@ -13,7 +13,7 @@ A terminal does not mean a human either. Some sandboxes run the commands of an a
 The rules in `docs/contract/output.md` and `docs/contract/config.md` are the public contract of the CLI. In short:
 
 - stdout is data only, stderr is everything else
-- `json` is the default output mode, in a terminal or not; `ndjson` streams lists; there is no other format
+- every command writes JSON, in a terminal or not; there is no other format
 - API responses pass through unchanged, with no wrapper and no renaming
 - errors are JSON on stderr with `code`, `type`, `message`, `link`, `hint`
 - exit codes are stable and documented
@@ -26,7 +26,7 @@ Only `src/lib/output.ts`, `src/lib/errors.ts` and `src/lib/config.ts` implement 
 
 ## Consequences
 
-- An agent never sets `--output`. In a terminal the JSON is indented, so it is easy to read.
+- In a terminal the JSON is indented, so it is easy to read.
 - A destructive command has nothing to confirm. An agent is the operator. A flag that answers no question adds friction and teaches nothing. The intent is already in the command line: the verb is `delete`, `cancel` or `swap`, and the description says what the command destroys. Reviewers read the verb. The only guard is a selector: `delete documents` refuses to run without `--ids`, `--filter` or `--all`.
 - Any change to these rules is a breaking change. It needs a major version, and a contract pull request first.
 - Human comfort is in scope, but it never overrides these rules. It goes into the documentation and the `--help` now, and into comfort commands later, each through a contract pull request.

@@ -51,13 +51,7 @@ describe("meili multi-search", () => {
 
   it("prints the API envelope as it is in JSON", async () => {
     server.use(meilisearchHandlers.multiSearch(perQuery));
-    const result = await runCommand(MultiSearch, [
-      "--queries",
-      queries,
-      "--output",
-      "json",
-      ...project,
-    ]);
+    const result = await runCommand(MultiSearch, ["--queries", queries, ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -95,20 +89,6 @@ describe("meili multi-search", () => {
     expect(await bodiesOf(["--queries", "movies"])).toEqual([{ queries: "movies" }]);
   });
 
-  it("refuses --output ndjson: the response is hits, not a list envelope", async () => {
-    server.use(meilisearchHandlers.multiSearch(perQuery));
-    const result = await runCommand(MultiSearch, [
-      "--queries",
-      queries,
-      "--output",
-      "ndjson",
-      ...project,
-    ]);
-    expect(result.exitCode).toBe(2);
-    expect(result.stdout).toBe("");
-    expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
-  });
-
   it("passes the API error of a missing index through, which the route answers 400", async () => {
     server.use(
       meilisearchHandlers.apiError("/multi-search", 400, {
@@ -121,8 +101,6 @@ describe("meili multi-search", () => {
     const result = await runCommand(MultiSearch, [
       "--queries",
       '[{"indexUid":"missing","q":"nosferatu"}]',
-      "--output",
-      "json",
       ...project,
     ]);
     expect(result).toMatchSnapshot();
