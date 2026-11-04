@@ -103,15 +103,19 @@ export default class AddProjects extends BaseCommand {
         },
       );
     }
+    const cloud = cloudOf(project, await readTeamNames(this.managementClient));
+    // Read again: with --wait, minutes may have passed since the check above.
+    const file = this.configFile();
+    assertNoProject(
+      file,
+      sync.entry,
+      `: project ${project.id} is created but was not added to it.`,
+    );
     writeConfigFile({
-      path: sync.file.path,
+      path: file.path,
       projects: {
-        ...sync.file.projects,
-        [sync.entry]: {
-          url: project.url,
-          apiKey: created.masterKey,
-          cloud: cloudOf(project, await readTeamNames(this.managementClient)),
-        },
+        ...file.projects,
+        [sync.entry]: { url: project.url, apiKey: created.masterKey, cloud },
       },
     });
   }

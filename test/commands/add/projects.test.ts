@@ -1,6 +1,7 @@
 import { HttpResponse, http } from "msw";
 import { describe, expect, it } from "vitest";
 import AddProjects from "../../../src/commands/add/projects.js";
+import { writeConfigFile } from "../../../src/lib/config.js";
 import {
   managementEnv as env,
   forbidden,
@@ -200,6 +201,34 @@ describe("meili add projects", () => {
         },
       },
     });
+  });
+
+  it("keeps what another command wrote to the config file during --wait", async () => {
+    const { path, env: configEnv } = tempConfig("wait-concurrent.json", {});
+    let polls = 0;
+    server.use(
+      http.post(`${MANAGEMENT_URL}/api/v2/projects`, () =>
+        HttpResponse.json({ ...project, url: null, status: "creating" }, { status: 201 }),
+      ),
+      http.get(`${MANAGEMENT_URL}/api/v2/projects/343`, () => {
+        if (polls++ === 0) {
+          writeConfigFile({ path, projects: { other: { url: "http://other" } } });
+          return HttpResponse.json({ ...polled, url: null, status: "creating" });
+        }
+        return HttpResponse.json(polled);
+      }),
+      managementHandlers.listTeams(),
+    );
+    const result = await runCommand(
+      AddProjects,
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--wait", "--sync-config"],
+      { env: { ...env, ...configEnv } },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(Object.keys((readJson(path) as { projects: object }).projects)).toEqual([
+      "other",
+      "demo",
+    ]);
   });
 
   it("prints the project and exits 7 with cli_task_failed when its status becomes failed", async () => {
