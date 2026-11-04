@@ -84,17 +84,6 @@ describe("meili auth login", () => {
     expect(JSON.parse(result.stderr).error.message).toContain("together");
   });
 
-  it("refuses another Cloud without its application, before any network call", async () => {
-    const result = await runCommand(AuthLogin, ["--no-browser"], {
-      env: {
-        ...sessionHome(),
-        MEILI_MANAGEMENT_URL: "https://api.example.com",
-        MEILI_MANAGEMENT_DASHBOARD_URL: "https://cloud.example.com",
-      },
-    });
-    expect(result).toMatchSnapshot();
-  });
-
   // Last: the trace wraps fetch for the rest of the process.
   it("masks the tokens of the exchange in the --debug trace", async () => {
     const server = await startAuthorizationServer();

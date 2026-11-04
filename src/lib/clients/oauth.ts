@@ -142,6 +142,9 @@ function authorizationUrl(
     state,
     code_challenge: challenge,
     code_challenge_method: "S256",
+    // Sends a human without a session to the sign-up page instead of the login
+    // page (OpenID Connect `prompt=create`). That page links to the login page.
+    prompt: "create",
   }).toString();
   return url.href;
 }

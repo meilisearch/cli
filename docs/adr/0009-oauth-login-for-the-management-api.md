@@ -1,6 +1,6 @@
 # ADR 0009: `auth login` gets a Management API token through OAuth, and keeps it in a credentials file
 
-Status: accepted. Date: 2026-10-20.
+Status: accepted. Date: 2026-10-20. One point is superseded by ADR 0014: the client id is `meilisearch-cli` on every Cloud, no longer a built-in id for Meilisearch Cloud only.
 
 ## Context
 

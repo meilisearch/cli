@@ -98,10 +98,10 @@ describe("resolveOauthClient", () => {
     ).toMatchObject({ clientId: DEFAULT_MANAGEMENT_CLIENT_ID });
   });
 
-  it("asks another Cloud for its own application: the built-in one is not registered there", () => {
-    expect(() =>
+  it("takes the application of this CLI on another Cloud too: every Cloud registers it", () => {
+    expect(
       resolveOauthClient(cloud("https://api.example.com", "https://cloud.example.com")),
-    ).toThrowError(/No OAuth application/);
+    ).toMatchObject({ clientId: DEFAULT_MANAGEMENT_CLIENT_ID });
   });
 
   it("takes a loopback address in plain HTTP, including IPv6", () => {

@@ -27,11 +27,11 @@ export const ENV = {
 export const DEFAULT_MANAGEMENT_URL = "https://api.meilisearch.com";
 export const DEFAULT_MANAGEMENT_DASHBOARD_URL = "https://cloud.meilisearch.com";
 /**
- * The OAuth application of this CLI on Meilisearch Cloud, which `auth login`
- * identifies itself with. A client id is public by definition: it names the
- * application on the consent page, it is not a secret. See ADR 0009.
+ * The OAuth application of this CLI, which `auth login` identifies itself with.
+ * Every Cloud registers it with this id. A client id is public by definition: it
+ * names the application on the consent page, it is not a secret. See ADR 0014.
  */
-export const DEFAULT_MANAGEMENT_CLIENT_ID = "0sZKkuuaL3xcitNgKUchid3Vz4sHPslxQNFn_d_9rck";
+export const DEFAULT_MANAGEMENT_CLIENT_ID = "meilisearch-cli";
 
 /**
  * The table of docs/contract/config.md, in the same order. Rendered in `meili --help`.
@@ -56,7 +56,7 @@ export const ENV_VARS: ReadonlyArray<{ name: string; description: string; flag?:
   {
     name: ENV.MANAGEMENT_CLIENT_ID,
     description:
-      "OAuth application the `auth login` command identifies itself with. Default: the one of this CLI on Meilisearch Cloud. For development and tests.",
+      "OAuth application the `auth login` command identifies itself with. Default: `meilisearch-cli`, the one of this CLI. For development and tests.",
   },
   {
     name: ENV.MANAGEMENT_DASHBOARD_URL,
