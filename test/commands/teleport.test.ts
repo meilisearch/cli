@@ -299,6 +299,39 @@ describe("meili teleport", () => {
     ]);
   });
 
+  it("says the transfer goes on, with the links to watch it, on Ctrl-C during the transfer", async () => {
+    const exits: Array<{ code: unknown; stderr: string }> = [];
+    let stderr = "";
+    vi.spyOn(process, "exit").mockImplementationOnce((code) => {
+      exits.push({ code, stderr });
+      return undefined as never;
+    });
+    // The first handler of a path wins: this one replaces the task 9 of `source()`.
+    server.use(
+      http.get(`${MEILISEARCH_URL}/tasks/9`, () => {
+        process.emit("SIGINT");
+        return HttpResponse.json(makeTask({ uid: 9, status: "succeeded" }));
+      }),
+      ...source(),
+      ...cloud(),
+      ...destination(),
+    );
+    const { env: configEnv } = tempConfig("teleport-interrupted.json", {
+      local: { url: MEILISEARCH_URL, apiKey: "masterKey" },
+    });
+    human.answers.push(frankfurt, team, "local-cloud");
+
+    await runCommand(Teleport, ["--project", "local"], {
+      env: { ...env, ...configEnv },
+      onStderr: (chunk) => {
+        stderr += chunk;
+      },
+    });
+
+    expect(exits.map((each) => each.code)).toEqual([0]);
+    expect(exits[0]?.stderr).toMatchSnapshot();
+  });
+
   it("names the failed tasks of the new project, and what exists in Meilisearch Cloud", async () => {
     server.use(...source(), ...cloud(), ...destination([2]));
     const { env: configEnv } = tempConfig("teleport-failed.json", {

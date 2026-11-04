@@ -198,3 +198,29 @@ exports[`meili teleport > refuses to run without a terminal, with the JSON error
   "stdout": "",
 }
 `;
+
+exports[`meili teleport > says the transfer goes on, with the links to watch it, on Ctrl-C during the transfer 1`] = `
+"  meili teleport · move your data to Meilisearch Cloud
+
+  ✔ Source      local, http://meili.test:7700
+  ✔ Logged in   ada@example.com
+
+[J  ⠋ Loading the regions, the organizations and the teams
+[J  ✔ Region      Frankfurt
+  ✔ Team        Search (Acme)
+  ✔ Project     local-cloud, free trial, free for 14 days
+
+[J  ⠋ Creating local-cloud: running. It can take several minutes.  0s
+    Tip: Choose the best plan for your usage: https://www.meilisearch.com/pricing[2A
+[J  ✔ Created     local-cloud is running, in the config file as \`local-cloud\`  0s
+
+[J  ⠋ Sending   ──────────────────────────────   0%  0s
+[J  ⠋ Sending   ──────────────────────────────   0%  0s
+
+  ⏳ The transfer goes on in Meilisearch Cloud. meili stopped watching it.
+
+    Watch it          https://dashboard.test/teams/12/projects/343/batches
+    Try it            https://dashboard.test/teams/12/projects/343/preview
+    Project settings  https://dashboard.test/teams/12/projects/343/settings/general
+"
+`;
