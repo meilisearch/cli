@@ -1,4 +1,4 @@
-# ADR 0016: Distribution on npm, Homebrew and archives with Node inside
+# ADR 0017: Distribution on npm, Homebrew and archives with Node inside
 
 Status: accepted. Date: 2026-11-04.
 

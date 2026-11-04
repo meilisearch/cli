@@ -81,4 +81,4 @@ The release runs in `.github/workflows/release.yml`, on `main`, after the tests.
 2. as archives with Node inside, built by `pnpm archives` in `dist/` and attached to the GitHub release, for `scripts/install.sh`;
 3. on Homebrew, in the `meilisearch/homebrew-tap` repository, from the formula `.github/homebrew/meili.rb`.
 
-See ADR 0016 for the channels and the reasons.
+See ADR 0017 for the channels and the reasons.
