@@ -16,13 +16,16 @@ With Homebrew, on macOS and Linux:
 brew install meilisearch/tap/meili
 ```
 
-Without Node, on macOS and Linux:
+From the GitHub release assets, on macOS and Linux, without Node:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/meilisearch/cli/main/scripts/install.sh | sh
 ```
 
-The script installs the CLI with its own Node in `~/.local/share/meili`, and links `meili` in `~/.local/bin`, or in the folder of `MEILI_CLI_INSTALL_DIR`. `MEILI_CLI_VERSION=0.1.0` installs this version instead of the latest one. Run the script again to update.
+- The script installs the CLI with its own Node in `~/.local/share/meili`.
+- It links `meili` in `~/.local/bin`, or in the folder of `MEILI_CLI_INSTALL_DIR`.
+- `MEILI_CLI_VERSION=0.1.0` installs this version instead of the latest one.
+- Run the script again to update.
 
 ## Get started
 
