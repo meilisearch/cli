@@ -21,7 +21,7 @@ export type Error = {
     /**
      * Per-field details, only present on `validation_failed`.
      */
-    errors?: Array<{
+    details?: Array<{
         field: string;
         code: string;
         message: string;
@@ -499,7 +499,7 @@ export type PatchApiV2ProjectsByProjectIdMasterKeyResponses = {
 export type PatchApiV2ProjectsByProjectIdMasterKeyResponse = PatchApiV2ProjectsByProjectIdMasterKeyResponses[keyof PatchApiV2ProjectsByProjectIdMasterKeyResponses];
 
 export type PatchApiV2ProjectsByProjectIdPlanData = {
-    body?: {
+    body: {
         resourceId: number;
     };
     path: {
@@ -576,7 +576,7 @@ export type GetApiV2ProjectsByProjectIdUsageResponses = {
 export type GetApiV2ProjectsByProjectIdUsageResponse = GetApiV2ProjectsByProjectIdUsageResponses[keyof GetApiV2ProjectsByProjectIdUsageResponses];
 
 export type PatchApiV2ProjectsByProjectIdVersionData = {
-    body?: {
+    body: {
         version: string;
     };
     path: {
@@ -650,7 +650,7 @@ export type GetApiV2ProjectsResponses = {
 export type GetApiV2ProjectsResponse = GetApiV2ProjectsResponses[keyof GetApiV2ProjectsResponses];
 
 export type PostApiV2ProjectsData = {
-    body?: {
+    body: {
         name: string;
         teamId: number;
         resourceId: number;
@@ -663,6 +663,10 @@ export type PostApiV2ProjectsData = {
 
 export type PostApiV2ProjectsErrors = {
     /**
+     * Missing parameter
+     */
+    400: Error;
+    /**
      * project limit reached
      */
     403: unknown;
@@ -671,6 +675,8 @@ export type PostApiV2ProjectsErrors = {
      */
     422: unknown;
 };
+
+export type PostApiV2ProjectsError = PostApiV2ProjectsErrors[keyof PostApiV2ProjectsErrors];
 
 export type PostApiV2ProjectsResponses = {
     /**
@@ -732,7 +738,7 @@ export type GetApiV2ProjectsByIdResponses = {
 export type GetApiV2ProjectsByIdResponse = GetApiV2ProjectsByIdResponses[keyof GetApiV2ProjectsByIdResponses];
 
 export type PatchApiV2ProjectsByIdData = {
-    body?: {
+    body: {
         name: string;
     };
     path: {
@@ -838,9 +844,9 @@ export type GetApiV2ResourcesResponses = {
 export type GetApiV2ResourcesResponse = GetApiV2ResourcesResponses[keyof GetApiV2ResourcesResponses];
 
 export type DeleteApiV2TeamMembersData = {
-    body?: {
-        teamId?: number;
-        email?: string;
+    body: {
+        teamId: number;
+        email: string;
     };
     path?: never;
     query?: never;
@@ -849,14 +855,20 @@ export type DeleteApiV2TeamMembersData = {
 
 export type DeleteApiV2TeamMembersErrors = {
     /**
+     * Missing parameter
+     */
+    400: Error;
+    /**
      * not the team or organization owner
      */
     403: unknown;
     /**
-     * owner cannot be removed
+     * Team user is not member
      */
-    422: unknown;
+    422: Error;
 };
+
+export type DeleteApiV2TeamMembersError = DeleteApiV2TeamMembersErrors[keyof DeleteApiV2TeamMembersErrors];
 
 export type DeleteApiV2TeamMembersResponses = {
     /**
@@ -870,7 +882,7 @@ export type DeleteApiV2TeamMembersResponse = DeleteApiV2TeamMembersResponses[key
 export type GetApiV2TeamMembersData = {
     body?: never;
     path?: never;
-    query?: {
+    query: {
         /**
          * Page to return, starting at 1.
          */
@@ -879,17 +891,23 @@ export type GetApiV2TeamMembersData = {
          * Number of items per page. Values above the maximum are capped to it.
          */
         limit?: number;
-        teamId?: number;
+        teamId: number;
     };
     url: '/api/v2/team-members';
 };
 
 export type GetApiV2TeamMembersErrors = {
     /**
+     * Missing parameter
+     */
+    400: Error;
+    /**
      * team not accessible
      */
     403: unknown;
 };
+
+export type GetApiV2TeamMembersError = GetApiV2TeamMembersErrors[keyof GetApiV2TeamMembersErrors];
 
 export type GetApiV2TeamMembersResponses = {
     /**
@@ -903,9 +921,9 @@ export type GetApiV2TeamMembersResponses = {
 export type GetApiV2TeamMembersResponse = GetApiV2TeamMembersResponses[keyof GetApiV2TeamMembersResponses];
 
 export type PostApiV2TeamMembersData = {
-    body?: {
-        teamId?: number;
-        email?: string;
+    body: {
+        teamId: number;
+        email: string;
     };
     path?: never;
     query?: never;
@@ -914,14 +932,20 @@ export type PostApiV2TeamMembersData = {
 
 export type PostApiV2TeamMembersErrors = {
     /**
+     * Missing parameter
+     */
+    400: Error;
+    /**
      * not the team or organization owner
      */
     403: unknown;
     /**
-     * email is already a member
+     * Team user is member already
      */
-    422: unknown;
+    422: Error;
 };
+
+export type PostApiV2TeamMembersError = PostApiV2TeamMembersErrors[keyof PostApiV2TeamMembersErrors];
 
 export type PostApiV2TeamMembersResponses = {
     /**
@@ -969,11 +993,9 @@ export type GetApiV2TeamsResponses = {
 export type GetApiV2TeamsResponse = GetApiV2TeamsResponses[keyof GetApiV2TeamsResponses];
 
 export type PostApiV2TeamsData = {
-    body?: {
-        team: {
-            name?: string;
-            organizationId: number;
-        };
+    body: {
+        name?: string;
+        organizationId: number;
     };
     path?: never;
     query?: never;
@@ -981,6 +1003,10 @@ export type PostApiV2TeamsData = {
 };
 
 export type PostApiV2TeamsErrors = {
+    /**
+     * Missing parameter
+     */
+    400: Error;
     /**
      * Forbidden
      */

@@ -223,7 +223,7 @@ export const getApiV2Projects = <ThrowOnError extends boolean = true>(options?: 
 /**
  * Creates a project in a team
  */
-export const postApiV2Projects = <ThrowOnError extends boolean = true>(options?: Options<PostApiV2ProjectsData, ThrowOnError>): RequestResult<PostApiV2ProjectsResponses, PostApiV2ProjectsErrors, ThrowOnError, 'data'> => (options?.client ?? client).post<PostApiV2ProjectsResponses, PostApiV2ProjectsErrors, ThrowOnError, 'data'>({
+export const postApiV2Projects = <ThrowOnError extends boolean = true>(options: Options<PostApiV2ProjectsData, ThrowOnError>): RequestResult<PostApiV2ProjectsResponses, PostApiV2ProjectsErrors, ThrowOnError, 'data'> => (options.client ?? client).post<PostApiV2ProjectsResponses, PostApiV2ProjectsErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
     security: [{
             key: 'personal_access_token',
@@ -234,7 +234,7 @@ export const postApiV2Projects = <ThrowOnError extends boolean = true>(options?:
     ...options,
     headers: {
         'Content-Type': 'application/json',
-        ...options?.headers
+        ...options.headers
     }
 });
 
@@ -315,7 +315,7 @@ export const getApiV2Resources = <ThrowOnError extends boolean = true>(options?:
 /**
  * Removes a member from a team
  */
-export const deleteApiV2TeamMembers = <ThrowOnError extends boolean = true>(options?: Options<DeleteApiV2TeamMembersData, ThrowOnError>): RequestResult<DeleteApiV2TeamMembersResponses, DeleteApiV2TeamMembersErrors, ThrowOnError, 'data'> => (options?.client ?? client).delete<DeleteApiV2TeamMembersResponses, DeleteApiV2TeamMembersErrors, ThrowOnError, 'data'>({
+export const deleteApiV2TeamMembers = <ThrowOnError extends boolean = true>(options: Options<DeleteApiV2TeamMembersData, ThrowOnError>): RequestResult<DeleteApiV2TeamMembersResponses, DeleteApiV2TeamMembersErrors, ThrowOnError, 'data'> => (options.client ?? client).delete<DeleteApiV2TeamMembersResponses, DeleteApiV2TeamMembersErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
     security: [{
             key: 'personal_access_token',
@@ -326,14 +326,14 @@ export const deleteApiV2TeamMembers = <ThrowOnError extends boolean = true>(opti
     ...options,
     headers: {
         'Content-Type': 'application/json',
-        ...options?.headers
+        ...options.headers
     }
 });
 
 /**
  * Lists the members and pending invitees of a team
  */
-export const getApiV2TeamMembers = <ThrowOnError extends boolean = true>(options?: Options<GetApiV2TeamMembersData, ThrowOnError>): RequestResult<GetApiV2TeamMembersResponses, GetApiV2TeamMembersErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<GetApiV2TeamMembersResponses, GetApiV2TeamMembersErrors, ThrowOnError, 'data'>({
+export const getApiV2TeamMembers = <ThrowOnError extends boolean = true>(options: Options<GetApiV2TeamMembersData, ThrowOnError>): RequestResult<GetApiV2TeamMembersResponses, GetApiV2TeamMembersErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetApiV2TeamMembersResponses, GetApiV2TeamMembersErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
     security: [{
             key: 'personal_access_token',
@@ -347,7 +347,7 @@ export const getApiV2TeamMembers = <ThrowOnError extends boolean = true>(options
 /**
  * Invites a member to a team
  */
-export const postApiV2TeamMembers = <ThrowOnError extends boolean = true>(options?: Options<PostApiV2TeamMembersData, ThrowOnError>): RequestResult<PostApiV2TeamMembersResponses, PostApiV2TeamMembersErrors, ThrowOnError, 'data'> => (options?.client ?? client).post<PostApiV2TeamMembersResponses, PostApiV2TeamMembersErrors, ThrowOnError, 'data'>({
+export const postApiV2TeamMembers = <ThrowOnError extends boolean = true>(options: Options<PostApiV2TeamMembersData, ThrowOnError>): RequestResult<PostApiV2TeamMembersResponses, PostApiV2TeamMembersErrors, ThrowOnError, 'data'> => (options.client ?? client).post<PostApiV2TeamMembersResponses, PostApiV2TeamMembersErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
     security: [{
             key: 'personal_access_token',
@@ -358,7 +358,7 @@ export const postApiV2TeamMembers = <ThrowOnError extends boolean = true>(option
     ...options,
     headers: {
         'Content-Type': 'application/json',
-        ...options?.headers
+        ...options.headers
     }
 });
 
@@ -379,7 +379,7 @@ export const getApiV2Teams = <ThrowOnError extends boolean = true>(options?: Opt
 /**
  * Creates a team
  */
-export const postApiV2Teams = <ThrowOnError extends boolean = true>(options?: Options<PostApiV2TeamsData, ThrowOnError>): RequestResult<PostApiV2TeamsResponses, PostApiV2TeamsErrors, ThrowOnError, 'data'> => (options?.client ?? client).post<PostApiV2TeamsResponses, PostApiV2TeamsErrors, ThrowOnError, 'data'>({
+export const postApiV2Teams = <ThrowOnError extends boolean = true>(options: Options<PostApiV2TeamsData, ThrowOnError>): RequestResult<PostApiV2TeamsResponses, PostApiV2TeamsErrors, ThrowOnError, 'data'> => (options.client ?? client).post<PostApiV2TeamsResponses, PostApiV2TeamsErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
     security: [{
             key: 'personal_access_token',
@@ -390,7 +390,7 @@ export const postApiV2Teams = <ThrowOnError extends boolean = true>(options?: Op
     ...options,
     headers: {
         'Content-Type': 'application/json',
-        ...options?.headers
+        ...options.headers
     }
 });
 
