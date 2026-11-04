@@ -49,7 +49,7 @@ jobs:
           # A pull request opened with the workflow token runs no workflow, so CI would never test it.
           github-token: ${{ secrets.MEILI_BOT_GH_PAT }}
           # The manifest holds the version, and CI checks that it matches the code.
-          version-script: pnpm changeset version && pnpm gen:manifest
+          version-script: pnpm changeset:version
 
   publish:
     name: Publish on npm
