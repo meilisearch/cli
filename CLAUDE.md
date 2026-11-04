@@ -1,6 +1,6 @@
 # meili, the Meilisearch CLI
 
-This file is the maintainer guide for humans and for coding agents. Read it fully before you change anything. The detailed contracts live in `docs/contract/`. The reasons behind the decisions live in `docs/adr/`. When this file and a contract file disagree, the contract file wins.
+This file is the maintainer guide for humans and for coding agents. Read it fully before you change anything. The detailed contracts are in `docs/contract/`. The reasons for the decisions are in `docs/adr/`. When this file and a contract file disagree, the contract file wins.
 
 ## What this project is
 
@@ -9,7 +9,7 @@ This file is the maintainer guide for humans and for coding agents. Read it full
 - the Meilisearch API (indexes, documents, search, settings, tasks, keys) on any instance, local or remote
 - the Management API, which manages Meilisearch Cloud (organizations, teams, projects, resources, regions)
 
-`meili` must be coding agent friendly, without exception: no interaction, structured output, stable errors, self-description. Human comfort counts too: in the documentation and the `--help` from the start, and later in comfort commands that never change how the rest of the CLI behaves.
+`meili` must always work well for coding agents. This means no interaction, structured output, stable errors and self-description. Comfort for humans also matters. From the start, it comes from the documentation and the `--help`. Later, it will also come from comfort commands. These commands never change how the rest of the CLI behaves.
 
 Package: `@meilisearch/cli` on npm. Binary: `meili`.
 
@@ -18,37 +18,41 @@ Package: `@meilisearch/cli` on npm. Binary: `meili`.
 1. Data goes to stdout. Everything else (logs, progress, warnings, debug) goes to stderr. Never print a message like "Done" on stdout.
 2. Only `src/lib/output.ts` writes to stdout. Commands never call `console.log`, `process.stdout.write` or `this.log` directly.
 3. Only `src/lib/clients/` makes HTTP calls: the generated Management API client, `meilisearch-js`, and the OAuth client of `meili auth login`. Never write `fetch` in a command.
-4. Never prompt and never ask a question. Every command runs as written; a command of the verb `delete` requires `--yes` on the command line first, the shared group `BaseCommand.confirmFlags`. See ADR 0007.
-5. Never open `$EDITOR`. Every input comes from a flag, an environment variable, a file (`--file`), stdin (`--file -`) or the config file of `docs/contract/config.md`, from which nothing is deduced.
-6. Command and flag names derive from the API routes by the rules of `docs/contract/commands.md`: verb first, resource plural, `meili get indexes --id movies`. The resource's own identifier is `--id`, or `--ids` when the list route filters by identifiers; a parent in the path is a flag named after its collection, `--index`; a query or body parameter keeps its API name in kebab-case, `primaryKey` is `--primary-key`. No positional argument, and no synonym beyond the aliases the contract lists.
+4. Never prompt and never ask a question. Every command runs as written. A command of the verb `delete` requires `--yes` on the command line before it runs. This flag comes from the shared group `BaseCommand.confirmFlags`. See ADR 0007.
+5. Never open `$EDITOR`. Every input comes from a flag, an environment variable, a file (`--file`), stdin (`--file -`) or the config file of `docs/contract/config.md`. The CLI deduces nothing from the config file: it uses only what the file states.
+6. Command and flag names come from the API routes, by the rules of `docs/contract/commands.md`. The verb comes first, and the resource is plural: `meili get indexes --id movies`. The flag for the resource's own identifier is `--id`, or `--ids` when the list route filters by identifiers. A parent in the path becomes a flag named after its collection: `--index`. A query or body parameter keeps its API name in kebab-case: `primaryKey` becomes `--primary-key`. There are no positional arguments, and no synonyms other than the aliases that the contract lists.
 7. Errors are structured. Use `MeiliCliError` from `src/lib/errors.ts` with a code and an exit code from the table in `docs/contract/output.md`. Never `throw new Error("...")`.
-8. The credentials the CLI holds to reach an API never appear in output, logs or debug traces. Use the redaction helpers in `src/lib/config.ts`. A credential an API returns is data: it goes to stdout unchanged, like the `key` of `get keys`, except the `masterKey` of `add projects`, masked (ADR 0013). See the Secrets section of `docs/contract/config.md`.
-9. No new dependency without a one line justification in the pull request. Prefer the standard library.
-10. One command per pull request, or the commands of one resource when they ship together and complete: the `get`, `add`, `update` and `delete` of `documents` are one change. One file per command, covering every route of its verb and resource. Every command has a snapshot test.
+8. The credentials that the CLI uses to reach an API never appear in output, logs or debug traces. Use the redaction helpers in `src/lib/config.ts`. A credential that an API returns is data. It goes to stdout unchanged, like the `key` of `get keys`. The only exception is the `masterKey` of `add projects`, which is masked (ADR 0013). See the Secrets section of `docs/contract/config.md`.
+9. No new dependency without a one-line justification in the pull request. Prefer the standard library.
+10. One command per pull request. The exception is the commands of one resource, when they ship together as a complete set: the `get`, `add`, `update` and `delete` of `documents` are one change. Each command has one file, which covers every route of its verb and resource. Every command has a snapshot test.
 11. Every command declares the API it uses with `static api = "meilisearch" | "management" | "none"`. `BaseCommand` resolves credentials and builds the client. Never resolve credentials or build a client in a command.
-12. Code and docs change together. If your change touches a command name, a flag, an environment variable, an error code, an exit code or a file path that appears in `docs/`, update that doc in the same pull request. The contract tests in `test/contract/` fail on most of these drifts, so a red `pnpm test` after a docs-free change is expected, not a flaky test.
-13. Never edit an accepted ADR to match the code. If your change contradicts an ADR, stop and ask, or write a new ADR that supersedes the old one and mark the old one `superseded by ADR NNNN`. The history of decisions stays readable.
-14. A setting that exists both as a flag and as an environment variable carries the same name: the variable is `MEILI_` followed by the flag name in upper snake case. `--timeout` is `MEILI_TIMEOUT`, `--output` is `MEILI_OUTPUT`. Not every variable needs a flag, but a pair never drifts. `test/contract/env.test.ts` checks it.
-15. `.github/PULL_REQUEST_TEMPLATE.md` is the definition of done. Before you open a pull request, or say that you are done, go through every box of the template and tick it only if it is true. A box you cannot tick is work left to do, or a reason to say so in the pull request, never a box to skip.
-16. The simplest code that passes the tests wins. Before you say you are done, read your diff once more and delete what does not earn its place: an abstraction used once, a parameter or option nobody passes, a branch for a case the API cannot produce, a guard against a caller that does not exist, a comment that repeats the code, a helper the standard library already provides, a test that checks the same thing as another. A command file reads top to bottom; what it needs beyond its own route goes to `src/lib/`, once, and is named in the pull request. When two designs pass the same tests, ship the one with fewer moving parts, even if the other is more general.
+12. Code and docs change together. If your change touches a command name, a flag, an environment variable, an error code, an exit code or a file path that appears in `docs/`, update that doc in the same pull request. The contract tests in `test/contract/` fail on most of these mismatches. So if you change the code without the docs and `pnpm test` fails, this is expected. It is not a flaky test.
+13. Never edit an accepted ADR to match the code. If your change contradicts an ADR, stop and ask. Or write a new ADR that supersedes the old one, and mark the old one `superseded by ADR NNNN`. This keeps the history of decisions readable.
+14. A setting that exists both as a flag and as an environment variable has the same name in both. The variable is `MEILI_` followed by the flag name in upper snake case: `--timeout` is `MEILI_TIMEOUT`, `--output` is `MEILI_OUTPUT`. Not every variable needs a flag. But when both exist, their names always match. `test/contract/env.test.ts` checks it.
+15. `.github/PULL_REQUEST_TEMPLATE.md` is the definition of done. Before you open a pull request, or say that you are done, go through every box of the template. Tick a box only if it is true. A box that you cannot tick is work left to do, or something to explain in the pull request. Never skip a box.
+16. The simplest code that passes the tests wins. Before you say you are done, read your diff once more. Delete everything that is not needed: an abstraction used once, a parameter or option that nobody passes, a branch for a case that the API cannot produce, a guard against a caller that does not exist, a comment that repeats the code, a helper that the standard library already provides, a test that checks the same thing as another test. A command file reads from top to bottom. Anything it needs beyond its own route goes to `src/lib/`, once, and the pull request names it. When two designs pass the same tests, ship the one with fewer parts, even if the other is more general.
+17. Docs use international, simplified technical English. Readers are not always native English speakers. This applies to every Markdown file of the repository, the ADRs included.
+    - **Plain.** Short sentences, everyday words, no idioms.
+    - **Clear over elegant.** Choose the sentence a reader understands on the first read.
+    - **Tight.** A sentence stays only if removing it loses information.
 
 ## Stack
 
 - TypeScript, strict mode, `noUncheckedIndexedAccess` on. Node 22 or newer.
-- oclif v5 (`@oclif/core` 5) for the command tree, topic separator is a space (`meili get indexes`). See ADR 0001.
+- oclif v5 (`@oclif/core` 5) for the command tree. The topic separator is a space (`meili get indexes`). See ADR 0001.
 - `meilisearch-js` for the Meilisearch API.
-- `@hey-api/openapi-ts` generates the Management API client from `openapi/management.json`, downloaded by `pnpm openapi:management` and never committed, into `src/lib/clients/management/generated/`. Never edit generated files. Run `pnpm gen:management` to refresh them: it runs the generator through `pnpm dlx` with TypeScript 5 beside it, which the generator needs, from `openapi-ts.config.mjs`, and CI fails when the committed files differ. In code, flags and environment variables, `management` names the Management API itself, `MEILI_MANAGEMENT_URL`; `cloud` names the product, Meilisearch Cloud, where a command, a flag or a field speaks of it, `config sync-with-cloud`, `--sync-with-cloud`, `cloud.id`.
-- vitest for tests, with snapshots. `msw` mocks HTTP in unit tests. Integration tests run against a local Meilisearch; the Management API has none, see `docs/contract/testing.md`.
+- `@hey-api/openapi-ts` generates the Management API client into `src/lib/clients/management/generated/`, from `openapi/management.json`. `pnpm openapi:management` downloads this document, which is never committed. Never edit generated files. Run `pnpm gen:management` to refresh them. This script runs the generator through `pnpm dlx`, with the config of `openapi-ts.config.mjs`. It also installs TypeScript 5 next to the generator, because the generator needs it. CI fails when the committed files differ. In code, flags and environment variables, `management` names the Management API itself, as in `MEILI_MANAGEMENT_URL`. `cloud` names the product, Meilisearch Cloud, when a command, a flag or a field refers to it: `config sync-with-cloud`, `--sync-with-cloud`, `cloud.id`.
+- vitest for tests, with snapshots. `msw` mocks HTTP in unit tests. Integration tests run against a local Meilisearch. The Management API has no local instance, see `docs/contract/testing.md`.
 - Biome for lint and format.
 - changesets for versioning and the changelog.
 - pnpm as the package manager.
 
 ## Repository conventions
 
-Explore the tree yourself. These are the rules that are not visible from the tree:
+Explore the tree yourself. The rules below are not visible from the tree:
 
-- `src/commands/` holds one file per command. The file path is the command path: `src/commands/get/projects.ts` is `meili get projects`. oclif derives the command tree from it, so moving a file renames a command.
-- `src/lib/output.ts`, `src/lib/errors.ts` and `src/lib/config.ts` implement the contract in `docs/contract/`. They change only through a contract pull request.
+- `src/commands/` holds one file per command. The file path is the command path: `src/commands/get/projects.ts` is `meili get projects`. oclif builds the command tree from these paths, so moving a file renames a command.
+- `src/lib/output.ts`, `src/lib/errors.ts` and `src/lib/config.ts` implement the contract in `docs/contract/`. They change only in a contract pull request.
 - `src/lib/clients/management/generated/` is generated from `openapi/management.json`. Never edit it.
 - `test/commands/` mirrors `src/commands/`, one test file per command.
 - `docs/contract/` is what the CLI promises. `docs/adr/` is why. `.claude/skills/` holds the procedures agents follow.
@@ -57,15 +61,15 @@ Explore the tree yourself. These are the rules that are not visible from the tre
 
 Use the skill: `/add-command <command>`, for example `/add-command get stats`. If the skill is not available yet, follow these steps by hand.
 
-1. Run `pnpm openapi`. Find every route of the verb and resource in `openapi/meilisearch.json` or `openapi/management.json` and derive the command name, its routes and its flags with the naming rules of `docs/contract/commands.md`. If the document does not describe what you need, stop and ask. If the derived name is wrong for a route, record an exception in `src/lib/api-naming.ts` and in the exceptions table of `commands.md`, with the reason, in the same pull request. A command that calls no API is listed in `commands.md`; if it is not, stop and ask. Read the ADRs that touch what you are about to change: `docs/adr/` is small, each file says what was decided and what was refused, and a decision you contradict needs a new ADR rather than a silent change (rule 13). Finding that out at the end costs a rewrite.
-2. Copy the closest existing command file. `src/commands/get/health.ts` is the reference for a read command with one route, `src/commands/get/indexes.ts` for a command that covers a list route and a unit route. For a write command that returns a task, start from `health.ts` and end with `outputTask`.
+1. Run `pnpm openapi`. Find every route of the verb and resource in `openapi/meilisearch.json` or `openapi/management.json`. Derive the command name, its routes and its flags with the naming rules of `docs/contract/commands.md`. If the document does not describe what you need, stop and ask. If the derived name is wrong for a route, record an exception in `src/lib/api-naming.ts` and in the exceptions table of `commands.md`, with the reason, in the same pull request. A command that calls no API is listed in `commands.md`. If it is not, stop and ask. Read the ADRs related to what you are about to change. `docs/adr/` is small. Each file says what was decided and what was refused. If you contradict a decision, you need a new ADR, not a silent change (rule 13). If you find this out at the end, you must rewrite your work.
+2. Copy the closest existing command file. `src/commands/get/health.ts` is the reference for a read command with one route. `src/commands/get/indexes.ts` is the reference for a command that covers a list route and a unit route. For a write command that returns a task, start from `health.ts` and end with `outputTask`.
 3. Fill `description`, `examples` (at least two, one of them with `--output json`), `routes`, `keyActions` (the specific action of each route's `security` in the OpenAPI document, empty when there is none) and `flags`. Reuse the shared flags from `BaseCommand` (`waitFlags`, `paginationFlags`, `bodyInputFlags`).
 4. Call the client. Read commands end with `await this.output(result)`. Write commands end with `await this.outputTask(task, flags)`.
-5. Map errors. Do nothing for API errors, `BaseCommand` maps them. Add a `hint` only when you know the next command the user should run.
+5. Map errors. Do nothing for API errors: `BaseCommand` maps them. Add a `hint` only when you know the next command the user should run.
 6. Create `test/commands/<same path>.test.ts` from the sibling test. It must snapshot the `--help` output and the JSON output for one success case and one error case, with `msw` mocks.
-7. For a Meilisearch command, add one integration test in `test/integration/meilisearch/`: Meilisearch runs locally from the `docker compose` file of this repository. A management command has none: Meilisearch Cloud does not run locally, its OpenAPI document is the source of truth, and the unit tests mock it from that document (`docs/contract/testing.md`). What the document does not say is a gap to report to the Cloud team, not something to guess.
+7. For a Meilisearch command, add one integration test in `test/integration/meilisearch/`. Meilisearch runs locally from the `docker compose` file of this repository. A management command has no integration test. Meilisearch Cloud does not run locally. Its OpenAPI document is the source of truth, and the unit tests mock the API from that document (`docs/contract/testing.md`). If the document does not describe something, report the gap to the Cloud team. Do not guess.
 8. Run `pnpm gen:manifest` so `oclif.manifest.json` and `meili schema` know the command.
-9. Add the command to the changeset. Until the first release, `.changeset/first-version.md` is the only one and describes everything: add your line to it. After it, write a new file in `.changeset/` by hand with type `minor`: `pnpm changeset` is interactive.
+9. Add the command to the changeset. Until the first release, `.changeset/first-version.md` is the only changeset and describes everything: add your line to it. After the first release, write a new file in `.changeset/` by hand, with type `minor`, because `pnpm changeset` is interactive.
 10. Run the "Before you finish" list.
 
 ## Before you finish
@@ -80,16 +84,16 @@ pnpm test
 
 Update snapshots (`pnpm test -u`) only when you changed the interface on purpose. A snapshot diff on a command you did not touch is a bug, not something to accept.
 
-Then read the diff of your pull request twice. Once for simplicity: in Claude Code, run the `simplify` skill on your changes and rerun the three commands above after it; in any agent, apply rule 16 by hand and delete every line that does not earn its place. Once from the point of view of `docs/`: does every name, flag, variable and code you added or renamed appear in the right contract file? The contract tests catch the mechanical part. The meaning is on you: a new behavior that `docs/contract/` does not describe is a contract change, so the contract file and the code land together (rule 12). Finally, go through `.github/PULL_REQUEST_TEMPLATE.md` box by box (rule 15).
+Then read the diff of your pull request twice. First, read it for simplicity. In Claude Code, run the `simplify` skill on your changes, then run the three commands above again. In any other agent, apply rule 16 by hand and delete every line that is not needed. Second, read it from the point of view of `docs/`. Does every name, flag, variable and code that you added or renamed appear in the right contract file? The contract tests check the mechanical part. You are responsible for the meaning. A new behavior that `docs/contract/` does not describe is a contract change, so the contract file and the code change in the same pull request (rule 12). Finally, go through `.github/PULL_REQUEST_TEMPLATE.md` box by box (rule 15).
 
 ## What not to do
 
-- Do not add a command or flag that the OpenAPI document does not describe and the naming rules do not derive, unless it is a recorded exception. A new global flag, output field, environment variable or error code is a contract change: it ships in one pull request with the code that implements it and, when a decision changes, its ADR, because the contract tests tie the two together. Discuss it before, not in a docs-only pull request that cannot be green.
-- Do not add prose to the JSON output: it holds the API body and nothing else. In a terminal it is indented, which is how it reads.
+- Do not add a command or flag that the OpenAPI document does not describe and the naming rules do not derive, unless it is a recorded exception. A new global flag, output field, environment variable or error code is a contract change. It ships in one pull request with the code that implements it, and with its ADR when a decision changes. The contract tests link the docs and the code, so they must change together. Discuss the change before you start. Do not propose it in a docs-only pull request: its tests cannot pass.
+- Do not add prose to the JSON output. It holds the API body and nothing else. In a terminal, the JSON is indented, and this is enough to make it readable.
 - Do not wrap API responses. Return the API body as it is. See `docs/contract/output.md`.
 - Do not catch errors to print them yourself. Let `BaseCommand` render them.
 - Do not add interactive features (menus, TUI, spinners on stdout). A spinner on stderr when stderr is a TTY is fine.
-- Do not change `src/lib/output.ts`, `src/lib/errors.ts` or `src/lib/config.ts` in a command pull request. These files carry the contract and change through their own pull request.
+- Do not change `src/lib/output.ts`, `src/lib/errors.ts` or `src/lib/config.ts` in a command pull request. These files hold the contract and change in their own pull request.
 - Do not touch `src/lib/clients/management/generated/`. Fix the OpenAPI spec or the generator config instead.
 - Do not edit an accepted ADR. Write a new one.
 
