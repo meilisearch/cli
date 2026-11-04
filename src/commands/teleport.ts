@@ -138,7 +138,7 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
       if (this.created?.transferring === true) {
         say();
         say(
-          `⏳ ${paint("bold", "The transfer goes on in Meilisearch Cloud. meili stopped watching it.")}`,
+          `⏳ ${paint("bold", "The transfer continues in Meilisearch Cloud. meili CLI stopped watching it.")}`,
         );
         say();
         field("Watch it", `${this.created.link}/batches`);
