@@ -12,10 +12,12 @@ import {
 import type {
   Organization,
   Project,
+  Region,
   Resource,
   Team,
 } from "../lib/clients/management/generated/types.gen.js";
 import { probeExport, triggerExport } from "../lib/clients/meilisearch.js";
+import { regionLatency } from "../lib/clients/ping.js";
 import { cloudOf, everyPage, type ReachableProject, waitForProject } from "../lib/cloud-sync.js";
 import { assertNoProject, type ConfigFile, isProjectUrl, writeConfigFile } from "../lib/config.js";
 import {
@@ -153,10 +155,7 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
       everyPage((query) => getApiV2Organizations({ client, query }), { page: 1 }),
       everyPage((query) => getApiV2Teams({ client, query }), { page: 1 }),
     ]);
-    const region = await choose(
-      "Region of the new project",
-      regions.map((each) => ({ name: each.name, value: each })),
-    );
+    const region = await choose("Region of the new project", await closestFirst(regions));
     step("Region", region.name);
     const team = await chooseTeam(organizations, teams);
 
@@ -409,6 +408,26 @@ async function exportProblem(client: Meilisearch): Promise<string | undefined> {
     }
     return toRenderedError(error).body.message;
   }
+}
+
+/**
+ * The regions as the dashboard shows them: the closest first, then by latency,
+ * with a 🌱 on a green label region. A region that does not answer comes last.
+ */
+async function closestFirst(regions: Region[]): Promise<Array<{ name: string; value: Region }>> {
+  const measured = await Promise.all(
+    regions.map(async (region) => ({ region, latency: await regionLatency(region.regionUrl) })),
+  );
+  measured.sort(
+    (a, b) => (a.latency ?? Number.POSITIVE_INFINITY) - (b.latency ?? Number.POSITIVE_INFINITY),
+  );
+  const width = Math.max(...regions.map((region) => region.name.length)) + 3;
+  return measured.map(({ region, latency }, index) => {
+    const name = `${region.name}${region.greenLabel ? " 🌱" : ""}`.padEnd(width);
+    const ms = latency === undefined ? "" : `${String(latency).padStart(4)}ms`;
+    const closest = index === 0 && latency !== undefined ? "  (closest)" : "";
+    return { name: `${name}${ms}${closest}`.trimEnd(), value: region };
+  });
 }
 
 /** The team of the new project, asked only when there are several, grouped by organization. */
