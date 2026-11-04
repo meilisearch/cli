@@ -1056,6 +1056,217 @@
         "projects.js"
       ]
     },
+    "add:teams": {
+      "aliases": [],
+      "args": {},
+      "description": "Create a Meilisearch Cloud team in an organization.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %> --name search --organization-id 1",
+        "<%= config.bin %> <%= command.id %> --name search --organization-id 1 --output json",
+        "<%= config.bin %> <%= command.id %> --data '{\"name\":\"search\",\"organizationId\":1}'"
+      ],
+      "flags": {
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name of the team.",
+          "name": "name",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "organization-id": {
+          "description": "Organization that owns the team.",
+          "name": "organization-id",
+          "hasDynamicHelp": false,
+          "helpValue": "<id>",
+          "multiple": false,
+          "type": "option"
+        },
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "exclusive": [
+            "data"
+          ],
+          "name": "file",
+          "hasDynamicHelp": false,
+          "helpValue": "<path>",
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "name": "data",
+          "hasDynamicHelp": false,
+          "helpValue": "<json>",
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "add:teams",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "management",
+      "routes": [
+        "POST /api/v2/teams"
+      ],
+      "keyActions": [],
+      "connectionFlags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "helpValue": "<key>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "cloudProjectFlags": {
+        "project": {
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "add",
+        "teams.js"
+      ]
+    },
     "auth:login": {
       "aliases": [],
       "args": {},
@@ -4776,6 +4987,197 @@
         "tasks.js"
       ]
     },
+    "delete:teams": {
+      "aliases": [],
+      "args": {},
+      "description": "Delete a Meilisearch Cloud team that has no project left. Prints nothing on success.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %> --id 12 --yes",
+        "<%= config.bin %> <%= command.id %> --id 12 --yes --output json"
+      ],
+      "flags": {
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The team to delete.",
+          "name": "id",
+          "required": true,
+          "hasDynamicHelp": false,
+          "helpValue": "<id>",
+          "multiple": false,
+          "type": "option"
+        },
+        "yes": {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "delete:teams",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "management",
+      "routes": [
+        "DELETE /api/v2/teams/{id}"
+      ],
+      "keyActions": [],
+      "connectionFlags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "helpValue": "<key>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "cloudProjectFlags": {
+        "project": {
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "delete",
+        "teams.js"
+      ]
+    },
     "export": {
       "aliases": [],
       "args": {},
@@ -8215,6 +8617,192 @@
         "tasks.js"
       ]
     },
+    "get:teams": {
+      "aliases": [],
+      "args": {},
+      "description": "List the Meilisearch Cloud teams the token sees, or get one with --id.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %>",
+        "<%= config.bin %> <%= command.id %> --output json",
+        "<%= config.bin %> <%= command.id %> --id 12",
+        "<%= config.bin %> <%= command.id %> --output ndjson"
+      ],
+      "flags": {
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The team to get. Without it, the command lists the teams.",
+          "name": "id",
+          "hasDynamicHelp": false,
+          "helpValue": "<id>",
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "get:teams",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "management",
+      "routes": [
+        "GET /api/v2/teams",
+        "GET /api/v2/teams/{id}"
+      ],
+      "keyActions": [],
+      "connectionFlags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "helpValue": "<key>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "cloudProjectFlags": {
+        "project": {
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "get",
+        "teams.js"
+      ]
+    },
     "get:version": {
       "aliases": [],
       "args": {},
@@ -11412,6 +12000,227 @@
         "commands",
         "update",
         "settings.js"
+      ]
+    },
+    "update:teams": {
+      "aliases": [],
+      "args": {},
+      "description": "Rename a Meilisearch Cloud team, or give it to another of its members.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %> --id 12 --name renamed",
+        "<%= config.bin %> <%= command.id %> --id 12 --name renamed --output json",
+        "<%= config.bin %> <%= command.id %> --id 12 --owner-id 5b7c2f1e-8a3d-4e6f-9b0a-1c2d3e4f5a6b",
+        "<%= config.bin %> <%= command.id %> --id 12 --data '{\"name\":\"renamed\"}'"
+      ],
+      "flags": {
+        "output": {
+          "char": "o",
+          "description": "json (default): one document, the API body as it is, indented in a terminal, compact when piped. ndjson: one item per line, list commands only, streams with --all.",
+          "name": "output",
+          "hasDynamicHelp": false,
+          "helpValue": "<mode>",
+          "multiple": false,
+          "options": [
+            "json",
+            "ndjson"
+          ],
+          "type": "option"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The team to update.",
+          "name": "id",
+          "required": true,
+          "hasDynamicHelp": false,
+          "helpValue": "<id>",
+          "multiple": false,
+          "type": "option"
+        },
+        "name": {
+          "description": "New name of the team.",
+          "name": "name",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "owner-id": {
+          "description": "UUID of the new owner, who must already be a member of the team.",
+          "name": "owner-id",
+          "hasDynamicHelp": false,
+          "helpValue": "<uuid>",
+          "multiple": false,
+          "type": "option"
+        },
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "exclusive": [
+            "data"
+          ],
+          "name": "file",
+          "hasDynamicHelp": false,
+          "helpValue": "<path>",
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "name": "data",
+          "hasDynamicHelp": false,
+          "helpValue": "<json>",
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "update:teams",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "management",
+      "routes": [
+        "PATCH /api/v2/teams/{id}"
+      ],
+      "keyActions": [],
+      "connectionFlags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "helpValue": "<key>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "cloudProjectFlags": {
+        "project": {
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page. Streams with ndjson, buffers into one array with json.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "update",
+        "teams.js"
       ]
     }
   },

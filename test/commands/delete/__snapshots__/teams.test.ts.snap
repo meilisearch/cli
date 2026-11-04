@@ -1,0 +1,38 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`meili delete teams > passes the API's error body through on an unknown id, with exit 4 1`] = `
+{
+  "exitCode": 4,
+  "stderr": "{"error":{"code":"team_not_found","type":"invalid_request","message":"Team not found.","link":"https://www.meilisearch.com/docs/reference/errors#team_not_found"}}
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili delete teams > prints its help without any network call 1`] = `
+"Delete a Meilisearch Cloud team that has no project left. Prints nothing on success.
+
+USAGE
+  $ meili delete teams --id <id> --yes [-o <mode>] [--debug]
+
+FLAGS
+  -o, --output=<mode>  json (default): one document, the API body as it is,
+                       indented in a terminal, compact when piped. ndjson: one
+                       item per line, list commands only, streams with --all.
+      --debug          Print every HTTP request and response on stderr, secrets
+                       redacted.
+      --id=<id>        (required) The team to delete.
+      --yes            (required) Confirm the deletion. Nothing is sent to the
+                       API without it.
+
+DESCRIPTION
+  Delete a Meilisearch Cloud team that has no project left. Prints nothing on
+  success.
+
+EXAMPLES
+  $ meili delete teams --id 12 --yes
+
+  $ meili delete teams --id 12 --yes --output json
+
+"
+`;

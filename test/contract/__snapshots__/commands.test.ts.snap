@@ -343,6 +343,48 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
       ],
     },
     {
+      "api": "management",
+      "description": "Create a Meilisearch Cloud team in an organization.",
+      "examples": [
+        "meili add teams --name search --organization-id 1",
+        "meili add teams --name search --organization-id 1 --output json",
+        "meili add teams --data '{"name":"search","organizationId":1}'",
+      ],
+      "flags": [
+        {
+          "description": "Name of the team.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "Organization that owns the team.",
+          "helpValue": "<id>",
+          "name": "organization-id",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "add teams",
+      "routes": [
+        "POST /api/v2/teams",
+      ],
+    },
+    {
       "api": "none",
       "description": "Log in to Meilisearch Cloud with a browser, and store the token for the management commands.",
       "examples": [
@@ -1150,6 +1192,33 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
       "routes": [
         "DELETE /tasks",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "Delete a Meilisearch Cloud team that has no project left. Prints nothing on success.",
+      "examples": [
+        "meili delete teams --id 12 --yes",
+        "meili delete teams --id 12 --yes --output json",
+      ],
+      "flags": [
+        {
+          "description": "The team to delete.",
+          "helpValue": "<id>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "type": "boolean",
+        },
+      ],
+      "id": "delete teams",
+      "routes": [
+        "DELETE /api/v2/teams/{id}",
       ],
     },
     {
@@ -2108,6 +2177,29 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       ],
       "routes": [
         "GET /tasks",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "List the Meilisearch Cloud teams the token sees, or get one with --id.",
+      "examples": [
+        "meili get teams",
+        "meili get teams --output json",
+        "meili get teams --id 12",
+        "meili get teams --output ndjson",
+      ],
+      "flags": [
+        {
+          "description": "The team to get. Without it, the command lists the teams.",
+          "helpValue": "<id>",
+          "name": "id",
+          "type": "option",
+        },
+      ],
+      "id": "get teams",
+      "routes": [
+        "GET /api/v2/teams",
+        "GET /api/v2/teams/{id}",
       ],
     },
     {
@@ -3144,6 +3236,56 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         "PATCH /indexes/{index_uid}/settings",
       ],
     },
+    {
+      "api": "management",
+      "description": "Rename a Meilisearch Cloud team, or give it to another of its members.",
+      "examples": [
+        "meili update teams --id 12 --name renamed",
+        "meili update teams --id 12 --name renamed --output json",
+        "meili update teams --id 12 --owner-id 5b7c2f1e-8a3d-4e6f-9b0a-1c2d3e4f5a6b",
+        "meili update teams --id 12 --data '{"name":"renamed"}'",
+      ],
+      "flags": [
+        {
+          "description": "The team to update.",
+          "helpValue": "<id>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "New name of the team.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "UUID of the new owner, who must already be a member of the team.",
+          "helpValue": "<uuid>",
+          "name": "owner-id",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "update teams",
+      "routes": [
+        "PATCH /api/v2/teams/{id}",
+      ],
+    },
   ],
   "index": {
     "commands": [
@@ -3173,6 +3315,13 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         "id": "add projects",
         "routes": [
           "POST /api/v2/projects",
+        ],
+      },
+      {
+        "description": "Create a Meilisearch Cloud team in an organization.",
+        "id": "add teams",
+        "routes": [
+          "POST /api/v2/teams",
         ],
       },
       {
@@ -3267,6 +3416,13 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         "id": "delete tasks",
         "routes": [
           "DELETE /tasks",
+        ],
+      },
+      {
+        "description": "Delete a Meilisearch Cloud team that has no project left. Prints nothing on success.",
+        "id": "delete teams",
+        "routes": [
+          "DELETE /api/v2/teams/{id}",
         ],
       },
       {
@@ -3373,6 +3529,14 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         ],
       },
       {
+        "description": "List the Meilisearch Cloud teams the token sees, or get one with --id.",
+        "id": "get teams",
+        "routes": [
+          "GET /api/v2/teams",
+          "GET /api/v2/teams/{id}",
+        ],
+      },
+      {
         "description": "Get the version of the Meilisearch instance, with the commit it was built from.",
         "id": "get version",
         "routes": [
@@ -3448,6 +3612,13 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         "id": "update settings",
         "routes": [
           "PATCH /indexes/{index_uid}/settings",
+        ],
+      },
+      {
+        "description": "Rename a Meilisearch Cloud team, or give it to another of its members.",
+        "id": "update teams",
+        "routes": [
+          "PATCH /api/v2/teams/{id}",
         ],
       },
     ],
