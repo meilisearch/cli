@@ -9,7 +9,7 @@ This file is the maintainer guide for humans and for coding agents. Read it full
 - the Meilisearch API (indexes, documents, search, settings, tasks, keys) on any instance, local or remote
 - the Management API, which manages Meilisearch Cloud (organizations, teams, projects, resources, regions)
 
-`meili` is built for coding agents only. Every design choice favors the agent: no interaction, structured output, stable errors, self-description. Human comfort features are out of scope.
+`meili` must be coding agent friendly, without exception: no interaction, structured output, stable errors, self-description. Human comfort counts too: in the documentation and the `--help` from the start, and later in comfort commands that never change how the rest of the CLI behaves.
 
 Package: `@meilisearch/cli` on npm. Binary: `meili`.
 
@@ -85,7 +85,7 @@ Then read the diff of your pull request twice. Once for simplicity: in Claude Co
 ## What not to do
 
 - Do not add a command or flag that the OpenAPI document does not describe and the naming rules do not derive, unless it is a recorded exception. A new global flag, output field, environment variable or error code is a contract change: it ships in one pull request with the code that implements it and, when a decision changes, its ADR, because the contract tests tie the two together. Discuss it before, not in a docs-only pull request that cannot be green.
-- Do not add "human friendly" text to the JSON output. There is no human mode: a human reads the indented JSON.
+- Do not add prose to the JSON output: it holds the API body and nothing else. In a terminal it is indented, which is how it reads.
 - Do not wrap API responses. Return the API body as it is. See `docs/contract/output.md`.
 - Do not catch errors to print them yourself. Let `BaseCommand` render them.
 - Do not add interactive features (menus, TUI, spinners on stdout). A spinner on stderr when stderr is a TTY is fine.
