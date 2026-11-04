@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-similar-${randomUUID().slice(0, 8)}`;
 // A user-provided embedder: the vectors come with the documents, so the suite
 // needs no embedding service to have a similarity to compare.
@@ -36,10 +36,18 @@ describe.skipIf(!meilisearchUp)("meili similar against a real Meilisearch", () =
   });
 
   it("returns the documents closest to --id, the target excluded", async () => {
-    const result = await runBinary(
-      ["similar", "--index", uid, "--id", "1", "--embedder", "manual", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "similar",
+      "--index",
+      uid,
+      "--id",
+      "1",
+      "--embedder",
+      "manual",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const body = JSON.parse(result.stdout) as SearchResponse & { id: string };
@@ -48,46 +56,42 @@ describe.skipIf(!meilisearchUp)("meili similar against a real Meilisearch", () =
   });
 
   it("filters and limits the similar documents", async () => {
-    const result = await runBinary(
-      [
-        "similar",
-        "--index",
-        uid,
-        "--id",
-        "1",
-        "--embedder",
-        "manual",
-        "--filter",
-        "genre = horror",
-        "--attributes-to-retrieve",
-        "id",
-        "--limit",
-        "1",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "similar",
+      "--index",
+      uid,
+      "--id",
+      "1",
+      "--embedder",
+      "manual",
+      "--filter",
+      "genre = horror",
+      "--attributes-to-retrieve",
+      "id",
+      "--limit",
+      "1",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const body = JSON.parse(result.stdout) as SearchResponse;
     expect(body.hits).toEqual([{ id: 2 }]);
   });
 
   it("sends the body of --data, which a flag of the same field overrides", async () => {
-    const result = await runBinary(
-      [
-        "similar",
-        "--index",
-        uid,
-        "--data",
-        JSON.stringify({ id: 1, embedder: "manual", limit: 1 }),
-        "--id",
-        "3",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "similar",
+      "--index",
+      uid,
+      "--data",
+      JSON.stringify({ id: 1, embedder: "manual", limit: 1 }),
+      "--id",
+      "3",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const body = JSON.parse(result.stdout) as SearchResponse & { id: string };
     expect(body.id).toBe("3");
@@ -95,30 +99,36 @@ describe.skipIf(!meilisearchUp)("meili similar against a real Meilisearch", () =
   });
 
   it("lets the API refuse a document that does not exist, with its own code", async () => {
-    const result = await runBinary(
-      ["similar", "--index", uid, "--id", "404", "--embedder", "manual", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "similar",
+      "--index",
+      uid,
+      "--id",
+      "404",
+      "--embedder",
+      "manual",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("not_found_similar_id");
   });
 
   it("exits 4 with the API error when the index does not exist", async () => {
-    const result = await runBinary(
-      [
-        "similar",
-        "--index",
-        `${uid}-missing`,
-        "--id",
-        "1",
-        "--embedder",
-        "manual",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "similar",
+      "--index",
+      `${uid}-missing`,
+      "--id",
+      "1",
+      "--embedder",
+      "manual",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("index_not_found");

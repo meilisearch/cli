@@ -12,7 +12,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const canceling = makeEnqueuedTask({ taskUid: 7, indexUid: null, type: "taskCancelation" });
 
 describe("meili cancel tasks", () => {
@@ -25,18 +25,26 @@ describe("meili cancel tasks", () => {
 
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.tasksCancel(canceling));
-    const result = await runCommand(CancelTasks, ["--ids", "42,1344", "--output", "json"], { env });
+    const result = await runCommand(CancelTasks, [
+      "--ids",
+      "42,1344",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
   it("sends the filters as the query parameters of the route", async () => {
     server.use(meilisearchHandlers.tasksCancel(canceling));
     const requests = await recordRequests(async () => {
-      await runCommand(
-        CancelTasks,
-        ["--statuses", "enqueued,processing", "--index-ids", "movies"],
-        { env },
-      );
+      await runCommand(CancelTasks, [
+        "--statuses",
+        "enqueued,processing",
+        "--index-ids",
+        "movies",
+        ...project,
+      ]);
     });
     expect(requests).toHaveLength(1);
     expect(requests[0]?.method).toBe("POST");
@@ -55,11 +63,14 @@ describe("meili cancel tasks", () => {
         makeTask({ uid: 7, status: "succeeded", indexUid: null, type: "taskCancelation" }),
       ]),
     );
-    const result = await runCommand(
-      CancelTasks,
-      ["--statuses", "enqueued", "--wait", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(CancelTasks, [
+      "--statuses",
+      "enqueued",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid: 7, status: "succeeded" });
   });
@@ -74,7 +85,7 @@ describe("meili cancel tasks", () => {
         link: "https://docs.meilisearch.com/errors#missing_task_filters",
       }),
     );
-    const result = await runCommand(CancelTasks, ["--output", "json"], { env });
+    const result = await runCommand(CancelTasks, ["--output", "json", ...project]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("missing_task_filters");
@@ -82,7 +93,7 @@ describe("meili cancel tasks", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/tasks/cancel", 403, invalidApiKeyError));
-    const result = await runCommand(CancelTasks, ["--ids", "42", "--output", "json"], { env });
+    const result = await runCommand(CancelTasks, ["--ids", "42", "--output", "json", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

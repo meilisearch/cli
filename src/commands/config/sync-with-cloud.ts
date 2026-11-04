@@ -39,7 +39,6 @@ ${CONFIG_FILE_WARNING}`;
   ];
 
   static override flags = {
-    ...BaseCommand.managementFlags,
     all: Flags.boolean({ description: "Every project the token sees.", exactlyOne: SCOPES }),
     "team-ids": Flags.string({
       description: "The projects of these teams, comma-separated.",

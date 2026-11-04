@@ -10,7 +10,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 
 describe("meili get version", () => {
   it("prints its help without any network call", async () => {
@@ -22,13 +22,13 @@ describe("meili get version", () => {
 
   it("prints the version as the API returned it", async () => {
     server.use(meilisearchHandlers.version());
-    const result = await runCommand(GetVersion, ["--output", "json"], { env });
+    const result = await runCommand(GetVersion, ["--output", "json", ...project]);
     expect(result).toMatchSnapshot();
   });
 
   it("passes the API error of a key the instance refuses through and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/version", 403, invalidApiKeyError));
-    const result = await runCommand(GetVersion, ["--output", "json"], { env });
+    const result = await runCommand(GetVersion, ["--output", "json", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

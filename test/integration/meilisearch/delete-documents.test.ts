@@ -9,7 +9,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-delete-documents-${randomUUID().slice(0, 8)}`;
 const documents = [
   { id: 1, title: "Nosferatu", rating: 4.5 },
@@ -40,81 +40,89 @@ describe.skipIf(!meilisearchUp)("meili delete documents against a real Meilisear
   };
 
   it("deletes the documents named by --ids", async () => {
-    const result = await runBinary(
-      [
-        "delete",
-        "documents",
-        "--index",
-        uid,
-        "--ids",
-        "1,2",
-        "--yes",
-        "--wait",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "documents",
+      "--index",
+      uid,
+      "--ids",
+      "1,2",
+      "--yes",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ status: "succeeded" });
     expect(await remainingIds()).toEqual([3]);
   });
 
   it("deletes the documents matched by --filter", async () => {
-    const result = await runBinary(
-      [
-        "delete",
-        "documents",
-        "--index",
-        uid,
-        "--filter",
-        "rating < 2",
-        "--yes",
-        "--wait",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "documents",
+      "--index",
+      uid,
+      "--filter",
+      "rating < 2",
+      "--yes",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(await remainingIds()).toEqual([1, 2]);
   });
 
   it("reads the identifiers from a file, which selects the delete-batch route", async () => {
-    const result = await runBinary(
-      [
-        "delete",
-        "documents",
-        "--index",
-        uid,
-        "--file",
-        idsFile,
-        "--yes",
-        "--wait",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "documents",
+      "--index",
+      uid,
+      "--file",
+      idsFile,
+      "--yes",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ type: "documentDeletion" });
     expect(await remainingIds()).toEqual([3]);
   });
 
   it("deletes every document with --all", async () => {
-    const result = await runBinary(
-      ["delete", "documents", "--index", uid, "--all", "--yes", "--wait", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "documents",
+      "--index",
+      uid,
+      "--all",
+      "--yes",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(await remainingIds()).toEqual([]);
   });
 
   it("exits 2 and deletes nothing without --yes", async () => {
-    const result = await runBinary(
-      ["delete", "documents", "--index", uid, "--all", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "documents",
+      "--index",
+      uid,
+      "--all",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
@@ -122,10 +130,16 @@ describe.skipIf(!meilisearchUp)("meili delete documents against a real Meilisear
   });
 
   it("exits 2 and deletes nothing without a selector", async () => {
-    const result = await runBinary(
-      ["delete", "documents", "--index", uid, "--yes", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "documents",
+      "--index",
+      uid,
+      "--yes",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
     expect(await remainingIds()).toEqual([1, 2, 3]);

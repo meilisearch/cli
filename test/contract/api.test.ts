@@ -71,7 +71,6 @@ const commands = await Promise.all(
 const globalFlags = [
   ...Object.keys(BaseCommand.baseFlags),
   ...Object.keys(BaseCommand.connectionFlags),
-  ...Object.keys(BaseCommand.managementFlags),
 ];
 const VERBS = ["get", "add", "update", "delete", ...LITERAL_VERBS];
 

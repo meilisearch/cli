@@ -4,7 +4,7 @@ Status: accepted. Date: 2026-10-14. One point is superseded by ADR 0006: an entr
 
 ## Context
 
-`meili` talks to one project at a time, given by `--project-url` and `--project-api-key` or by `MEILI_PROJECT_URL` and `MEILI_PROJECT_API_KEY`. Working with several instances, a local one, a staging one, a Cloud project, means re-exporting variables between commands or repeating the URL and the key on every command line, where the key lands in the shell history and in the transcript of an agent. We want a human to set up several projects once and share that setup easily, and an agent to work on two projects in the same session, each command naming its target. ADR 0004 left a config file undecided, to come with its own ADR: this is it.
+`meili` talks to one project at a time, given by `--project-url` and `--project-api-key`. Working with several instances, a local one, a staging one, a Cloud project, means repeating the URL and the key on every command line, where the key lands in the shell history and in the transcript of an agent. We want a human to set up several projects once and share that setup easily, and an agent to work on two projects in the same session, each command naming its target. ADR 0004 left a config file undecided, to come with its own ADR: this is it.
 
 kubectl solves this with contexts in a file and a current context that `kubectl config use-context` switches. That current context is shared by every process that reads the file: two agents on one machine, or a `use-context prod` forgotten in another terminal, send the next command to the wrong cluster. Wrong-context incidents are documented for humans, and the people who tool agents on Kubernetes describe it as the first failure mode to guard against.
 
@@ -30,22 +30,22 @@ Alternatives considered:
 
   The file has no current project and no default entry. It holds keys, so it belongs to one user, mode `600`; when it is readable by others the CLI warns on stderr and goes on rather than refusing: a file with loose permissions still works, and the warning is what the human and the agent see.
 
-- **A project is chosen on the command line, or not at all.** `--project <name>` selects an entry of the file. There is no `MEILI_PROJECT` variable: a selection that lives in a process environment is one more thing to deduce, and rule 14 does not require a variable for every flag.
+- **A project is chosen on the command line, or not at all.** `--project <name>` selects an entry of the file, `--project-url` and `--project-api-key` give one outright. No environment variable stands for any of them, neither `MEILI_PROJECT` nor `MEILI_PROJECT_URL` and `MEILI_PROJECT_API_KEY`: a selection that lives in a process environment is set once, forgotten, and chooses the target of every later command, one more thing to deduce. Rule 14 does not require a variable for every flag. A human writes the projects in the file; an agent names one with `--project`, from the file it was given, or is handed a URL and a key and passes them as flags.
 
-- **Nothing is deduced.** The command line wins. Otherwise exactly one ambient source must define exactly one project: the environment pair alone, or the file alone with a single project. A file with several projects and no `--project`, or the environment pair and a file at the same time, is a `cli_config` error that lists what was found. `--project` together with `--project-url` is a `cli_usage` error: the name and the URL contradict each other.
+- **Nothing is deduced.** A command without `--project` or `--project-url` is a `cli_usage` error. The file is read only for the entry `--project` names: a file with a single project is not a default, because a second project added later would turn every command that relied on it into an error, and until then the command does not say where it goes. `--project` together with `--project-url` is a `cli_usage` error: the name and the URL contradict each other.
 
-- **A URL and its key travel together.** With `--project-url`, the key comes from `--project-api-key` or from nowhere, never from the environment or the file: a configured key is never sent to a URL it was not configured with. `--project-api-key` alone, or with `--project`, replaces the key of the configured project: an explicit key for a configured URL is the way to hand an agent a restricted key.
+- **A URL and its key travel together.** With `--project-url`, the key comes from `--project-api-key` or from nowhere, never from the file: a configured key is never sent to a URL it was not configured with. `--project-api-key` with `--project` replaces the key of the configured project: an explicit key for a configured URL is the way to hand an agent a restricted key.
 
 - **Three commands without an API manage the file**, for humans: `config list` prints the path and the projects with keys masked; `config set` creates the file in mode `600`, validates the URL, reads the key from stdin with `--project-api-key -` to keep it out of the shell history, and refuses a name that already exists; `config unset` deletes an entry. They are a convenience, not a protection.
 
 - **The file is shared state.** An agent gets its own file through `MEILI_CONFIG`, prepared by a human and mounted read-only in its sandbox, never the human's file. An agent changes nothing in the file, neither a project nor its permissions, unless the human asked for it explicitly. `--help`, `meili schema` and the README say so, because those are what an agent reads.
 
-- The single-project setup does not change: the environment pair alone, as in a container, keeps working with no file.
+- The container setup needs no file: `--project-url` and `--project-api-key` work with no file and no `HOME`.
 
 ## Consequences
 
 - An agent works on two projects in one session, `--project staging` then `--project prod`, with no key on any command line and no state that another process can switch under it.
-- A forgotten variable cannot choose the target silently: the environment pair next to a file is an error, not a precedence. The price is that a script which exports the pair on a machine that has a file must point `MEILI_CONFIG` at a file that does not exist, or unset the pair.
+- Nothing ambient can choose the target silently: no variable, no default entry, no single entry. The price is that every command carries its target, `--project local` even when the file has nothing else, and that a script exports the URL and the key under names of its own and passes them as flags.
 - What the CLI cannot protect against: another writer of the same file. Unsetting `staging` and setting it again with other credentials redirects every later `--project staging` of whoever shares the file, and a process with a file tool does not need `config set` to do it. Isolation, one file per agent, is the protection; `config set` refusing an existing name only prevents a replacement by mistake.
 - `config.md` changes one promise: the CLI reads keys from the config file, and from nowhere else on disk, and warns when the file is readable by others. `output.md` gains the warning format.
 - Unit and integration tests point `MEILI_CONFIG` at a file that does not exist, so a developer's own file never leaks into a test.

@@ -5,11 +5,11 @@
       "args": {},
       "description": "Add documents to an index, replacing the ones that already have the same primary key.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --index movies --file movies.json",
-        "<%= config.bin %> <%= command.id %> --index movies --file movies.json --output json",
-        "cat movies.json | <%= config.bin %> <%= command.id %> --index movies --file -",
-        "<%= config.bin %> <%= command.id %> --index movies --data '[{\"id\":1,\"title\":\"Nosferatu\"}]' --primary-key id",
-        "<%= config.bin %> <%= command.id %> --index movies --file movies.json --wait"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json --output json",
+        "cat movies.json | <%= config.bin %> <%= command.id %> --project prod --index movies --file -",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --data '[{\"id\":1,\"title\":\"Nosferatu\"}]' --primary-key id",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json --wait"
       ],
       "flags": {
         "output": {
@@ -32,7 +32,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -48,7 +48,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -140,7 +140,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -154,24 +154,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -191,26 +175,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -312,9 +276,9 @@
       "args": {},
       "description": "Create an empty index, named by --id, with --primary-key as its primary key.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --id movies",
-        "<%= config.bin %> <%= command.id %> --id movies --primary-key id --output json",
-        "<%= config.bin %> <%= command.id %> --id movies --wait"
+        "<%= config.bin %> <%= command.id %> --project prod --id movies",
+        "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key id --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --id movies --wait"
       ],
       "flags": {
         "output": {
@@ -337,7 +301,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -353,7 +317,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -434,7 +398,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -448,24 +412,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -485,26 +433,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -606,10 +534,10 @@
       "args": {},
       "description": "Create an API key that runs --actions on --indexes until --expires-at.\n\nThe answer carries the `key` field, the credential itself, on stdout like any other data.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --actions search --indexes movies --expires-at null",
-        "<%= config.bin %> <%= command.id %> --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json",
-        "<%= config.bin %> <%= command.id %> --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
-        "<%= config.bin %> <%= command.id %> --data '{\"actions\":[\"search\"],\"indexes\":[\"movies\"],\"expiresAt\":null}'"
+        "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes movies --expires-at null",
+        "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
+        "<%= config.bin %> <%= command.id %> --project prod --data '{\"actions\":[\"search\"],\"indexes\":[\"movies\"],\"expiresAt\":null}'"
       ],
       "flags": {
         "output": {
@@ -632,7 +560,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -648,7 +576,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -743,7 +671,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -757,24 +685,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -794,26 +706,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -943,22 +835,6 @@
           "allowNo": false,
           "type": "boolean"
         },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "name": "management-token",
-          "hasDynamicHelp": false,
-          "helpValue": "<pat>",
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "name": "management-url",
-          "hasDynamicHelp": false,
-          "helpValue": "<url>",
-          "multiple": false,
-          "type": "option"
-        },
         "name": {
           "description": "Name of the project.",
           "name": "name",
@@ -1049,7 +925,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -1063,24 +939,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -1100,26 +960,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -1245,30 +1085,6 @@
           "allowNo": false,
           "type": "boolean"
         },
-        "management-client-id": {
-          "description": "The OAuth application to log in with, on a Cloud that is not Meilisearch Cloud. Also MEILI_MANAGEMENT_CLIENT_ID.",
-          "name": "management-client-id",
-          "hasDynamicHelp": false,
-          "helpValue": "<uid>",
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL, which holds the token endpoint.",
-          "name": "management-url",
-          "hasDynamicHelp": false,
-          "helpValue": "<url>",
-          "multiple": false,
-          "type": "option"
-        },
-        "management-dashboard-url": {
-          "description": "Dashboard URL, which hosts the consent page.",
-          "name": "management-dashboard-url",
-          "hasDynamicHelp": false,
-          "helpValue": "<url>",
-          "multiple": false,
-          "type": "option"
-        },
         "browser": {
           "description": "Open the consent page in a browser. --no-browser only prints the URL.",
           "name": "browser",
@@ -1289,7 +1105,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -1303,24 +1119,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -1340,26 +1140,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -1498,7 +1278,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -1512,24 +1292,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -1549,26 +1313,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -1707,7 +1451,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -1721,24 +1465,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -1758,26 +1486,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -1916,7 +1624,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -1930,24 +1638,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -1967,26 +1659,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -2088,10 +1760,10 @@
       "args": {},
       "description": "Cancel the enqueued and processing tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --ids 42,1344",
-        "<%= config.bin %> <%= command.id %> --ids 42 --output json",
-        "<%= config.bin %> <%= command.id %> --statuses enqueued --index-ids movies",
-        "<%= config.bin %> <%= command.id %> --statuses processing --wait"
+        "<%= config.bin %> <%= command.id %> --project prod --ids 42,1344",
+        "<%= config.bin %> <%= command.id %> --project prod --ids 42 --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --statuses enqueued --index-ids movies",
+        "<%= config.bin %> <%= command.id %> --project prod --statuses processing --wait"
       ],
       "flags": {
         "output": {
@@ -2114,7 +1786,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -2130,7 +1802,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -2278,7 +1950,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -2292,24 +1964,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -2329,26 +1985,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -2488,7 +2124,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -2502,24 +2138,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -2539,26 +2159,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -2716,28 +2316,6 @@
           "name": "sync-with-cloud",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "dependsOn": [
-            "sync-with-cloud"
-          ],
-          "description": "Management API personal access token.",
-          "name": "management-token",
-          "hasDynamicHelp": false,
-          "helpValue": "<pat>",
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "dependsOn": [
-            "sync-with-cloud"
-          ],
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "name": "management-url",
-          "hasDynamicHelp": false,
-          "helpValue": "<url>",
-          "multiple": false,
-          "type": "option"
         }
       },
       "hasDynamicHelp": false,
@@ -2753,7 +2331,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -2767,24 +2345,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -2804,26 +2366,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -2950,22 +2492,6 @@
           "allowNo": false,
           "type": "boolean"
         },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "name": "management-token",
-          "hasDynamicHelp": false,
-          "helpValue": "<pat>",
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "name": "management-url",
-          "hasDynamicHelp": false,
-          "helpValue": "<url>",
-          "multiple": false,
-          "type": "option"
-        },
         "all": {
           "description": "Every project the token sees.",
           "name": "all",
@@ -3010,7 +2536,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -3024,24 +2550,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -3061,26 +2571,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -3228,7 +2718,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -3242,24 +2732,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -3279,26 +2753,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -3454,28 +2908,6 @@
           "name": "sync-with-cloud",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "dependsOn": [
-            "sync-with-cloud"
-          ],
-          "description": "Management API personal access token.",
-          "name": "management-token",
-          "hasDynamicHelp": false,
-          "helpValue": "<pat>",
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "dependsOn": [
-            "sync-with-cloud"
-          ],
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "name": "management-url",
-          "hasDynamicHelp": false,
-          "helpValue": "<url>",
-          "multiple": false,
-          "type": "option"
         }
       },
       "hasDynamicHelp": false,
@@ -3491,7 +2923,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -3505,24 +2937,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -3542,26 +2958,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -3663,11 +3059,11 @@
       "args": {},
       "description": "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --index movies --ids 42,1344 --yes",
-        "<%= config.bin %> <%= command.id %> --index movies --ids 42 --yes --output json",
-        "<%= config.bin %> <%= command.id %> --index movies --filter 'rating < 2' --yes",
-        "<%= config.bin %> <%= command.id %> --index movies --file ids.json --yes",
-        "<%= config.bin %> <%= command.id %> --index movies --all --yes --wait"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42,1344 --yes",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42 --yes --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --filter 'rating < 2' --yes",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --file ids.json --yes",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --all --yes --wait"
       ],
       "flags": {
         "output": {
@@ -3690,7 +3086,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -3706,7 +3102,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -3832,7 +3228,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -3846,24 +3242,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -3883,26 +3263,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -4004,9 +3364,9 @@
       "args": {},
       "description": "Delete an index, with its documents, its settings and its task history.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --id movies --yes",
-        "<%= config.bin %> <%= command.id %> --id movies --yes --output json",
-        "<%= config.bin %> <%= command.id %> --id movies --yes --wait"
+        "<%= config.bin %> <%= command.id %> --project prod --id movies --yes",
+        "<%= config.bin %> <%= command.id %> --project prod --id movies --yes --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --id movies --yes --wait"
       ],
       "flags": {
         "output": {
@@ -4029,7 +3389,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -4045,7 +3405,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -4103,7 +3463,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -4117,24 +3477,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -4154,26 +3498,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -4275,8 +3599,8 @@
       "args": {},
       "description": "Delete an API key, which stops authenticating every request that carries it.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
-        "<%= config.bin %> <%= command.id %> --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json"
+        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
+        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json"
       ],
       "flags": {
         "output": {
@@ -4299,7 +3623,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -4315,7 +3639,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -4356,7 +3680,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -4370,24 +3694,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -4407,26 +3715,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -4553,22 +3841,6 @@
           "allowNo": false,
           "type": "boolean"
         },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "name": "management-token",
-          "hasDynamicHelp": false,
-          "helpValue": "<pat>",
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "name": "management-url",
-          "hasDynamicHelp": false,
-          "helpValue": "<url>",
-          "multiple": false,
-          "type": "option"
-        },
         "project": {
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "name": "project",
@@ -4614,7 +3886,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -4628,24 +3900,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -4665,26 +3921,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -4786,9 +4022,9 @@
       "args": {},
       "description": "Reset every setting of an index to its default value, which reindexes the documents.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --index movies --yes",
-        "<%= config.bin %> <%= command.id %> --index movies --yes --output json",
-        "<%= config.bin %> <%= command.id %> --index movies --yes --wait"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --yes",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --yes --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --yes --wait"
       ],
       "flags": {
         "output": {
@@ -4811,7 +4047,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -4827,7 +4063,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -4885,7 +4121,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -4899,24 +4135,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -4936,26 +4156,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -5057,10 +4257,10 @@
       "args": {},
       "description": "Delete the finished tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --ids 42,1344 --yes",
-        "<%= config.bin %> <%= command.id %> --ids 42 --yes --output json",
-        "<%= config.bin %> <%= command.id %> --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
-        "<%= config.bin %> <%= command.id %> --index-ids movies --yes --wait"
+        "<%= config.bin %> <%= command.id %> --project prod --ids 42,1344 --yes",
+        "<%= config.bin %> <%= command.id %> --project prod --ids 42 --yes --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
+        "<%= config.bin %> <%= command.id %> --project prod --index-ids movies --yes --wait"
       ],
       "flags": {
         "output": {
@@ -5083,7 +4283,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -5099,7 +4299,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -5254,7 +4454,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -5268,24 +4468,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -5305,26 +4489,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -5426,12 +4590,12 @@
       "args": {},
       "description": "Send the documents and the settings of the source instance to the destination instance, and answer the task that does it.\n\nThe source is the project this command connects to, named by --project, --project-url and --project-api-key as on every command: it receives the request and does the export. The destination is --url with --api-key, or --project-destination, an entry of the config file. --indexes narrows the export to the indexes those patterns match.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
-        "<%= config.bin %> <%= command.id %> --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
+        "<%= config.bin %> <%= command.id %> --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json",
         "<%= config.bin %> <%= command.id %> --project staging --project-destination prod",
-        "<%= config.bin %> <%= command.id %> --url http://localhost:7701 --indexes '{\"movies\":{\"filter\":\"rating > 4\"}}' --wait",
-        "<%= config.bin %> <%= command.id %> --url http://localhost:7701 --payload-size 24MiB",
-        "<%= config.bin %> <%= command.id %> --data '{\"url\":\"http://localhost:7701\",\"indexes\":{\"*\":{\"overrideSettings\":true}}}'"
+        "<%= config.bin %> <%= command.id %> --project prod --url http://localhost:7701 --indexes '{\"movies\":{\"filter\":\"rating > 4\"}}' --wait",
+        "<%= config.bin %> <%= command.id %> --project prod --url http://localhost:7701 --payload-size 24MiB",
+        "<%= config.bin %> <%= command.id %> --project prod --data '{\"url\":\"http://localhost:7701\",\"indexes\":{\"*\":{\"overrideSettings\":true}}}'"
       ],
       "flags": {
         "output": {
@@ -5454,7 +4618,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -5470,7 +4634,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -5578,7 +4742,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -5592,24 +4756,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -5629,26 +4777,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -5749,10 +4877,10 @@
       "args": {},
       "description": "Search the values of one facet attribute of an index, counted on the documents --q and --filter keep.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --index movies --facet-name genres --facet-query ac",
-        "<%= config.bin %> <%= command.id %> --index movies --facet-name genres --facet-query ac --output json",
-        "<%= config.bin %> <%= command.id %> --index movies --facet-name genres --q horror --filter 'rating > 4'",
-        "<%= config.bin %> <%= command.id %> --index movies --data '{\"facetName\":\"genres\",\"facetQuery\":\"ac\"}'"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --data '{\"facetName\":\"genres\",\"facetQuery\":\"ac\"}'"
       ],
       "flags": {
         "output": {
@@ -5775,7 +4903,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -5791,7 +4919,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -5934,7 +5062,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -5948,24 +5076,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -5985,26 +5097,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -6105,12 +5197,12 @@
       "args": {},
       "description": "List the batches of tasks the instance processed, narrowed by --ids, --task-ids, --statuses and the other filters of the route.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
-        "<%= config.bin %> <%= command.id %> --ids 7",
-        "<%= config.bin %> <%= command.id %> --task-ids 42",
-        "<%= config.bin %> <%= command.id %> --statuses failed --index-ids movies --limit 5",
-        "<%= config.bin %> <%= command.id %> --all --output ndjson"
+        "<%= config.bin %> <%= command.id %> --project prod",
+        "<%= config.bin %> <%= command.id %> --project prod --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --ids 7",
+        "<%= config.bin %> <%= command.id %> --project prod --task-ids 42",
+        "<%= config.bin %> <%= command.id %> --project prod --statuses failed --index-ids movies --limit 5",
+        "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson"
       ],
       "flags": {
         "output": {
@@ -6133,7 +5225,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -6149,7 +5241,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -6308,7 +5400,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -6322,24 +5414,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -6359,26 +5435,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -6480,11 +5536,11 @@
       "args": {},
       "description": "List the documents of an index, narrowed by --ids or by --filter.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --index movies",
-        "<%= config.bin %> <%= command.id %> --index movies --output json",
-        "<%= config.bin %> <%= command.id %> --index movies --ids 42,1344 --fields id,title",
-        "<%= config.bin %> <%= command.id %> --index movies --filter 'rating > 4' --sort rating:desc",
-        "<%= config.bin %> <%= command.id %> --index movies --all --output ndjson"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42,1344 --fields id,title",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --filter 'rating > 4' --sort rating:desc",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --all --output ndjson"
       ],
       "flags": {
         "output": {
@@ -6507,7 +5563,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -6523,7 +5579,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -6639,7 +5695,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -6653,24 +5709,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -6690,26 +5730,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -6811,9 +5831,9 @@
       "args": {},
       "description": "Check that the Meilisearch instance is available.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
-        "MEILI_PROJECT_URL=http://localhost:7700 <%= config.bin %> <%= command.id %>"
+        "<%= config.bin %> <%= command.id %> --project prod",
+        "<%= config.bin %> <%= command.id %> --project prod --output json",
+        "<%= config.bin %> <%= command.id %> --project-url http://localhost:7700"
       ],
       "flags": {
         "output": {
@@ -6836,7 +5856,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -6852,7 +5872,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -6875,7 +5895,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -6889,24 +5909,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -6926,26 +5930,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -7047,11 +6031,11 @@
       "args": {},
       "description": "List the indexes of the instance, or get one with --id.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
-        "<%= config.bin %> <%= command.id %> --id movies",
-        "<%= config.bin %> <%= command.id %> --limit 5 --offset 10",
-        "<%= config.bin %> <%= command.id %> --all --output ndjson"
+        "<%= config.bin %> <%= command.id %> --project prod",
+        "<%= config.bin %> <%= command.id %> --project prod --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --id movies",
+        "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10",
+        "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson"
       ],
       "flags": {
         "output": {
@@ -7074,7 +6058,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -7090,7 +6074,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -7146,7 +6130,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -7160,24 +6144,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -7197,26 +6165,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -7318,11 +6266,11 @@
       "args": {},
       "description": "List the API keys of the instance, or get one with --id.\n\nThe answer is the API body as it is, so it carries the `key` field of every key it returns: credentials that work, on stdout, like any other data.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
-        "<%= config.bin %> <%= command.id %> --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
-        "<%= config.bin %> <%= command.id %> --limit 5 --offset 10",
-        "<%= config.bin %> <%= command.id %> --all --output ndjson"
+        "<%= config.bin %> <%= command.id %> --project prod",
+        "<%= config.bin %> <%= command.id %> --project prod --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
+        "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10",
+        "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson"
       ],
       "flags": {
         "output": {
@@ -7345,7 +6293,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -7361,7 +6309,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -7417,7 +6365,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -7431,24 +6379,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -7468,26 +6400,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -7616,22 +6528,6 @@
           "allowNo": false,
           "type": "boolean"
         },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "name": "management-token",
-          "hasDynamicHelp": false,
-          "helpValue": "<pat>",
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "name": "management-url",
-          "hasDynamicHelp": false,
-          "helpValue": "<url>",
-          "multiple": false,
-          "type": "option"
-        },
         "project": {
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "name": "project",
@@ -7673,7 +6569,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -7687,24 +6583,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -7724,26 +6604,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -7845,8 +6705,8 @@
       "args": {},
       "description": "Get every setting of an index, each with its current value or its default.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --index movies",
-        "<%= config.bin %> <%= command.id %> --index movies --output json"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --output json"
       ],
       "flags": {
         "output": {
@@ -7869,7 +6729,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -7885,7 +6745,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -7919,7 +6779,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -7933,24 +6793,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -7970,26 +6814,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -8091,10 +6915,10 @@
       "args": {},
       "description": "Get the statistics of the whole instance, or those of one index with --index.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
-        "<%= config.bin %> <%= command.id %> --index movies",
-        "<%= config.bin %> <%= command.id %> --index movies --size-format human --show-internal-database-sizes"
+        "<%= config.bin %> <%= command.id %> --project prod",
+        "<%= config.bin %> <%= command.id %> --project prod --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --size-format human --show-internal-database-sizes"
       ],
       "flags": {
         "output": {
@@ -8117,7 +6941,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -8133,7 +6957,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -8184,7 +7008,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -8198,24 +7022,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -8235,26 +7043,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -8356,12 +7144,12 @@
       "args": {},
       "description": "List the tasks of the instance, narrowed by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json",
-        "<%= config.bin %> <%= command.id %> --ids 42",
-        "<%= config.bin %> <%= command.id %> --statuses failed,canceled --limit 5",
-        "<%= config.bin %> <%= command.id %> --index-ids movies --types documentAdditionOrUpdate",
-        "<%= config.bin %> <%= command.id %> --all --output ndjson"
+        "<%= config.bin %> <%= command.id %> --project prod",
+        "<%= config.bin %> <%= command.id %> --project prod --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --ids 42",
+        "<%= config.bin %> <%= command.id %> --project prod --statuses failed,canceled --limit 5",
+        "<%= config.bin %> <%= command.id %> --project prod --index-ids movies --types documentAdditionOrUpdate",
+        "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson"
       ],
       "flags": {
         "output": {
@@ -8384,7 +7172,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -8400,7 +7188,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -8559,7 +7347,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -8573,24 +7361,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -8610,26 +7382,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -8731,8 +7483,8 @@
       "args": {},
       "description": "Get the version of the Meilisearch instance, with the commit it was built from.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --output json"
+        "<%= config.bin %> <%= command.id %> --project prod",
+        "<%= config.bin %> <%= command.id %> --project prod --output json"
       ],
       "flags": {
         "output": {
@@ -8755,7 +7507,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -8771,7 +7523,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -8796,7 +7548,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -8810,24 +7562,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -8847,26 +7583,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -8968,10 +7684,10 @@
       "args": {},
       "description": "Run several search queries in one request, each naming its index in --queries, returned side by side or merged into one ranked list with --federation.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --queries '[{\"indexUid\":\"movies\",\"q\":\"nosferatu\"},{\"indexUid\":\"books\",\"q\":\"nosferatu\"}]'",
-        "<%= config.bin %> <%= command.id %> --queries '[{\"indexUid\":\"movies\",\"q\":\"nosferatu\"}]' --output json",
-        "<%= config.bin %> <%= command.id %> --queries '[{\"indexUid\":\"movies\",\"q\":\"horror\"},{\"indexUid\":\"books\",\"q\":\"horror\"}]' --federation '{\"limit\":5}'",
-        "cat queries.json | <%= config.bin %> <%= command.id %> --file -"
+        "<%= config.bin %> <%= command.id %> --project prod --queries '[{\"indexUid\":\"movies\",\"q\":\"nosferatu\"},{\"indexUid\":\"books\",\"q\":\"nosferatu\"}]'",
+        "<%= config.bin %> <%= command.id %> --project prod --queries '[{\"indexUid\":\"movies\",\"q\":\"nosferatu\"}]' --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --queries '[{\"indexUid\":\"movies\",\"q\":\"horror\"},{\"indexUid\":\"books\",\"q\":\"horror\"}]' --federation '{\"limit\":5}'",
+        "cat queries.json | <%= config.bin %> <%= command.id %> --project prod --file -"
       ],
       "flags": {
         "output": {
@@ -8994,7 +7710,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -9010,7 +7726,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -9070,7 +7786,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -9084,24 +7800,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -9121,26 +7821,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -9288,7 +7968,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -9302,24 +7982,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -9339,26 +8003,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -9459,11 +8103,11 @@
       "args": {},
       "description": "Search the documents of an index, with --q and the search parameters of the route.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --index movies --q nosferatu",
-        "<%= config.bin %> <%= command.id %> --index movies --q nosferatu --output json",
-        "<%= config.bin %> <%= command.id %> --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
-        "<%= config.bin %> <%= command.id %> --index movies --facets genres --attributes-to-retrieve id,title",
-        "<%= config.bin %> <%= command.id %> --index movies --data '{\"q\":\"nosferatu\",\"hybrid\":{\"embedder\":\"default\",\"semanticRatio\":0.5}}'"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --q nosferatu",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --q nosferatu --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --facets genres --attributes-to-retrieve id,title",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --data '{\"q\":\"nosferatu\",\"hybrid\":{\"embedder\":\"default\",\"semanticRatio\":0.5}}'"
       ],
       "flags": {
         "output": {
@@ -9486,7 +8130,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -9502,7 +8146,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -9765,7 +8409,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -9779,24 +8423,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -9816,26 +8444,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -9936,10 +8544,10 @@
       "args": {},
       "description": "Find the documents an index holds that are closest to one of its documents, named by --id and compared with --embedder.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --index movies --id 143 --embedder default",
-        "<%= config.bin %> <%= command.id %> --index movies --id 143 --embedder default --output json",
-        "<%= config.bin %> <%= command.id %> --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
-        "<%= config.bin %> <%= command.id %> --index movies --data '{\"id\":143,\"embedder\":\"default\",\"retrieveVectors\":true}'"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --id 143 --embedder default",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --id 143 --embedder default --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --data '{\"id\":143,\"embedder\":\"default\",\"retrieveVectors\":true}'"
       ],
       "flags": {
         "output": {
@@ -9962,7 +8570,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -9978,7 +8586,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -10111,7 +8719,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -10125,24 +8733,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -10162,26 +8754,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -10282,11 +8854,11 @@
       "args": {},
       "description": "Add documents to an index, merging their fields into the ones that already have the same primary key.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --index movies --file changes.json",
-        "<%= config.bin %> <%= command.id %> --index movies --file changes.json --output json",
-        "cat changes.json | <%= config.bin %> <%= command.id %> --index movies --file -",
-        "<%= config.bin %> <%= command.id %> --index movies --data '[{\"id\":1,\"rating\":4}]'",
-        "<%= config.bin %> <%= command.id %> --index movies --file changes.json --wait"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json --output json",
+        "cat changes.json | <%= config.bin %> <%= command.id %> --project prod --index movies --file -",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --data '[{\"id\":1,\"rating\":4}]'",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json --wait"
       ],
       "flags": {
         "output": {
@@ -10309,7 +8881,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -10325,7 +8897,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -10417,7 +8989,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -10431,24 +9003,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -10468,26 +9024,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -10589,10 +9125,10 @@
       "args": {},
       "description": "Change the primary key of an index with --primary-key, or rename it with --new-id.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --id movies --primary-key movie_id",
-        "<%= config.bin %> <%= command.id %> --id movies --primary-key movie_id --output json",
-        "<%= config.bin %> <%= command.id %> --id movies --new-id films",
-        "<%= config.bin %> <%= command.id %> --id movies --new-id films --wait"
+        "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key movie_id",
+        "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key movie_id --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --id movies --new-id films",
+        "<%= config.bin %> <%= command.id %> --project prod --id movies --new-id films --wait"
       ],
       "flags": {
         "output": {
@@ -10615,7 +9151,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -10631,7 +9167,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -10720,7 +9256,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -10734,24 +9270,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -10771,26 +9291,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -10892,9 +9392,9 @@
       "args": {},
       "description": "Change the name or the description of an API key, the two fields the route takes, and reset one with the value null.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
-        "<%= config.bin %> <%= command.id %> --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly' --output json",
-        "<%= config.bin %> <%= command.id %> --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null"
+        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
+        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly' --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null"
       ],
       "flags": {
         "output": {
@@ -10917,7 +9417,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -10933,7 +9433,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -11002,7 +9502,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -11016,24 +9516,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -11053,26 +9537,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -11200,22 +9664,6 @@
           "allowNo": false,
           "type": "boolean"
         },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "name": "management-token",
-          "hasDynamicHelp": false,
-          "helpValue": "<pat>",
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "name": "management-url",
-          "hasDynamicHelp": false,
-          "helpValue": "<url>",
-          "multiple": false,
-          "type": "option"
-        },
         "project": {
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "name": "project",
@@ -11281,7 +9729,7 @@
       "keyActions": [],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -11295,24 +9743,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -11332,26 +9764,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {
@@ -11453,11 +9865,11 @@
       "args": {},
       "description": "Change the settings given, leave the others as they are, and reset one with the value null.",
       "examples": [
-        "<%= config.bin %> <%= command.id %> --index movies --searchable-attributes title,overview",
-        "<%= config.bin %> <%= command.id %> --index movies --filterable-attributes genres,release_date --output json",
-        "<%= config.bin %> <%= command.id %> --index movies --stop-words null",
-        "<%= config.bin %> <%= command.id %> --index movies --typo-tolerance '{\"enabled\":false}' --wait",
-        "<%= config.bin %> <%= command.id %> --index movies --file settings.json"
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --searchable-attributes title,overview",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --filterable-attributes genres,release_date --output json",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --stop-words null",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --typo-tolerance '{\"enabled\":false}' --wait",
+        "<%= config.bin %> <%= command.id %> --project prod --index movies --file settings.json"
       ],
       "flags": {
         "output": {
@@ -11480,7 +9892,7 @@
           "type": "boolean"
         },
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "name": "project-url",
           "hasDynamicHelp": false,
           "helpValue": "<url>",
@@ -11496,7 +9908,7 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
@@ -11742,7 +10154,7 @@
       ],
       "connectionFlags": {
         "project-url": {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "input": [],
           "multiple": false,
@@ -11756,24 +10168,8 @@
           "type": "option"
         },
         "project": {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        }
-      },
-      "managementFlags": {
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option"
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
           "input": [],
           "multiple": false,
           "type": "option"
@@ -11793,26 +10189,6 @@
           "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
           "allowNo": false,
           "type": "boolean"
-        },
-        "management-token": {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
-        },
-        "management-url": {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "input": [],
-          "multiple": false,
-          "type": "option",
-          "dependsOn": [
-            "sync-with-cloud"
-          ]
         }
       },
       "waitFlags": {

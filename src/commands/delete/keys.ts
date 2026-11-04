@@ -12,8 +12,8 @@ export default class DeleteKeys extends BaseCommand {
     "Delete an API key, which stops authenticating every request that carries it.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
-    "<%= config.bin %> <%= command.id %> --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
+    "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json",
   ];
 
   static override flags = {

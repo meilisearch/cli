@@ -9,7 +9,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-add-documents-${randomUUID().slice(0, 8)}`;
 const file = join(mkdtempSync(join(tmpdir(), "meili-cli-test-")), "movies.json");
 writeFileSync(file, JSON.stringify([{ id: 1, title: "Nosferatu" }]));
@@ -26,10 +26,17 @@ describe.skipIf(!meilisearchUp)("meili add documents against a real Meilisearch"
   });
 
   it("enqueues a task and returns at once, without --wait", async () => {
-    const result = await runBinary(
-      ["add", "documents", "--index", uid, "--file", file, "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "add",
+      "documents",
+      "--index",
+      uid,
+      "--file",
+      file,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const task = JSON.parse(result.stdout) as { taskUid: number; status: string; type: string };
@@ -39,8 +46,8 @@ describe.skipIf(!meilisearchUp)("meili add documents against a real Meilisearch"
 
   it("reads the documents from stdin with --file -, and --wait prints the final task", async () => {
     const result = await runBinary(
-      ["add", "documents", "--index", uid, "--file", "-", "--wait", "--output", "json"],
-      env,
+      ["add", "documents", "--index", uid, "--file", "-", "--wait", "--output", "json", ...project],
+      {},
       JSON.stringify([{ id: 2, title: "Alien" }]),
     );
     expect(result.exitCode).toBe(0);
@@ -49,39 +56,35 @@ describe.skipIf(!meilisearchUp)("meili add documents against a real Meilisearch"
   });
 
   it("replaces a document that has the same primary key", async () => {
-    const result = await runBinary(
-      [
-        "add",
-        "documents",
-        "--index",
-        uid,
-        "--data",
-        '[{"id":1,"rating":5}]',
-        "--wait",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "add",
+      "documents",
+      "--index",
+      uid,
+      "--data",
+      '[{"id":1,"rating":5}]',
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(await client.index(uid).getDocument(1)).toEqual({ id: 1, rating: 5 });
   });
 
   it("prints the failed task and exits 7 when --wait sees the task fail", async () => {
-    const result = await runBinary(
-      [
-        "add",
-        "documents",
-        "--index",
-        uid,
-        "--data",
-        '[{"title":"no primary key here"}]',
-        "--wait",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "add",
+      "documents",
+      "--index",
+      uid,
+      "--data",
+      '[{"title":"no primary key here"}]',
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(7);
     expect(JSON.parse(result.stdout)).toMatchObject({
       status: "failed",

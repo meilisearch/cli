@@ -5,11 +5,11 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 
 describe.skipIf(!meilisearchUp)("meili get version against a real Meilisearch", () => {
   it("returns the version of the instance as the API wrote it", async () => {
-    const result = await runBinary(["get", "version", "--output", "json"], env);
+    const result = await runBinary(["get", "version", "--output", "json", ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const body = JSON.parse(result.stdout) as Version;
@@ -18,10 +18,16 @@ describe.skipIf(!meilisearchUp)("meili get version against a real Meilisearch", 
   });
 
   it("exits 3 with the API error when the key is not accepted, unlike get health", async () => {
-    const result = await runBinary(["get", "version", "--output", "json"], {
-      MEILI_PROJECT_URL: MEILISEARCH_URL,
-      MEILI_PROJECT_API_KEY: "not-the-master-key",
-    });
+    const result = await runBinary([
+      "get",
+      "version",
+      "--project-url",
+      MEILISEARCH_URL,
+      "--project-api-key",
+      "not-the-master-key",
+      "--output",
+      "json",
+    ]);
     expect(result.exitCode).toBe(3);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("invalid_api_key");

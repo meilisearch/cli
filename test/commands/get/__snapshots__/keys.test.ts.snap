@@ -12,7 +12,7 @@ exports[`meili get keys > gets one key by its uid through the unit route 1`] = `
 exports[`meili get keys > passes an authentication error through with a hint and exits 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\`."}}
 ",
   "stdout": "",
 }
@@ -49,10 +49,11 @@ FLAGS
       --limit=<n>              Passed to the API.
       --offset=<n>             Passed to the API.
       --project=<name>         A project of the config file. Cannot be combined
-                               with --project-url. Required when the file has
-                               several projects.
+                               with --project-url. One of --project or
+                               --project-url is required.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
 
 DESCRIPTION
   List the API keys of the instance, or get one with --id.
@@ -61,15 +62,15 @@ DESCRIPTION
   key it returns: credentials that work, on stdout, like any other data.
 
 EXAMPLES
-  $ meili get keys
+  $ meili get keys --project prod
 
-  $ meili get keys --output json
+  $ meili get keys --project prod --output json
 
-  $ meili get keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60
+  $ meili get keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60
 
-  $ meili get keys --limit 5 --offset 10
+  $ meili get keys --project prod --limit 5 --offset 10
 
-  $ meili get keys --all --output ndjson
+  $ meili get keys --project prod --all --output ndjson
 
 "
 `;

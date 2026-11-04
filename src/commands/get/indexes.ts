@@ -12,11 +12,11 @@ export default class GetIndexes extends BaseCommand {
   static override description = "List the indexes of the instance, or get one with --id.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-    "<%= config.bin %> <%= command.id %> --id movies",
-    "<%= config.bin %> <%= command.id %> --limit 5 --offset 10",
-    "<%= config.bin %> <%= command.id %> --all --output ndjson",
+    "<%= config.bin %> <%= command.id %> --project prod",
+    "<%= config.bin %> <%= command.id %> --project prod --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --id movies",
+    "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10",
+    "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson",
   ];
 
   static override flags = {

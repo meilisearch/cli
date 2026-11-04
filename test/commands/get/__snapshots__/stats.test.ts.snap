@@ -27,11 +27,12 @@ FLAGS
       --index=<index>                 The index to read the statistics of.
                                       Without it, the whole instance.
       --project=<name>                A project of the config file. Cannot be
-                                      combined with --project-url. Required when
-                                      the file has several projects.
+                                      combined with --project-url. One of
+                                      --project or --project-url is required.
       --project-api-key=<key>         Project API key. \`-\` reads it from stdin.
       --project-url=<url>             Project URL, the Meilisearch instance to
-                                      talk to.
+                                      talk to. One of --project or --project-url
+                                      is required.
       --show-internal-database-sizes  Add internalDatabaseSizes to the response,
                                       the size of each internal database.
       --size-format=<option>          How the sizes are written: raw (default),
@@ -43,13 +44,13 @@ DESCRIPTION
   Get the statistics of the whole instance, or those of one index with --index.
 
 EXAMPLES
-  $ meili get stats
+  $ meili get stats --project prod
 
-  $ meili get stats --output json
+  $ meili get stats --project prod --output json
 
-  $ meili get stats --index movies
+  $ meili get stats --project prod --index movies
 
-  $ meili get stats --index movies --size-format human --show-internal-database-sizes
+  $ meili get stats --project prod --index movies --size-format human --show-internal-database-sizes
 
 "
 `;

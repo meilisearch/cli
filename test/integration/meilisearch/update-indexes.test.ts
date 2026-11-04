@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-update-indexes-${randomUUID().slice(0, 8)}`;
 const renamed = `${uid}-renamed`;
 
@@ -22,10 +22,18 @@ describe.skipIf(!meilisearchUp)("meili update indexes against a real Meilisearch
   });
 
   it("sets the primary key of the index", async () => {
-    const result = await runBinary(
-      ["update", "indexes", "--id", uid, "--primary-key", "id", "--wait", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "indexes",
+      "--id",
+      uid,
+      "--primary-key",
+      "id",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({
       indexUid: uid,
@@ -36,29 +44,35 @@ describe.skipIf(!meilisearchUp)("meili update indexes against a real Meilisearch
   });
 
   it("renames the index with --new-id", async () => {
-    const result = await runBinary(
-      ["update", "indexes", "--id", uid, "--new-id", renamed, "--wait", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "indexes",
+      "--id",
+      uid,
+      "--new-id",
+      renamed,
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(await client.index(renamed).getRawInfo()).toMatchObject({ uid: renamed });
   });
 
   it("prints the failed task and exits 7 when the index does not exist", async () => {
-    const result = await runBinary(
-      [
-        "update",
-        "indexes",
-        "--id",
-        `${uid}-missing`,
-        "--primary-key",
-        "id",
-        "--wait",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "indexes",
+      "--id",
+      `${uid}-missing`,
+      "--primary-key",
+      "id",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(7);
     expect(JSON.parse(result.stdout)).toMatchObject({
       status: "failed",

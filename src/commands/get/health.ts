@@ -8,9 +8,9 @@ export default class GetHealth extends BaseCommand {
   static override description = "Check that the Meilisearch instance is available.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-    "MEILI_PROJECT_URL=http://localhost:7700 <%= config.bin %> <%= command.id %>",
+    "<%= config.bin %> <%= command.id %> --project prod",
+    "<%= config.bin %> <%= command.id %> --project prod --output json",
+    "<%= config.bin %> <%= command.id %> --project-url http://localhost:7700",
   ];
 
   static override flags = { ...BaseCommand.connectionFlags };

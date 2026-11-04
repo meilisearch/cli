@@ -6,7 +6,7 @@ import { runCli, runCommand } from "../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const hits = [
   { id: 2770, title: "American Pie 2" },
   { id: 190859, title: "American Sniper" },
@@ -15,7 +15,7 @@ const hits = [
 /** The body the CLI sent to POST /indexes/{uid}/similar, request by request. */
 async function bodiesOf(argv: string[]): Promise<unknown[]> {
   const requests = await recordRequests(async () => {
-    await runCommand(Similar, argv, { env });
+    await runCommand(Similar, [...argv, ...project]);
   });
   return requests.map((request) => JSON.parse(request.body));
 }
@@ -30,11 +30,17 @@ describe("meili similar", () => {
 
   it("prints the API envelope as it is in JSON", async () => {
     server.use(meilisearchHandlers.similar(hits));
-    const result = await runCommand(
-      Similar,
-      ["--index", "movies", "--id", "143", "--embedder", "default", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(Similar, [
+      "--index",
+      "movies",
+      "--id",
+      "143",
+      "--embedder",
+      "default",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
@@ -110,11 +116,17 @@ describe("meili similar", () => {
 
   it("refuses --output ndjson: the response is hits, not a list envelope", async () => {
     server.use(meilisearchHandlers.similar(hits));
-    const result = await runCommand(
-      Similar,
-      ["--index", "movies", "--id", "143", "--embedder", "default", "--output", "ndjson"],
-      { env },
-    );
+    const result = await runCommand(Similar, [
+      "--index",
+      "movies",
+      "--id",
+      "143",
+      "--embedder",
+      "default",
+      "--output",
+      "ndjson",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
@@ -129,11 +141,17 @@ describe("meili similar", () => {
         link: "https://docs.meilisearch.com/errors#index_not_found",
       }),
     );
-    const result = await runCommand(
-      Similar,
-      ["--index", "missing", "--id", "143", "--embedder", "default", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(Similar, [
+      "--index",
+      "missing",
+      "--id",
+      "143",
+      "--embedder",
+      "default",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

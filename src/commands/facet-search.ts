@@ -15,10 +15,10 @@ export default class FacetSearch extends BaseCommand {
     "Search the values of one facet attribute of an index, counted on the documents --q and --filter keep.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --index movies --facet-name genres --facet-query ac",
-    "<%= config.bin %> <%= command.id %> --index movies --facet-name genres --facet-query ac --output json",
-    "<%= config.bin %> <%= command.id %> --index movies --facet-name genres --q horror --filter 'rating > 4'",
-    '<%= config.bin %> <%= command.id %> --index movies --data \'{"facetName":"genres","facetQuery":"ac"}\'',
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
+    '<%= config.bin %> <%= command.id %> --project prod --index movies --data \'{"facetName":"genres","facetQuery":"ac"}\'',
   ];
 
   static override flags = {

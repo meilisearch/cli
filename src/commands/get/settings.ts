@@ -12,8 +12,8 @@ export default class GetSettings extends BaseCommand {
     "Get every setting of an index, each with its current value or its default.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --index movies",
-    "<%= config.bin %> <%= command.id %> --index movies --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies",
+    "<%= config.bin %> <%= command.id %> --project prod --index movies --output json",
   ];
 
   static override flags = {

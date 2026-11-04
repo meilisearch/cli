@@ -81,20 +81,6 @@ describe("meili schema", () => {
         description:
           "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
       },
-      {
-        name: "management-token",
-        type: "option",
-        description: "Management API personal access token.",
-        helpValue: "<pat>",
-        dependsOn: ["sync-with-cloud"],
-      },
-      {
-        name: "management-url",
-        type: "option",
-        description: "Management API base URL. Default https://api.meilisearch.com.",
-        helpValue: "<url>",
-        dependsOn: ["sync-with-cloud"],
-      },
     ]);
     expect(command.description).toContain("\n\n");
   });

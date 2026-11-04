@@ -6,7 +6,7 @@ import { runCli, runCommand } from "../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const hits = [
   { id: 1, title: "Nosferatu", rating: 4.5 },
   { id: 2, title: "Nosferatu the Vampyre", rating: 4 },
@@ -15,7 +15,7 @@ const hits = [
 /** The body the CLI sent to POST /indexes/{uid}/search, request by request. */
 async function bodiesOf(argv: string[]): Promise<unknown[]> {
   const requests = await recordRequests(async () => {
-    await runCommand(Search, argv, { env });
+    await runCommand(Search, [...argv, ...project]);
   });
   return requests.map((request) => JSON.parse(request.body));
 }
@@ -30,11 +30,15 @@ describe("meili search", () => {
 
   it("prints the API envelope as it is in JSON", async () => {
     server.use(meilisearchHandlers.search(hits));
-    const result = await runCommand(
-      Search,
-      ["--index", "movies", "--q", "nosferatu", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(Search, [
+      "--index",
+      "movies",
+      "--q",
+      "nosferatu",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
@@ -135,7 +139,13 @@ describe("meili search", () => {
 
   it("refuses --output ndjson: the response is hits, not a list envelope", async () => {
     server.use(meilisearchHandlers.search(hits));
-    const result = await runCommand(Search, ["--index", "movies", "--output", "ndjson"], { env });
+    const result = await runCommand(Search, [
+      "--index",
+      "movies",
+      "--output",
+      "ndjson",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
@@ -150,7 +160,7 @@ describe("meili search", () => {
         link: "https://docs.meilisearch.com/errors#index_not_found",
       }),
     );
-    const result = await runCommand(Search, ["--index", "missing", "--output", "json"], { env });
+    const result = await runCommand(Search, ["--index", "missing", "--output", "json", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

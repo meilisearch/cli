@@ -35,11 +35,12 @@ FLAGS
       --primary-key=<field>       Primary key of the index. Only taken into
                                   account on its first documents.
       --project=<name>            A project of the config file. Cannot be
-                                  combined with --project-url. Required when the
-                                  file has several projects.
+                                  combined with --project-url. One of --project
+                                  or --project-url is required.
       --project-api-key=<key>     Project API key. \`-\` reads it from stdin.
       --project-url=<url>         Project URL, the Meilisearch instance to talk
-                                  to.
+                                  to. One of --project or --project-url is
+                                  required.
       --skip-creation             Only update documents that already exist,
                                   ignore the new ones.
       --timeout=<duration>        Maximum wait time, for example 30s, 2m.
@@ -52,15 +53,15 @@ DESCRIPTION
   have the same primary key.
 
 EXAMPLES
-  $ meili update documents --index movies --file changes.json
+  $ meili update documents --project prod --index movies --file changes.json
 
-  $ meili update documents --index movies --file changes.json --output json
+  $ meili update documents --project prod --index movies --file changes.json --output json
 
-  cat changes.json | meili update documents --index movies --file -
+  cat changes.json | meili update documents --project prod --index movies --file -
 
-  $ meili update documents --index movies --data '[{"id":1,"rating":4}]'
+  $ meili update documents --project prod --index movies --data '[{"id":1,"rating":4}]'
 
-  $ meili update documents --index movies --file changes.json --wait
+  $ meili update documents --project prod --index movies --file changes.json --wait
 
 "
 `;

@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-update-settings-${randomUUID().slice(0, 8)}`;
 
 describe.skipIf(!meilisearchUp)("meili update settings against a real Meilisearch", () => {
@@ -21,22 +21,20 @@ describe.skipIf(!meilisearchUp)("meili update settings against a real Meilisearc
   });
 
   it("sets the settings given and leaves the others as they are", async () => {
-    const result = await runBinary(
-      [
-        "update",
-        "settings",
-        "--index",
-        uid,
-        "--stop-words",
-        "the,a",
-        "--typo-tolerance",
-        '{"enabled":false}',
-        "--wait",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "settings",
+      "--index",
+      uid,
+      "--stop-words",
+      "the,a",
+      "--typo-tolerance",
+      '{"enabled":false}',
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({
       indexUid: uid,
@@ -51,10 +49,18 @@ describe.skipIf(!meilisearchUp)("meili update settings against a real Meilisearc
   });
 
   it("resets one setting with the value null", async () => {
-    const result = await runBinary(
-      ["update", "settings", "--index", uid, "--stop-words", "null", "--wait", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "settings",
+      "--index",
+      uid,
+      "--stop-words",
+      "null",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const settings = await client.index(uid).getSettings();
     expect(settings.stopWords).toEqual([]);
@@ -62,20 +68,18 @@ describe.skipIf(!meilisearchUp)("meili update settings against a real Meilisearc
   });
 
   it("exits 1 with the API error when it refuses a value, before any task", async () => {
-    const result = await runBinary(
-      [
-        "update",
-        "settings",
-        "--index",
-        uid,
-        "--proximity-precision",
-        "byNothing",
-        "--wait",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "settings",
+      "--index",
+      uid,
+      "--proximity-precision",
+      "byNothing",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("invalid_settings_proximity_precision");

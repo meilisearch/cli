@@ -10,7 +10,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const changes = '[{"id":1,"rating":4}]';
 
 describe("meili update documents", () => {
@@ -23,22 +23,32 @@ describe("meili update documents", () => {
 
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.documentsUpdate(makeEnqueuedTask()));
-    const result = await runCommand(
-      UpdateDocuments,
-      ["--index", "movies", "--data", changes, "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(UpdateDocuments, [
+      "--index",
+      "movies",
+      "--data",
+      changes,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
   it("takes the PUT route, which merges, and sends the options as query parameters", async () => {
     server.use(meilisearchHandlers.documentsUpdate(makeEnqueuedTask()));
     const requests = await recordRequests(async () => {
-      await runCommand(
-        UpdateDocuments,
-        ["--index", "movies", "--data", changes, "--primary-key", "id", "--custom-metadata", "x"],
-        { env },
-      );
+      await runCommand(UpdateDocuments, [
+        "--index",
+        "movies",
+        "--data",
+        changes,
+        "--primary-key",
+        "id",
+        "--custom-metadata",
+        "x",
+        ...project,
+      ]);
     });
     expect(requests).toHaveLength(1);
     expect(requests[0]?.method).toBe("PUT");
@@ -53,7 +63,7 @@ describe("meili update documents", () => {
   it("refuses to run without documents, before any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(UpdateDocuments, ["--index", "movies"], { env });
+      result = await runCommand(UpdateDocuments, ["--index", "movies", ...project]);
     });
     expect(requests).toBe(0);
     expect(result?.exitCode).toBe(2);
@@ -69,11 +79,15 @@ describe("meili update documents", () => {
         link: "https://docs.meilisearch.com/errors#index_not_found",
       }),
     );
-    const result = await runCommand(
-      UpdateDocuments,
-      ["--index", "nope", "--data", changes, "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(UpdateDocuments, [
+      "--index",
+      "nope",
+      "--data",
+      changes,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

@@ -3,7 +3,7 @@
 exports[`meili delete tasks > passes an authentication error through with a hint and exits 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\`."}}
 ",
   "stdout": "",
 }
@@ -50,11 +50,12 @@ FLAGS
       --index-ids=<indexes>        Match the tasks of these indexes,
                                    comma-separated. \`*\` matches every one.
       --project=<name>             A project of the config file. Cannot be
-                                   combined with --project-url. Required when
-                                   the file has several projects.
+                                   combined with --project-url. One of --project
+                                   or --project-url is required.
       --project-api-key=<key>      Project API key. \`-\` reads it from stdin.
       --project-url=<url>          Project URL, the Meilisearch instance to talk
-                                   to.
+                                   to. One of --project or --project-url is
+                                   required.
       --statuses=<statuses>        Task statuses to match, comma-separated:
                                    enqueued, processing, succeeded, failed or
                                    canceled. \`*\` matches every one.
@@ -74,13 +75,13 @@ DESCRIPTION
   filters of the route.
 
 EXAMPLES
-  $ meili delete tasks --ids 42,1344 --yes
+  $ meili delete tasks --project prod --ids 42,1344 --yes
 
-  $ meili delete tasks --ids 42 --yes --output json
+  $ meili delete tasks --project prod --ids 42 --yes --output json
 
-  $ meili delete tasks --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes
+  $ meili delete tasks --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes
 
-  $ meili delete tasks --index-ids movies --yes --wait
+  $ meili delete tasks --project prod --index-ids movies --yes --wait
 
 "
 `;

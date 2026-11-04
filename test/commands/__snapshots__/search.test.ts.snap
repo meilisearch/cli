@@ -88,13 +88,14 @@ FLAGS
                                           totalPages instead of
                                           estimatedTotalHits.
       --project=<name>                    A project of the config file. Cannot
-                                          be combined with --project-url.
-                                          Required when the file has several
-                                          projects.
+                                          be combined with --project-url. One of
+                                          --project or --project-url is
+                                          required.
       --project-api-key=<key>             Project API key. \`-\` reads it from
                                           stdin.
       --project-url=<url>                 Project URL, the Meilisearch instance
-                                          to talk to.
+                                          to talk to. One of --project or
+                                          --project-url is required.
       --q=<query>                         The search terms. Omit it for a
                                           placeholder search, which returns
                                           everything.
@@ -122,15 +123,15 @@ DESCRIPTION
   route.
 
 EXAMPLES
-  $ meili search --index movies --q nosferatu
+  $ meili search --project prod --index movies --q nosferatu
 
-  $ meili search --index movies --q nosferatu --output json
+  $ meili search --project prod --index movies --q nosferatu --output json
 
-  $ meili search --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5
+  $ meili search --project prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5
 
-  $ meili search --index movies --facets genres --attributes-to-retrieve id,title
+  $ meili search --project prod --index movies --facets genres --attributes-to-retrieve id,title
 
-  $ meili search --index movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'
+  $ meili search --project prod --index movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'
 
 "
 `;

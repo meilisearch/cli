@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = randomUUID();
 
 describe.skipIf(!meilisearchUp)("meili update keys against a real Meilisearch", () => {
@@ -29,29 +29,50 @@ describe.skipIf(!meilisearchUp)("meili update keys against a real Meilisearch", 
 
   it("changes the name and answers the key as the API returns it", async () => {
     const name = `meili-cli-test-renamed-${uid.slice(0, 8)}`;
-    const result = await runBinary(
-      ["update", "keys", "--id", uid, "--name", name, "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "keys",
+      "--id",
+      uid,
+      "--name",
+      name,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     expect(JSON.parse(result.stdout)).toMatchObject({ uid, name });
   });
 
   it("removes the description with the value null", async () => {
-    const result = await runBinary(
-      ["update", "keys", "--id", uid, "--description", "null", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "keys",
+      "--id",
+      uid,
+      "--description",
+      "null",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid, description: null });
   });
 
   it("exits 4 with the API error when the key does not exist", async () => {
-    const result = await runBinary(
-      ["update", "keys", "--id", randomUUID(), "--name", "nope", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "keys",
+      "--id",
+      randomUUID(),
+      "--name",
+      "nope",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("api_key_not_found");

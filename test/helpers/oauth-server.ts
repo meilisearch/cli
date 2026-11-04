@@ -23,7 +23,7 @@ export interface AuthorizationServer {
   close: () => Promise<void>;
 }
 
-/** The client id the stub knows, which tests pass as `--management-client-id`. */
+/** The client id the stub knows, which tests set as `MEILI_MANAGEMENT_CLIENT_ID`. */
 export const STUB_CLIENT_ID = "client-uid";
 
 export async function startAuthorizationServer(): Promise<AuthorizationServer> {

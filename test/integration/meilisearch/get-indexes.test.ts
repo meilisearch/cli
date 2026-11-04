@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const suffix = randomUUID().slice(0, 8);
 const uids = [`meili-cli-test-${suffix}-a`, `meili-cli-test-${suffix}-b`];
 
@@ -22,7 +22,7 @@ describe.skipIf(!meilisearchUp)("meili get indexes against a real Meilisearch", 
   });
 
   it("returns the API envelope with the created indexes", async () => {
-    const result = await runBinary(["get", "indexes", "--all", "--output", "json"], env);
+    const result = await runBinary(["get", "indexes", "--all", "--output", "json", ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const page = JSON.parse(result.stdout) as {
@@ -36,29 +36,45 @@ describe.skipIf(!meilisearchUp)("meili get indexes against a real Meilisearch", 
   });
 
   it("gets one index with --id", async () => {
-    const result = await runBinary(
-      ["get", "indexes", "--id", uids[0] ?? "", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "get",
+      "indexes",
+      "--id",
+      uids[0] ?? "",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid: uids[0], primaryKey: "id" });
   });
 
   it("exits 4 with the API error when the --id does not exist", async () => {
-    const result = await runBinary(
-      ["get", "indexes", "--id", `${uids[0]}-missing`, "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "get",
+      "indexes",
+      "--id",
+      `${uids[0]}-missing`,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("index_not_found");
   });
 
   it("streams every index as ndjson with --all", async () => {
-    const result = await runBinary(
-      ["get", "indexes", "--all", "--limit", "1", "--output", "ndjson"],
-      env,
-    );
+    const result = await runBinary([
+      "get",
+      "indexes",
+      "--all",
+      "--limit",
+      "1",
+      "--output",
+      "ndjson",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const seen = result.stdout
       .trimEnd()

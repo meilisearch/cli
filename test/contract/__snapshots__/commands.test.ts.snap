@@ -8,15 +8,15 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
       "async": true,
       "description": "Add documents to an index, replacing the ones that already have the same primary key.",
       "examples": [
-        "meili add documents --index movies --file movies.json",
-        "meili add documents --index movies --file movies.json --output json",
-        "cat movies.json | meili add documents --index movies --file -",
-        "meili add documents --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
-        "meili add documents --index movies --file movies.json --wait",
+        "meili add documents --project prod --index movies --file movies.json",
+        "meili add documents --project prod --index movies --file movies.json --output json",
+        "cat movies.json | meili add documents --project prod --index movies --file -",
+        "meili add documents --project prod --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
+        "meili add documents --project prod --index movies --file movies.json --wait",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -28,7 +28,7 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -100,13 +100,13 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
       "async": true,
       "description": "Create an empty index, named by --id, with --primary-key as its primary key.",
       "examples": [
-        "meili add indexes --id movies",
-        "meili add indexes --id movies --primary-key id --output json",
-        "meili add indexes --id movies --wait",
+        "meili add indexes --project prod --id movies",
+        "meili add indexes --project prod --id movies --primary-key id --output json",
+        "meili add indexes --project prod --id movies --wait",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -118,7 +118,7 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -180,14 +180,14 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
 
 The answer carries the \`key\` field, the credential itself, on stdout like any other data.",
       "examples": [
-        "meili add keys --actions search --indexes movies --expires-at null",
-        "meili add keys --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json",
-        "meili add keys --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
-        "meili add keys --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'",
+        "meili add keys --project prod --actions search --indexes movies --expires-at null",
+        "meili add keys --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json",
+        "meili add keys --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
+        "meili add keys --project prod --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -199,7 +199,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -279,18 +279,6 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
       ],
       "flags": [
         {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
-        {
           "description": "Name of the project.",
           "helpValue": "<name>",
           "name": "name",
@@ -364,24 +352,6 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
       ],
       "flags": [
         {
-          "description": "The OAuth application to log in with, on a Cloud that is not Meilisearch Cloud. Also MEILI_MANAGEMENT_CLIENT_ID.",
-          "helpValue": "<uid>",
-          "name": "management-client-id",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL, which holds the token endpoint.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
-        {
-          "description": "Dashboard URL, which hosts the consent page.",
-          "helpValue": "<url>",
-          "name": "management-dashboard-url",
-          "type": "option",
-        },
-        {
           "description": "Open the consent page in a browser. --no-browser only prints the URL.",
           "name": "browser",
           "type": "boolean",
@@ -424,14 +394,14 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
       "async": true,
       "description": "Cancel the enqueued and processing tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
-        "meili cancel tasks --ids 42,1344",
-        "meili cancel tasks --ids 42 --output json",
-        "meili cancel tasks --statuses enqueued --index-ids movies",
-        "meili cancel tasks --statuses processing --wait",
+        "meili cancel tasks --project prod --ids 42,1344",
+        "meili cancel tasks --project prod --ids 42 --output json",
+        "meili cancel tasks --project prod --statuses enqueued --index-ids movies",
+        "meili cancel tasks --project prod --statuses processing --wait",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -443,7 +413,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -591,24 +561,6 @@ The file holds API keys and decides where every later command goes, for every pr
           "name": "sync-with-cloud",
           "type": "boolean",
         },
-        {
-          "dependsOn": [
-            "sync-with-cloud",
-          ],
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "dependsOn": [
-            "sync-with-cloud",
-          ],
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
       ],
       "id": "config set",
     },
@@ -624,18 +576,6 @@ The file holds API keys and decides where every later command goes, for every pr
         "meili config sync-with-cloud --project-url https://ms-abc.sfo.meilisearch.io --output json",
       ],
       "flags": [
-        {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
         {
           "description": "Every project the token sees.",
           "name": "all",
@@ -717,24 +657,6 @@ The file holds API keys and decides where every later command goes, for every pr
           "name": "sync-with-cloud",
           "type": "boolean",
         },
-        {
-          "dependsOn": [
-            "sync-with-cloud",
-          ],
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "dependsOn": [
-            "sync-with-cloud",
-          ],
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
       ],
       "id": "config update",
     },
@@ -743,15 +665,15 @@ The file holds API keys and decides where every later command goes, for every pr
       "async": true,
       "description": "Delete the documents of an index named by --ids, matched by --filter, or every one of them with --all.",
       "examples": [
-        "meili delete documents --index movies --ids 42,1344 --yes",
-        "meili delete documents --index movies --ids 42 --yes --output json",
-        "meili delete documents --index movies --filter 'rating < 2' --yes",
-        "meili delete documents --index movies --file ids.json --yes",
-        "meili delete documents --index movies --all --yes --wait",
+        "meili delete documents --project prod --index movies --ids 42,1344 --yes",
+        "meili delete documents --project prod --index movies --ids 42 --yes --output json",
+        "meili delete documents --project prod --index movies --filter 'rating < 2' --yes",
+        "meili delete documents --project prod --index movies --file ids.json --yes",
+        "meili delete documents --project prod --index movies --all --yes --wait",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -763,7 +685,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -863,13 +785,13 @@ The file holds API keys and decides where every later command goes, for every pr
       "async": true,
       "description": "Delete an index, with its documents, its settings and its task history.",
       "examples": [
-        "meili delete indexes --id movies --yes",
-        "meili delete indexes --id movies --yes --output json",
-        "meili delete indexes --id movies --yes --wait",
+        "meili delete indexes --project prod --id movies --yes",
+        "meili delete indexes --project prod --id movies --yes --output json",
+        "meili delete indexes --project prod --id movies --yes --wait",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -881,7 +803,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -926,12 +848,12 @@ The file holds API keys and decides where every later command goes, for every pr
       "api": "meilisearch",
       "description": "Delete an API key, which stops authenticating every request that carries it.",
       "examples": [
-        "meili delete keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
-        "meili delete keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json",
+        "meili delete keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes",
+        "meili delete keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -943,7 +865,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -981,18 +903,6 @@ The file holds API keys and decides where every later command goes, for every pr
       ],
       "flags": [
         {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
-        {
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "name": "project",
@@ -1026,13 +936,13 @@ The file holds API keys and decides where every later command goes, for every pr
       "async": true,
       "description": "Reset every setting of an index to its default value, which reindexes the documents.",
       "examples": [
-        "meili delete settings --index movies --yes",
-        "meili delete settings --index movies --yes --output json",
-        "meili delete settings --index movies --yes --wait",
+        "meili delete settings --project prod --index movies --yes",
+        "meili delete settings --project prod --index movies --yes --output json",
+        "meili delete settings --project prod --index movies --yes --wait",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -1044,7 +954,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1090,14 +1000,14 @@ The file holds API keys and decides where every later command goes, for every pr
       "async": true,
       "description": "Delete the finished tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
-        "meili delete tasks --ids 42,1344 --yes",
-        "meili delete tasks --ids 42 --yes --output json",
-        "meili delete tasks --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
-        "meili delete tasks --index-ids movies --yes --wait",
+        "meili delete tasks --project prod --ids 42,1344 --yes",
+        "meili delete tasks --project prod --ids 42 --yes --output json",
+        "meili delete tasks --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
+        "meili delete tasks --project prod --index-ids movies --yes --wait",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -1109,7 +1019,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1222,16 +1132,16 @@ The file holds API keys and decides where every later command goes, for every pr
 
 The source is the project this command connects to, named by --project, --project-url and --project-api-key as on every command: it receives the request and does the export. The destination is --url with --api-key, or --project-destination, an entry of the config file. --indexes narrows the export to the indexes those patterns match.",
       "examples": [
-        "meili export --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
-        "meili export --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json",
+        "meili export --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
+        "meili export --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key> --output json",
         "meili export --project staging --project-destination prod",
-        "meili export --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait",
-        "meili export --url http://localhost:7701 --payload-size 24MiB",
-        "meili export --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'",
+        "meili export --project prod --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait",
+        "meili export --project prod --url http://localhost:7701 --payload-size 24MiB",
+        "meili export --project prod --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -1243,7 +1153,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1323,14 +1233,14 @@ The source is the project this command connects to, named by --project, --projec
       "api": "meilisearch",
       "description": "Search the values of one facet attribute of an index, counted on the documents --q and --filter keep.",
       "examples": [
-        "meili facet-search --index movies --facet-name genres --facet-query ac",
-        "meili facet-search --index movies --facet-name genres --facet-query ac --output json",
-        "meili facet-search --index movies --facet-name genres --q horror --filter 'rating > 4'",
-        "meili facet-search --index movies --data '{"facetName":"genres","facetQuery":"ac"}'",
+        "meili facet-search --project prod --index movies --facet-name genres --facet-query ac",
+        "meili facet-search --project prod --index movies --facet-name genres --facet-query ac --output json",
+        "meili facet-search --project prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
+        "meili facet-search --project prod --index movies --data '{"facetName":"genres","facetQuery":"ac"}'",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -1342,7 +1252,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1451,16 +1361,16 @@ The source is the project this command connects to, named by --project, --projec
       "api": "meilisearch",
       "description": "List the batches of tasks the instance processed, narrowed by --ids, --task-ids, --statuses and the other filters of the route.",
       "examples": [
-        "meili get batches",
-        "meili get batches --output json",
-        "meili get batches --ids 7",
-        "meili get batches --task-ids 42",
-        "meili get batches --statuses failed --index-ids movies --limit 5",
-        "meili get batches --all --output ndjson",
+        "meili get batches --project prod",
+        "meili get batches --project prod --output json",
+        "meili get batches --project prod --ids 7",
+        "meili get batches --project prod --task-ids 42",
+        "meili get batches --project prod --statuses failed --index-ids movies --limit 5",
+        "meili get batches --project prod --all --output ndjson",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -1472,7 +1382,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1584,15 +1494,15 @@ The source is the project this command connects to, named by --project, --projec
       "api": "meilisearch",
       "description": "List the documents of an index, narrowed by --ids or by --filter.",
       "examples": [
-        "meili get documents --index movies",
-        "meili get documents --index movies --output json",
-        "meili get documents --index movies --ids 42,1344 --fields id,title",
-        "meili get documents --index movies --filter 'rating > 4' --sort rating:desc",
-        "meili get documents --index movies --all --output ndjson",
+        "meili get documents --project prod --index movies",
+        "meili get documents --project prod --index movies --output json",
+        "meili get documents --project prod --index movies --ids 42,1344 --fields id,title",
+        "meili get documents --project prod --index movies --filter 'rating > 4' --sort rating:desc",
+        "meili get documents --project prod --index movies --all --output ndjson",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -1604,7 +1514,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1690,13 +1600,13 @@ The source is the project this command connects to, named by --project, --projec
       "api": "meilisearch",
       "description": "Check that the Meilisearch instance is available.",
       "examples": [
-        "meili get health",
-        "meili get health --output json",
-        "MEILI_PROJECT_URL=http://localhost:7700 meili get health",
+        "meili get health --project prod",
+        "meili get health --project prod --output json",
+        "meili get health --project-url http://localhost:7700",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -1708,7 +1618,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1723,15 +1633,15 @@ The source is the project this command connects to, named by --project, --projec
       "api": "meilisearch",
       "description": "List the indexes of the instance, or get one with --id.",
       "examples": [
-        "meili get indexes",
-        "meili get indexes --output json",
-        "meili get indexes --id movies",
-        "meili get indexes --limit 5 --offset 10",
-        "meili get indexes --all --output ndjson",
+        "meili get indexes --project prod",
+        "meili get indexes --project prod --output json",
+        "meili get indexes --project prod --id movies",
+        "meili get indexes --project prod --limit 5 --offset 10",
+        "meili get indexes --project prod --all --output ndjson",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -1743,7 +1653,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1787,15 +1697,15 @@ The source is the project this command connects to, named by --project, --projec
 
 The answer is the API body as it is, so it carries the \`key\` field of every key it returns: credentials that work, on stdout, like any other data.",
       "examples": [
-        "meili get keys",
-        "meili get keys --output json",
-        "meili get keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
-        "meili get keys --limit 5 --offset 10",
-        "meili get keys --all --output ndjson",
+        "meili get keys --project prod",
+        "meili get keys --project prod --output json",
+        "meili get keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60",
+        "meili get keys --project prod --limit 5 --offset 10",
+        "meili get keys --project prod --all --output ndjson",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -1807,7 +1717,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1858,18 +1768,6 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       ],
       "flags": [
         {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
-        {
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "name": "project",
@@ -1898,12 +1796,12 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "api": "meilisearch",
       "description": "Get every setting of an index, each with its current value or its default.",
       "examples": [
-        "meili get settings --index movies",
-        "meili get settings --index movies --output json",
+        "meili get settings --project prod --index movies",
+        "meili get settings --project prod --index movies --output json",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -1915,7 +1813,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1940,14 +1838,14 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "api": "meilisearch",
       "description": "Get the statistics of the whole instance, or those of one index with --index.",
       "examples": [
-        "meili get stats",
-        "meili get stats --output json",
-        "meili get stats --index movies",
-        "meili get stats --index movies --size-format human --show-internal-database-sizes",
+        "meili get stats --project prod",
+        "meili get stats --project prod --output json",
+        "meili get stats --project prod --index movies",
+        "meili get stats --project prod --index movies --size-format human --show-internal-database-sizes",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -1959,7 +1857,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -1998,16 +1896,16 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "api": "meilisearch",
       "description": "List the tasks of the instance, narrowed by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
-        "meili get tasks",
-        "meili get tasks --output json",
-        "meili get tasks --ids 42",
-        "meili get tasks --statuses failed,canceled --limit 5",
-        "meili get tasks --index-ids movies --types documentAdditionOrUpdate",
-        "meili get tasks --all --output ndjson",
+        "meili get tasks --project prod",
+        "meili get tasks --project prod --output json",
+        "meili get tasks --project prod --ids 42",
+        "meili get tasks --project prod --statuses failed,canceled --limit 5",
+        "meili get tasks --project prod --index-ids movies --types documentAdditionOrUpdate",
+        "meili get tasks --project prod --all --output ndjson",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -2019,7 +1917,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2131,12 +2029,12 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "api": "meilisearch",
       "description": "Get the version of the Meilisearch instance, with the commit it was built from.",
       "examples": [
-        "meili get version",
-        "meili get version --output json",
+        "meili get version --project prod",
+        "meili get version --project prod --output json",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -2148,7 +2046,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2166,14 +2064,14 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "api": "meilisearch",
       "description": "Run several search queries in one request, each naming its index in --queries, returned side by side or merged into one ranked list with --federation.",
       "examples": [
-        "meili multi-search --queries '[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]'",
-        "meili multi-search --queries '[{"indexUid":"movies","q":"nosferatu"}]' --output json",
-        "meili multi-search --queries '[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]' --federation '{"limit":5}'",
-        "cat queries.json | meili multi-search --file -",
+        "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]'",
+        "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"}]' --output json",
+        "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]' --federation '{"limit":5}'",
+        "cat queries.json | meili multi-search --project prod --file -",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -2185,7 +2083,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2249,15 +2147,15 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "api": "meilisearch",
       "description": "Search the documents of an index, with --q and the search parameters of the route.",
       "examples": [
-        "meili search --index movies --q nosferatu",
-        "meili search --index movies --q nosferatu --output json",
-        "meili search --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
-        "meili search --index movies --facets genres --attributes-to-retrieve id,title",
-        "meili search --index movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'",
+        "meili search --project prod --index movies --q nosferatu",
+        "meili search --project prod --index movies --q nosferatu --output json",
+        "meili search --project prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
+        "meili search --project prod --index movies --facets genres --attributes-to-retrieve id,title",
+        "meili search --project prod --index movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -2269,7 +2167,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2470,14 +2368,14 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "api": "meilisearch",
       "description": "Find the documents an index holds that are closest to one of its documents, named by --id and compared with --embedder.",
       "examples": [
-        "meili similar --index movies --id 143 --embedder default",
-        "meili similar --index movies --id 143 --embedder default --output json",
-        "meili similar --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
-        "meili similar --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'",
+        "meili similar --project prod --index movies --id 143 --embedder default",
+        "meili similar --project prod --index movies --id 143 --embedder default --output json",
+        "meili similar --project prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
+        "meili similar --project prod --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -2489,7 +2387,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2592,15 +2490,15 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "async": true,
       "description": "Add documents to an index, merging their fields into the ones that already have the same primary key.",
       "examples": [
-        "meili update documents --index movies --file changes.json",
-        "meili update documents --index movies --file changes.json --output json",
-        "cat changes.json | meili update documents --index movies --file -",
-        "meili update documents --index movies --data '[{"id":1,"rating":4}]'",
-        "meili update documents --index movies --file changes.json --wait",
+        "meili update documents --project prod --index movies --file changes.json",
+        "meili update documents --project prod --index movies --file changes.json --output json",
+        "cat changes.json | meili update documents --project prod --index movies --file -",
+        "meili update documents --project prod --index movies --data '[{"id":1,"rating":4}]'",
+        "meili update documents --project prod --index movies --file changes.json --wait",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -2612,7 +2510,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2684,14 +2582,14 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "async": true,
       "description": "Change the primary key of an index with --primary-key, or rename it with --new-id.",
       "examples": [
-        "meili update indexes --id movies --primary-key movie_id",
-        "meili update indexes --id movies --primary-key movie_id --output json",
-        "meili update indexes --id movies --new-id films",
-        "meili update indexes --id movies --new-id films --wait",
+        "meili update indexes --project prod --id movies --primary-key movie_id",
+        "meili update indexes --project prod --id movies --primary-key movie_id --output json",
+        "meili update indexes --project prod --id movies --new-id films",
+        "meili update indexes --project prod --id movies --new-id films --wait",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -2703,7 +2601,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2769,13 +2667,13 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "api": "meilisearch",
       "description": "Change the name or the description of an API key, the two fields the route takes, and reset one with the value null.",
       "examples": [
-        "meili update keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
-        "meili update keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly' --output json",
-        "meili update keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null",
+        "meili update keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
+        "meili update keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly' --output json",
+        "meili update keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -2787,7 +2685,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
@@ -2847,18 +2745,6 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       ],
       "flags": [
         {
-          "description": "Management API personal access token.",
-          "helpValue": "<pat>",
-          "name": "management-token",
-          "type": "option",
-        },
-        {
-          "description": "Management API base URL. Default https://api.meilisearch.com.",
-          "helpValue": "<url>",
-          "name": "management-url",
-          "type": "option",
-        },
-        {
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "name": "project",
@@ -2907,15 +2793,15 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "async": true,
       "description": "Change the settings given, leave the others as they are, and reset one with the value null.",
       "examples": [
-        "meili update settings --index movies --searchable-attributes title,overview",
-        "meili update settings --index movies --filterable-attributes genres,release_date --output json",
-        "meili update settings --index movies --stop-words null",
-        "meili update settings --index movies --typo-tolerance '{"enabled":false}' --wait",
-        "meili update settings --index movies --file settings.json",
+        "meili update settings --project prod --index movies --searchable-attributes title,overview",
+        "meili update settings --project prod --index movies --filterable-attributes genres,release_date --output json",
+        "meili update settings --project prod --index movies --stop-words null",
+        "meili update settings --project prod --index movies --typo-tolerance '{"enabled":false}' --wait",
+        "meili update settings --project prod --index movies --file settings.json",
       ],
       "flags": [
         {
-          "description": "Project URL, the Meilisearch instance to talk to.",
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
           "helpValue": "<url>",
           "name": "project-url",
           "type": "option",
@@ -2927,7 +2813,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
-          "description": "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",

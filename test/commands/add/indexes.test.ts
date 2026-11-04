@@ -11,14 +11,14 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const created = makeEnqueuedTask({ taskUid: 11, type: "indexCreation" });
 
 /** The body the command sent to `POST /indexes`. */
 async function sentBody(argv: string[]): Promise<unknown> {
   server.use(meilisearchHandlers.indexCreate(created));
   const requests = await recordRequests(async () => {
-    await runCommand(AddIndexes, argv, { env });
+    await runCommand(AddIndexes, [...argv, ...project]);
   });
   expect(requests).toHaveLength(1);
   expect(requests[0]?.method).toBe("POST");
@@ -36,7 +36,7 @@ describe("meili add indexes", () => {
 
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.indexCreate(created));
-    const result = await runCommand(AddIndexes, ["--id", "movies", "--output", "json"], { env });
+    const result = await runCommand(AddIndexes, ["--id", "movies", "--output", "json", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -70,7 +70,7 @@ describe("meili add indexes", () => {
   it("refuses a body that is not a JSON object, before any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(AddIndexes, ["--id", "movies", "--data", "42"], { env });
+      result = await runCommand(AddIndexes, ["--id", "movies", "--data", "42", ...project]);
     });
     expect(requests).toBe(0);
     expect(result?.exitCode).toBe(2);
@@ -79,7 +79,7 @@ describe("meili add indexes", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/indexes", 403, invalidApiKeyError));
-    const result = await runCommand(AddIndexes, ["--id", "movies", "--output", "json"], { env });
+    const result = await runCommand(AddIndexes, ["--id", "movies", "--output", "json", ...project]);
     expect(result).toMatchSnapshot();
   });
 });

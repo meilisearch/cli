@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = randomUUID();
 
 describe.skipIf(!meilisearchUp)("meili delete keys against a real Meilisearch", () => {
@@ -23,22 +23,34 @@ describe.skipIf(!meilisearchUp)("meili delete keys against a real Meilisearch", 
   });
 
   it("deletes the key, writes nothing on stdout and exits 0", async () => {
-    const result = await runBinary(
-      ["delete", "keys", "--id", uid, "--yes", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "keys",
+      "--id",
+      uid,
+      "--yes",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toBe("");
     expect(result.stderr).toBe("");
-    const gone = await runBinary(["get", "keys", "--id", uid, "--output", "json"], env);
+    const gone = await runBinary(["get", "keys", "--id", uid, "--output", "json", ...project]);
     expect(gone.exitCode).toBe(4);
   });
 
   it("exits 4 with the API error when the key does not exist", async () => {
-    const result = await runBinary(
-      ["delete", "keys", "--id", randomUUID(), "--yes", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "keys",
+      "--id",
+      randomUUID(),
+      "--yes",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(4);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("api_key_not_found");

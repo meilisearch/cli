@@ -12,9 +12,9 @@ import { installHttpTrace } from "./clients/trace.js";
 import {
   type ConfigFile,
   configFilePath,
-  DEFAULT_MANAGEMENT_URL,
   ENV,
   type Env,
+  nonEmpty,
   readConfigFile,
   resolveCloudProjectId,
   resolveProjectConnection,
@@ -37,7 +37,6 @@ export type Api = "meilisearch" | "management" | "none";
 export type GlobalFlags = Interfaces.InferredFlags<
   typeof BaseCommand.baseFlags &
     typeof BaseCommand.connectionFlags &
-    typeof BaseCommand.managementFlags &
     typeof BaseCommand.cloudProjectFlags &
     typeof BaseCommand.syncWithCloudFlags
 >;
@@ -70,7 +69,7 @@ export abstract class BaseCommand extends Command {
    * `["indexes.get"]`, as the `security` of the OpenAPI document declares it.
    * `meili schema --command` prints them so that a 403 names what the key
    * lacks. Empty when no key action is required (`GET /health`), and on the
-   * Management API, whose token carries no scope.
+   * Management API, whose document declares no key action.
    */
   static keyActions: readonly string[] = [];
 
@@ -97,7 +96,8 @@ export abstract class BaseCommand extends Command {
    */
   static connectionFlags = {
     "project-url": Flags.string({
-      description: "Project URL, the Meilisearch instance to talk to.",
+      description:
+        "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
       helpValue: "<url>",
     }),
     "project-api-key": Flags.string({
@@ -107,24 +107,8 @@ export abstract class BaseCommand extends Command {
     }),
     project: Flags.string({
       description:
-        "A project of the config file. Cannot be combined with --project-url. Required when the file has several projects.",
+        "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
       helpValue: "<name>",
-    }),
-  };
-
-  /**
-   * How a command reaches the Management API, the group of
-   * docs/contract/commands.md. Spread by the commands that talk to it, and by
-   * no other.
-   */
-  static managementFlags = {
-    "management-token": Flags.string({
-      description: "Management API personal access token.",
-      helpValue: "<pat>",
-    }),
-    "management-url": Flags.string({
-      description: `Management API base URL. Default ${DEFAULT_MANAGEMENT_URL}.`,
-      helpValue: "<url>",
     }),
   };
 
@@ -143,22 +127,13 @@ export abstract class BaseCommand extends Command {
 
   /**
    * `config set` and `config update` work offline, and talk to the Management
-   * API only with `--sync-with-cloud` (ADR 0011): the connection flags take
-   * effect with it alone, so they depend on it.
+   * API only with `--sync-with-cloud` (ADR 0011).
    */
   static syncWithCloudFlags = {
     "sync-with-cloud": Flags.boolean({
       description:
         "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
     }),
-    "management-token": {
-      ...BaseCommand.managementFlags["management-token"],
-      dependsOn: ["sync-with-cloud"],
-    },
-    "management-url": {
-      ...BaseCommand.managementFlags["management-url"],
-      dependsOn: ["sync-with-cloud"],
-    },
   };
 
   /** Shared group for write commands whose API response is a task. */
@@ -251,7 +226,6 @@ export abstract class BaseCommand extends Command {
           apiKey: this.globalFlags["project-api-key"],
           project: this.globalFlags.project,
         },
-        this.env,
         () => this.configFile(),
       );
       this.meilisearch = createMeilisearchClient({
@@ -262,11 +236,7 @@ export abstract class BaseCommand extends Command {
       return;
     }
 
-    const credentials = await resolveManagementCredentials(
-      { token: this.globalFlags["management-token"], url: this.globalFlags["management-url"] },
-      this.env,
-      writeWarning,
-    );
+    const credentials = await resolveManagementCredentials(this.env, writeWarning);
     this.managementClient = createManagementClient({
       ...credentials,
       userAgent: this.userAgent,
@@ -281,7 +251,11 @@ export abstract class BaseCommand extends Command {
   /** Renders every error as the contract says, then exits with its code. */
   protected override async catch(error: unknown): Promise<never> {
     if (error instanceof Errors.ExitError) throw error;
-    const rendered = toRenderedError(error);
+    const rendered = toRenderedError(
+      error,
+      [],
+      nonEmpty(this.env[ENV.MANAGEMENT_TOKEN]) !== undefined,
+    );
     writeError(rendered, {
       pretty: process.stderr.isTTY === true,
       debug: this.globalFlags?.debug ?? this.argv.includes("--debug"),

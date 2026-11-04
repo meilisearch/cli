@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const suffix = randomUUID().slice(0, 8);
 const movies = `meili-cli-test-multi-search-movies-${suffix}`;
 const books = `meili-cli-test-multi-search-books-${suffix}`;
@@ -38,19 +38,17 @@ describe.skipIf(!meilisearchUp)("meili multi-search against a real Meilisearch",
   });
 
   it("answers one envelope per query, in the order of --queries", async () => {
-    const result = await runBinary(
-      [
-        "multi-search",
-        "--queries",
-        JSON.stringify([
-          { indexUid: movies, q: "nosferatu" },
-          { indexUid: books, q: "nosferatu" },
-        ]),
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "multi-search",
+      "--queries",
+      JSON.stringify([
+        { indexUid: movies, q: "nosferatu" },
+        { indexUid: books, q: "nosferatu" },
+      ]),
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const body = JSON.parse(result.stdout) as MultiSearchResponse;
@@ -59,21 +57,19 @@ describe.skipIf(!meilisearchUp)("meili multi-search against a real Meilisearch",
   });
 
   it("merges the hits of every query with --federation", async () => {
-    const result = await runBinary(
-      [
-        "multi-search",
-        "--queries",
-        JSON.stringify([
-          { indexUid: movies, q: "nosferatu" },
-          { indexUid: books, q: "nosferatu" },
-        ]),
-        "--federation",
-        "{}",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "multi-search",
+      "--queries",
+      JSON.stringify([
+        { indexUid: movies, q: "nosferatu" },
+        { indexUid: books, q: "nosferatu" },
+      ]),
+      "--federation",
+      "{}",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const body = JSON.parse(result.stdout) as SearchResponse;
     expect(body.hits).toHaveLength(2);
@@ -81,18 +77,16 @@ describe.skipIf(!meilisearchUp)("meili multi-search against a real Meilisearch",
   });
 
   it("sends the body of --data, which --queries overrides", async () => {
-    const result = await runBinary(
-      [
-        "multi-search",
-        "--data",
-        JSON.stringify({ queries: [{ indexUid: books, q: "nosferatu" }] }),
-        "--queries",
-        JSON.stringify([{ indexUid: movies, q: "solaris" }]),
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "multi-search",
+      "--data",
+      JSON.stringify({ queries: [{ indexUid: books, q: "nosferatu" }] }),
+      "--queries",
+      JSON.stringify([{ indexUid: movies, q: "solaris" }]),
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     const body = JSON.parse(result.stdout) as MultiSearchResponse;
     expect(body.results).toHaveLength(1);
@@ -100,23 +94,21 @@ describe.skipIf(!meilisearchUp)("meili multi-search against a real Meilisearch",
   });
 
   it("lets the API name the missing queries when neither --queries nor a body is given", async () => {
-    const result = await runBinary(["multi-search", "--output", "json"], env);
+    const result = await runBinary(["multi-search", "--output", "json", ...project]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.message).toBe("Missing field `queries`");
   });
 
   it("passes the error of an index that does not exist through, which the route answers 400", async () => {
-    const result = await runBinary(
-      [
-        "multi-search",
-        "--queries",
-        JSON.stringify([{ indexUid: `${movies}-missing`, q: "nosferatu" }]),
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "multi-search",
+      "--queries",
+      JSON.stringify([{ indexUid: `${movies}-missing`, q: "nosferatu" }]),
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("index_not_found");

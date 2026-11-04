@@ -3,7 +3,7 @@
 exports[`meili get documents > passes an authentication error through with a hint and exits 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\`."}}
 ",
   "stdout": "",
 }
@@ -39,10 +39,11 @@ FLAGS
       --limit=<n>              Passed to the API.
       --offset=<n>             Passed to the API.
       --project=<name>         A project of the config file. Cannot be combined
-                               with --project-url. Required when the file has
-                               several projects.
+                               with --project-url. One of --project or
+                               --project-url is required.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
       --retrieve-vectors       Include the vector embeddings of the documents
                                that have them.
       --sort=<sort>            Attributes to sort on, comma-separated, each as
@@ -52,15 +53,15 @@ DESCRIPTION
   List the documents of an index, narrowed by --ids or by --filter.
 
 EXAMPLES
-  $ meili get documents --index movies
+  $ meili get documents --project prod --index movies
 
-  $ meili get documents --index movies --output json
+  $ meili get documents --project prod --index movies --output json
 
-  $ meili get documents --index movies --ids 42,1344 --fields id,title
+  $ meili get documents --project prod --index movies --ids 42,1344 --fields id,title
 
-  $ meili get documents --index movies --filter 'rating > 4' --sort rating:desc
+  $ meili get documents --project prod --index movies --filter 'rating > 4' --sort rating:desc
 
-  $ meili get documents --index movies --all --output ndjson
+  $ meili get documents --project prod --index movies --all --output ndjson
 
 "
 `;

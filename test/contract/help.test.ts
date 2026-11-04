@@ -11,7 +11,7 @@ const documented = tableRows(
 ).map((row) => codeSpans(row[0] ?? "")[0] ?? "");
 
 describe("--help", () => {
-  it("makes no network call, even with a URL configured", async () => {
+  it("makes no network call, even with --project-url", async () => {
     for (const argv of [
       ["--help"],
       ["get", "--help"],
@@ -20,7 +20,7 @@ describe("--help", () => {
     ]) {
       let result: Awaited<ReturnType<typeof runCli>> | undefined;
       const requests = await countRequests(async () => {
-        result = await runCli(argv, { env: { MEILI_PROJECT_URL: "http://meili.test:7700" } });
+        result = await runCli([...argv, "--project-url", "http://meili.test:7700"]);
       });
       expect(requests, argv.join(" ")).toBe(0);
       expect(result?.exitCode, argv.join(" ")).toBe(0);

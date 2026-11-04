@@ -11,7 +11,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const deleted = makeEnqueuedTask({ taskUid: 13, type: "indexDeletion" });
 
 describe("meili delete indexes", () => {
@@ -24,18 +24,21 @@ describe("meili delete indexes", () => {
 
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.indexDelete(deleted));
-    const result = await runCommand(
-      DeleteIndexes,
-      ["--id", "movies", "--yes", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(DeleteIndexes, [
+      "--id",
+      "movies",
+      "--yes",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
   it("names the index in the path", async () => {
     server.use(meilisearchHandlers.indexDelete(deleted));
     const requests = await recordRequests(async () => {
-      await runCommand(DeleteIndexes, ["--id", "movies", "--yes"], { env });
+      await runCommand(DeleteIndexes, ["--id", "movies", "--yes", ...project]);
     });
     expect(requests).toHaveLength(1);
     expect(requests[0]?.method).toBe("DELETE");
@@ -45,7 +48,7 @@ describe("meili delete indexes", () => {
   it("refuses to run without --yes, before any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(DeleteIndexes, ["--id", "movies"], { env });
+      result = await runCommand(DeleteIndexes, ["--id", "movies", ...project]);
     });
     expect(requests).toBe(0);
     expect(result?.stdout).toBe("");
@@ -55,11 +58,14 @@ describe("meili delete indexes", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError("/indexes/movies", 403, invalidApiKeyError));
-    const result = await runCommand(
-      DeleteIndexes,
-      ["--id", "movies", "--yes", "--output", "json"],
-      { env },
-    );
+    const result = await runCommand(DeleteIndexes, [
+      "--id",
+      "movies",
+      "--yes",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

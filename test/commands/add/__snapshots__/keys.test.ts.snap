@@ -3,7 +3,7 @@
 exports[`meili add keys > passes an authentication error through with a hint and exits 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\`."}}
 ",
   "stdout": "",
 }
@@ -41,10 +41,11 @@ FLAGS
                                that prefix.
       --name=<name>            Name of the key, for a human reading the list.
       --project=<name>         A project of the config file. Cannot be combined
-                               with --project-url. Required when the file has
-                               several projects.
+                               with --project-url. One of --project or
+                               --project-url is required.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
 
 DESCRIPTION
   Create an API key that runs --actions on --indexes until --expires-at.
@@ -53,13 +54,13 @@ DESCRIPTION
   other data.
 
 EXAMPLES
-  $ meili add keys --actions search --indexes movies --expires-at null
+  $ meili add keys --project prod --actions search --indexes movies --expires-at null
 
-  $ meili add keys --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json
+  $ meili add keys --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z --output json
 
-  $ meili add keys --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'
+  $ meili add keys --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'
 
-  $ meili add keys --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'
+  $ meili add keys --project prod --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'
 
 "
 `;

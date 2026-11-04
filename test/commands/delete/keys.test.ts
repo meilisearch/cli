@@ -10,7 +10,7 @@ import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const uid = "52787ccd-48ff-48e5-9c4b-03cd76978a60";
 
 describe("meili delete keys", () => {
@@ -23,16 +23,21 @@ describe("meili delete keys", () => {
 
   it("writes nothing on stdout and exits 0, the route answering 204", async () => {
     server.use(meilisearchHandlers.keyDelete());
-    const result = await runCommand(DeleteKeys, ["--id", uid, "--yes", "--output", "json"], {
-      env,
-    });
+    const result = await runCommand(DeleteKeys, [
+      "--id",
+      uid,
+      "--yes",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
   it("names the key in the path", async () => {
     server.use(meilisearchHandlers.keyDelete());
     const requests = await recordRequests(async () => {
-      await runCommand(DeleteKeys, ["--id", uid, "--yes"], { env });
+      await runCommand(DeleteKeys, ["--id", uid, "--yes", ...project]);
     });
     expect(requests).toHaveLength(1);
     expect(requests[0]?.method).toBe("DELETE");
@@ -42,7 +47,7 @@ describe("meili delete keys", () => {
   it("refuses to run without --yes, before any network call", async () => {
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;
     const requests = await countRequests(async () => {
-      result = await runCommand(DeleteKeys, ["--id", uid], { env });
+      result = await runCommand(DeleteKeys, ["--id", uid, ...project]);
     });
     expect(requests).toBe(0);
     expect(result?.stdout).toBe("");
@@ -52,9 +57,14 @@ describe("meili delete keys", () => {
 
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(meilisearchHandlers.apiError(`/keys/${uid}`, 403, invalidApiKeyError));
-    const result = await runCommand(DeleteKeys, ["--id", uid, "--yes", "--output", "json"], {
-      env,
-    });
+    const result = await runCommand(DeleteKeys, [
+      "--id",
+      uid,
+      "--yes",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

@@ -12,16 +12,16 @@ import { runCli, runCommand, tempConfig } from "../helpers/run-command.js";
 
 useMockServer();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL };
+const project = ["--project-url", MEILISEARCH_URL];
 const remote = "https://ms-1234.heaven.meilisearch.com";
 /** meilisearch-js has no `export` task type yet (meilisearch/meilisearch-js#1989). */
 const exportType = "export" as TaskType;
 const exporting = makeEnqueuedTask({ taskUid: 7, indexUid: null, type: exportType });
 
 /** The body the CLI sent to POST /export. */
-async function bodyOf(argv: string[], runEnv: Record<string, string> = env): Promise<unknown> {
+async function bodyOf(argv: string[], runEnv: Record<string, string> = {}): Promise<unknown> {
   const requests = await recordRequests(async () => {
-    await runCommand(Export, argv, { env: runEnv });
+    await runCommand(Export, [...argv, ...project], { env: runEnv });
   });
   expect(requests).toHaveLength(1);
   expect(requests[0]?.method).toBe("POST");
@@ -39,7 +39,7 @@ describe("meili export", () => {
 
   it("prints the enqueued task as the API returned it, without waiting", async () => {
     server.use(meilisearchHandlers.export(exporting));
-    const result = await runCommand(Export, ["--url", remote, "--output", "json"], { env });
+    const result = await runCommand(Export, ["--url", remote, "--output", "json", ...project]);
     expect(result).toMatchSnapshot();
   });
 
@@ -87,15 +87,14 @@ describe("meili export", () => {
       prod: { url: remote, apiKey: "prodkey1" },
       staging: { url: "http://localhost:7701" },
     });
-    const source = ["--project-url", MEILISEARCH_URL];
-    expect(await bodyOf([...source, "--project-destination", "prod"], config.env)).toEqual({
+    expect(await bodyOf(["--project-destination", "prod"], config.env)).toEqual({
       url: remote,
       apiKey: "prodkey1",
     });
     expect(
-      await bodyOf([...source, "--project-destination", "prod", "--api-key", "other"], config.env),
+      await bodyOf(["--project-destination", "prod", "--api-key", "other"], config.env),
     ).toEqual({ url: remote, apiKey: "other" });
-    expect(await bodyOf([...source, "--project-destination", "staging"], config.env)).toEqual({
+    expect(await bodyOf(["--project-destination", "staging"], config.env)).toEqual({
       url: "http://localhost:7701",
     });
   });
@@ -126,9 +125,14 @@ describe("meili export", () => {
         makeTask({ uid: 7, status: "succeeded", indexUid: null, type: exportType }),
       ]),
     );
-    const result = await runCommand(Export, ["--url", remote, "--wait", "--output", "json"], {
-      env,
-    });
+    const result = await runCommand(Export, [
+      "--url",
+      remote,
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid: 7, status: "succeeded" });
   });
@@ -142,9 +146,13 @@ describe("meili export", () => {
         link: "https://docs.meilisearch.com/errors#invalid_export_url",
       }),
     );
-    const result = await runCommand(Export, ["--data", '{"url":true}', "--output", "json"], {
-      env,
-    });
+    const result = await runCommand(Export, [
+      "--data",
+      '{"url":true}',
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result).toMatchSnapshot();
   });
 });

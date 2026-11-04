@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-update-documents-${randomUUID().slice(0, 8)}`;
 
 describe.skipIf(!meilisearchUp)("meili update documents against a real Meilisearch", () => {
@@ -25,39 +25,35 @@ describe.skipIf(!meilisearchUp)("meili update documents against a real Meilisear
   });
 
   it("merges the given fields into the document instead of replacing it", async () => {
-    const result = await runBinary(
-      [
-        "update",
-        "documents",
-        "--index",
-        uid,
-        "--data",
-        '[{"id":1,"rating":4}]',
-        "--wait",
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "documents",
+      "--index",
+      uid,
+      "--data",
+      '[{"id":1,"rating":4}]',
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ status: "succeeded" });
     expect(await client.index(uid).getDocument(1)).toEqual({ id: 1, title: "Alien", rating: 4 });
   });
 
   it("enqueues a task and returns at once, without --wait", async () => {
-    const result = await runBinary(
-      [
-        "update",
-        "documents",
-        "--index",
-        uid,
-        "--data",
-        '[{"id":2,"title":"Solaris"}]',
-        "--output",
-        "json",
-      ],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "documents",
+      "--index",
+      uid,
+      "--data",
+      '[{"id":2,"title":"Solaris"}]',
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const task = JSON.parse(result.stdout) as { taskUid: number; status: string };
@@ -67,10 +63,15 @@ describe.skipIf(!meilisearchUp)("meili update documents against a real Meilisear
   });
 
   it("exits 2 without documents, and sends nothing", async () => {
-    const result = await runBinary(
-      ["update", "documents", "--index", uid, "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "update",
+      "documents",
+      "--index",
+      uid,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");

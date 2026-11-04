@@ -23,7 +23,6 @@ export default class GetProjects extends BaseCommand {
   ];
 
   static override flags = {
-    ...BaseCommand.managementFlags,
     ...BaseCommand.cloudProjectFlags,
     id: Flags.integer({
       description:

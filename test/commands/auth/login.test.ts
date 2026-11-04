@@ -13,16 +13,14 @@ import {
 import { runCli, runCommand } from "../../helpers/run-command.js";
 import { sessionHome } from "../../helpers/session.js";
 
-function argv(server: AuthorizationServer): string[] {
-  return [
-    "--management-client-id",
-    STUB_CLIENT_ID,
-    "--management-url",
-    server.url,
-    "--management-dashboard-url",
-    server.url,
-    "--no-browser",
-  ];
+/** A temporary home, with the variables that point `auth login` at the stub server. */
+function cloudEnv(server: AuthorizationServer): Record<string, string> {
+  return {
+    ...sessionHome(),
+    MEILI_MANAGEMENT_CLIENT_ID: STUB_CLIENT_ID,
+    MEILI_MANAGEMENT_URL: server.url,
+    MEILI_MANAGEMENT_DASHBOARD_URL: server.url,
+  };
 }
 
 /**
@@ -50,9 +48,9 @@ describe("meili auth login", () => {
 
   it("logs in with a browser and writes the session, with no token on any stream", async () => {
     const server = await startAuthorizationServer();
-    const env = sessionHome();
+    const env = cloudEnv(server);
     try {
-      const result = await runCommand(AuthLogin, [...argv(server), "--output", "json"], {
+      const result = await runCommand(AuthLogin, ["--no-browser", "--output", "json"], {
         env,
         onStderr: browser(),
       });
@@ -73,55 +71,36 @@ describe("meili auth login", () => {
     }
   });
 
-  it("takes the application from the environment when the flag is absent", async () => {
-    const server = await startAuthorizationServer();
-    const env = {
-      ...sessionHome(),
-      MEILI_MANAGEMENT_CLIENT_ID: STUB_CLIENT_ID,
-      MEILI_MANAGEMENT_URL: server.url,
-      MEILI_MANAGEMENT_DASHBOARD_URL: server.url,
-    };
-    try {
-      const result = await runCommand(AuthLogin, ["--no-browser"], { env, onStderr: browser() });
-      expect(result.exitCode).toBe(0);
-      expect(server.authorization?.get("client_id")).toBe(STUB_CLIENT_ID);
-    } finally {
-      await server.close();
-    }
-  });
-
   it("refuses one URL without the other: a Cloud is named by both", async () => {
-    const result = await runCommand(
-      AuthLogin,
-      ["--management-client-id", STUB_CLIENT_ID, "--management-url", "https://api.example.com"],
-      { env: sessionHome() },
-    );
+    const result = await runCommand(AuthLogin, ["--no-browser"], {
+      env: {
+        ...sessionHome(),
+        MEILI_MANAGEMENT_CLIENT_ID: STUB_CLIENT_ID,
+        MEILI_MANAGEMENT_URL: "https://api.example.com",
+      },
+    });
     expect(result.exitCode).toBe(2);
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
     expect(JSON.parse(result.stderr).error.message).toContain("together");
   });
 
   it("refuses another Cloud without its application, before any network call", async () => {
-    const result = await runCommand(
-      AuthLogin,
-      [
-        "--management-url",
-        "https://api.example.com",
-        "--management-dashboard-url",
-        "https://cloud.example.com",
-        "--no-browser",
-      ],
-      { env: sessionHome() },
-    );
+    const result = await runCommand(AuthLogin, ["--no-browser"], {
+      env: {
+        ...sessionHome(),
+        MEILI_MANAGEMENT_URL: "https://api.example.com",
+        MEILI_MANAGEMENT_DASHBOARD_URL: "https://cloud.example.com",
+      },
+    });
     expect(result).toMatchSnapshot();
   });
 
   // Last: the trace wraps fetch for the rest of the process.
   it("masks the tokens of the exchange in the --debug trace", async () => {
     const server = await startAuthorizationServer();
-    const env = sessionHome();
+    const env = cloudEnv(server);
     try {
-      const result = await runCommand(AuthLogin, [...argv(server), "--debug"], {
+      const result = await runCommand(AuthLogin, ["--no-browser", "--debug"], {
         env,
         onStderr: browser(),
       });

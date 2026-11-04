@@ -40,7 +40,6 @@ export default class AddProjects extends BaseCommand {
   ];
 
   static override flags = {
-    ...BaseCommand.managementFlags,
     name: Flags.string({ description: "Name of the project.", helpValue: "<name>" }),
     "team-id": Flags.integer({ description: "Team that owns the project.", helpValue: "<id>" }),
     "resource-id": Flags.integer({

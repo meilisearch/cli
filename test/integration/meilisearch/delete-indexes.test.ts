@@ -6,7 +6,7 @@ import { MASTER_KEY, MEILISEARCH_URL, meilisearchAvailable } from "./setup.js";
 
 const meilisearchUp = await meilisearchAvailable();
 
-const env = { MEILI_PROJECT_URL: MEILISEARCH_URL, MEILI_PROJECT_API_KEY: MASTER_KEY };
+const project = ["--project-url", MEILISEARCH_URL, "--project-api-key", MASTER_KEY];
 const uid = `meili-cli-test-delete-indexes-${randomUUID().slice(0, 8)}`;
 
 // The two tests share one index, in order: the first leaves it standing, the
@@ -19,7 +19,15 @@ describe.skipIf(!meilisearchUp)("meili delete indexes against a real Meilisearch
   });
 
   it("exits 2 and deletes nothing without --yes", async () => {
-    const result = await runBinary(["delete", "indexes", "--id", uid, "--output", "json"], env);
+    const result = await runBinary([
+      "delete",
+      "indexes",
+      "--id",
+      uid,
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
@@ -27,10 +35,17 @@ describe.skipIf(!meilisearchUp)("meili delete indexes against a real Meilisearch
   });
 
   it("deletes the index", async () => {
-    const result = await runBinary(
-      ["delete", "indexes", "--id", uid, "--yes", "--wait", "--output", "json"],
-      env,
-    );
+    const result = await runBinary([
+      "delete",
+      "indexes",
+      "--id",
+      uid,
+      "--yes",
+      "--wait",
+      "--output",
+      "json",
+      ...project,
+    ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({
       indexUid: uid,

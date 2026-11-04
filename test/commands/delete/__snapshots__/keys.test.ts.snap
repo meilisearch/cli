@@ -3,7 +3,7 @@
 exports[`meili delete keys > passes an authentication error through with a hint and exits 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\`."}}
 ",
   "stdout": "",
 }
@@ -26,10 +26,11 @@ FLAGS
       --id=<key>               (required) The key to delete, by its uid or by
                                its key value.
       --project=<name>         A project of the config file. Cannot be combined
-                               with --project-url. Required when the file has
-                               several projects.
+                               with --project-url. One of --project or
+                               --project-url is required.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
       --yes                    (required) Confirm the deletion. Nothing is sent
                                to the API without it.
 
@@ -37,9 +38,9 @@ DESCRIPTION
   Delete an API key, which stops authenticating every request that carries it.
 
 EXAMPLES
-  $ meili delete keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes
+  $ meili delete keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes
 
-  $ meili delete keys --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json
+  $ meili delete keys --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes --output json
 
 "
 `;

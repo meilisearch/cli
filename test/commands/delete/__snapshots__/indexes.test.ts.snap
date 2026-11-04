@@ -3,7 +3,7 @@
 exports[`meili delete indexes > passes an authentication error through with a hint and exits 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\`."}}
 ",
   "stdout": "",
 }
@@ -26,10 +26,11 @@ FLAGS
                                secrets redacted.
       --id=<index>             (required) The index to delete.
       --project=<name>         A project of the config file. Cannot be combined
-                               with --project-url. Required when the file has
-                               several projects.
+                               with --project-url. One of --project or
+                               --project-url is required.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
       --timeout=<duration>     Maximum wait time, for example 30s, 2m. Default
                                10m. Only with --wait.
       --wait                   Poll the task until it reaches a final status,
@@ -41,11 +42,11 @@ DESCRIPTION
   Delete an index, with its documents, its settings and its task history.
 
 EXAMPLES
-  $ meili delete indexes --id movies --yes
+  $ meili delete indexes --project prod --id movies --yes
 
-  $ meili delete indexes --id movies --yes --output json
+  $ meili delete indexes --project prod --id movies --yes --output json
 
-  $ meili delete indexes --id movies --yes --wait
+  $ meili delete indexes --project prod --id movies --yes --wait
 
 "
 `;

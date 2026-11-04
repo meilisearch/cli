@@ -48,13 +48,14 @@ FLAGS
                                           20 by default.
       --offset=<n>                        Number of documents to skip.
       --project=<name>                    A project of the config file. Cannot
-                                          be combined with --project-url.
-                                          Required when the file has several
-                                          projects.
+                                          be combined with --project-url. One of
+                                          --project or --project-url is
+                                          required.
       --project-api-key=<key>             Project API key. \`-\` reads it from
                                           stdin.
       --project-url=<url>                 Project URL, the Meilisearch instance
-                                          to talk to.
+                                          to talk to. One of --project or
+                                          --project-url is required.
       --ranking-score-threshold=<number>  Drop the hits whose ranking score is
                                           below this value, between 0.0 and 1.0.
       --retrieve-vectors                  Add _vectors to each hit, the
@@ -72,13 +73,13 @@ DESCRIPTION
   named by --id and compared with --embedder.
 
 EXAMPLES
-  $ meili similar --index movies --id 143 --embedder default
+  $ meili similar --project prod --index movies --id 143 --embedder default
 
-  $ meili similar --index movies --id 143 --embedder default --output json
+  $ meili similar --project prod --index movies --id 143 --embedder default --output json
 
-  $ meili similar --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5
+  $ meili similar --project prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5
 
-  $ meili similar --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'
+  $ meili similar --project prod --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'
 
 "
 `;

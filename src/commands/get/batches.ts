@@ -14,12 +14,12 @@ export default class GetBatches extends BaseCommand {
     "List the batches of tasks the instance processed, narrowed by --ids, --task-ids, --statuses and the other filters of the route.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %>",
-    "<%= config.bin %> <%= command.id %> --output json",
-    "<%= config.bin %> <%= command.id %> --ids 7",
-    "<%= config.bin %> <%= command.id %> --task-ids 42",
-    "<%= config.bin %> <%= command.id %> --statuses failed --index-ids movies --limit 5",
-    "<%= config.bin %> <%= command.id %> --all --output ndjson",
+    "<%= config.bin %> <%= command.id %> --project prod",
+    "<%= config.bin %> <%= command.id %> --project prod --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --ids 7",
+    "<%= config.bin %> <%= command.id %> --project prod --task-ids 42",
+    "<%= config.bin %> <%= command.id %> --project prod --statuses failed --index-ids movies --limit 5",
+    "<%= config.bin %> <%= command.id %> --project prod --all --output ndjson",
   ];
 
   static override flags = {

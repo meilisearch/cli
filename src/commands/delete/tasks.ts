@@ -13,10 +13,10 @@ export default class DeleteTasks extends BaseCommand {
     "Delete the finished tasks matched by --ids, --statuses, --types and the other filters of the route.";
 
   static override examples = [
-    "<%= config.bin %> <%= command.id %> --ids 42,1344 --yes",
-    "<%= config.bin %> <%= command.id %> --ids 42 --yes --output json",
-    "<%= config.bin %> <%= command.id %> --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
-    "<%= config.bin %> <%= command.id %> --index-ids movies --yes --wait",
+    "<%= config.bin %> <%= command.id %> --project prod --ids 42,1344 --yes",
+    "<%= config.bin %> <%= command.id %> --project prod --ids 42 --yes --output json",
+    "<%= config.bin %> <%= command.id %> --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
+    "<%= config.bin %> <%= command.id %> --project prod --index-ids movies --yes --wait",
   ];
 
   static override flags = {

@@ -3,7 +3,7 @@
 exports[`meili update settings > passes an authentication error through with a hint and exits 3 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\` or \`MEILI_PROJECT_API_KEY\`."}}
+  "stderr": "{"error":{"code":"invalid_api_key","type":"auth","message":"The provided API key is invalid.","link":"https://docs.meilisearch.com/errors#invalid_api_key","hint":"Provide an API key with \`--project-api-key <key>\`."}}
 ",
   "stdout": "",
 }
@@ -74,12 +74,13 @@ FLAGS
                                          \`indexingTime\` or \`disabled\`, which
                                          indexes faster.
       --project=<name>                   A project of the config file. Cannot be
-                                         combined with --project-url. Required
-                                         when the file has several projects.
+                                         combined with --project-url. One of
+                                         --project or --project-url is required.
       --project-api-key=<key>            Project API key. \`-\` reads it from
                                          stdin.
       --project-url=<url>                Project URL, the Meilisearch instance
-                                         to talk to.
+                                         to talk to. One of --project or
+                                         --project-url is required.
       --proximity-precision=<precision>  Precision of the proximity ranking
                                          rule, \`byWord\` or \`byAttribute\`, which
                                          indexes faster.
@@ -111,15 +112,15 @@ DESCRIPTION
   the value null.
 
 EXAMPLES
-  $ meili update settings --index movies --searchable-attributes title,overview
+  $ meili update settings --project prod --index movies --searchable-attributes title,overview
 
-  $ meili update settings --index movies --filterable-attributes genres,release_date --output json
+  $ meili update settings --project prod --index movies --filterable-attributes genres,release_date --output json
 
-  $ meili update settings --index movies --stop-words null
+  $ meili update settings --project prod --index movies --stop-words null
 
-  $ meili update settings --index movies --typo-tolerance '{"enabled":false}' --wait
+  $ meili update settings --project prod --index movies --typo-tolerance '{"enabled":false}' --wait
 
-  $ meili update settings --index movies --file settings.json
+  $ meili update settings --project prod --index movies --file settings.json
 
 "
 `;

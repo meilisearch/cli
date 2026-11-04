@@ -18,26 +18,16 @@ describe("meili get health", () => {
 
   it("prints the health of the instance as JSON", async () => {
     server.use(meilisearchHandlers.health());
-    const result = await runCommand(GetHealth, ["--output", "json"], {
-      env: { MEILI_PROJECT_URL: MEILISEARCH_URL },
-    });
+    const result = await runCommand(GetHealth, [
+      "--output",
+      "json",
+      "--project-url",
+      MEILISEARCH_URL,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
-  it("takes the URL from --project-url over MEILI_PROJECT_URL", async () => {
-    server.use(meilisearchHandlers.health("http://flag.test:7700"));
-    const result = await runCommand(
-      GetHealth,
-      ["--project-url", "http://flag.test:7700", "--output", "json"],
-      {
-        env: { MEILI_PROJECT_URL: "http://env.test:7700" },
-      },
-    );
-    expect(result).toEqual({ stdout: '{"status":"available"}\n', stderr: "", exitCode: 0 });
-  });
-
   it("takes the project named by --project from the config file", async () => {
-    // Not the scrubbed default path: the other tests of this file must see no project.
     const path = join(scrubbedHome, "projects.json");
     writeConfigFile({
       path,
@@ -59,46 +49,63 @@ describe("meili get health", () => {
         link: "https://docs.meilisearch.com/errors#internal",
       }),
     );
-    const result = await runCommand(GetHealth, ["--output", "json"], {
-      env: { MEILI_PROJECT_URL: MEILISEARCH_URL },
-    });
+    const result = await runCommand(GetHealth, [
+      "--output",
+      "json",
+      "--project-url",
+      MEILISEARCH_URL,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
   it("reports a connection failure with cli_network and exits 6", async () => {
     server.use(meilisearchHandlers.networkError("/health"));
-    const result = await runCommand(GetHealth, ["--output", "json"], {
-      env: { MEILI_PROJECT_URL: MEILISEARCH_URL },
-    });
+    const result = await runCommand(GetHealth, [
+      "--output",
+      "json",
+      "--project-url",
+      MEILISEARCH_URL,
+    ]);
     expect(result).toMatchSnapshot();
   });
 
-  it("fails with cli_config and exits 2 when no project is configured", async () => {
-    const result = await runCommand(GetHealth, ["--output", "json"]);
+  it("fails with cli_usage and exits 2 without --project or --project-url", async () => {
+    // A file with one project is never taken without --project, nor is a variable.
+    const path = join(scrubbedHome, "one-project.json");
+    writeConfigFile({ path, projects: { prod: { url: MEILISEARCH_URL } } });
+    const result = await runCommand(GetHealth, ["--output", "json"], {
+      env: { MEILI_CONFIG: path, MEILI_PROJECT_URL: MEILISEARCH_URL },
+    });
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
-    const error = JSON.parse(result.stderr).error as { code: string; message: string };
-    expect(error.code).toBe("cli_config");
-    expect(error.message).toMatch(
-      /^No project configured\. .*`--project-url`.*`MEILI_PROJECT_URL`.*config\.json\.$/,
-    );
+    expect(JSON.parse(result.stderr).error).toMatchObject({
+      code: "cli_usage",
+      hint: "Run `meili config list` to see the projects of the config file.",
+    });
     expect(result.stderr).not.toContain("MEILI_MANAGEMENT_TOKEN");
   });
 
   it("rejects ndjson, which is for list routes only", async () => {
     server.use(meilisearchHandlers.health());
-    const result = await runCommand(GetHealth, ["--output", "ndjson"], {
-      env: { MEILI_PROJECT_URL: MEILISEARCH_URL },
-    });
+    const result = await runCommand(GetHealth, [
+      "--output",
+      "ndjson",
+      "--project-url",
+      MEILISEARCH_URL,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(result.stdout).toBe("");
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
   });
 
   it("rejects an unexpected argument with cli_usage", async () => {
-    const result = await runCommand(GetHealth, ["extra", "--output", "json"], {
-      env: { MEILI_PROJECT_URL: MEILISEARCH_URL },
-    });
+    const result = await runCommand(GetHealth, [
+      "extra",
+      "--output",
+      "json",
+      "--project-url",
+      MEILISEARCH_URL,
+    ]);
     expect(result.exitCode).toBe(2);
     expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
   });
