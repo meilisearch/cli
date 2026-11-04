@@ -69,7 +69,7 @@ Use the skill: `/add-command <command>`, for example `/add-command get stats`. I
 6. Create `test/commands/<same path>.test.ts` from the sibling test. It must snapshot the `--help` output and the JSON output for one success case and one error case, with `msw` mocks.
 7. For a Meilisearch command, add one integration test in `test/integration/meilisearch/`. Meilisearch runs locally from the `docker compose` file of this repository. A management command has no integration test. Meilisearch Cloud does not run locally. Its OpenAPI document is the source of truth, and the unit tests mock the API from that document (`docs/contract/testing.md`). If the document does not describe something, report the gap to the Cloud team. Do not guess.
 8. Run `pnpm gen:manifest` so `oclif.manifest.json` and `meili schema` know the command.
-9. Add the command to the changeset. Until the first release, `.changeset/first-version.md` is the only changeset and describes everything: add your line to it. After the first release, write a new file in `.changeset/` by hand, with type `minor`, because `pnpm changeset` is interactive.
+9. Add a changeset: write a new file in `.changeset/` by hand, with type `minor`, because `pnpm changeset` is interactive.
 10. Run the "Before you finish" list.
 
 ## Before you finish

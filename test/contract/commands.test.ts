@@ -51,7 +51,8 @@ describe("oclif.manifest.json", () => {
       expect(detail.exitCode, `meili schema --command "${id}"`).toBe(0);
       commands.push(JSON.parse(detail.stdout));
     }
-    expect({ index, commands }).toMatchSnapshot();
+    // The version changes with every release, in the Version Packages pull request.
+    expect({ index, commands }).toMatchSnapshot({ index: { version: expect.any(String) } });
   });
 
   it("every command has a one-sentence description and at least two examples, one with --output json", () => {

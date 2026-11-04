@@ -4,7 +4,25 @@
 
 ## Install
 
-TBD. The package is not published yet. To run it from source, see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+With npm, where Node 22 or newer is installed. This is the normal path for coding agents:
+
+```sh
+npm install -g @meilisearch/cli
+```
+
+With Homebrew, on macOS and Linux:
+
+```sh
+brew install meilisearch/tap/meili
+```
+
+Without Node, on macOS and Linux:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/meilisearch/cli/main/scripts/install.sh | sh
+```
+
+The script installs the CLI with its own Node in `~/.local/share/meili`, and links `meili` in `~/.local/bin`, or in the folder of `MEILI_CLI_INSTALL_DIR`. `MEILI_CLI_VERSION=0.1.0` installs this version instead of the latest one. Run the script again to update.
 
 ## Get started
 

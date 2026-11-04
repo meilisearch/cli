@@ -5,3 +5,5 @@ coverage/
 .DS_Store
 # OpenAPI documents downloaded by `pnpm openapi`, never committed
 openapi/
+# Work folder of `oclif pack tarballs`
+tmp/

@@ -17,11 +17,10 @@ for await (const file of glob(".claude/skills/*/SKILL.md", { cwd: PROJECT_ROOT }
 for await (const file of glob("docs/contract/*.md", { cwd: PROJECT_ROOT })) guides.push(file);
 
 /**
- * Paths the docs name on purpose before they exist: the worked example of the
- * skill, and the changelog of the first release. When one of them appears for
- * real, remove it from this list.
+ * Paths the docs name on purpose before they exist. When one of them appears
+ * for real, remove it from this list.
  */
-const PLANNED_PATHS = ["CHANGELOG.md"];
+const PLANNED_PATHS: string[] = [];
 
 /** A span that is a path of this repository: a known top-level file or folder. */
 const PATH_SPAN =
