@@ -28,6 +28,7 @@
     "test": "pnpm gen:manifest && vitest run",
     "test:integration": "pnpm build && MEILI_INTEGRATION=required vitest run --project integration-meilisearch",
     "changeset": "changeset",
+    "changeset:version": "changeset version && pnpm gen:manifest",
     "openapi": "node scripts/openapi.mjs all",
     "openapi:meilisearch": "node scripts/openapi.mjs meilisearch",
     "openapi:management": "node scripts/openapi.mjs management",
