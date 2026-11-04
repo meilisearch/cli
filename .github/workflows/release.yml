@@ -48,8 +48,12 @@ jobs:
     needs: release
     if: needs.release.outputs.published == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
@@ -61,7 +65,9 @@ jobs:
         working-directory: dist
         # Named without version, for the latest/download URL of scripts/install.sh.
         run: |
-          for archive in meili-v*.tar.gz; do mv "$archive" "meili-${archive#meili-v*-*-}"; done
+          for target in darwin-arm64 darwin-x64 linux-x64 linux-arm64; do
+            mv meili-v*-"$target".tar.gz "meili-$target.tar.gz"
+          done
           sha256sum meili-*.tar.gz > SHA256SUMS
           gh release upload "v$VERSION" meili-*.tar.gz SHA256SUMS
         env:
@@ -73,8 +79,12 @@ jobs:
     needs: release
     if: needs.release.outputs.published == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
       - run: |
           url="https://registry.npmjs.org/@meilisearch/cli/-/cli-$VERSION.tgz"
           sha256=$(curl -fsSL --retry 5 --retry-delay 10 --retry-all-errors "$url" | sha256sum | cut -d ' ' -f 1)
