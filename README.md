@@ -10,13 +10,13 @@ With npm, where Node 22 or newer is installed:
 npm install -g @meilisearch/cli
 ```
 
-With Homebrew, on macOS and Linux:
+With Homebrew:
 
 ```sh
 brew install meilisearch/tap/meili
 ```
 
-From the GitHub release assets, on macOS and Linux, without Node:
+From the GitHub release assets, on macOS and Linux:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/meilisearch/cli/main/scripts/install.sh | sh
