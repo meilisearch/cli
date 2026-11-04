@@ -6,6 +6,7 @@
  */
 import { Command, Errors, Flags, type Interfaces } from "@oclif/core";
 import type { EnqueuedTask, Meilisearch } from "meilisearch";
+import { flagNames, sendAnalytics, track } from "./analytics.js";
 import { createManagementClient, type ManagementClient } from "./clients/management.js";
 import { createMeilisearchClient } from "./clients/meilisearch.js";
 import { installHttpTrace } from "./clients/trace.js";
@@ -30,6 +31,7 @@ import {
   type Session,
 } from "./session.js";
 import { DEFAULT_TIMEOUT, isTaskFailure, parseDuration, waitForTask } from "./tasks.js";
+import { isPromptExit } from "./terminal.js";
 
 /** The API a command talks to. `none` commands work offline. */
 export type Api = "meilisearch" | "management" | "none";
@@ -258,6 +260,32 @@ export abstract class BaseCommand extends Command {
   /** What both APIs see in their client header: `meili-cli (v1.2.3)`. */
   private get userAgent(): string {
     return `meili-cli (v${this.config.version})`;
+  }
+
+  private readonly startedAt = performance.now();
+  /** The code the command exits with, kept for its `cli_command_run` event. */
+  private exitCode = 0;
+
+  override exit(code = 0): never {
+    this.exitCode = code;
+    return super.exit(code);
+  }
+
+  /** Sends the usage events of the run, after its output and its error (ADR 0016). */
+  override async finally(error: Error | undefined): Promise<void> {
+    const failed =
+      error !== undefined && !(error instanceof Errors.ExitError) && !isPromptExit(error);
+    track("cli_command_run", {
+      flags: flagNames(this.argv, { ...this.ctor.baseFlags, ...this.ctor.flags }),
+      exit_code: this.exitCode,
+      error_code: failed ? toRenderedError(error).body.code : undefined,
+      duration_ms: Math.round(performance.now() - this.startedAt),
+    });
+    await sendAnalytics(this.env, {
+      command: this.id?.replaceAll(":", " "),
+      cli_version: this.config.version,
+    });
+    await super.finally(error);
   }
 
   /** Renders every error as the contract says, then exits with its code. */

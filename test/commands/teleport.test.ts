@@ -29,9 +29,10 @@ vi.mock("../../src/lib/terminal.js", async (importActual) => {
   };
   return {
     ...actual,
-    choose: (message: string, choices: Array<{ name: string }>) => answer(message, choices),
-    ask: (message: string) => answer(message),
-    askSecret: (message: string) => answer(message),
+    choose: (_prompt: string, message: string, choices: Array<{ name: string }>) =>
+      answer(message, choices),
+    ask: (_prompt: string, message: string) => answer(message),
+    askSecret: (_prompt: string, message: string) => answer(message),
   };
 });
 

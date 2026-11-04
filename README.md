@@ -68,4 +68,8 @@ meili schema             # the command tree as JSON, one entry per command with 
 meili schema --command "get indexes" # one command in full, as JSON
 ```
 
+## Analytics
+
+`meili` sends anonymous usage data to Meilisearch: the commands you run, the names of their flags, their errors, and in `meili teleport` the options you choose. It never sends the values of the flags, your data or your keys. To turn it off, set `MEILI_NO_ANALYTICS=true`. `DO_NOT_TRACK=1` works too, and nothing is sent in CI. The details are in [`docs/contract/config.md`](docs/contract/config.md#analytics).
+
 To contribute, read [`CONTRIBUTING.md`](CONTRIBUTING.md). [MIT](LICENSE).

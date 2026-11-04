@@ -21,7 +21,17 @@ import {
 import { logInWithBrowser } from "../lib/login.js";
 import { resolveOauthClient } from "../lib/session.js";
 import { isTaskFailure, isTaskFinal, pollUntil } from "../lib/tasks.js";
-import { ask, askSecret, bar, choose, elapsed, endStatus, say, status } from "../lib/terminal.js";
+import {
+  ask,
+  askSecret,
+  bar,
+  choose,
+  elapsed,
+  endStatus,
+  isPromptExit,
+  say,
+  status,
+} from "../lib/terminal.js";
 
 const PRICING_URL = "https://www.meilisearch.com/pricing";
 const SUPPORT = "support@meilisearch.com";
@@ -112,8 +122,9 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
       everyPage((query) => getApiV2Teams({ client, query }), { page: 1 }),
     ]);
     const regionId = await choose(
+      "region",
       "Region of the new project",
-      regions.map((region) => ({ name: region.name, value: region.id })),
+      regions.map((region) => ({ name: region.name, value: region.id, id: region.name })),
     );
     const team = await chooseTeam(teams);
 
@@ -190,16 +201,23 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     const picked =
       names.length === 0
         ? null
-        : await choose<string | null>("Which project moves to Meilisearch Cloud?", [
-            ...names.map((each) => ({ name: `${each}  ${file.projects[each]?.url}`, value: each })),
-            { name: "Another one: enter its URL and its API key", value: null },
+        : await choose<string | null>("source", "Which project moves to Meilisearch Cloud?", [
+            ...names.map((each) => ({
+              name: `${each}  ${file.projects[each]?.url}`,
+              value: each,
+              id: "config-entry",
+            })),
+            { name: "Another one: enter its URL and its API key", value: null, id: "enter-url" },
           ]);
     if (picked !== null) return this.pickSource(file, picked);
-    const url = await ask("URL of the Meilisearch instance", {
+    const url = await ask("source-url", "URL of the Meilisearch instance", {
       validate: (value) =>
         isProjectUrl(value) || "Enter an HTTP(S) URL, for example http://localhost:7700.",
     });
-    const apiKey = await askSecret("Its API key, with the export action (empty when it has none)");
+    const apiKey = await askSecret(
+      "source-api-key",
+      "Its API key, with the export action (empty when it has none)",
+    );
     return { name: undefined, url, client: this.meilisearchClient(url, apiKey || undefined) };
   }
 
@@ -312,7 +330,7 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     }
     endStatus();
     // Ctrl-C on a question.
-    if (error instanceof Error && error.name === "ExitPromptError") {
+    if (isPromptExit(error)) {
       this.sayWhatExists();
       this.exit(130);
     }
@@ -360,6 +378,7 @@ async function chooseTeam(teams: Team[]): Promise<Team> {
     return only;
   }
   return choose(
+    "team",
     "Team of the new project",
     teams.map((team) => ({ name: team.name, value: team })),
   );
@@ -367,7 +386,7 @@ async function chooseTeam(teams: Team[]): Promise<Team> {
 
 /** A name Meilisearch Cloud accepts and the config file does not have yet. */
 function askName(file: ConfigFile, suggested: string): Promise<string> {
-  return ask("Name of the new project", {
+  return ask("project-name", "Name of the new project", {
     default: suggested,
     validate: (value) =>
       !PROJECT_NAME.test(value)
@@ -393,12 +412,14 @@ function choosePlan(resources: Resource[], why: string): Promise<number> {
     return estimation === undefined ? [] : [{ resource, estimation }];
   });
   return choose(
+    "plan",
     "Plan of the new project",
     priced
       .sort((a, b) => rank(a.resource) - rank(b.resource))
       .map(({ resource, estimation }) => ({
         name: describeResource(resource, estimation),
         value: resource.id,
+        id: resource.name,
       })),
   );
 }
