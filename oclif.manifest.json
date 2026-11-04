@@ -115,7 +115,7 @@
           "dependsOn": [
             "wait"
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "name": "timeout",
           "hasDynamicHelp": false,
           "helpValue": "<duration>",
@@ -220,7 +220,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -409,7 +409,7 @@
           "dependsOn": [
             "wait"
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "name": "timeout",
           "hasDynamicHelp": false,
           "helpValue": "<duration>",
@@ -514,7 +514,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -823,7 +823,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -918,6 +918,7 @@
         "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3",
         "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --output json",
         "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --sync-config",
+        "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --wait --sync-config",
         "<%= config.bin %> <%= command.id %> --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
         "<%= config.bin %> <%= command.id %> --data '{\"name\":\"demo\",\"teamId\":12,\"resourceId\":3}'",
         "<%= config.bin %> <%= command.id %> --file project.json --name other-name"
@@ -995,6 +996,23 @@
           "name": "sync-config",
           "allowNo": false,
           "type": "boolean"
+        },
+        "wait": {
+          "description": "Poll the project until its status is running or failed, then print it.",
+          "name": "wait",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "dependsOn": [
+            "wait"
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "name": "timeout",
+          "hasDynamicHelp": false,
+          "helpValue": "<duration>",
+          "multiple": false,
+          "type": "option"
         },
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",
@@ -1111,7 +1129,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -1351,7 +1369,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -1560,7 +1578,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -1769,7 +1787,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -1978,7 +1996,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -2235,7 +2253,7 @@
           "dependsOn": [
             "wait"
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "name": "timeout",
           "hasDynamicHelp": false,
           "helpValue": "<duration>",
@@ -2340,7 +2358,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -2550,7 +2568,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -2815,7 +2833,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -3072,7 +3090,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -3290,7 +3308,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -3553,7 +3571,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -3780,7 +3798,7 @@
           "dependsOn": [
             "wait"
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "name": "timeout",
           "hasDynamicHelp": false,
           "helpValue": "<duration>",
@@ -3894,7 +3912,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -4053,7 +4071,7 @@
           "dependsOn": [
             "wait"
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "name": "timeout",
           "hasDynamicHelp": false,
           "helpValue": "<duration>",
@@ -4165,7 +4183,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -4418,7 +4436,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -4676,7 +4694,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -4835,7 +4853,7 @@
           "dependsOn": [
             "wait"
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "name": "timeout",
           "hasDynamicHelp": false,
           "helpValue": "<duration>",
@@ -4947,7 +4965,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -5204,7 +5222,7 @@
           "dependsOn": [
             "wait"
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "name": "timeout",
           "hasDynamicHelp": false,
           "helpValue": "<duration>",
@@ -5316,7 +5334,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -5535,7 +5553,7 @@
           "dependsOn": [
             "wait"
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "name": "timeout",
           "hasDynamicHelp": false,
           "helpValue": "<duration>",
@@ -5640,7 +5658,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -5996,7 +6014,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -6370,7 +6388,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -6701,7 +6719,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -6937,7 +6955,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -7208,7 +7226,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -7479,7 +7497,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -7735,7 +7753,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -7981,7 +7999,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -8246,7 +8264,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -8621,7 +8639,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -8858,7 +8876,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -9132,7 +9150,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -9350,7 +9368,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -9827,7 +9845,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -10173,7 +10191,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -10374,7 +10392,7 @@
           "dependsOn": [
             "wait"
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "name": "timeout",
           "hasDynamicHelp": false,
           "helpValue": "<duration>",
@@ -10479,7 +10497,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -10677,7 +10695,7 @@
           "dependsOn": [
             "wait"
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "name": "timeout",
           "hasDynamicHelp": false,
           "helpValue": "<duration>",
@@ -10782,7 +10800,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -11064,7 +11082,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -11343,7 +11361,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"
@@ -11699,7 +11717,7 @@
           "dependsOn": [
             "wait"
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "name": "timeout",
           "hasDynamicHelp": false,
           "helpValue": "<duration>",
@@ -11804,7 +11822,7 @@
           "type": "boolean"
         },
         "timeout": {
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "dependsOn": [
             "wait"

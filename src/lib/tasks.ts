@@ -1,10 +1,10 @@
 /**
- * `--wait` and `--timeout` for asynchronous Meilisearch tasks. See docs/contract/output.md.
+ * `--wait` and `--timeout`: for asynchronous Meilisearch tasks, and for `add projects`. See docs/contract/output.md.
  */
 import type { Meilisearch, Task } from "meilisearch";
 import { MeiliCliError } from "./errors.js";
 
-export const DEFAULT_TIMEOUT = "60s";
+export const DEFAULT_TIMEOUT = "10m";
 
 const INITIAL_INTERVAL_MS = 100;
 const MAX_INTERVAL_MS = 1000;
@@ -44,43 +44,62 @@ export function formatDuration(ms: number): string {
   return `${ms}ms`;
 }
 
-export interface WaitForTaskOptions {
+export interface PollOptions<T> {
   timeoutMs: number;
   /** Called after every poll that did not reach a final status. */
-  onProgress?: (task: Task) => void;
-  /** First delay between polls. Doubles up to one second. Tests use a small value. */
+  onProgress?: (current: T) => void;
+  /** First delay between polls, 100 ms by default. Doubles up to `maxIntervalMs`. */
   initialIntervalMs?: number;
+  /** Longest delay between polls, 1 s by default. */
+  maxIntervalMs?: number;
   sleep?: (ms: number) => Promise<void>;
 }
 
 /**
- * Polls `GET /tasks/{uid}` until `succeeded`, `failed` or `canceled`, starting
- * at 100 ms and growing to 1 s between calls. Throws `cli_timeout` when the
- * deadline passes; the task keeps running on the server.
+ * Calls `poll` until `isFinal` holds, with a delay between calls that doubles
+ * from `initialIntervalMs` to `maxIntervalMs`. Throws `timeoutError()` when
+ * the deadline passes.
  */
-export async function waitForTask(
-  client: Meilisearch,
-  uid: number,
-  options: WaitForTaskOptions,
-): Promise<Task> {
+export async function pollUntil<T>(
+  poll: () => Promise<T>,
+  isFinal: (current: T) => boolean,
+  timeoutError: () => MeiliCliError,
+  options: PollOptions<T>,
+): Promise<T> {
   const sleep = options.sleep ?? defaultSleep;
   const deadline = Date.now() + options.timeoutMs;
   let interval = options.initialIntervalMs ?? INITIAL_INTERVAL_MS;
   for (;;) {
-    const task = await client.tasks.getTask(uid);
-    if (isTaskFinal(task)) return task;
-    options.onProgress?.(task);
+    const current = await poll();
+    if (isFinal(current)) return current;
+    options.onProgress?.(current);
     const remaining = deadline - Date.now();
-    if (remaining <= 0) {
-      throw new MeiliCliError(
+    if (remaining <= 0) throw timeoutError();
+    await sleep(Math.min(interval, remaining));
+    interval = Math.min(interval * 2, options.maxIntervalMs ?? MAX_INTERVAL_MS);
+  }
+}
+
+/**
+ * Polls `GET /tasks/{uid}` until `succeeded`, `failed` or `canceled`. Throws
+ * `cli_timeout` when the deadline passes; the task keeps running on the server.
+ */
+export function waitForTask(
+  client: Meilisearch,
+  uid: number,
+  options: PollOptions<Task>,
+): Promise<Task> {
+  return pollUntil(
+    () => client.tasks.getTask(uid),
+    isTaskFinal,
+    () =>
+      new MeiliCliError(
         "cli_timeout",
         `Task ${uid} did not reach a final status within ${formatDuration(options.timeoutMs)}. It keeps running on the server.`,
         { hint: `Run \`meili get tasks --ids ${uid}\` to check its status.` },
-      );
-    }
-    await sleep(Math.min(interval, remaining));
-    interval = Math.min(interval * 2, MAX_INTERVAL_MS);
-  }
+      ),
+    options,
+  );
 }
 
 function defaultSleep(ms: number): Promise<void> {

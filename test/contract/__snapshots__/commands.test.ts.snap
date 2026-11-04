@@ -81,7 +81,7 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
           "dependsOn": [
             "wait",
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "name": "timeout",
           "type": "option",
@@ -160,7 +160,7 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
           "dependsOn": [
             "wait",
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "name": "timeout",
           "type": "option",
@@ -266,11 +266,13 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
     },
     {
       "api": "management",
+      "async": true,
       "description": "Create a Meilisearch Cloud project in a team, on a resource. The master key is printed masked: give --sync-config to write it to the config file instead.",
       "examples": [
         "meili add projects --name demo --team-id 12 --resource-id 3",
         "meili add projects --name demo --team-id 12 --resource-id 3 --output json",
         "meili add projects --name demo --team-id 12 --resource-id 3 --sync-config",
+        "meili add projects --name demo --team-id 12 --resource-id 3 --wait --sync-config",
         "meili add projects --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0",
         "meili add projects --data '{"name":"demo","teamId":12,"resourceId":3}'",
         "meili add projects --file project.json --name other-name",
@@ -316,6 +318,20 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
           "description": "Add the project to the config file, as an entry named after it with its URL, its master key and its cloud identifiers.",
           "name": "sync-config",
           "type": "boolean",
+        },
+        {
+          "description": "Poll the project until its status is running or failed, then print it.",
+          "name": "wait",
+          "type": "boolean",
+        },
+        {
+          "dependsOn": [
+            "wait",
+          ],
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "name": "timeout",
+          "type": "option",
         },
         {
           "description": "Read the body from a file. \`-\` reads from stdin.",
@@ -513,7 +529,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
           "dependsOn": [
             "wait",
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "name": "timeout",
           "type": "option",
@@ -820,7 +836,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "dependsOn": [
             "wait",
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "name": "timeout",
           "type": "option",
@@ -886,7 +902,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "dependsOn": [
             "wait",
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "name": "timeout",
           "type": "option",
@@ -1049,7 +1065,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "dependsOn": [
             "wait",
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "name": "timeout",
           "type": "option",
@@ -1179,7 +1195,7 @@ The file holds API keys and decides where every later command goes, for every pr
           "dependsOn": [
             "wait",
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "name": "timeout",
           "type": "option",
@@ -1289,7 +1305,7 @@ The source is the project this command connects to, named by --project, --projec
           "dependsOn": [
             "wait",
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "name": "timeout",
           "type": "option",
@@ -2649,7 +2665,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "dependsOn": [
             "wait",
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "name": "timeout",
           "type": "option",
@@ -2735,7 +2751,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "dependsOn": [
             "wait",
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "name": "timeout",
           "type": "option",
@@ -3079,7 +3095,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "dependsOn": [
             "wait",
           ],
-          "description": "Maximum wait time, for example 30s, 2m. Default 60s. Only with --wait.",
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
           "helpValue": "<duration>",
           "name": "timeout",
           "type": "option",

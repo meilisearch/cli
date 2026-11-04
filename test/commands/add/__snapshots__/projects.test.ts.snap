@@ -1,5 +1,14 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`meili add projects > fails with cli_timeout and exit 5 when the project is not running within --timeout 1`] = `
+{
+  "exitCode": 5,
+  "stderr": "{"error":{"code":"cli_timeout","type":"cli","message":"Project 343 did not reach status running or failed within 50ms. Its creation goes on on the server.","hint":"Run \`meili get projects --id 343\` to check its status."}}
+",
+  "stdout": "",
+}
+`;
+
 exports[`meili add projects > passes the API's error body through on a 403, with exit 3 1`] = `
 {
   "exitCode": 3,
@@ -15,8 +24,8 @@ exports[`meili add projects > prints its help without any network call 1`] = `
 USAGE
   $ meili add projects [-o <mode>] [--debug] [--management-token <pat>]
     [--management-url <url>] [--name <name>] [--team-id <id>] [--resource-id
-    <id>] [--ms-version <version>] [--sync-config] [--file <path> | --data
-    <json>]
+    <id>] [--ms-version <version>] [--sync-config] [--timeout <duration> --wait]
+    [--file <path> | --data <json>]
 
 FLAGS
   -o, --output=<mode>           json (default): one document, the API body as it
@@ -39,6 +48,10 @@ FLAGS
                                 named after it with its URL, its master key and
                                 its cloud identifiers.
       --team-id=<id>            Team that owns the project.
+      --timeout=<duration>      Maximum wait time, for example 30s, 2m. Default
+                                10m. Only with --wait.
+      --wait                    Poll the project until its status is running or
+                                failed, then print it.
 
 DESCRIPTION
   Create a Meilisearch Cloud project in a team, on a resource. The master key is
@@ -50,6 +63,8 @@ EXAMPLES
   $ meili add projects --name demo --team-id 12 --resource-id 3 --output json
 
   $ meili add projects --name demo --team-id 12 --resource-id 3 --sync-config
+
+  $ meili add projects --name demo --team-id 12 --resource-id 3 --wait --sync-config
 
   $ meili add projects --name demo --team-id 12 --resource-id 3 --ms-version v1.54.0
 

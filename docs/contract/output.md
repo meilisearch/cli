@@ -68,14 +68,14 @@ The CLI warns when the config file is readable by others, see `config.md`.
 
 | Code | Meaning |
 |---|---|
-| 0 | Success. With `--wait`, the task reached `succeeded`. |
+| 0 | Success. With `--wait`, the task reached `succeeded`, or the project of `add projects` reached `running`. |
 | 1 | API error not covered below, or unexpected error. |
 | 2 | Usage error: unknown command, bad or missing flag, flags that call for two different routes, invalid input file. |
 | 3 | Authentication or authorization failed: missing API key or token, HTTP 401 or 403 from either API. |
 | 4 | Resource not found: HTTP 404 from either API. |
 | 5 | Timeout: `--wait` exceeded `--timeout`, or the HTTP request timed out. |
 | 6 | Cannot connect: DNS failure, connection refused, TLS error. |
-| 7 | Task finished with status `failed` or `canceled` (only with `--wait`). The final task is still printed on stdout. |
+| 7 | Task finished with status `failed` or `canceled`, or the project of `add projects` with status `failed` (only with `--wait`). The final task or project is still printed on stdout. |
 
 No other code is used on purpose. If a new situation needs its own code, add it to this table first.
 
@@ -86,8 +86,16 @@ Most write operations of the Meilisearch API return a task, not a result. The CL
 - Without `--wait`, the command prints the task the API returned (`taskUid`, `status: "enqueued"`, ...) and exits 0.
 - With `--wait`, the command polls `GET /tasks/{uid}` until the status is `succeeded`, `failed` or `canceled`, prints the final task object, and exits with 0 or 7.
 - Polling starts at 100 ms and grows to a maximum of 1 s between calls.
-- `--timeout` accepts a duration: `500ms`, `30s`, `2m`. Default `60s`. On timeout the CLI prints an error with code `cli_timeout` and exits 5. The task keeps running on the server.
+- `--timeout` accepts a duration: `500ms`, `30s`, `2m`. Default `10m`. On timeout the CLI prints an error with code `cli_timeout` and exits 5. The task keeps running on the server.
 - Progress ("waiting for task 42, status processing") goes to stderr, and only when stderr is a TTY.
+
+A Cloud project is not ready when `POST /api/v2/projects` answers: its `status` says when it is, and its `url` may be `null` until then. `meili add projects --wait` follows the same rules, with the project in place of the task:
+
+- It polls `GET /api/v2/projects/{id}` until `status` is `running` or `failed`, prints the final project, and exits with 0 or 7, `cli_task_failed`. With `--sync-config`, the entry is written only once the project is `running`.
+- Polling starts at 1 s and grows to a maximum of 5 s between calls: creating a project takes minutes.
+- The final project is printed as `GET /api/v2/projects/{id}` returns it, without `masterKey`: only creation returns it. `--sync-config` writes the key of the creation to the config file.
+- On timeout, `cli_timeout` and exit 5; the creation goes on on the server, and nothing is written to the config file.
+- Progress ("waiting for project 343, status creating") goes to stderr, and only when stderr is a TTY.
 
 ## Destructive commands
 
@@ -119,7 +127,7 @@ Destructive commands are those of the verb `delete`, as `commands.md` derives th
 - `--help` never makes a network call.
 - `meili schema` prints the index: the global flags once, then one entry per command with its `id`, its `description` and its `routes`. The description is its first paragraph; what follows is a warning the detail carries. It is the cheapest way for an agent to see everything that exists.
 - `meili schema --command "get indexes"` prints that one command in full: `id`, `description`, `api`, `routes`, `async`, `keyActions`, the `flags` the command declares itself and its `examples`. The global flags are not repeated there: they belong to the index. `meili config set --project` is listed, required and with its own description, because that command declares it; `--debug` is not, because no command declares it. An unknown `--command` is `cli_usage`, exit 2, with a hint that names the closest command, or `meili schema` when nothing is close.
-- A field that would say nothing is absent rather than empty or false: no `routes` on a command without an API, no `keyActions` when the routes need none, no `async` on a command that returns no task, no `required` on an optional flag.
+- A field that would say nothing is absent rather than empty or false: no `routes` on a command without an API, no `keyActions` when the routes need none, no `async` on a command that offers no `--wait`, which every command that returns a task and `add projects` offer, no `required` on an optional flag.
 - The index reads the oclif manifest; `--command` reads it too and loads the command class for its own flags. Both are always in sync with the code. There is no third level: `oclif.manifest.json` is there for whoever wants everything. See ADR 0008.
 
 ## Versioning

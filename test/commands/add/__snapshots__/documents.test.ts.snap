@@ -42,7 +42,7 @@ FLAGS
       --skip-creation             Only update documents that already exist,
                                   ignore the new ones.
       --timeout=<duration>        Maximum wait time, for example 30s, 2m.
-                                  Default 60s. Only with --wait.
+                                  Default 10m. Only with --wait.
       --wait                      Poll the task until it reaches a final status,
                                   then print the final task.
 
