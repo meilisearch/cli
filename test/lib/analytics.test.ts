@@ -3,7 +3,8 @@ import { dirname, join } from "node:path";
 import { HttpResponse, http } from "msw";
 import { describe, expect, it, vi } from "vitest";
 import GetHealth from "../../src/commands/get/health.js";
-import { flagNames, sendAnalytics } from "../../src/lib/analytics.js";
+import { flagNames, sendAnalytics, track } from "../../src/lib/analytics.js";
+import { type Api, BaseCommand } from "../../src/lib/base-command.js";
 import { ANALYTICS_URL } from "../../src/lib/clients/analytics.js";
 import { choose } from "../../src/lib/terminal.js";
 import { MEILISEARCH_URL, meilisearchHandlers } from "../helpers/meilisearch-handlers.js";
@@ -128,6 +129,25 @@ describe("analytics", () => {
     const result = await runCommand(GetHealth, health, { env: analyticsEnv() });
 
     expect(result).toEqual({ stdout: '{"status":"available"}\n', stderr: "", exitCode: 0 });
+  });
+
+  it("sends the events of a command that exits from a signal handler", async () => {
+    const batches = posthog();
+    const exit = vi.spyOn(process, "exit").mockImplementationOnce(() => undefined as never);
+    class Interrupted extends BaseCommand {
+      static api: Api = "none";
+      async run(): Promise<void> {
+        track("cli_prompt_answered", { prompt: "region", choice: "Europe (Frankfurt)" });
+        await this.exitNow(130);
+      }
+    }
+    await runCommand(Interrupted, [], { env: analyticsEnv() });
+
+    expect(exit).toHaveBeenCalledWith(130);
+    expect(batches[0]?.batch.map((event) => [event.event, event.properties])).toEqual([
+      ["cli_prompt_answered", expect.objectContaining({ prompt: "region" })],
+      ["cli_command_run", expect.objectContaining({ exit_code: 130 })],
+    ]);
   });
 
   it("names only the flags the command declares", () => {

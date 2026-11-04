@@ -273,6 +273,18 @@ export abstract class BaseCommand extends Command {
 
   /** Sends the usage events of the run, after its output and its error (ADR 0016). */
   override async finally(error: Error | undefined): Promise<void> {
+    await this.sendUsage(error);
+    await super.finally(error);
+  }
+
+  /** Exits from a signal handler, where `finally` never runs, once the usage events are sent. */
+  protected async exitNow(code: number): Promise<never> {
+    this.exitCode = code;
+    await this.sendUsage(undefined);
+    return process.exit(code);
+  }
+
+  private async sendUsage(error: Error | undefined): Promise<void> {
     const failed =
       error !== undefined && !(error instanceof Errors.ExitError) && !isPromptExit(error);
     track("cli_command_run", {
@@ -285,7 +297,6 @@ export abstract class BaseCommand extends Command {
       command: this.id?.replaceAll(":", " "),
       cli_version: this.config.version,
     });
-    await super.finally(error);
   }
 
   /** Renders every error as the contract says, then exits with its code. */

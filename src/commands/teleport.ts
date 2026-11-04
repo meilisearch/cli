@@ -143,10 +143,11 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
         say();
         field("Watch it", `${this.created.link}/batches`);
         sayLinks(this.created.link);
-        process.exit(0);
+        void this.exitNow(0);
+        return;
       }
       this.sayWhatExists();
-      process.exit(130);
+      void this.exitNow(130);
     };
     process.once("SIGINT", onInterrupt);
     try {
