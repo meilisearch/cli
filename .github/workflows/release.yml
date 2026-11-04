@@ -1,62 +1,18 @@
-name: CI
+name: Release
 
+# See the Release section of CONTRIBUTING.md.
 on:
   push:
     branches: [main]
-  pull_request:
 
 jobs:
-  checks:
-    name: Lint, typecheck, unit and contract tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version-file: .node-version
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - name: Download the OpenAPI documents the contract tests read
-        run: pnpm openapi
-        env:
-          GITHUB_TOKEN: ${{ secrets.MEILI_BOT_GH_PAT }}
-      - run: pnpm gen:management
-      - name: The committed Management API client must match the document
-        run: git diff --exit-code src/lib/clients/management/generated
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm gen:manifest
-      - name: The committed manifest must match the code
-        run: git diff --exit-code oclif.manifest.json
-      - run: pnpm exec vitest run --project unit --project contract
+  test:
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
 
-  integration-meilisearch:
-    name: Integration tests against Meilisearch
-    runs-on: ubuntu-latest
-    services:
-      meilisearch:
-        image: getmeili/meilisearch:v1.54.0
-        ports:
-          - 7700:7700
-        env:
-          MEILI_MASTER_KEY: masterKey
-          MEILI_NO_ANALYTICS: "true"
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4.3.0
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version-file: .node-version
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm test:integration
-
-  # On main only, after the tests. See the Release section of CONTRIBUTING.md.
   release:
     name: Version Packages pull request, or publish on npm
-    if: github.event_name == 'push'
-    needs: [checks, integration-meilisearch]
+    needs: test
     runs-on: ubuntu-latest
     concurrency: release
     permissions:

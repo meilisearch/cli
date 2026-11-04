@@ -16,7 +16,7 @@ Every version ships on three channels, from the same commit, with no human step:
 - **Homebrew**: `brew install meilisearch/tap/meili`, from the formula of the `meilisearch/homebrew-tap` repository. The formula installs the npm package and depends on Homebrew's `node`, as the formulae of Node tools in `homebrew/core` do.
 - **Archives with Node inside**, for macOS and Linux, on x64 and arm64, attached to the GitHub release: `pnpm archives` builds them with `oclif pack tarballs` and the Node of `.node-version`. `scripts/install.sh` downloads the archive of the machine, checks it against `SHA256SUMS`, puts it in `~/.local/share/meili`, and links `meili` in `~/.local/bin`. It needs no `sudo` and never changes a shell profile: it prints the line to add when `~/.local/bin` is not in `PATH`.
 
-The release runs in `.github/workflows/ci.yml`, on `main`, after the tests. `changesets/action` opens the "Version Packages" pull request. When this pull request is merged, it publishes on npm, then two jobs attach the archives to the GitHub release and push the formula to the tap.
+The release runs in `.github/workflows/release.yml`, on `main`, after the tests. `changesets/action` opens the "Version Packages" pull request. When this pull request is merged, it publishes on npm, then two jobs attach the archives to the GitHub release and push the formula to the tap.
 
 Refused:
 

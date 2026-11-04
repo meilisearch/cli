@@ -1,5 +1,5 @@
 # Formula/meili.rb of meilisearch/homebrew-tap. The homebrew job of
-# .github/workflows/ci.yml writes the version and the checksum, and pushes it.
+# .github/workflows/release.yml writes the version and the checksum, and pushes it.
 class Meili < Formula
   desc "Command-line tool for Meilisearch and Meilisearch Cloud"
   homepage "https://github.com/meilisearch/cli"
