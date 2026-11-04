@@ -4,28 +4,28 @@ Status: accepted. Date: 2026-11-04. Supersedes one point of ADR 0007: API respon
 
 ## Context
 
-`POST /api/v2/projects` returns the new project with its `masterKey`, the key that can do everything on that project. `meili add projects` printed it on stdout unchanged, as `output.md` and `config.md` asked: a credential an API returns is data, and the CLI hides nothing from the agent it works for.
+`POST /api/v2/projects` returns the new project with its `masterKey`, the key that can do everything on that project. `meili add projects` printed it on stdout unchanged, as `output.md` and `config.md` required. Their reason: a credential that an API returns is data, and the CLI hides nothing from the agent it works for.
 
-A command that prints a key is fine when the key is what it was run for. `get keys` prints keys, and a command on `GET /api/v2/projects/{projectId}/master-key` would print the master key: whoever runs them expects a secret in the answer and handles the output accordingly. `add projects` is run to create a project. Nobody expects the strongest key of that project to pop up at the end of its output, so nobody takes care of where that output goes.
+A command that prints a key is fine when the key is the reason to run it. `get keys` prints keys, and a command on `GET /api/v2/projects/{projectId}/master-key` would print the master key. Whoever runs them expects a secret in the answer, and handles the output with care. `add projects` is run to create a project. Nobody expects the strongest key of that project to appear at the end of its output. So nobody takes care of where that output goes.
 
-And an agent's stdout is not a private channel. It lands in the agent's transcript, in CI logs, in the history of a chat, wherever the output of a command is kept. A master key printed there by surprise is a master key copied to every one of those places, when the agent needs the key to reach the project, not to read it.
+And an agent's stdout is not a private channel. It ends up in the agent's transcript, in CI logs, in the history of a chat: wherever the output of a command is kept. A master key printed there by surprise is copied to every one of those places. Yet the agent needs the key to reach the project, not to read it.
 
-The CLI already has two ways to put the key where it belongs, the config file, without printing it:
+The CLI already has two ways to put the key where it belongs, in the config file, without printing it:
 
 - `add projects --sync-config` writes the project's entry with its master key as `apiKey`.
 - `config sync-with-cloud` reads the key with `GET /api/v2/projects/{projectId}/master-key` and writes it into an entry without a key, for a project created earlier or elsewhere.
 
 Alternatives considered:
 
-- **Keep printing the key.** Faithful to the API, but every creation leaks the strongest key of the project into logs, for a use the config file already covers.
-- **Drop the field.** The output no longer says a key exists, and an agent cannot tell a key that was masked from a response that had none.
-- **A flag that prints the key in full**, `--show-secrets`. Not now: no use needs it that the config file does not cover, and a flag that unmasks is one an agent adds by reflex. It can come later, in its own decision, if a use shows up.
-- **Mask every credential an API returns**, the `key` of `get keys` too. Those commands are run for the key: printing it is their purpose, not a surprise. Not this decision.
+- **Keep printing the key.** It follows the API exactly. But every creation leaks the strongest key of the project into logs, for a use that the config file already covers.
+- **Drop the field.** The output no longer shows that a key exists. An agent cannot tell a masked key from a response that had no key.
+- **A flag that prints the key in full**, `--show-secrets`. Not now. No use needs it that the config file does not already cover. And an agent would add a flag that unmasks out of habit. It can come later, in its own decision, if a use appears.
+- **Mask every credential an API returns**, the `key` of `get keys` too. Those commands are run for the key: printing it is their purpose, not a surprise. That is not part of this decision.
 
 ## Decision
 
 - **`add projects` prints the `masterKey` masked**, `****` followed by its last four characters, the way `config list` masks a key. The other fields pass through unchanged.
-- **`--sync-config` is the recommended way to keep the key**: the description of `add projects` says so. When the project has no URL yet, the error points to `config sync-with-cloud --project-name <name>`, which adds the project with its master key once it has one.
+- **`--sync-config` is the recommended way to keep the key**. The description of `add projects` says so. When the project has no URL yet, the error points to `config sync-with-cloud --project-name <name>`. That command adds the project with its master key once the project has a URL.
 
 ## Consequences
 

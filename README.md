@@ -1,10 +1,10 @@
 # Meilisearch CLI
 
-`meili` is the command line tool for [Meilisearch](https://www.meilisearch.com): any instance, local or remote, and Meilisearch Cloud through its Management API.
+`meili` is the command line tool for [Meilisearch](https://www.meilisearch.com). It works with any instance, local or remote, and with Meilisearch Cloud through its Management API.
 
 ## Install
 
-TBD. The package is not published yet. To run it from the source, see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+TBD. The package is not published yet. To run it from source, see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Get started
 
@@ -22,9 +22,9 @@ meili config set --project local --project-url http://localhost:7700 --project-a
 meili config list                    # the projects of the file, keys masked
 ```
 
-The config file is `~/.config/meili/config.json` by default. `MEILI_CONFIG` names another file.
+The config file is `~/.config/meili/config.json` by default. `MEILI_CONFIG` sets another file.
 
-`--team-ids`, `--project-name` and `--project-url` narrow `sync-with-cloud` down. A key already in the file is never replaced; `meili config update --project <name> --project-api-key -` gives a project the key you got elsewhere.
+`--team-ids`, `--project-name` and `--project-url` limit the projects that `sync-with-cloud` adds. A key already in the file is never replaced. To give a project a key you got elsewhere, run `meili config update --project <name> --project-api-key -`.
 
 **3. Run commands**, naming the project with `--project`:
 
@@ -36,7 +36,7 @@ meili update projects --project prod --name renamed   # a management command, on
 meili add projects --name demo --team-id 12 --resource-id 3 --sync-config   # creates a Cloud project and adds it to the file
 ```
 
-`--project` is required on every command. Without a config file, name the instance outright: `--project-url <url> --project-api-key <key>`.
+`--project` is required on every command. Without a config file, give the instance directly: `--project-url <url> --project-api-key <key>`.
 
 ## Documentation
 
