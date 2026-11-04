@@ -7,6 +7,7 @@ import { HttpResponse, http } from "msw";
 import type {
   Error as ApiError,
   Project,
+  Resource,
   Team,
 } from "../../src/lib/clients/management/generated/types.gen.js";
 
@@ -34,6 +35,19 @@ export const project: Project = {
   paused: false,
   createdAt: "2026-10-14T10:00:00Z",
   resource: { id: 3, name: "build", plan: "build", regionId: 1 },
+};
+
+/** The resource of `project`, as `GET /api/v2/resources` returns it. */
+export const resource: Resource = {
+  id: 3,
+  name: "build",
+  displayName: "Build",
+  plan: "build",
+  regionId: 1,
+  storage: 10,
+  memory: 1,
+  vcpu: 0.5,
+  fullPlan: null,
 };
 
 /** The team of `project`, as `GET /api/v2/teams` returns it. */
@@ -98,6 +112,17 @@ export const managementHandlers = {
       const teamId = query.get("teamId");
       const matching = all.filter((each) => teamId === null || String(each.teamId) === teamId);
       return HttpResponse.json(onePage(matching, Number(query.get("page") ?? "1"), limit));
+    }),
+
+  /** `GET /api/v2/resources` answering the resources of `all` in the `regionId` asked if any, on one page. */
+  listResources: (all: Resource[], received: ReceivedRequest[] = []) =>
+    http.get(`${MANAGEMENT_URL}/api/v2/resources`, async ({ request }) => {
+      await record(received, request);
+      const regionId = new URL(request.url).searchParams.get("regionId");
+      const matching = all.filter(
+        (each) => regionId === null || String(each.regionId) === regionId,
+      );
+      return HttpResponse.json(onePage(matching, 1, 20));
     }),
 
   /** `GET /api/v2/teams` answering `all` on one page. */
