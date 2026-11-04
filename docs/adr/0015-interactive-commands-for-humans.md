@@ -29,9 +29,9 @@ It moves the data of a Meilisearch project to a new Meilisearch Cloud project. I
 2. The source is checked with `POST /export` without a body. The instance checks the key first, then answers 400 `missing_payload` and enqueues nothing. A 401, 403 or 404, or no answer, shows why and asks for the source again.
 3. The stored session is used when the API accepts it. Otherwise, the browser login of `auth login` runs. It also creates an account.
 4. Region, in the order of the API: the API does not expose what the dashboard measures to find the closest region.
-5. Team, asked only when there are several.
+5. Team, asked only when there are several. The teams are grouped by organization.
 6. Project name, `<source>-cloud` by default.
-7. The free trial resource of the region. On `user_not_entitled_to_free_trial`, or in a region without a free trial, the plans of the region that have a monthly estimation, with their size and their price. A missing payment method or address stops the command with the link to the billing page of the team.
+7. The free trial resource of the region. On `user_not_entitled_to_free_trial`, or in a region without a free trial, the plans of the region that have a monthly estimation, except the Build plan, with their size and their price. A missing payment method or address stops the command with the link to the billing page of the team.
 8. Wait until the project is `running`, with the link to the prices.
 9. Add the project to the config file, as `add projects --sync-config` does.
 10. Export, with the progress of the batch of the source. Then wait until the new project has no task to process: it is new, so all its tasks come from the export.

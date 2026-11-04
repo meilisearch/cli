@@ -22,14 +22,19 @@ const human = vi.hoisted(() => ({
 
 vi.mock("../../src/lib/terminal.js", async (importActual) => {
   const actual = await importActual<typeof import("../../src/lib/terminal.js")>();
-  const answer = (message: string, choices?: Array<{ name: string }>) => {
-    human.questions.push({ message, ...(choices && { choices: choices.map((c) => c.name) }) });
+  // A heading of `choose` has no `name`, only its `separator` text.
+  const answer = (message: string, choices?: Array<{ name?: string; separator?: string }>) => {
+    human.questions.push({
+      message,
+      ...(choices && { choices: choices.map((c) => c.name ?? c.separator ?? "") }),
+    });
     if (human.answers.length === 0) return Promise.reject(new Error(`No answer to: ${message}`));
     return Promise.resolve(human.answers.shift());
   };
   return {
     ...actual,
-    choose: (message: string, choices: Array<{ name: string }>) => answer(message, choices),
+    choose: (message: string, choices: Array<{ name?: string; separator?: string }>) =>
+      answer(message, choices),
     ask: (message: string) => answer(message),
     askSecret: (message: string) => answer(message),
   };
@@ -63,7 +68,7 @@ function resource(id: number, name: string, kind: string, estimation: number | n
     },
   };
 }
-/** In the API order: the plans come back sorted XS, M, Build, then the others; L has no price. */
+/** In the API order: the plans come back sorted XS, M, 2XL; Build is never offered, and L has no price. */
 const plans: Resource[] = [
   resource(3, "Build", "base", 30),
   resource(9, "2XL", "instance_runtime", 175.2),
@@ -71,6 +76,11 @@ const plans: Resource[] = [
   resource(6, "M", "instance_runtime", 43.8),
   resource(4, "XS", "instance_runtime", 21.9),
 ];
+const regions = [
+  { id: 1, name: "San Francisco", awsRegion: "us-west-1", countryCode: "US" },
+  { id: 2, name: "Frankfurt", awsRegion: "eu-central-1", countryCode: "DE" },
+];
+const [sanFrancisco, frankfurt] = regions;
 const missingPayload = {
   message: "A json payload is missing.",
   code: "missing_payload",
@@ -136,13 +146,18 @@ function cloud(
     http.get(`${MANAGEMENT_URL}/api/v2/me`, () =>
       HttpResponse.json({ name: "Ada", email: "ada@example.com" }),
     ),
-    http.get(`${MANAGEMENT_URL}/api/v2/regions`, () =>
+    http.get(`${MANAGEMENT_URL}/api/v2/regions`, () => page(regions)),
+    http.get(`${MANAGEMENT_URL}/api/v2/organizations`, () =>
       page([
-        { id: 1, name: "San Francisco", awsRegion: "us-west-1", countryCode: "US" },
-        { id: 2, name: "Frankfurt", awsRegion: "eu-central-1", countryCode: "DE" },
+        { id: 1, name: "Acme", identifier: "acme" },
+        { id: 2, name: "Labs", identifier: "labs" },
       ]),
     ),
-    managementHandlers.listTeams([team, { ...team, id: 13, name: "Other" }]),
+    managementHandlers.listTeams([
+      team,
+      { ...team, id: 14, name: "Research", organizationId: 2 },
+      { ...team, id: 13, name: "Other" },
+    ]),
     http.get(`${MANAGEMENT_URL}/api/v2/resources`, () => page([...plans, trial])),
     create,
     managementHandlers.getProject([{ ...project, name: "local-cloud" }]),
@@ -155,10 +170,13 @@ describe("meili teleport", () => {
     tty = { stdin: process.stdin.isTTY, stderr: process.stderr.isTTY };
     process.stdin.isTTY = true;
     process.stderr.isTTY = true;
+    // The spinner stays on its first frame, and every wait lasts 0s.
+    vi.useFakeTimers({ toFake: ["setInterval", "Date"] });
     human.answers.length = 0;
     human.questions.length = 0;
   });
   afterEach(() => {
+    vi.useRealTimers();
     process.stdin.isTTY = tty.stdin as boolean;
     process.stderr.isTTY = tty.stderr as boolean;
   });
@@ -184,7 +202,7 @@ describe("meili teleport", () => {
     const { path, env: configEnv } = tempConfig("teleport.json", {
       local: { url: MEILISEARCH_URL, apiKey: "masterKey" },
     });
-    human.answers.push(2, team, "local-cloud");
+    human.answers.push(frankfurt, team, "local-cloud");
 
     const result = await runCommand(Teleport, ["--project", "local"], {
       env: { ...env, ...configEnv },
@@ -241,7 +259,7 @@ describe("meili teleport", () => {
       bad: { url: "http://bad.test:7700", apiKey: "nope" },
       local: { url: MEILISEARCH_URL, apiKey: "masterKey" },
     });
-    human.answers.push("local", 1, team, "local-cloud", 4);
+    human.answers.push("local", sanFrancisco, team, "local-cloud", 4);
 
     const result = await runCommand(Teleport, ["--project", "bad"], {
       env: { ...env, ...configEnv },
@@ -260,7 +278,7 @@ describe("meili teleport", () => {
     const { env: configEnv } = tempConfig("teleport-failed.json", {
       local: { url: MEILISEARCH_URL, apiKey: "masterKey" },
     });
-    human.answers.push(2, team, "local-cloud");
+    human.answers.push(frankfurt, team, "local-cloud");
 
     const result = await runCommand(Teleport, ["--project", "local"], {
       env: { ...env, ...configEnv },

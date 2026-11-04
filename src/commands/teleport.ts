@@ -3,12 +3,18 @@ import { type Meilisearch, MeilisearchApiError } from "meilisearch";
 import { type Api, BaseCommand } from "../lib/base-command.js";
 import {
   getApiV2Me,
+  getApiV2Organizations,
   getApiV2Regions,
   getApiV2Resources,
   getApiV2Teams,
   postApiV2Projects,
 } from "../lib/clients/management/generated/sdk.gen.js";
-import type { Project, Resource, Team } from "../lib/clients/management/generated/types.gen.js";
+import type {
+  Organization,
+  Project,
+  Resource,
+  Team,
+} from "../lib/clients/management/generated/types.gen.js";
 import { probeExport, triggerExport } from "../lib/clients/meilisearch.js";
 import { cloudOf, everyPage, type ReachableProject, waitForProject } from "../lib/cloud-sync.js";
 import { assertNoProject, type ConfigFile, isProjectUrl, writeConfigFile } from "../lib/config.js";
@@ -21,10 +27,39 @@ import {
 import { logInWithBrowser } from "../lib/login.js";
 import { resolveOauthClient } from "../lib/session.js";
 import { isTaskFailure, isTaskFinal, pollUntil } from "../lib/tasks.js";
-import { ask, askSecret, bar, choose, elapsed, endStatus, say, status } from "../lib/terminal.js";
+import {
+  ask,
+  askSecret,
+  bar,
+  choose,
+  detail,
+  elapsed,
+  endStatus,
+  field,
+  heading,
+  paint,
+  problem,
+  say,
+  status,
+  step,
+} from "../lib/terminal.js";
 
 const PRICING_URL = "https://www.meilisearch.com/pricing";
 const SUPPORT = "support@meilisearch.com";
+
+/** Shown in turn while Meilisearch Cloud creates the project, `<name>` replaced by its name. */
+const TIPS = [
+  `Choose the best plan for your usage: ${PRICING_URL}`,
+  "Meilisearch Cloud upgrades your project to new Meilisearch versions smoothly.",
+  "`meili get indexes --project <name>` lists the indexes of the project.",
+  "Meilisearch Cloud monitors your instance for you.",
+  '`meili search --project <name> --index <uid> --q "<query>"` searches an index.',
+  "Meilisearch Cloud shows analytics on how your project is searched.",
+  "`meili get stats --project <name>` shows the number of documents of each index.",
+  "`meili get tasks --project <name> --statuses failed` lists the tasks that failed.",
+  "`meili config list` shows the projects of your config file.",
+];
+const TIP_MS = 8000;
 
 /** The answers of `POST /api/v2/projects` to an organization without a payment method or an address. */
 const BILLING_ERRORS: ReadonlySet<string> = new Set([
@@ -89,6 +124,7 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
       );
     }
     const onInterrupt = () => {
+      endStatus();
       this.sayWhatExists();
       process.exit(130);
     };
@@ -101,27 +137,34 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
   }
 
   private async teleport(named: string | undefined): Promise<void> {
+    say(
+      `${paint("bold", "meili teleport")} ${paint("dim", "· move your data to Meilisearch Cloud")}`,
+    );
+    say();
     const file = this.configFile();
     const source = await this.chooseSource(file, named);
     await this.logIn();
     const client = this.managementClient;
     const dashboard = resolveOauthClient(this.env).dashboardUrl;
 
-    const [regions, teams] = await Promise.all([
+    status(() => "Loading the regions, the organizations and the teams");
+    const [regions, organizations, teams] = await Promise.all([
       everyPage((query) => getApiV2Regions({ client, query }), { page: 1 }),
+      everyPage((query) => getApiV2Organizations({ client, query }), { page: 1 }),
       everyPage((query) => getApiV2Teams({ client, query }), { page: 1 }),
     ]);
-    const regionId = await choose(
+    const region = await choose(
       "Region of the new project",
-      regions.map((region) => ({ name: region.name, value: region.id })),
+      regions.map((each) => ({ name: each.name, value: each })),
     );
-    const team = await chooseTeam(teams);
+    step("Region", region.name);
+    const team = await chooseTeam(organizations, teams);
 
     const created = await this.createProject(
       file,
       await askName(file, `${source.name ?? "meilisearch"}-cloud`),
       team,
-      regionId,
+      region.id,
       dashboard,
     );
     // The entry of the config file takes the name of the project.
@@ -129,14 +172,20 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     const link = `${dashboard}/teams/${team.id}/projects/${created.id}`;
     this.created = { name, link, sourceName: source.name, inConfigFile: false };
 
-    say(`Meilisearch Cloud is creating ${name}. It can take several minutes.`);
-    say(`While you wait, see the plans and prices at ${PRICING_URL}`);
     const start = Date.now();
+    let current = created.status;
+    const creating = () => {
+      const tip = TIPS[Math.floor((Date.now() - start) / TIP_MS) % TIPS.length] as string;
+      return `Creating ${name}: ${current}. It can take several minutes.  ${paint("dim", elapsed(start))}
+${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
+    };
+    status(creating);
     const project = await waitForProject(client, created.id, {
       timeoutMs: this.waitTimeoutMs({}),
-      onProgress: (current) => status(`Creating ${name}: ${current.status}, ${elapsed(start)}`),
+      onProgress: (each) => {
+        current = each.status;
+      },
     });
-    endStatus();
     if (project.status === "failed" || project.url == null) {
       throw new MeiliCliError(
         "cli_task_failed",
@@ -147,25 +196,27 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
 
     this.addToConfigFile({ ...project, url: project.url }, created.masterKey, teams);
     this.created.inConfigFile = true;
-    say(`Project ${name} is running, and is in the config file as \`${name}\`.`);
+    step("Created", `${name} is running, in the config file as \`${name}\``, start);
 
-    say(`Sending the data of ${source.name ?? source.url} to ${name}.`);
     const task = await triggerExport(source.client, {
       url: project.url,
       apiKey: created.masterKey,
     });
-    await followExport(source.client, task.taskUid);
+    await followExport(source.client, task.taskUid, source.name ?? source.url);
     const destination = this.meilisearchClient(project.url, created.masterKey);
     await followIndexing(destination, name);
 
     const [index] = (await destination.getIndexes({ limit: 1 })).results;
     say();
-    say(`Your data is in Meilisearch Cloud, in project ${name}.`);
+    say(
+      `✨ ${paint("bold", `Done in ${elapsed(start)}: your data is in Meilisearch Cloud, in project ${name}.`)}`,
+    );
+    say();
     if (index !== undefined) {
-      say(`Search it:         meili search --project ${name} --index ${index.uid} --q "<query>"`);
+      field("Search", `meili search --project ${name} --index ${index.uid} --q "<query>"`);
     }
-    say(`Try it:            ${link}/preview`);
-    say(`Project settings:  ${link}/settings/general`);
+    field("Try it", `${link}/preview`);
+    field("Project settings", `${link}/settings/general`);
   }
 
   /** The source named, else the one chosen, once its key can call `POST /export`. */
@@ -174,9 +225,12 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     for (;;) {
       const source = await this.pickSource(file, name);
       name = undefined;
-      const problem = await exportProblem(source.client);
-      if (problem === undefined) return source;
-      say(`${source.name ?? source.url} cannot export. ${problem}`);
+      const why = await exportProblem(source.client);
+      if (why === undefined) {
+        step("Source", source.name === undefined ? source.url : `${source.name}, ${source.url}`);
+        return source;
+      }
+      problem(`${source.name ?? source.url} cannot export. ${why}`);
     }
   }
 
@@ -185,7 +239,7 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     if (entry !== undefined) {
       return { name, url: entry.url, client: this.meilisearchClient(entry.url, entry.apiKey) };
     }
-    if (name !== undefined) say(`No project \`${name}\` in ${file.path}.`);
+    if (name !== undefined) problem(`No project \`${name}\` in ${file.path}.`);
     const names = Object.keys(file.projects);
     const picked =
       names.length === 0
@@ -208,11 +262,11 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     let me = await this.loggedInUser();
     if (me === undefined) {
       say("Log in to Meilisearch Cloud in your browser. Without an account, you create one there.");
-      await logInWithBrowser(this.env, true);
+      await logInWithBrowser(this.env, true, detail);
       await this.connectManagement();
       me = await getApiV2Me({ client: this.managementClient });
     }
-    say(`Logged in to Meilisearch Cloud as ${me.email}.`);
+    step("Logged in", me.email);
   }
 
   /** The user of the stored session, or undefined when there is none or the server refuses it. */
@@ -255,7 +309,11 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
           client,
           body: { name, teamId: team.id, resourceId },
         });
-        if (resourceId === trialId) say(`${name} is a free trial project: free for 14 days.`);
+        const plan =
+          resourceId === trialId
+            ? "free trial, free for 14 days"
+            : `plan ${resources.find((resource) => resource.id === resourceId)?.name}`;
+        step("Project", `${name}, ${plan}`);
         return project;
       } catch (error) {
         const code = apiErrorCode(error);
@@ -264,7 +322,7 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
           continue;
         }
         if (code === "project_create_name_exists") {
-          say(`Team ${team.name} already has a project ${name}.`);
+          problem(`Team ${team.name} already has a project ${name}.`);
           name = await askName(file, name);
           continue;
         }
@@ -318,18 +376,18 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     }
     const { body, exitCode } = toRenderedError(error);
     say();
-    say(`Error: ${body.message}`);
-    if (body.hint !== undefined) say(body.hint);
+    problem(`Error: ${body.message}`);
+    if (body.hint !== undefined) detail(body.hint);
     this.sayWhatExists();
     this.exit(exitCode);
   }
 
   private sayWhatExists(): void {
     if (this.created === undefined) return;
-    say(`Project ${this.created.name} exists in Meilisearch Cloud: ${this.created.link}`);
+    detail(`Project ${this.created.name} exists in Meilisearch Cloud: ${this.created.link}`);
     const { name, sourceName, inConfigFile } = this.created;
     if (inConfigFile) {
-      say(
+      detail(
         `It is in the config file. To send the data again, run \`meili export --project ${sourceName ?? "<source>"} --project-destination ${name} --wait\`.`,
       );
     }
@@ -353,16 +411,27 @@ async function exportProblem(client: Meilisearch): Promise<string | undefined> {
   }
 }
 
-async function chooseTeam(teams: Team[]): Promise<Team> {
+/** The team of the new project, asked only when there are several, grouped by organization. */
+async function chooseTeam(organizations: Organization[], teams: Team[]): Promise<Team> {
   const [only] = teams;
-  if (only !== undefined && teams.length === 1) {
-    say(`Team: ${only.name}.`);
-    return only;
-  }
-  return choose(
-    "Team of the new project",
-    teams.map((team) => ({ name: team.name, value: team })),
-  );
+  const team =
+    only !== undefined && teams.length === 1
+      ? only
+      : await choose(
+          "Team of the new project",
+          organizations.flatMap((organization) => {
+            const its = teams.filter((each) => each.organizationId === organization.id);
+            return its.length === 0
+              ? []
+              : [
+                  heading(organization.name),
+                  ...its.map((each) => ({ name: `  ${each.name}`, value: each })),
+                ];
+          }),
+        );
+  const organization = organizations.find((each) => each.id === team.organizationId);
+  step("Team", organization === undefined ? team.name : `${team.name} (${organization.name})`);
+  return team;
 }
 
 /** A name Meilisearch Cloud accepts and the config file does not have yet. */
@@ -379,17 +448,17 @@ function askName(file: ConfigFile, suggested: string): Promise<string> {
 }
 
 /** The plans offered when the free trial is not, in this order. Any other plan comes after them. */
-const PLAN_ORDER = ["XS", "S", "M", "L", "XL", "Build"];
+const PLAN_ORDER = ["XS", "S", "M", "L", "XL", "2XL", "4XL", "8XL"];
 
-/** The plans that show a monthly estimation, in `PLAN_ORDER`. */
+/** The plans that show a monthly estimation, in `PLAN_ORDER`, except the Build plan: it is never offered here. */
 function choosePlan(resources: Resource[], why: string): Promise<number> {
-  say(`${why} Choose a plan. Prices: ${PRICING_URL}`);
+  say(`${why} Get help to choose the right plan based on your usage here: ${PRICING_URL}`);
   const rank = (resource: Resource) => {
     const index = PLAN_ORDER.indexOf(resource.name);
     return index === -1 ? PLAN_ORDER.length : index;
   };
   const priced = resources.flatMap((resource) => {
-    const estimation = monthlyEstimation(resource);
+    const estimation = resource.name === "Build" ? undefined : monthlyEstimation(resource);
     return estimation === undefined ? [] : [{ resource, estimation }];
   });
   return choose(
@@ -417,14 +486,15 @@ function monthlyEstimation(resource: Resource): number | undefined {
 
 const USD = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
-/** `XS: 0.5 vCPU, 1 GB RAM, 50 GB storage, about $21.90 a month`. */
+/** `XS: 0.5 vCPU, 1 GB RAM, 50 GB storage, about $21.90 a month (recommended for development only)`. */
 function describeResource(resource: Resource, estimation: number): string {
   const size = [
     resource.vcpu == null ? undefined : `${resource.vcpu} vCPU`,
     resource.memory == null ? undefined : `${resource.memory} GB RAM`,
     resource.storage == null ? undefined : `${resource.storage} GB storage`,
   ].filter((part) => part !== undefined);
-  return `${resource.name}: ${[...size, `about ${USD.format(estimation)} a month`].join(", ")}`;
+  const note = resource.name === "XS" ? " (recommended for development only)" : "";
+  return `${resource.name}: ${[...size, `about ${USD.format(estimation)} a month`].join(", ")}${note}`;
 }
 
 /** The `code` of a Management API error body. */
@@ -433,8 +503,10 @@ function apiErrorCode(error: unknown): string | undefined {
 }
 
 /** Follows the export task of the source, with the progress of its batch. */
-async function followExport(client: Meilisearch, uid: number): Promise<void> {
-  const show = (percentage: number) => status(`Sending   ${bar(percentage / 100)}`);
+async function followExport(client: Meilisearch, uid: number, label: string): Promise<void> {
+  const start = Date.now();
+  let percentage = 0;
+  status(() => `Sending   ${bar(percentage / 100)}  ${paint("dim", elapsed(start))}`);
   const final = await pollUntil(
     async () => {
       const task = await client.tasks.getTask(uid);
@@ -446,49 +518,60 @@ async function followExport(client: Meilisearch, uid: number): Promise<void> {
     },
     ({ task }) => isTaskFinal(task),
     NEVER,
-    { timeoutMs: NO_DEADLINE, onProgress: ({ percentage }) => show(percentage) },
+    {
+      timeoutMs: NO_DEADLINE,
+      onProgress: (current) => {
+        percentage = current.percentage;
+      },
+    },
   );
   if (isTaskFailure(final.task)) {
-    endStatus();
     throw new MeiliCliError(
       "cli_task_failed",
       `The export failed: ${final.task.error?.message ?? final.task.status}.`,
     );
   }
-  show(100);
-  endStatus();
+  step("Sent", `the data of ${label}`, start);
 }
+
+const tasks = (count: number) => (count === 1 ? "1 task" : `${count} tasks`);
 
 /**
  * Follows the tasks of the new project until none is left to process. The
  * project is new, so every task of it comes from the export.
  */
 async function followIndexing(client: Meilisearch, entry: string): Promise<void> {
+  const start = Date.now();
   // The export is over, so the total no longer grows: only what is left is polled.
   const { total } = await client.tasks.getTasks({ limit: 1 });
-  const show = (left: number) =>
-    status(
-      `Indexing  ${bar(total === 0 ? 1 : (total - left) / total)}  ${total - left}/${total} tasks`,
-    );
+  let left = total;
+  status(
+    () =>
+      `Indexing  ${bar(total === 0 ? 1 : (total - left) / total)}  ${total - left}/${total} tasks  ${paint("dim", elapsed(start))}`,
+  );
   await pollUntil(
     async () =>
       (await client.tasks.getTasks({ statuses: ["enqueued", "processing"], limit: 1 })).total,
-    (left) => left === 0,
+    (count) => count === 0,
     NEVER,
-    { timeoutMs: NO_DEADLINE, maxIntervalMs: 2000, onProgress: show },
-  );
-  show(0);
-  endStatus();
-  const failed = await client.tasks.getTasks({ statuses: ["failed"] });
-  if (failed.total === 0) return;
-  for (const task of failed.results) {
-    say(`Task ${task.uid} (${task.type}) failed: ${task.error?.message ?? "no error message"}`);
-  }
-  throw new MeiliCliError(
-    "cli_task_failed",
-    `${failed.total === 1 ? "1 task" : `${failed.total} tasks`} failed in project ${entry}.`,
     {
-      hint: `Run \`meili get tasks --project ${entry} --statuses failed\` to see them.`,
+      timeoutMs: NO_DEADLINE,
+      maxIntervalMs: 2000,
+      onProgress: (count) => {
+        left = count;
+      },
     },
   );
+  left = 0;
+  const failed = await client.tasks.getTasks({ statuses: ["failed"] });
+  if (failed.total === 0) {
+    step("Indexed", tasks(total), start);
+    return;
+  }
+  for (const task of failed.results) {
+    problem(`Task ${task.uid} (${task.type}) failed: ${task.error?.message ?? "no error message"}`);
+  }
+  throw new MeiliCliError("cli_task_failed", `${tasks(failed.total)} failed in project ${entry}.`, {
+    hint: `Run \`meili get tasks --project ${entry} --statuses failed\` to see them.`,
+  });
 }

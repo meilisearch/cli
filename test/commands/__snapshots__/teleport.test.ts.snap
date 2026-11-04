@@ -3,12 +3,19 @@
 exports[`meili teleport > asks for another source when the key cannot export, then offers the plans when the free trial is used, and stops on a missing payment method 1`] = `
 {
   "exitCode": 1,
-  "stderr": "bad cannot export. The API key is missing or wrong, or it lacks the \`export\` action. Use the master key, or a key with the \`export\` action.
-Logged in to Meilisearch Cloud as ada@example.com.
-Your free trial is already used. Choose a plan. Prices: https://www.meilisearch.com/pricing
-Add a payment method and an address at https://dashboard.test/teams/12/billing, then run \`meili teleport\` again.
+  "stderr": "  meili teleport · move your data to Meilisearch Cloud
 
-Error: A payment method is required.
+  ✖ bad cannot export. The API key is missing or wrong, or it lacks the \`export\` action. Use the master key, or a key with the \`export\` action.
+  ✔ Source      local, http://meili.test:7700
+  ✔ Logged in   ada@example.com
+
+[J  ⠋ Loading the regions, the organizations and the teams
+[J  ✔ Region      San Francisco
+  ✔ Team        Search (Acme)
+  Your free trial is already used. Get help to choose the right plan based on your usage here: https://www.meilisearch.com/pricing
+  Add a payment method and an address at https://dashboard.test/teams/12/billing, then run \`meili teleport\` again.
+
+  ✖ Error: A payment method is required.
 ",
   "stdout": "",
 }
@@ -33,8 +40,11 @@ exports[`meili teleport > asks for another source when the key cannot export, th
   },
   {
     "choices": [
-      "Search",
-      "Other",
+      "   Acme",
+      "  Search",
+      "  Other",
+      "   Labs",
+      "  Research",
     ],
     "message": "Team of the new project",
   },
@@ -43,9 +53,8 @@ exports[`meili teleport > asks for another source when the key cannot export, th
   },
   {
     "choices": [
-      "XS: 2 vCPU, 1 GB RAM, 50 GB storage, about $21.90 a month",
+      "XS: 2 vCPU, 1 GB RAM, 50 GB storage, about $21.90 a month (recommended for development only)",
       "M: 2 vCPU, 1 GB RAM, 50 GB storage, about $43.80 a month",
-      "Build: 2 vCPU, 1 GB RAM, 50 GB storage, about $30.00 a month",
       "2XL: 2 vCPU, 1 GB RAM, 50 GB storage, about $175.20 a month",
     ],
     "message": "Plan of the new project",
@@ -56,21 +65,31 @@ exports[`meili teleport > asks for another source when the key cannot export, th
 exports[`meili teleport > creates a free trial project, adds it to the config file, and exports the data to it 1`] = `
 {
   "exitCode": 0,
-  "stderr": "Logged in to Meilisearch Cloud as ada@example.com.
-local-cloud is a free trial project: free for 14 days.
-Meilisearch Cloud is creating local-cloud. It can take several minutes.
-While you wait, see the plans and prices at https://www.meilisearch.com/pricing
-Project local-cloud is running, and is in the config file as \`local-cloud\`.
-Sending the data of local to local-cloud.
+  "stderr": "  meili teleport · move your data to Meilisearch Cloud
 
-[2KSending   [##############################] 100%
+  ✔ Source      local, http://meili.test:7700
+  ✔ Logged in   ada@example.com
 
-[2KIndexing  [##############################] 100%  3/3 tasks
+[J  ⠋ Loading the regions, the organizations and the teams
+[J  ✔ Region      Frankfurt
+  ✔ Team        Search (Acme)
+  ✔ Project     local-cloud, free trial, free for 14 days
 
-Your data is in Meilisearch Cloud, in project local-cloud.
-Search it:         meili search --project local-cloud --index movies --q "<query>"
-Try it:            https://dashboard.test/teams/12/projects/343/preview
-Project settings:  https://dashboard.test/teams/12/projects/343/settings/general
+[J  ⠋ Creating local-cloud: running. It can take several minutes.  0s
+    Tip: Choose the best plan for your usage: https://www.meilisearch.com/pricing[2A
+[J  ✔ Created     local-cloud is running, in the config file as \`local-cloud\`  0s
+
+[J  ⠋ Sending   ──────────────────────────────   0%  0s
+[J  ✔ Sent        the data of local  0s
+
+[J  ⠋ Indexing  ──────────────────────────────   0%  0/3 tasks  0s
+[J  ✔ Indexed     3 tasks  0s
+
+  ✨ Done in 0s: your data is in Meilisearch Cloud, in project local-cloud.
+
+    Search            meili search --project local-cloud --index movies --q "<query>"
+    Try it            https://dashboard.test/teams/12/projects/343/preview
+    Project settings  https://dashboard.test/teams/12/projects/343/settings/general
 ",
   "stdout": "",
 }
@@ -87,8 +106,11 @@ exports[`meili teleport > creates a free trial project, adds it to the config fi
   },
   {
     "choices": [
-      "Search",
-      "Other",
+      "   Acme",
+      "  Search",
+      "  Other",
+      "   Labs",
+      "  Research",
     ],
     "message": "Team of the new project",
   },
@@ -99,22 +121,31 @@ exports[`meili teleport > creates a free trial project, adds it to the config fi
 `;
 
 exports[`meili teleport > names the failed tasks of the new project, and what exists in Meilisearch Cloud 1`] = `
-"Logged in to Meilisearch Cloud as ada@example.com.
-local-cloud is a free trial project: free for 14 days.
-Meilisearch Cloud is creating local-cloud. It can take several minutes.
-While you wait, see the plans and prices at https://www.meilisearch.com/pricing
-Project local-cloud is running, and is in the config file as \`local-cloud\`.
-Sending the data of local to local-cloud.
+"  meili teleport · move your data to Meilisearch Cloud
 
-[2KSending   [##############################] 100%
+  ✔ Source      local, http://meili.test:7700
+  ✔ Logged in   ada@example.com
 
-[2KIndexing  [##############################] 100%  3/3 tasks
-Task 2 (indexCreation) failed: Bad document.
+[J  ⠋ Loading the regions, the organizations and the teams
+[J  ✔ Region      Frankfurt
+  ✔ Team        Search (Acme)
+  ✔ Project     local-cloud, free trial, free for 14 days
 
-Error: 1 task failed in project local-cloud.
-Run \`meili get tasks --project local-cloud --statuses failed\` to see them.
-Project local-cloud exists in Meilisearch Cloud: https://dashboard.test/teams/12/projects/343
-It is in the config file. To send the data again, run \`meili export --project local --project-destination local-cloud --wait\`.
+[J  ⠋ Creating local-cloud: running. It can take several minutes.  0s
+    Tip: Choose the best plan for your usage: https://www.meilisearch.com/pricing[2A
+[J  ✔ Created     local-cloud is running, in the config file as \`local-cloud\`  0s
+
+[J  ⠋ Sending   ──────────────────────────────   0%  0s
+[J  ✔ Sent        the data of local  0s
+
+[J  ⠋ Indexing  ──────────────────────────────   0%  0/3 tasks  0s
+[J  ⠋ Indexing  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100%  3/3 tasks  0s
+  ✖ Task 2 (indexCreation) failed: Bad document.
+
+  ✖ Error: 1 task failed in project local-cloud.
+    Run \`meili get tasks --project local-cloud --statuses failed\` to see them.
+    Project local-cloud exists in Meilisearch Cloud: https://dashboard.test/teams/12/projects/343
+    It is in the config file. To send the data again, run \`meili export --project local --project-destination local-cloud --wait\`.
 "
 `;
 

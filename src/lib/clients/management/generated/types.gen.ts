@@ -60,6 +60,9 @@ export type Team = {
 };
 
 export type TeamMember = {
+    /**
+     * User's uuid, null for pending invitations
+     */
     id?: string | null;
     email: string;
     name?: string | null;
@@ -112,6 +115,7 @@ export type Region = {
     awsRegion: string;
     countryCode: string;
     greenLabel?: boolean;
+    regionUrl: string;
 };
 
 export type MeilisearchVersion = {
@@ -230,6 +234,7 @@ export type GetApiV2MeResponses = {
      * current user identity
      */
     200: {
+        id: string;
         name: string;
         email: string;
     };
