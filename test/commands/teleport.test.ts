@@ -42,16 +42,35 @@ const env = { ...managementEnv, MEILI_MANAGEMENT_DASHBOARD_URL: DASHBOARD_URL };
 const DESTINATION_URL = project.url as string;
 
 const trial: Resource = { id: 6, name: "free_trial", plan: "free_trial", regionId: 2 };
-const build: Resource = {
-  id: 3,
-  name: "build",
-  displayName: "Build",
-  plan: "build_plan",
-  regionId: 2,
-  vcpu: 2,
-  memory: 1,
-  storage: 50,
-};
+/** A resource of the region, and the plan the dashboard prices it with. */
+function resource(id: number, name: string, kind: string, estimation: number | null): Resource {
+  return {
+    id,
+    name,
+    plan: kind === "base" ? "build_plan" : "resource_based_plan",
+    regionId: 2,
+    vcpu: 2,
+    memory: 1,
+    storage: 50,
+    fullPlan: {
+      id,
+      name,
+      code: name,
+      features: [
+        { name: "Search", kind: "search", enabled: true, monthlyEstimation: 0 },
+        { name, kind, enabled: true, monthlyEstimation: estimation },
+      ],
+    },
+  };
+}
+/** In the API order: the plans come back sorted XS, M, Build, then the others; L has no price. */
+const plans: Resource[] = [
+  resource(3, "Build", "base", 30),
+  resource(9, "2XL", "instance_runtime", 175.2),
+  resource(7, "L", "instance_runtime", null),
+  resource(6, "M", "instance_runtime", 43.8),
+  resource(4, "XS", "instance_runtime", 21.9),
+];
 const missingPayload = {
   message: "A json payload is missing.",
   code: "missing_payload",
@@ -124,7 +143,7 @@ function cloud(
       ]),
     ),
     managementHandlers.listTeams([team, { ...team, id: 13, name: "Other" }]),
-    http.get(`${MANAGEMENT_URL}/api/v2/resources`, () => page([build, trial])),
+    http.get(`${MANAGEMENT_URL}/api/v2/resources`, () => page([...plans, trial])),
     create,
     managementHandlers.getProject([{ ...project, name: "local-cloud" }]),
   ];
@@ -222,7 +241,7 @@ describe("meili teleport", () => {
       bad: { url: "http://bad.test:7700", apiKey: "nope" },
       local: { url: MEILISEARCH_URL, apiKey: "masterKey" },
     });
-    human.answers.push("local", 1, team, "local-cloud", 3);
+    human.answers.push("local", 1, team, "local-cloud", 4);
 
     const result = await runCommand(Teleport, ["--project", "bad"], {
       env: { ...env, ...configEnv },
@@ -232,7 +251,7 @@ describe("meili teleport", () => {
     expect(human.questions).toMatchSnapshot();
     expect(received.map((each) => each.body)).toEqual([
       { name: "local-cloud", teamId: 12, resourceId: 6 },
-      { name: "local-cloud", teamId: 12, resourceId: 3 },
+      { name: "local-cloud", teamId: 12, resourceId: 4 },
     ]);
   });
 

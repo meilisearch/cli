@@ -374,24 +374,53 @@ function askName(file: ConfigFile, suggested: string): Promise<string> {
   });
 }
 
+/** The plans offered when the free trial is not, in this order. Any other plan comes after them. */
+const PLAN_ORDER = ["XS", "S", "M", "L", "XL", "Build"];
+
+/** The plans that show a monthly estimation, in `PLAN_ORDER`. */
 function choosePlan(resources: Resource[], why: string): Promise<number> {
   say(`${why} Choose a plan. Prices: ${PRICING_URL}`);
+  const rank = (resource: Resource) => {
+    const index = PLAN_ORDER.indexOf(resource.name);
+    return index === -1 ? PLAN_ORDER.length : index;
+  };
+  const priced = resources.flatMap((resource) => {
+    const estimation = monthlyEstimation(resource);
+    return estimation === undefined ? [] : [{ resource, estimation }];
+  });
   return choose(
     "Plan of the new project",
-    resources
-      .filter((resource) => resource.plan !== "free_trial")
-      .map((resource) => ({ name: describeResource(resource), value: resource.id })),
+    priced
+      .sort((a, b) => rank(a.resource) - rank(b.resource))
+      .map(({ resource, estimation }) => ({
+        name: describeResource(resource, estimation),
+        value: resource.id,
+      })),
   );
 }
 
-/** `Build: 2 vCPU, 1 GB RAM, 50 GB storage`. */
-function describeResource(resource: Resource): string {
+/**
+ * What the dashboard shows as the monthly price of a resource: the estimation
+ * of the first feature of its plan billed per month or per hour of runtime.
+ */
+function monthlyEstimation(resource: Resource): number | undefined {
+  return (
+    resource.fullPlan?.features.find(
+      (feature) => feature.kind === "base" || feature.kind === "instance_runtime",
+    )?.monthlyEstimation ?? undefined
+  );
+}
+
+const USD = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+
+/** `XS: 0.5 vCPU, 1 GB RAM, 50 GB storage, about $21.90 a month`. */
+function describeResource(resource: Resource, estimation: number): string {
   const size = [
     resource.vcpu == null ? undefined : `${resource.vcpu} vCPU`,
     resource.memory == null ? undefined : `${resource.memory} GB RAM`,
     resource.storage == null ? undefined : `${resource.storage} GB storage`,
   ].filter((part) => part !== undefined);
-  return `${resource.displayName ?? resource.name}: ${size.join(", ")}`;
+  return `${resource.name}: ${[...size, `about ${USD.format(estimation)} a month`].join(", ")}`;
 }
 
 /** The `code` of a Management API error body. */

@@ -43,7 +43,10 @@ exports[`meili teleport > asks for another source when the key cannot export, th
   },
   {
     "choices": [
-      "Build: 2 vCPU, 1 GB RAM, 50 GB storage",
+      "XS: 2 vCPU, 1 GB RAM, 50 GB storage, about $21.90 a month",
+      "M: 2 vCPU, 1 GB RAM, 50 GB storage, about $43.80 a month",
+      "Build: 2 vCPU, 1 GB RAM, 50 GB storage, about $30.00 a month",
+      "2XL: 2 vCPU, 1 GB RAM, 50 GB storage, about $175.20 a month",
     ],
     "message": "Plan of the new project",
   },
