@@ -29,4 +29,5 @@ Refused:
 - An archive weighs about 50 MB, most of it Node.
 - An archive runs on Linux with glibc. Alpine and other musl systems use npm.
 - A new Node version in `.node-version` changes the Node of the archives at the next release.
+- npm accepts the version from the job through trusted publishing (OIDC), so no npm token is stored in GitHub. Trusted publishing is set up on a package that exists, so a maintainer published `0.0.0` by hand once, to create `@meilisearch/cli`.
 - The `MEILI_BOT_GH_PAT` token opens the "Version Packages" pull request, so CI tests it, and it pushes to the tap.
