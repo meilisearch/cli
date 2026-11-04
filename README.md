@@ -80,7 +80,7 @@ meili export --project local --project-destination cloud --wait
 meili get tasks --project cloud --statuses enqueued,processing   # run it again until it lists no task
 ```
 
-The team id and the resource id can be fetched with `meili team list` and `meili resource list`.
+The team id and the resource id can be fetched with `meili get teams` and `meili get resources`.
 
 ## Documentation
 
