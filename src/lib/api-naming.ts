@@ -171,8 +171,9 @@ export function eachRoute(spec: OpenApiDocument): Route[] {
 // Exceptions
 
 /**
- * A route whose derived name is wrong, ambiguous or collides with another one,
- * or a route declared without command (`command: null`). The table in
+ * A route whose name the maintainers chose instead of the derived one, because
+ * that one is wrong, ambiguous, colliding or less clear, or a route declared
+ * without command (`command: null`). The table in
  * commands.md mirrors this list: same routes, same commands, same reasons.
  *
  * `route` is `METHOD /path` as written in the OpenAPI document. `*` as the

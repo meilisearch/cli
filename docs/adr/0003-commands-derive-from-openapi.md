@@ -1,6 +1,6 @@
 # ADR 0003: Commands derive from the OpenAPI documents, verb first, HTTP stays in generated clients
 
-Status: accepted. Date: 2026-09-29. The grammar is superseded by ADR 0018: the resource comes first, in the singular, and `list` and `view` are two commands.
+Status: accepted. Date: 2026-09-29. Two points are superseded by ADR 0018: the grammar (the resource comes first, in the singular, and `list` and `view` are two commands), and the rule that only a wrong, ambiguous or colliding name gets an exception.
 
 ## Context
 

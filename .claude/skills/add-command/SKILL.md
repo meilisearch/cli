@@ -31,8 +31,8 @@ Do not write a command without the document. If the download fails, stop and tel
 Compare the derived command with `$ARGUMENTS`:
 
 - same name: go on.
-- different name because the rules give a wrong, ambiguous or colliding name: record an exception in `ROUTE_EXCEPTIONS` of `src/lib/api-naming.ts` and in the exceptions table of `commands.md`, with the reason, in this same change. The command column of an exception names the command, then the flags that distinguish the route, which the route accepts (`document delete --ids`).
-- different name because the user's request contradicts the rules for no such reason: tell the user, propose the derived name, and follow what they decide; if they keep their name, it is an exception with their reason.
+- different name because the rules give a wrong, ambiguous or colliding name, or because the user chose a clearer one: record an exception in `ROUTE_EXCEPTIONS` of `src/lib/api-naming.ts` and in the exceptions table of `commands.md`, with the reason, in this same change. The command column of an exception names the command, then the flags that distinguish the route, which the route accepts (`document delete --ids`).
+- different name that you think reads better than the derived one: do not choose it yourself. Propose it to the user with the derived name, and follow what they decide. If they choose another name than the derived one, it is an exception with their reason.
 - no route in the document, or a parameter the user mentions that the document does not have: stop and ask the user. Do not guess a route and do not read it in Meilisearch's source code.
 - a route behind an experimental feature: it is out of the contract (rule 10). Stop and tell the user; opening it is an exception they decide.
 - a command that calls no API (`schema`, the `config` commands): it must be in the "Commands without an API" table of `commands.md`; if it is not, stop and ask.

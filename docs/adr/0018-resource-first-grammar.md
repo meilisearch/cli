@@ -1,6 +1,6 @@
 # ADR 0018: Resource first, in the singular: `meili index list`
 
-Status: accepted. Date: 2026-11-04. Supersedes the grammar of ADR 0003: the verb first, the plural resource, and one command for the list and the unit routes.
+Status: accepted. Date: 2026-11-04. Supersedes two points of ADR 0003: the grammar (the verb first, the plural resource, one command for the list and the unit routes), and the rule that only a wrong, ambiguous or colliding name gets an exception.
 
 ## Context
 
@@ -20,6 +20,7 @@ Alternatives considered:
 - **One command for the list and the unit routes**, as before: `meili index get` and `meili index get --id movies`. A singular name that returns a list surprises the reader. `gh` separates `list` and `view`.
 - **Hidden aliases for the old names**, for one release. The project is at its start, and few scripts use the CLI. An alias is a second spelling to maintain and to document. The changelog lists every old name with its new name.
 - **Positional identifiers**, `meili index view movies`, as in `gh`. Not now. Every value stays in a named flag (ADR 0003). The usage error gives a hint instead.
+- **Strict derivation**, as in ADR 0003: a route gets another name only when the derived name is wrong, ambiguous or collides. The rules then decide names that read badly, like `add indexes` or `project-version`, and nobody can fix them without breaking the rule. A CLI is read by people, and a good name is worth an exception.
 
 ## Decision
 
@@ -32,10 +33,12 @@ Alternatives considered:
 - **The commands without a resource stay at the root**: `search`, `similar`, `facet-search`, `multi-search`, `export`, `schema`, `teleport`. `auth` and `config` already followed this grammar and do not change.
 - **`meili --help` gives the full tour.** It lists every resource with its commands on one screen, grouped by the API whose routes they implement: the CLI first, for the commands without a route, then Meilisearch, then the Management API of Meilisearch Cloud. Nobody needs to open a second help to know what exists.
 - **A wrong command gets a hint, never a guess.** The `cli_usage` error suggests the closest existing command, computed from the manifest. It covers the old order (`meili get indexes` → `meili index list`), the plural (`meili indexes list` → `meili index list`), the verbs of `gh` (`create` → `add`, `edit` → `update`) and a positional value (`meili index view movies`: the hint says that every value goes in a named flag, and points to `meili index view --help`). The CLI still never runs a command the user did not write.
+- **The rules give the default name, not the only one.** The maintainers choose the name of a command, its resource word and its verb, case by case, when another name reads better for a human or an agent. The derived name does not need to be wrong: `meili info` for `GET /version` is such a choice. Each choice is an exception of `commands.md`, with its reason, so that the contract test, `meili schema` and the docs still agree. An agent that adds a command uses the derived name. It proposes another name to a human, who decides.
 - **The rest of ADR 0003 holds**: the OpenAPI documents are the reference, flags derive from the routes, every value is a named flag, `add` and not `create`, HTTP stays in `src/lib/clients/`.
 
 ## Consequences
 
+- An exception no longer needs a wrong, ambiguous or colliding name: a clearer name is reason enough.
 - Every command is renamed. This is a breaking change. The changeset lists every old name with its new name.
 - Files move: `src/commands/get/indexes.ts` becomes `src/commands/index/list.ts` and `src/commands/index/view.ts`. A command of the verb `delete` is now a file named `delete.ts`. The contract test of ADR 0007 checks these files for `--yes`, in place of the `src/commands/delete/` folder.
 - Each `get` command that covered a list route and a unit route becomes two commands. There are more commands, but each one has fewer flags and one route.
