@@ -38,9 +38,11 @@ meili add projects --name demo --team-id 12 --resource-id 3 --sync-config   # cr
 
 `--project` is required on every command. Without a config file, give the instance directly: `--project-url <url> --project-api-key <key>`.
 
-## Move your data to Meilisearch Cloud
+## From self-hosted to Meilisearch Cloud
 
-`meili teleport` moves the data of a Meilisearch instance, local or in production, to a new Meilisearch Cloud project. It asks its questions in the terminal:
+Meilisearch Cloud upgrades and monitors your project for you, shows how it is searched, and is [free for 14 days](https://www.meilisearch.com/pricing).
+
+`meili teleport` moves the data of a self-hosted Meilisearch, local or in production, to a new Meilisearch Cloud project. It asks its questions in the terminal:
 
 ```sh
 meili teleport

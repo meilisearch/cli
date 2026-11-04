@@ -15,16 +15,21 @@ import {
 /** How long the human has to approve before the login gives up. */
 const TIMEOUT_MS = 300_000;
 
-/** Runs the OAuth flow, writes the session to the credentials file, and returns both. */
+/**
+ * Runs the OAuth flow, writes the session to the credentials file, and returns
+ * both. `say` writes a line for the human: an interactive command draws it in its margin.
+ */
 export async function logInWithBrowser(
   env: Env,
   browser: boolean,
+  say: (line: string) => void = (line) => process.stderr.write(`${line}\n`),
 ): Promise<{ path: string; session: Session }> {
   const client = resolveOauthClient(env);
   const tokens = await logIn(client, {
     timeoutMs: TIMEOUT_MS,
     onAuthorizationUrl: (url) => {
-      process.stderr.write(`Approve the login for \`${SCOPES}\` at:\n${url}\n`);
+      say(`Approve the login for \`${SCOPES}\` at:`);
+      say(url);
       if (browser) openInBrowser(url);
     },
   });

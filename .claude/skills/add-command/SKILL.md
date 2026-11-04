@@ -23,7 +23,7 @@ Work through the steps in order. Every check below is enforced by `pnpm test` th
 Then get the OpenAPI document:
 
 ```sh
-pnpm openapi   # meilisearch: latest release; management: needs `gh auth login` or MEILI_BOT_GH_PAT
+pnpm openapi   # meilisearch: latest release; management: needs `gh auth login` or GITHUB_TOKEN
 ```
 
 Do not write a command without the document. If the download fails, stop and tell the user what is missing (network, GitHub token). `pnpm api:coverage` lists every command the rules derive, with its routes and whether it exists: find `meili $ARGUMENTS` there. Its routes are every route whose verb and resource give this command: `get indexes` covers `GET /indexes` and `GET /indexes/{index_uid}`, `delete documents` covers three routes. For each route, read in `openapi/meilisearch.json` (or `openapi/management.json`) its path parameters, query parameters, request body and response.

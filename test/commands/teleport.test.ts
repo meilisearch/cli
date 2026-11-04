@@ -22,18 +22,31 @@ const human = vi.hoisted(() => ({
 
 vi.mock("../../src/lib/terminal.js", async (importActual) => {
   const actual = await importActual<typeof import("../../src/lib/terminal.js")>();
-  const answer = (message: string, choices?: Array<{ name: string }>) => {
-    human.questions.push({ message, ...(choices && { choices: choices.map((c) => c.name) }) });
+  // A heading of `choose` has no `name`, only its `separator` text.
+  const answer = (message: string, choices?: Array<{ name?: string; separator?: string }>) => {
+    human.questions.push({
+      message,
+      ...(choices && { choices: choices.map((c) => c.name ?? c.separator ?? "") }),
+    });
     if (human.answers.length === 0) return Promise.reject(new Error(`No answer to: ${message}`));
     return Promise.resolve(human.answers.shift());
   };
   return {
     ...actual,
-    choose: (_prompt: string, message: string, choices: Array<{ name: string }>) =>
-      answer(message, choices),
+    choose: (
+      _prompt: string,
+      message: string,
+      choices: Array<{ name?: string; separator?: string }>,
+    ) => answer(message, choices),
     ask: (_prompt: string, message: string) => answer(message),
     askSecret: (_prompt: string, message: string) => answer(message),
   };
+});
+
+/** The latency of each region; Sydney does not answer. */
+vi.mock("../../src/lib/clients/ping.js", () => {
+  const latencies: Record<string, number> = { "sfo.meilisearch.io": 150, "fra.meilisearch.io": 20 };
+  return { regionLatency: (regionUrl: string) => Promise.resolve(latencies[regionUrl]) };
 });
 
 useMockServer();
@@ -64,7 +77,7 @@ function resource(id: number, name: string, kind: string, estimation: number | n
     },
   };
 }
-/** In the API order: the plans come back sorted XS, M, Build, then the others; L has no price. */
+/** In the API order: the plans come back sorted XS, M, 2XL; Build is never offered, and L has no price. */
 const plans: Resource[] = [
   resource(3, "Build", "base", 30),
   resource(9, "2XL", "instance_runtime", 175.2),
@@ -72,6 +85,31 @@ const plans: Resource[] = [
   resource(6, "M", "instance_runtime", 43.8),
   resource(4, "XS", "instance_runtime", 21.9),
 ];
+const regions = [
+  {
+    id: 1,
+    name: "San Francisco",
+    awsRegion: "us-west-1",
+    countryCode: "US",
+    regionUrl: "sfo.meilisearch.io",
+  },
+  {
+    id: 2,
+    name: "Frankfurt",
+    awsRegion: "eu-central-1",
+    countryCode: "DE",
+    greenLabel: true,
+    regionUrl: "fra.meilisearch.io",
+  },
+  {
+    id: 3,
+    name: "Sydney",
+    awsRegion: "ap-southeast-2",
+    countryCode: "AU",
+    regionUrl: "syd.meilisearch.io",
+  },
+];
+const [sanFrancisco, frankfurt] = regions;
 const missingPayload = {
   message: "A json payload is missing.",
   code: "missing_payload",
@@ -137,13 +175,18 @@ function cloud(
     http.get(`${MANAGEMENT_URL}/api/v2/me`, () =>
       HttpResponse.json({ name: "Ada", email: "ada@example.com" }),
     ),
-    http.get(`${MANAGEMENT_URL}/api/v2/regions`, () =>
+    http.get(`${MANAGEMENT_URL}/api/v2/regions`, () => page(regions)),
+    http.get(`${MANAGEMENT_URL}/api/v2/organizations`, () =>
       page([
-        { id: 1, name: "San Francisco", awsRegion: "us-west-1", countryCode: "US" },
-        { id: 2, name: "Frankfurt", awsRegion: "eu-central-1", countryCode: "DE" },
+        { id: 1, name: "Acme", identifier: "acme" },
+        { id: 2, name: "Labs", identifier: "labs" },
       ]),
     ),
-    managementHandlers.listTeams([team, { ...team, id: 13, name: "Other" }]),
+    managementHandlers.listTeams([
+      team,
+      { ...team, id: 14, name: "Research", organizationId: 2 },
+      { ...team, id: 13, name: "Other" },
+    ]),
     http.get(`${MANAGEMENT_URL}/api/v2/resources`, () => page([...plans, trial])),
     create,
     managementHandlers.getProject([{ ...project, name: "local-cloud" }]),
@@ -156,10 +199,13 @@ describe("meili teleport", () => {
     tty = { stdin: process.stdin.isTTY, stderr: process.stderr.isTTY };
     process.stdin.isTTY = true;
     process.stderr.isTTY = true;
+    // The spinner stays on its first frame, and every wait lasts 0s.
+    vi.useFakeTimers({ toFake: ["setInterval", "Date"] });
     human.answers.length = 0;
     human.questions.length = 0;
   });
   afterEach(() => {
+    vi.useRealTimers();
     process.stdin.isTTY = tty.stdin as boolean;
     process.stderr.isTTY = tty.stderr as boolean;
   });
@@ -185,7 +231,7 @@ describe("meili teleport", () => {
     const { path, env: configEnv } = tempConfig("teleport.json", {
       local: { url: MEILISEARCH_URL, apiKey: "masterKey" },
     });
-    human.answers.push(2, team, "local-cloud");
+    human.answers.push(frankfurt, team, "local-cloud");
 
     const result = await runCommand(Teleport, ["--project", "local"], {
       env: { ...env, ...configEnv },
@@ -242,7 +288,7 @@ describe("meili teleport", () => {
       bad: { url: "http://bad.test:7700", apiKey: "nope" },
       local: { url: MEILISEARCH_URL, apiKey: "masterKey" },
     });
-    human.answers.push("local", 1, team, "local-cloud", 4);
+    human.answers.push("local", sanFrancisco, team, "local-cloud", 4);
 
     const result = await runCommand(Teleport, ["--project", "bad"], {
       env: { ...env, ...configEnv },
@@ -256,12 +302,45 @@ describe("meili teleport", () => {
     ]);
   });
 
+  it("says the transfer goes on, with the links to watch it, on Ctrl-C during the transfer", async () => {
+    const exits: Array<{ code: unknown; stderr: string }> = [];
+    let stderr = "";
+    vi.spyOn(process, "exit").mockImplementationOnce((code) => {
+      exits.push({ code, stderr });
+      return undefined as never;
+    });
+    // The first handler of a path wins: this one replaces the task 9 of `source()`.
+    server.use(
+      http.get(`${MEILISEARCH_URL}/tasks/9`, () => {
+        process.emit("SIGINT");
+        return HttpResponse.json(makeTask({ uid: 9, status: "succeeded" }));
+      }),
+      ...source(),
+      ...cloud(),
+      ...destination(),
+    );
+    const { env: configEnv } = tempConfig("teleport-interrupted.json", {
+      local: { url: MEILISEARCH_URL, apiKey: "masterKey" },
+    });
+    human.answers.push(frankfurt, team, "local-cloud");
+
+    await runCommand(Teleport, ["--project", "local"], {
+      env: { ...env, ...configEnv },
+      onStderr: (chunk) => {
+        stderr += chunk;
+      },
+    });
+
+    expect(exits.map((each) => each.code)).toEqual([0]);
+    expect(exits[0]?.stderr).toMatchSnapshot();
+  });
+
   it("names the failed tasks of the new project, and what exists in Meilisearch Cloud", async () => {
     server.use(...source(), ...cloud(), ...destination([2]));
     const { env: configEnv } = tempConfig("teleport-failed.json", {
       local: { url: MEILISEARCH_URL, apiKey: "masterKey" },
     });
-    human.answers.push(2, team, "local-cloud");
+    human.answers.push(frankfurt, team, "local-cloud");
 
     const result = await runCommand(Teleport, ["--project", "local"], {
       env: { ...env, ...configEnv },
