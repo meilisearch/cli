@@ -317,11 +317,26 @@ export function entriesOfCloudId(file: ConfigFile, id: number): string[] {
   return Object.keys(file.projects).filter((name) => file.projects[name]?.cloud?.id === id);
 }
 
-/** `cli_usage` unless `value` is an HTTP(S) URL: a Meilisearch instance answers over nothing else. */
+/** `value` as a URL, or undefined. `URL.parse` would do, but only from Node 22.1. */
+export function parseUrl(value: string): URL | undefined {
+  try {
+    return new URL(value);
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * `cli_usage` unless `value` is an HTTP(S) URL: a Meilisearch instance answers
+ * over nothing else. The message leaves the value out, which may carry a password.
+ */
 export function assertProjectUrl(value: string): void {
-  const url = URL.parse(value);
-  if (url === null || (url.protocol !== "http:" && url.protocol !== "https:")) {
-    throw new MeiliCliError("cli_usage", `Invalid project URL \`${value}\`.`);
+  const url = parseUrl(value);
+  if (url === undefined || (url.protocol !== "http:" && url.protocol !== "https:")) {
+    throw new MeiliCliError(
+      "cli_usage",
+      "Invalid project URL: `--project-url` takes an HTTP(S) URL.",
+    );
   }
 }
 

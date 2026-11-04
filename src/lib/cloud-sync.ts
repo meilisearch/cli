@@ -11,7 +11,7 @@ import {
 } from "./clients/management/generated/sdk.gen.js";
 import type { Pagination, Project } from "./clients/management/generated/types.gen.js";
 import type { ManagementClient } from "./clients/management.js";
-import type { CloudIdentifiers, ProjectEntry } from "./config.js";
+import { type CloudIdentifiers, type ProjectEntry, parseUrl } from "./config.js";
 import { ManagementApiError, MeiliCliError, toRenderedError, writeWarning } from "./errors.js";
 import { iteratePages, nextPageQuery, type PageQuery } from "./pagination.js";
 
@@ -133,8 +133,8 @@ export async function cloudEntry(
 
 /** Same scheme, host and port. */
 export function sameOrigin(a: string, b: string): boolean {
-  const origin = URL.parse(a)?.origin;
-  return origin !== undefined && origin === URL.parse(b)?.origin;
+  const origin = parseUrl(a)?.origin;
+  return origin !== undefined && origin === parseUrl(b)?.origin;
 }
 
 /** An entry whose URL is not its project's is an anomaly, reported and not corrected. */

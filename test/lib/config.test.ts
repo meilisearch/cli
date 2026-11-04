@@ -173,11 +173,12 @@ describe("resolveProjectConnection", () => {
     });
   });
 
-  it("refuses a --project-url that is not HTTP(S), an empty one included", () => {
-    for (const url of ["", "ftp://flag"]) {
+  it("refuses a --project-url that is not HTTP(S), an empty one included, without echoing it", () => {
+    for (const url of ["", "ftp://user:secret@flag"]) {
       const error = caught(() => resolveProjectConnection({ url }, unread));
       expect(error.code).toBe("cli_usage");
       expect(error.exitCode).toBe(2);
+      expect(error.message).not.toContain("secret");
     }
   });
 
