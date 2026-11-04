@@ -35,6 +35,8 @@ COMMANDS
                      index with --index.
   get tasks          List the tasks of the instance, narrowed by --ids,
                      --statuses, --types and the other filters of the route.
+  get teams          List the Meilisearch Cloud teams the token sees, or get one
+                     with --id.
   get version        Get the version of the Meilisearch instance, with the
                      commit it was built from.
 

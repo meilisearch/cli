@@ -89,6 +89,14 @@ export const forbidden: ApiError = {
   link: "https://www.meilisearch.com/docs/reference/errors#project_not_accessible",
 };
 
+/** The 404 of a team route on an id the token does not see. */
+export const teamNotFound: ApiError = {
+  message: "Team not found.",
+  code: "team_not_found",
+  type: "invalid_request",
+  link: "https://www.meilisearch.com/docs/reference/errors#team_not_found",
+};
+
 /** The 403 of the master key route to a member who is not an owner. */
 export const notOwner: ApiError = {
   message: "Only team and organization owners can read the master key.",
@@ -150,6 +158,26 @@ export const managementHandlers = {
   /** `GET /api/v2/teams` answering `all` on one page. */
   listTeams: (all: Team[] = [team]) =>
     http.get(`${MANAGEMENT_URL}/api/v2/teams`, () => HttpResponse.json(onePage(all, 1, 20))),
+
+  /** `GET /api/v2/teams/{id}` answering `team` with the id asked. */
+  getTeam: () =>
+    http.get(`${MANAGEMENT_URL}/api/v2/teams/:id`, ({ params }) =>
+      HttpResponse.json({ ...team, id: Number(params.id) }),
+    ),
+
+  /** `POST /api/v2/teams` answering 201 with `team` carrying the attributes received. */
+  createTeam: (received: ReceivedRequest[]) =>
+    http.post(`${MANAGEMENT_URL}/api/v2/teams`, async ({ request }) => {
+      const attributes = (await record(received, request)) as Record<string, unknown>;
+      return HttpResponse.json({ ...team, ...attributes }, { status: 201 });
+    }),
+
+  /** `PATCH /api/v2/teams/{id}` answering 200 with `team` carrying the attributes received. */
+  updateTeam: (received: ReceivedRequest[]) =>
+    http.patch(`${MANAGEMENT_URL}/api/v2/teams/:id`, async ({ request }) => {
+      const body = (await record(received, request)) as Record<string, unknown>;
+      return HttpResponse.json({ ...team, ...body });
+    }),
 
   /** `GET /api/v2/regions` answering `all` on one page. */
   listRegions: (all: Region[]) =>

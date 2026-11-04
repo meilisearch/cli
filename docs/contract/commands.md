@@ -71,6 +71,10 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 | `PATCH /api/v2/organizations/{id}` | `meili update organizations --id <id> --name <name>` |
 | `DELETE /api/v2/organizations/{id}` | `meili delete organizations --id <id> --yes` |
 | `GET /api/v2/regions` | `meili get regions` |
+| `GET /api/v2/teams`, `GET /api/v2/teams/{id}` | `meili get teams [--id <id>]` |
+| `POST /api/v2/teams` | `meili add teams --organization-id <id> [--name <name>]` |
+| `PATCH /api/v2/teams/{id}` | `meili update teams --id <id> [--name <name>] [--owner-id <uuid>]` |
+| `DELETE /api/v2/teams/{id}` | `meili delete teams --id <id> --yes` |
 | `GET /api/v2/team-members` | `meili get team-members --team-id <id>` |
 | `GET /api/v2/resources` | `meili get resources [--region-id <id>]` |
 
