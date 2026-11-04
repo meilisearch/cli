@@ -33,8 +33,9 @@ exports[`meili teleport > asks for another source when the key cannot export, th
   },
   {
     "choices": [
-      "San Francisco",
-      "Frankfurt",
+      "Frankfurt 🌱      20ms  (closest)",
+      "San Francisco    150ms",
+      "Sydney",
     ],
     "message": "Region of the new project",
   },
@@ -99,8 +100,9 @@ exports[`meili teleport > creates a free trial project, adds it to the config fi
 [
   {
     "choices": [
-      "San Francisco",
-      "Frankfurt",
+      "Frankfurt 🌱      20ms  (closest)",
+      "San Francisco    150ms",
+      "Sydney",
     ],
     "message": "Region of the new project",
   },

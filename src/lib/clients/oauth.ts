@@ -5,7 +5,7 @@
  * to a loopback server this process owns, and the code is exchanged for the
  * tokens of the Management API. See ADR 0009.
  *
- * With `meilisearch.ts`, the only files of `src/` that speak HTTP.
+ * With `meilisearch.ts` and `ping.ts`, the only files of `src/` that speak HTTP.
  */
 import { createHash, randomBytes } from "node:crypto";
 import { createServer, type ServerResponse } from "node:http";

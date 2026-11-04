@@ -40,6 +40,12 @@ vi.mock("../../src/lib/terminal.js", async (importActual) => {
   };
 });
 
+/** The latency of each region; Sydney does not answer. */
+vi.mock("../../src/lib/clients/ping.js", () => {
+  const latencies: Record<string, number> = { "sfo.meilisearch.io": 150, "fra.meilisearch.io": 20 };
+  return { regionLatency: (regionUrl: string) => Promise.resolve(latencies[regionUrl]) };
+});
+
 useMockServer();
 
 const DASHBOARD_URL = "https://dashboard.test";
@@ -77,8 +83,28 @@ const plans: Resource[] = [
   resource(4, "XS", "instance_runtime", 21.9),
 ];
 const regions = [
-  { id: 1, name: "San Francisco", awsRegion: "us-west-1", countryCode: "US" },
-  { id: 2, name: "Frankfurt", awsRegion: "eu-central-1", countryCode: "DE" },
+  {
+    id: 1,
+    name: "San Francisco",
+    awsRegion: "us-west-1",
+    countryCode: "US",
+    regionUrl: "sfo.meilisearch.io",
+  },
+  {
+    id: 2,
+    name: "Frankfurt",
+    awsRegion: "eu-central-1",
+    countryCode: "DE",
+    greenLabel: true,
+    regionUrl: "fra.meilisearch.io",
+  },
+  {
+    id: 3,
+    name: "Sydney",
+    awsRegion: "ap-southeast-2",
+    countryCode: "AU",
+    regionUrl: "syd.meilisearch.io",
+  },
 ];
 const [sanFrancisco, frankfurt] = regions;
 const missingPayload = {
