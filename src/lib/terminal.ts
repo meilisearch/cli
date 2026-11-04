@@ -1,5 +1,5 @@
 /**
- * The terminal of `meili teleport`, the one interactive command (ADR 0015):
+ * The terminal of the interactive commands, such as `meili teleport` (ADR 0015):
  * questions answered with the arrow keys, lines for the human, and one status
  * line that rewrites itself. Everything goes to stderr: stdout stays for data.
  */

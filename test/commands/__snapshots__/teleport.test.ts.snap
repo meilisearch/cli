@@ -119,7 +119,7 @@ It is in the config file. To send the data again, run \`meili export --project l
 `;
 
 exports[`meili teleport > prints its help without any network call 1`] = `
-"Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. For humans only: an agent never runs it.
+"Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. An interactive command, for humans: an agent never runs it.
 
 USAGE
   $ meili teleport [-o <mode>] [--debug] [--project <name>]
@@ -135,7 +135,8 @@ FLAGS
 
 DESCRIPTION
   Move the data of a Meilisearch project to a new Meilisearch Cloud project, by
-  asking questions on the terminal. For humans only: an agent never runs it.
+  asking questions on the terminal. An interactive command, for humans: an agent
+  never runs it.
 
   It checks that the source can export, logs in to Meilisearch Cloud, creates a
   project in the region, team and plan chosen, adds it to the config file,

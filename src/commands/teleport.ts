@@ -55,7 +55,7 @@ export default class Teleport extends BaseCommand {
   static api: Api = "none";
 
   static override description =
-    `Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. For humans only: an agent never runs it.
+    `Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. An interactive command, for humans: an agent never runs it.
 
 It checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.
 

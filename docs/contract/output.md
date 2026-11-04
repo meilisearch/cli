@@ -8,7 +8,7 @@ This file defines what `meili` writes, where it writes it, and in which format. 
 - stderr carries everything else: errors, warnings, progress, debug traces, deprecation notices.
 - A command that produces no data (for example a delete that the API answers with 204) writes nothing on stdout in `json` mode and exits with code 0. It may write one line on stderr when stderr is a TTY.
 - A command that waits for a human, `auth login`, writes on stderr what that human must act on, TTY or not. The URL to approve must reach a person even when the output is piped.
-- `teleport`, the one interactive command, writes its questions, its progress and its messages on stderr, and nothing on stdout. In a terminal, its errors are text for a human. Without one, it fails with the JSON error of this file. See ADR 0015.
+- An interactive command, such as `teleport`, writes its questions, its progress and its messages on stderr, and nothing on stdout. In a terminal, its errors are text for a human. Without one, it fails with the JSON error of this file. See ADR 0015.
 
 ## Output modes
 

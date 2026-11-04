@@ -2487,7 +2487,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
     },
     {
       "api": "none",
-      "description": "Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. For humans only: an agent never runs it.
+      "description": "Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. An interactive command, for humans: an agent never runs it.
 
 It checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.
 
@@ -3248,7 +3248,7 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         ],
       },
       {
-        "description": "Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. For humans only: an agent never runs it.",
+        "description": "Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. An interactive command, for humans: an agent never runs it.",
         "id": "teleport",
       },
       {

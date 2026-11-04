@@ -8852,7 +8852,7 @@
     "teleport": {
       "aliases": [],
       "args": {},
-      "description": "Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. For humans only: an agent never runs it.\n\nIt checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.\n\nAn agent does the same without questions. Run `meili auth login`, then `meili add projects --name <name> --team-id <id> --resource-id <id> --sync-config --wait`, then `meili export --project <source> --project-destination <name> --wait`, then `meili get tasks --project <name> --statuses enqueued,processing` until it lists no task.",
+      "description": "Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. An interactive command, for humans: an agent never runs it.\n\nIt checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.\n\nAn agent does the same without questions. Run `meili auth login`, then `meili add projects --name <name> --team-id <id> --resource-id <id> --sync-config --wait`, then `meili export --project <source> --project-destination <name> --wait`, then `meili get tasks --project <name> --statuses enqueued,processing` until it lists no task.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
         "<%= config.bin %> <%= command.id %> --project local"
