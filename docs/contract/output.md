@@ -18,7 +18,7 @@ This file defines what `meili` writes, where, and in which format. Agents build 
 | `json` | One JSON document. Compact (one line) when stdout is not a TTY, indented with two spaces when it is. Field order and names are the API's. |
 | `ndjson` | One JSON object per line. Only list routes support it. Each line is one item of the API `results` array. With `--all`, lines stream as pages arrive. |
 
-There is no human-oriented mode and no color: the indented JSON of a terminal is what a human reads.
+There is no table mode and no color: in a terminal the JSON is indented, which is how it reads.
 
 ## Pass-through
 

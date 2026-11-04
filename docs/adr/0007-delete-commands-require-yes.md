@@ -17,7 +17,7 @@ A deletion is the only thing the CLI does that the next command cannot undo. A w
 The rules in `docs/contract/output.md` and `docs/contract/config.md` are the public contract of the CLI. In short:
 
 - stdout is data only, stderr is everything else
-- `json` is the default output mode, in a terminal or not; `ndjson` streams lists; there is no human mode
+- `json` is the default output mode, in a terminal or not; `ndjson` streams lists; there is no other format
 - API responses pass through unchanged, no wrapper, no renaming
 - errors are JSON on stderr with `code`, `type`, `message`, `link`, `hint`
 - exit codes are stable and documented
@@ -37,4 +37,4 @@ Destructive, in `output.md`, names the verb `delete` and nothing else: what the 
 - The selector rule is unchanged: `delete documents` still refuses to run without `--ids`, `--filter` or `--all`.
 - Every command line that deletes, in the documentation, in the examples and in the tests, carries `--yes`.
 - This is a breaking change for the `delete` commands: a major version once the CLI is released, a minor one before 1.0.
-- The consequences of ADR 0002 stand: any change to these rules needs a contract pull request first, human comfort features stay out of scope, and reviewers check the interface rather than the implementation.
+- The consequences of ADR 0002 stand: any change to these rules needs a contract pull request first, human comfort never overrides them, and reviewers check the interface rather than the implementation.

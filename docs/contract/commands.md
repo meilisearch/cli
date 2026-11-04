@@ -199,7 +199,7 @@ These commands have no route of their own, so no route derives them: most call n
 
 ## Not in scope
 
-`meili` is for coding agents only. Human comfort features are not planned: interactive modes and TUIs, `$EDITOR` integration, prompts, questions to answer, wizards, shell completions, positional arguments. `--yes` of the `delete` commands is none of those: it is a flag the agent writes, and nothing waits for an answer. Also not planned: starting a local Meilisearch, self-update, chat, a guide command, dry runs, splitting a large documents file into batches, running a Meilisearch API command against a Cloud project by its id, NDJSON or CSV documents as long as the OpenAPI document does not declare them. Open a contract pull request if you think one of them belongs here.
+`meili` must be coding agent friendly: no command prompts, asks a question, opens `$EDITOR` or takes a positional argument. `--yes` of the `delete` commands is none of those: it is a flag the agent writes, and nothing waits for an answer. Human comfort is considered from the start in the documentation and the `--help`. Comfort commands for humans, such as shell completions, interactive modes, TUIs or wizards, come later, each through a contract pull request, and never change how the other commands behave. Also not planned: starting a local Meilisearch, self-update, chat, a guide command, dry runs, splitting a large documents file into batches, running a Meilisearch API command against a Cloud project by its id, NDJSON or CSV documents as long as the OpenAPI document does not declare them. Open a contract pull request if you think one of them belongs here.
 
 ## Milestones
 
