@@ -113,7 +113,13 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
 
   /** The Cloud project created so far, said when the command stops halfway. */
   private created:
-    | { name: string; link: string; sourceName: string | undefined; inConfigFile: boolean }
+    | {
+        name: string;
+        link: string;
+        sourceName: string | undefined;
+        inConfigFile: boolean;
+        transferring: boolean;
+      }
     | undefined;
 
   async run(): Promise<void> {
@@ -127,6 +133,17 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     }
     const onInterrupt = () => {
       endStatus();
+      // The export is enqueued: the transfer goes on without the CLI.
+      if (this.created?.transferring === true) {
+        say();
+        say(
+          `⏳ ${paint("bold", "The transfer goes on in Meilisearch Cloud. meili stopped watching it.")}`,
+        );
+        say();
+        field("Watch it", `${this.created.link}/batches`);
+        sayLinks(this.created.link);
+        process.exit(0);
+      }
       this.sayWhatExists();
       process.exit(130);
     };
@@ -169,7 +186,13 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     // The entry of the config file takes the name of the project.
     const { name } = created;
     const link = `${dashboard}/teams/${team.id}/projects/${created.id}`;
-    this.created = { name, link, sourceName: source.name, inConfigFile: false };
+    this.created = {
+      name,
+      link,
+      sourceName: source.name,
+      inConfigFile: false,
+      transferring: false,
+    };
 
     const start = Date.now();
     let current = created.status;
@@ -201,6 +224,7 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
       url: project.url,
       apiKey: created.masterKey,
     });
+    this.created.transferring = true;
     await followExport(source.client, task.taskUid, source.name ?? source.url);
     const destination = this.meilisearchClient(project.url, created.masterKey);
     await followIndexing(destination, name);
@@ -214,8 +238,7 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
     if (index !== undefined) {
       field("Search", `meili search --project ${name} --index ${index.uid} --q "<query>"`);
     }
-    field("Try it", `${link}/preview`);
-    field("Project settings", `${link}/settings/general`);
+    sayLinks(link);
   }
 
   /** The source named, else the one chosen, once its key can call `POST /export`. */
@@ -391,6 +414,12 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
       );
     }
   }
+}
+
+/** The links to the project in the dashboard. */
+function sayLinks(link: string): void {
+  field("Try it", `${link}/preview`);
+  field("Project settings", `${link}/settings/general`);
 }
 
 /** Why the source cannot export, or undefined when it can. */
