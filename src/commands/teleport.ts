@@ -53,11 +53,11 @@ const SUPPORT = "support@meilisearch.com";
 /** Shown in turn while Meilisearch Cloud creates the project, `<name>` replaced by its name. */
 const TIPS = [
   `Choose the best plan for your usage: ${PRICING_URL}`,
-  "Meilisearch Cloud upgrades your project to new Meilisearch versions smoothly.",
+  "Meilisearch Cloud upgrades your project to new Meilisearch versions automatically, at the time you schedule.",
   "`meili get indexes --project <name>` lists the indexes of the project.",
-  "Meilisearch Cloud monitors your instance for you.",
-  '`meili search --project <name> --index <uid> --q "<query>"` searches an index.',
-  "Meilisearch Cloud shows analytics on how your project is searched.",
+  "Monitor and manage your project from the Meilisearch Cloud dashboard.",
+  "`meili get tasks --project <name> --statuses enqueued,processing` lists the tasks not finished yet.",
+  "Meilisearch Cloud shows the usage analytics of your project, like the most searched queries.",
   "`meili get stats --project <name>` shows the number of documents of each index.",
   "`meili get tasks --project <name> --statuses failed` lists the tasks that failed.",
   "`meili config list` shows the projects of your config file.",
