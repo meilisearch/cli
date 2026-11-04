@@ -3,13 +3,20 @@ import { dirname, join } from "node:path";
 import { HttpResponse, http } from "msw";
 import { describe, expect, it, vi } from "vitest";
 import GetHealth from "../../src/commands/get/health.js";
-import { flagNames, sendAnalytics, track } from "../../src/lib/analytics.js";
+import {
+  flagNames,
+  identify,
+  resetAnonymousId,
+  sendAnalytics,
+  track,
+} from "../../src/lib/analytics.js";
 import { type Api, BaseCommand } from "../../src/lib/base-command.js";
 import { ANALYTICS_URL } from "../../src/lib/clients/analytics.js";
 import { choose } from "../../src/lib/terminal.js";
 import { MEILISEARCH_URL, meilisearchHandlers } from "../helpers/meilisearch-handlers.js";
 import { countRequests, server, useMockServer } from "../helpers/msw.js";
 import { readJson, runCli, runCommand, scrubbedHome } from "../helpers/run-command.js";
+import { storeSession } from "../helpers/session.js";
 
 const select = vi.hoisted(() => vi.fn());
 vi.mock("@inquirer/prompts", async (importActual) => ({
@@ -148,6 +155,49 @@ describe("analytics", () => {
       ["cli_prompt_answered", expect.objectContaining({ prompt: "region" })],
       ["cli_command_run", expect.objectContaining({ exit_code: 130 })],
     ]);
+  });
+
+  it("joins the anonymous id to the Cloud user after login, and uses the user's id while the session exists", async () => {
+    server.use(meilisearchHandlers.health());
+    const batches = posthog();
+    const env = analyticsEnv();
+    await runCommand(GetHealth, health, { env });
+    const anonymous = batches[0]?.batch[0]?.distinct_id;
+
+    const userId = await identify(env, async () => "user-uuid");
+    storeSession(env, "https://api.meilisearch.com", { userId });
+    await sendAnalytics(env, { command: "auth login" });
+    await runCommand(GetHealth, health, { env });
+
+    expect(userId).toBe("user-uuid");
+    expect(batches[1]?.batch[0]).toMatchObject({
+      event: "$identify",
+      distinct_id: "user-uuid",
+      properties: { $anon_distinct_id: anonymous },
+    });
+    expect(batches[2]?.batch[0]?.distinct_id).toBe("user-uuid");
+    expect(batches[2]?.batch[0]?.properties).not.toHaveProperty("$process_person_profile");
+  });
+
+  it("stays anonymous when the user's id cannot be fetched", async () => {
+    const batches = posthog();
+    const env = analyticsEnv();
+    const userId = await identify(env, () => Promise.reject(new Error("offline")));
+    await sendAnalytics(env, { command: "auth login" });
+
+    expect(userId).toBeUndefined();
+    expect(batches.flatMap((batch) => batch.batch)).toEqual([]);
+  });
+
+  it("gives a new anonymous id after logout", async () => {
+    server.use(meilisearchHandlers.health());
+    const batches = posthog();
+    const env = analyticsEnv();
+    await runCommand(GetHealth, health, { env });
+    resetAnonymousId(env);
+    await runCommand(GetHealth, health, { env });
+
+    expect(batches[1]?.batch[0]?.distinct_id).not.toBe(batches[0]?.batch[0]?.distinct_id);
   });
 
   it("names only the flags the command declares", () => {

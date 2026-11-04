@@ -25,7 +25,7 @@ export default class AuthLogin extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(AuthLogin);
-    const { path, session } = await logInWithBrowser(this.env, flags.browser);
+    const { path, session } = await logInWithBrowser(this.env, flags.browser, this.userAgent);
     writeNotice(`Logged in for \`${session.scope}\`. The session is in ${path}.`);
   }
 }

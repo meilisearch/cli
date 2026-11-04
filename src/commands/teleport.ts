@@ -293,7 +293,7 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
     let me = await this.loggedInUser();
     if (me === undefined) {
       say("Log in to Meilisearch Cloud in your browser. Without an account, you create one there.");
-      await logInWithBrowser(this.env, true, detail);
+      await logInWithBrowser(this.env, true, this.userAgent, detail);
       await this.connectManagement();
       me = await getApiV2Me({ client: this.managementClient });
     }

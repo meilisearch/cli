@@ -16,6 +16,7 @@ import {
   writeSecretFile,
 } from "./config.js";
 import { isRecord, writeNotice } from "./errors.js";
+import { credentialsFilePath, readCredentialsFile } from "./session.js";
 
 const NOTICE =
   "meili sends anonymous usage data to Meilisearch: the commands you run, the names of their flags, and their errors. Never the values of the flags, your data or your keys. To turn it off, set MEILI_NO_ANALYTICS=true.";
@@ -44,13 +45,16 @@ function enabled(env: Env): boolean {
   );
 }
 
+const analyticsFilePath = (env: Env): string =>
+  join(dirname(configFilePath(env)), "analytics.json");
+
 /**
  * The id of `analytics.json`, next to the config file. The first time, the
  * file is written and the notice shown. When the file cannot be written, each
  * process has its own id, and the notice is not repeated on every command.
  */
 function anonymousId(env: Env): string {
-  const path = join(dirname(configFilePath(env)), "analytics.json");
+  const path = analyticsFilePath(env);
   try {
     const parsed: unknown = JSON.parse(readFileSync(path, "utf8"));
     if (isRecord(parsed) && typeof parsed.anonymousId === "string") return parsed.anonymousId;
@@ -67,11 +71,52 @@ function anonymousId(env: Env): string {
   return id;
 }
 
+/** The Cloud user of the session of `auth login`, if any. */
+function sessionUserId(env: Env): string | undefined {
+  try {
+    return readCredentialsFile(credentialsFilePath(env), () => {})?.userId;
+  } catch {
+    // A malformed file: the next management command says so.
+    return undefined;
+  }
+}
+
+/**
+ * After a login, when usage data is sent: the id of the Cloud user, to store
+ * in the session, and one `$identify` that joins the anonymous id to it.
+ * Undefined when nothing is sent or `fetchUserId` fails: the CLI stays anonymous.
+ */
+export async function identify(
+  env: Env,
+  fetchUserId: () => Promise<string>,
+): Promise<string | undefined> {
+  if (!enabled(env)) return undefined;
+  let userId: string;
+  try {
+    userId = await fetchUserId();
+  } catch {
+    return undefined;
+  }
+  track("$identify", { $anon_distinct_id: anonymousId(env) });
+  return userId;
+}
+
+/** After a logout: a new anonymous id, so the next person on the machine is not joined to the previous one. */
+export function resetAnonymousId(env: Env): void {
+  if (!enabled(env)) return;
+  try {
+    writeSecretFile(analyticsFilePath(env), { anonymousId: randomUUID() });
+  } catch {
+    // A read-only mount, for example.
+  }
+}
+
 /** Sends the events the command collected, each with `common`, then forgets them. */
 export async function sendAnalytics(env: Env, common: Record<string, unknown>): Promise<void> {
   const events = collected.splice(0);
   if (!enabled(env)) return;
-  const distinctId = anonymousId(env);
+  const userId = sessionUserId(env);
+  const distinctId = userId ?? anonymousId(env);
   const properties = {
     ...common,
     site: "cli",
@@ -80,7 +125,7 @@ export async function sendAnalytics(env: Env, common: Record<string, unknown>): 
     node_version: process.versions.node,
     tty: process.stdin.isTTY === true && process.stderr.isTTY === true,
     $lib: "meili-cli",
-    $process_person_profile: false,
+    ...(userId === undefined && { $process_person_profile: false }),
   };
   await sendEvents(
     events.map((event) => ({

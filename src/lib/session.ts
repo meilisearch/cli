@@ -77,6 +77,8 @@ export interface Session extends OauthSession {
   /** When the access token stops being accepted, ISO 8601. */
   expiresAt: string;
   scope: string;
+  /** The UUID of the Cloud user, from `GET /api/v2/me`, that the usage events use (ADR 0016). */
+  userId?: string;
 }
 
 /** `credentials.json`, next to the config file: `MEILI_CONFIG` moves both. */
@@ -108,7 +110,11 @@ export function readCredentialsFile(
   if (!isRecord(parsed) || !fields.every((field) => typeof parsed[field] === "string")) {
     throw malformed();
   }
-  if (parsed.refreshToken !== undefined && typeof parsed.refreshToken !== "string") {
+  if (
+    ["refreshToken", "userId"].some(
+      (field) => parsed[field] !== undefined && typeof parsed[field] !== "string",
+    )
+  ) {
     throw malformed();
   }
   const session = parsed as unknown as Session;

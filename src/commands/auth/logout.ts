@@ -1,3 +1,4 @@
+import { resetAnonymousId } from "../../lib/analytics.js";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { revokeSession } from "../../lib/clients/oauth.js";
 import { MeiliCliError, writeNotice } from "../../lib/errors.js";
@@ -30,6 +31,7 @@ export default class AuthLogout extends BaseCommand {
       );
     } finally {
       removeCredentialsFile(path);
+      resetAnonymousId(this.env);
     }
     writeNotice(`Logged out. The session was revoked and ${path} removed.`);
   }

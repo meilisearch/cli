@@ -258,7 +258,7 @@ export abstract class BaseCommand extends Command {
   }
 
   /** What both APIs see in their client header: `meili-cli (v1.2.3)`. */
-  private get userAgent(): string {
+  protected get userAgent(): string {
     return `meili-cli (v${this.config.version})`;
   }
 
