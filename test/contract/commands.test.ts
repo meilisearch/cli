@@ -63,6 +63,8 @@ describe("oclif.manifest.json", () => {
         typeof example === "string" ? example : example.command,
       );
       expect(examples.length, `${id} needs at least two examples`).toBeGreaterThanOrEqual(2);
+      // `teleport` prints no data, only questions and progress for a human (ADR 0015).
+      if (id === "teleport") continue;
       expect(
         examples.some((example) => example.includes("--output json")),
         `${id} needs an example with --output json`,

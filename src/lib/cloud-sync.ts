@@ -6,6 +6,7 @@
 
 import {
   getApiV2Projects,
+  getApiV2ProjectsById,
   getApiV2ProjectsByProjectIdMasterKey,
   getApiV2Teams,
 } from "./clients/management/generated/sdk.gen.js";
@@ -14,12 +15,13 @@ import type { ManagementClient } from "./clients/management.js";
 import { type CloudIdentifiers, type ProjectEntry, parseUrl } from "./config.js";
 import { ManagementApiError, MeiliCliError, toRenderedError, writeWarning } from "./errors.js";
 import { iteratePages, nextPageQuery, type PageQuery } from "./pagination.js";
+import { formatDuration, type PollOptions, pollUntil } from "./tasks.js";
 
 /** A project the CLI can write an entry for: one with a URL. */
 export type ReachableProject = Project & { url: string };
 
 /** Every item of a list route of the Management API, page after page. */
-async function everyPage<Q extends PageQuery, T>(
+export async function everyPage<Q extends PageQuery, T>(
   fetchPage: (query: Q) => Promise<Pagination & { results: T[] }>,
   query: Q,
 ): Promise<T[]> {
@@ -145,5 +147,31 @@ export function warnUrlAnomaly(name: string, url: string, project: Project): voi
       "cli_config",
       `The URL of \`${name}\`, ${url}, is not the URL Meilisearch Cloud gives for project ${project.id}, ${project.url}. The entry keeps its URL.`,
     ),
+  );
+}
+
+/** The statuses a project creation stops at: the project serves, or its creation failed. */
+const FINAL_PROJECT_STATUSES: ReadonlySet<string> = new Set(["running", "failed"]);
+
+/**
+ * Polls `GET /api/v2/projects/{id}` until `running` or `failed`, 1 s apart
+ * growing to 5 s: creating a project takes minutes. The project comes back
+ * without its master key. Throws `cli_timeout` when the deadline passes.
+ */
+export function waitForProject(
+  client: ManagementClient,
+  id: number,
+  options: Pick<PollOptions<Project>, "timeoutMs" | "onProgress">,
+): Promise<Project> {
+  return pollUntil(
+    () => getApiV2ProjectsById({ client, path: { id } }),
+    (current) => FINAL_PROJECT_STATUSES.has(current.status),
+    () =>
+      new MeiliCliError(
+        "cli_timeout",
+        `Project ${id} did not reach status running or failed within ${formatDuration(options.timeoutMs)}. Its creation goes on on the server.`,
+        { hint: `Run \`meili get projects --id ${id}\` to check its status.` },
+      ),
+    { ...options, initialIntervalMs: 1000, maxIntervalMs: 5000 },
   );
 }

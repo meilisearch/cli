@@ -86,7 +86,7 @@ export class ManagementApiError extends Error {
 }
 
 /** The error object of either API, or undefined when the body is not one. */
-function parseErrorBody(body: unknown): ErrorBody | undefined {
+export function parseErrorBody(body: unknown): ErrorBody | undefined {
   if (!isRecord(body)) return undefined;
   const { message, code, type, link } = body;
   if (typeof message !== "string" || typeof code !== "string" || typeof type !== "string") {

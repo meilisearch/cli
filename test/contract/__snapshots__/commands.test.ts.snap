@@ -2486,6 +2486,27 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       ],
     },
     {
+      "api": "none",
+      "description": "Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. For humans only: an agent never runs it.
+
+It checks that the source can export, logs in to Meilisearch Cloud, creates a project in the region, team and plan chosen, adds it to the config file, exports the data to it, and waits until the new project has indexed it. It refuses to run without a terminal.
+
+An agent does the same without questions. Run \`meili auth login\`, then \`meili add projects --name <name> --team-id <id> --resource-id <id> --sync-config --wait\`, then \`meili export --project <source> --project-destination <name> --wait\`, then \`meili get tasks --project <name> --statuses enqueued,processing\` until it lists no task.",
+      "examples": [
+        "meili teleport",
+        "meili teleport --project local",
+      ],
+      "flags": [
+        {
+          "description": "A project of the config file, the one whose data moves to Meilisearch Cloud. Without it, the command asks.",
+          "helpValue": "<name>",
+          "name": "project",
+          "type": "option",
+        },
+      ],
+      "id": "teleport",
+    },
+    {
       "api": "meilisearch",
       "async": true,
       "description": "Add documents to an index, merging their fields into the ones that already have the same primary key.",
@@ -3225,6 +3246,10 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
         "routes": [
           "POST /indexes/{index_uid}/similar",
         ],
+      },
+      {
+        "description": "Move the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal. For humans only: an agent never runs it.",
+        "id": "teleport",
       },
       {
         "description": "Add documents to an index, merging their fields into the ones that already have the same primary key.",

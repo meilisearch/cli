@@ -1,17 +1,7 @@
-import { spawn } from "node:child_process";
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { logIn, SCOPES } from "../../lib/clients/oauth.js";
 import { writeNotice } from "../../lib/errors.js";
-import {
-  credentialsFilePath,
-  resolveOauthClient,
-  type Session,
-  writeCredentialsFile,
-} from "../../lib/session.js";
-
-/** How long the human has to approve before the command gives up. */
-const TIMEOUT_MS = 300_000;
+import { logInWithBrowser } from "../../lib/login.js";
 
 export default class AuthLogin extends BaseCommand {
   static api: Api = "none";
@@ -35,34 +25,7 @@ export default class AuthLogin extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(AuthLogin);
-    const client = resolveOauthClient(this.env);
-
-    const tokens = await logIn(client, {
-      timeoutMs: TIMEOUT_MS,
-      onAuthorizationUrl: (url) => {
-        process.stderr.write(`Approve the login for \`${SCOPES}\` at:\n${url}\n`);
-        if (flags.browser) openInBrowser(url);
-      },
-    });
-
-    const session: Session = { ...client, ...tokens };
-    const path = credentialsFilePath(this.env);
-    writeCredentialsFile(path, session);
+    const { path, session } = await logInWithBrowser(this.env, flags.browser);
     writeNotice(`Logged in for \`${session.scope}\`. The session is in ${path}.`);
   }
-}
-
-/** Hands the URL to the desktop. A failure is not one: the URL is on stderr. */
-function openInBrowser(url: string): void {
-  // An argument array and no shell, on every platform: a consent URL always
-  // carries `&`, which `cmd` would read as a command separator.
-  const [command, args]: [string, string[]] =
-    process.platform === "darwin"
-      ? ["open", [url]]
-      : process.platform === "win32"
-        ? ["rundll32", ["url.dll,FileProtocolHandler", url]]
-        : ["xdg-open", [url]];
-  const child = spawn(command, args, { stdio: "ignore", detached: true });
-  child.on("error", () => {});
-  child.unref();
 }

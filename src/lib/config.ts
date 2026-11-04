@@ -326,13 +326,18 @@ export function parseUrl(value: string): URL | undefined {
   }
 }
 
+/** True when `value` is an HTTP(S) URL: a Meilisearch instance answers over nothing else. */
+export function isProjectUrl(value: string): boolean {
+  const protocol = parseUrl(value)?.protocol;
+  return protocol === "http:" || protocol === "https:";
+}
+
 /**
  * `cli_usage` unless `value` is an HTTP(S) URL: a Meilisearch instance answers
  * over nothing else. The message leaves the value out, which may carry a password.
  */
 export function assertProjectUrl(value: string): void {
-  const url = parseUrl(value);
-  if (url === undefined || (url.protocol !== "http:" && url.protocol !== "https:")) {
+  if (!isProjectUrl(value)) {
     throw new MeiliCliError(
       "cli_usage",
       "Invalid project URL: `--project-url` takes an HTTP(S) URL.",

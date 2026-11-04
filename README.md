@@ -38,6 +38,28 @@ meili add projects --name demo --team-id 12 --resource-id 3 --sync-config   # cr
 
 `--project` is required on every command. Without a config file, give the instance directly: `--project-url <url> --project-api-key <key>`.
 
+## Move your data to Meilisearch Cloud
+
+`meili teleport` moves the data of a Meilisearch instance, local or in production, to a new Meilisearch Cloud project. It asks its questions in the terminal:
+
+```sh
+meili config set --project local --project-url http://localhost:7700 --project-api-key <your-key>
+meili teleport --project local   # or `meili teleport`, which asks for the project
+```
+
+It checks that the key of the source can export, logs you in to Meilisearch Cloud (and creates your account), creates the project on the free trial or on the plan you choose, adds it to the config file, and sends the data to it.
+
+`meili teleport` is interactive, for humans only. Coding agents must not run it: without a terminal, it fails. The same steps without questions:
+
+```sh
+meili auth login   # a human logs in once, in a browser
+meili add projects --name cloud --team-id <id> --resource-id <id> --sync-config --wait
+meili export --project local --project-destination cloud --wait
+meili get tasks --project cloud --statuses enqueued,processing   # run it again until it lists no task
+```
+
+The team id and the resource id are in the Meilisearch Cloud dashboard.
+
 ## Documentation
 
 ```sh

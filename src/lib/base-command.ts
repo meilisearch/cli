@@ -228,14 +228,26 @@ export abstract class BaseCommand extends Command {
         },
         () => this.configFile(),
       );
-      this.meilisearch = createMeilisearchClient({
-        url: connection.url,
-        apiKey: connection.apiKey,
-        userAgent: this.userAgent,
-      });
+      this.meilisearch = this.meilisearchClient(connection.url, connection.apiKey);
       return;
     }
 
+    await this.connectManagement();
+  }
+
+  /**
+   * A client for one Meilisearch instance. `init` builds the one of the
+   * connection flags; `teleport` builds the ones of the projects it is told.
+   */
+  protected meilisearchClient(url: string, apiKey: string | undefined): Meilisearch {
+    return createMeilisearchClient({ url, apiKey, userAgent: this.userAgent });
+  }
+
+  /**
+   * Resolves the Management API credentials and sets `managementClient`. `init`
+   * calls it for a management command; `teleport` calls it after its login.
+   */
+  protected async connectManagement(): Promise<void> {
     const credentials = await resolveManagementCredentials(this.env, writeWarning);
     this.managementClient = createManagementClient({
       ...credentials,
