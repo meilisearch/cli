@@ -48,14 +48,17 @@ export interface PollOptions<T> {
   timeoutMs: number;
   /** Called after every poll that did not reach a final status. */
   onProgress?: (current: T) => void;
-  /** First delay between polls. Doubles up to one second. Tests use a small value. */
+  /** First delay between polls, 100 ms by default. Doubles up to `maxIntervalMs`. */
   initialIntervalMs?: number;
+  /** Longest delay between polls, 1 s by default. */
+  maxIntervalMs?: number;
   sleep?: (ms: number) => Promise<void>;
 }
 
 /**
- * Calls `poll` until `isFinal` holds, starting at 100 ms and growing to 1 s
- * between calls. Throws `timeoutError()` when the deadline passes.
+ * Calls `poll` until `isFinal` holds, with a delay between calls that doubles
+ * from `initialIntervalMs` to `maxIntervalMs`. Throws `timeoutError()` when
+ * the deadline passes.
  */
 export async function pollUntil<T>(
   poll: () => Promise<T>,
@@ -73,7 +76,7 @@ export async function pollUntil<T>(
     const remaining = deadline - Date.now();
     if (remaining <= 0) throw timeoutError();
     await sleep(Math.min(interval, remaining));
-    interval = Math.min(interval * 2, MAX_INTERVAL_MS);
+    interval = Math.min(interval * 2, options.maxIntervalMs ?? MAX_INTERVAL_MS);
   }
 }
 

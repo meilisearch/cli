@@ -92,6 +92,7 @@ Most write operations of the Meilisearch API return a task, not a result. The CL
 A Cloud project is not ready when `POST /api/v2/projects` answers: its `status` says when it is, and its `url` may be `null` until then. `meili add projects --wait` follows the same rules, with the project in place of the task:
 
 - It polls `GET /api/v2/projects/{id}` until `status` is `running` or `failed`, prints the final project, and exits with 0 or 7, `cli_task_failed`. With `--sync-config`, the entry is written only once the project is `running`.
+- Polling starts at 1 s and grows to a maximum of 5 s between calls: creating a project takes minutes.
 - The final project is printed as `GET /api/v2/projects/{id}` returns it, without `masterKey`: only creation returns it. `--sync-config` writes the key of the creation to the config file.
 - On timeout, `cli_timeout` and exit 5; the creation goes on on the server, and nothing is written to the config file.
 - Progress ("waiting for project 343, status creating") goes to stderr, and only when stderr is a TTY.

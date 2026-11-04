@@ -205,18 +205,12 @@ describe("meili add projects", () => {
 
   it("keeps what another command wrote to the config file during --wait", async () => {
     const { path, env: configEnv } = tempConfig("wait-concurrent.json", {});
-    let polls = 0;
     server.use(
-      http.post(`${MANAGEMENT_URL}/api/v2/projects`, () =>
-        HttpResponse.json({ ...project, url: null, status: "creating" }, { status: 201 }),
-      ),
-      http.get(`${MANAGEMENT_URL}/api/v2/projects/343`, () => {
-        if (polls++ === 0) {
-          writeConfigFile({ path, projects: { other: { url: "http://other" } } });
-          return HttpResponse.json({ ...polled, url: null, status: "creating" });
-        }
-        return HttpResponse.json(polled);
+      http.post(`${MANAGEMENT_URL}/api/v2/projects`, () => {
+        writeConfigFile({ path, projects: { other: { url: "http://other" } } });
+        return HttpResponse.json({ ...project, url: null, status: "creating" }, { status: 201 });
       }),
+      http.get(`${MANAGEMENT_URL}/api/v2/projects/343`, () => HttpResponse.json(polled)),
       managementHandlers.listTeams(),
     );
     const result = await runCommand(

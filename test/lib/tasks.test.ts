@@ -1,7 +1,13 @@
 import { Meilisearch } from "meilisearch";
 import { describe, expect, it } from "vitest";
 import { MeiliCliError } from "../../src/lib/errors.js";
-import { formatDuration, isTaskFailure, parseDuration, waitForTask } from "../../src/lib/tasks.js";
+import {
+  formatDuration,
+  isTaskFailure,
+  parseDuration,
+  pollUntil,
+  waitForTask,
+} from "../../src/lib/tasks.js";
 import { MEILISEARCH_URL, makeTask, meilisearchHandlers } from "../helpers/meilisearch-handlers.js";
 import { server, useMockServer } from "../helpers/msw.js";
 
@@ -63,6 +69,26 @@ describe("waitForTask", () => {
     expect(task.status).toBe("succeeded");
     expect(progress).toEqual(["enqueued", "processing", "processing", "processing"]);
     expect(sleeps).toEqual([100, 200, 400, 800]);
+  });
+
+  it("doubles the interval from initialIntervalMs up to maxIntervalMs", async () => {
+    const statuses = ["creating", "creating", "creating", "creating", "running"];
+    const sleeps: number[] = [];
+    const status = await pollUntil(
+      async () => statuses.shift(),
+      (current) => current === "running",
+      () => new MeiliCliError("cli_timeout", "late"),
+      {
+        timeoutMs: 60_000,
+        initialIntervalMs: 1000,
+        maxIntervalMs: 5000,
+        sleep: async (ms) => {
+          sleeps.push(ms);
+        },
+      },
+    );
+    expect(status).toBe("running");
+    expect(sleeps).toEqual([1000, 2000, 4000, 5000]);
   });
 
   it("returns a failed task instead of throwing", async () => {

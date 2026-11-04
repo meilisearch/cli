@@ -17,6 +17,10 @@ import { formatDuration, pollUntil } from "../../lib/tasks.js";
 /** The statuses `--wait` stops at: the project serves, or its creation failed. */
 const FINAL_STATUSES: ReadonlySet<string> = new Set(["running", "failed"]);
 
+/** Creating a project takes minutes: polls start at 1 s apart and grow to 5 s. */
+const INITIAL_INTERVAL_MS = 1000;
+const MAX_INTERVAL_MS = 5000;
+
 export default class AddProjects extends BaseCommand {
   static api: Api = "management";
 
@@ -134,6 +138,8 @@ export default class AddProjects extends BaseCommand {
         ),
       {
         timeoutMs,
+        initialIntervalMs: INITIAL_INTERVAL_MS,
+        maxIntervalMs: MAX_INTERVAL_MS,
         onProgress: (current) => {
           writeNotice(`waiting for project ${id}, status ${current.status}`);
         },
