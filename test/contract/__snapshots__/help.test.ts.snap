@@ -24,6 +24,7 @@ COMMANDS
   get keys       List the API keys of the instance, or get one with --id.
   get projects   List the Meilisearch Cloud projects the token sees, or get one
                  with --id or --project.
+  get regions    List the Meilisearch Cloud regions where a project can run.
   get resources  List the active Meilisearch Cloud resources, the plans a
                  project runs on, with their pricing.
   get settings   Get every setting of an index, each with its current value or

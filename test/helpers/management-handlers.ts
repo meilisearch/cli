@@ -7,6 +7,7 @@ import { HttpResponse, http } from "msw";
 import type {
   Error as ApiError,
   Project,
+  Region,
   Resource,
   Team,
 } from "../../src/lib/clients/management/generated/types.gen.js";
@@ -57,6 +58,15 @@ export const team: Team = {
   organizationId: 1,
   ownerId: "user-1",
   isAdmin: true,
+};
+
+/** A region as `GET /api/v2/regions` returns it. */
+export const region: Region = {
+  id: 1,
+  name: "San Francisco",
+  awsRegion: "us-west-1",
+  countryCode: "US",
+  regionUrl: "sfo.meilisearch.io",
 };
 
 /** An error body as the document describes it: the same shape as a Meilisearch one. */
@@ -128,6 +138,10 @@ export const managementHandlers = {
   /** `GET /api/v2/teams` answering `all` on one page. */
   listTeams: (all: Team[] = [team]) =>
     http.get(`${MANAGEMENT_URL}/api/v2/teams`, () => HttpResponse.json(onePage(all, 1, 20))),
+
+  /** `GET /api/v2/regions` answering `all` on one page. */
+  listRegions: (all: Region[]) =>
+    http.get(`${MANAGEMENT_URL}/api/v2/regions`, () => HttpResponse.json(onePage(all, 1, 20))),
 
   /**
    * `GET /api/v2/projects/{projectId}/master-key` answering the project of

@@ -1794,6 +1794,20 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
     },
     {
       "api": "management",
+      "description": "List the Meilisearch Cloud regions where a project can run.",
+      "examples": [
+        "meili get regions",
+        "meili get regions --output json",
+        "meili get regions --output ndjson",
+      ],
+      "flags": [],
+      "id": "get regions",
+      "routes": [
+        "GET /api/v2/regions",
+      ],
+    },
+    {
+      "api": "management",
       "description": "List the active Meilisearch Cloud resources, the plans a project runs on, with their pricing.",
       "examples": [
         "meili get resources",
@@ -3212,6 +3226,13 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         "routes": [
           "GET /api/v2/projects",
           "GET /api/v2/projects/{id}",
+        ],
+      },
+      {
+        "description": "List the Meilisearch Cloud regions where a project can run.",
+        "id": "get regions",
+        "routes": [
+          "GET /api/v2/regions",
         ],
       },
       {
