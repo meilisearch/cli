@@ -13,7 +13,7 @@ import type { AddressInfo } from "node:net";
 import { deepestCauseMessage, MeiliCliError } from "../errors.js";
 
 /** The scopes the CLI asks for: `read` for the GET routes of the API, `write` for the others. */
-export const SCOPES = "read write";
+const SCOPES = "read write";
 
 const CALLBACK_PATH = "/callback";
 

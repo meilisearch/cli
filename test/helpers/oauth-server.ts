@@ -1,9 +1,10 @@
 /**
  * A stub authorization server that speaks what Doorkeeper speaks on the Cloud:
  * a consent page that redirects back with a code, a token endpoint that checks
- * PKCE and authenticates a public client on its id alone, and the revocation
- * endpoint of RFC 7009. Real sockets, because the flow needs a loopback
- * redirect; msw mocks fetch, not the browser.
+ * PKCE and authenticates a public client on its id alone, the revocation
+ * endpoint of RFC 7009, and `GET /api/v2/me`, which the Cloud serves on the same
+ * host. Real sockets, because the flow needs a loopback redirect; msw mocks
+ * fetch, not the browser.
  */
 import { createHash } from "node:crypto";
 import { createServer, type IncomingMessage, type Server } from "node:http";
@@ -26,6 +27,13 @@ export interface AuthorizationServer {
 /** The client id the stub knows, which tests set as `MEILI_MANAGEMENT_CLIENT_ID`. */
 export const STUB_CLIENT_ID = "client-uid";
 
+/** The Cloud user that `GET /api/v2/me` returns for every accepted token. */
+export const STUB_USER = {
+  id: "0b5c4f1e-7d2a-4c3b-9e8f-1a2b3c4d5e6f",
+  name: "Ada",
+  email: "ada@example.com",
+};
+
 export async function startAuthorizationServer(): Promise<AuthorizationServer> {
   const challenges = new Map<string, string>();
   const accessTokens = new Set<string>();
@@ -45,14 +53,23 @@ export async function startAuthorizationServer(): Promise<AuthorizationServer> {
 
   const server: Server = createServer((request, response) => {
     const url = new URL(request.url ?? "/", "http://127.0.0.1");
+    const bearer = (request.headers.authorization ?? "").replace(/^Bearer /, "");
 
     if (request.method === "GET" && url.pathname === "/oauth/token/info") {
-      const token = (request.headers.authorization ?? "").replace(/^Bearer /, "");
-      if (!accessTokens.has(token)) {
+      if (!accessTokens.has(bearer)) {
         json(401, { error: "invalid_token", error_description: "The access token is invalid" });
         return;
       }
       json(200, { resource_owner_id: 1, scope: ["read", "write"], expires_in: 3600 });
+      return;
+    }
+
+    if (request.method === "GET" && url.pathname === "/api/v2/me") {
+      if (!accessTokens.has(bearer)) {
+        json(401, { message: "unauthorized" });
+        return;
+      }
+      json(200, STUB_USER);
       return;
     }
 

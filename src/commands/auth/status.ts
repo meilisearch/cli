@@ -1,13 +1,13 @@
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { tokenInfo } from "../../lib/clients/oauth.js";
 import { MeiliCliError } from "../../lib/errors.js";
-import { ensureFreshSession } from "../../lib/session.js";
+import { ensureFreshSession, sessionUser } from "../../lib/session.js";
 
 export default class AuthStatus extends BaseCommand {
   static api: Api = "none";
 
   static override description =
-    "Say whether a session of `auth login` exists and whether the authorization server still accepts it.";
+    "Say whether a session of `auth login` exists and whether the authorization server still accepts it, and who it logs in.";
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
@@ -35,6 +35,7 @@ export default class AuthStatus extends BaseCommand {
     }
 
     await this.output({
+      user: await sessionUser(fresh, this.userAgent),
       managementUrl: fresh.managementUrl,
       scope: info.scope ?? fresh.scope,
       expiresAt: info.expiresAt ?? fresh.expiresAt,
