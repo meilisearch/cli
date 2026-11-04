@@ -44,7 +44,7 @@ jobs:
         run: echo "version=$(node -p 'require("./package.json").version')" >> "$GITHUB_OUTPUT"
 
   binaries:
-    name: Archives with Node inside, attached to the GitHub release
+    name: Publish GitHub release assets
     needs: release
     if: needs.release.outputs.published == 'true'
     runs-on: ubuntu-latest
