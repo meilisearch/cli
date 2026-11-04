@@ -4,7 +4,7 @@
 
 ## Install
 
-With npm, where Node 22 or newer is installed. This is the normal path for coding agents:
+With npm, where Node 22 or newer is installed:
 
 ```sh
 npm install -g @meilisearch/cli
