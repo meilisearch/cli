@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "meili": "./bin/run.js"
+    "meili": "bin/run.js"
   },
   "files": [
     "bin",
@@ -18,6 +18,8 @@
   "packageManager": "pnpm@11.21.0",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "prepack": "pnpm build",
+    "archives": "NPM_CONFIG_WORKSPACE_DIR=$PWD/tmp/meili oclif pack tarballs --targets darwin-arm64,darwin-x64,linux-x64,linux-arm64 --no-xz --parallel",
     "gen:management": "pnpm --package=typescript@5.9.3 --package=@hey-api/openapi-ts@0.99.0 dlx openapi-ts",
     "gen:manifest": "pnpm build && oclif manifest && node scripts/sort-manifest.mjs",
     "lint": "biome check .",

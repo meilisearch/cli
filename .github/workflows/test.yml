@@ -1,9 +1,9 @@
-name: CI
+name: Test
 
+# On main, release.yml calls this workflow before it publishes.
 on:
-  push:
-    branches: [main]
   pull_request:
+  workflow_call:
 
 jobs:
   checks:

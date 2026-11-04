@@ -3306,7 +3306,7 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
       },
     ],
     "name": "meili",
-    "version": "0.0.0",
+    "version": Any<String>,
   },
 }
 `;

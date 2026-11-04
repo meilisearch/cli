@@ -73,6 +73,12 @@ Every pull request that changes what the published package does adds a changeset
 Add `meili get stats --index <index>`.
 ```
 
-The line names the command with its required flags. The optional flags are in `--help`. Use `patch` for a fix, `minor` for a new command or flag, and `major` for a breaking change of the contract. Before 1.0, a breaking change also uses `minor`. Until the first release, there is a single changeset, `.changeset/first-version.md`. Add your line to it instead of creating a new file.
+The line names the command with its required flags. The optional flags are in `--help`. Use `patch` for a fix, `minor` for a new command or flag, and `major` for a breaking change of the contract. Before 1.0, a breaking change also uses `minor`.
 
-Merging into `main` does not publish anything yet. The planned flow uses `changesets/action` in a release workflow. A "Version Packages" pull request bumps the version and writes `CHANGELOG.md` from the changesets. Merging this pull request publishes `@meilisearch/cli` on npm and tags the release. npm is the only distribution channel. Until this workflow exists, a maintainer runs `pnpm changeset version` and `pnpm changeset publish` by hand.
+The release runs in `.github/workflows/release.yml`, on `main`, after the tests. While changesets are waiting, `changesets/action` opens or updates a "Version Packages" pull request. It bumps the version, writes `CHANGELOG.md` from the changesets and regenerates `oclif.manifest.json`. Merging this pull request publishes the version:
+
+1. on npm, as `@meilisearch/cli`, with a `v<version>` tag and a GitHub release;
+2. as archives with Node inside, built by `pnpm archives` in `dist/` and attached to the GitHub release, for `scripts/install.sh`;
+3. on Homebrew, in the `meilisearch/homebrew-tap` repository, from the formula `.github/homebrew/meili.rb`.
+
+See ADR 0016 for the channels and the reasons.
