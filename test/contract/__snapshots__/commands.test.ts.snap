@@ -423,7 +423,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
     },
     {
       "api": "none",
-      "description": "Say whether a session of \`auth login\` exists and whether the authorization server still accepts it.",
+      "description": "Say whether a session of \`auth login\` exists and whether the authorization server still accepts it, and who it logs in.",
       "examples": [
         "meili auth status",
         "meili auth status --output json",
@@ -3337,7 +3337,7 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         "id": "auth refresh",
       },
       {
-        "description": "Say whether a session of \`auth login\` exists and whether the authorization server still accepts it.",
+        "description": "Say whether a session of \`auth login\` exists and whether the authorization server still accepts it, and who it logs in.",
         "id": "auth status",
       },
       {

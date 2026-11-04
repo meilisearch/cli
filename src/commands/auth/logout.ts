@@ -17,7 +17,10 @@ export default class AuthLogout extends BaseCommand {
 
   async run(): Promise<void> {
     const { path, session } = this.credentialsFile();
-    if (session === undefined) return;
+    if (session === undefined) {
+      writeNotice("Nobody was logged in.");
+      return;
+    }
 
     try {
       await revokeSession(session);

@@ -7,6 +7,8 @@
  */
 import { rmSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { getApiV2Me } from "./clients/management/generated/sdk.gen.js";
+import { createManagementClient } from "./clients/management.js";
 import { type OauthClient, type OauthSession, refreshAccessToken } from "./clients/oauth.js";
 import {
   configFilePath,
@@ -202,4 +204,14 @@ export function ensureFreshSession(path: string, session: Session): Promise<Sess
   if (Date.parse(session.expiresAt) - Date.now() > EXPIRY_MARGIN_MS)
     return Promise.resolve(session);
   return refreshSession(path, session);
+}
+
+/** The Cloud user of a session: the body of `GET /api/v2/me`. */
+export function sessionUser(session: OauthSession, userAgent: string) {
+  const client = createManagementClient({
+    url: session.managementUrl,
+    token: session.accessToken,
+    userAgent,
+  });
+  return getApiV2Me({ client });
 }

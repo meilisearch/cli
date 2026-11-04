@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`meili auth status > prints its help without any network call 1`] = `
-"Say whether a session of \`auth login\` exists and whether the authorization server still accepts it.
+"Say whether a session of \`auth login\` exists and whether the authorization server still accepts it, and who it logs in.
 
 USAGE
   $ meili auth status [-o <mode>] [--debug]
@@ -15,7 +15,7 @@ FLAGS
 
 DESCRIPTION
   Say whether a session of \`auth login\` exists and whether the authorization
-  server still accepts it.
+  server still accepts it, and who it logs in.
 
 EXAMPLES
   $ meili auth status

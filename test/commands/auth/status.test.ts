@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import AuthStatus from "../../../src/commands/auth/status.js";
-import { startAuthorizationServer } from "../../helpers/oauth-server.js";
+import { STUB_USER, startAuthorizationServer } from "../../helpers/oauth-server.js";
 import { runCli, runCommand } from "../../helpers/run-command.js";
 import { sessionHome, storeSession } from "../../helpers/session.js";
 
@@ -12,7 +12,7 @@ describe("meili auth status", () => {
     expect(result.stdout).toMatchSnapshot();
   });
 
-  it("asks the authorization server and answers on stdout when it still accepts", async () => {
+  it("asks the authorization server and answers on stdout, with the user, when it still accepts", async () => {
     const server = await startAuthorizationServer();
     const env = sessionHome();
     const path = storeSession(env, server.url, { accessToken: "access-token-live" });
@@ -22,6 +22,7 @@ describe("meili auth status", () => {
       expect(result.exitCode).toBe(0);
       expect(result.stderr).toBe("");
       expect(JSON.parse(result.stdout)).toEqual({
+        user: STUB_USER,
         managementUrl: server.url,
         scope: "read write",
         expiresAt: expect.any(String),

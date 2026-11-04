@@ -4,14 +4,13 @@
  */
 import { spawn } from "node:child_process";
 import { identify } from "./analytics.js";
-import { getApiV2Me } from "./clients/management/generated/sdk.gen.js";
-import { createManagementClient } from "./clients/management.js";
-import { logIn, SCOPES } from "./clients/oauth.js";
+import { logIn } from "./clients/oauth.js";
 import type { Env } from "./config.js";
 import {
   credentialsFilePath,
   resolveOauthClient,
   type Session,
+  sessionUser,
   writeCredentialsFile,
 } from "./session.js";
 
@@ -33,20 +32,12 @@ export async function logInWithBrowser(
   const tokens = await logIn(client, {
     timeoutMs: TIMEOUT_MS,
     onAuthorizationUrl: (url) => {
-      say(`Approve the login for \`${SCOPES}\` at:`);
       say(url);
       if (browser) openInBrowser(url);
     },
   });
   const session: Session = { ...client, ...tokens };
-  const userId = await identify(env, async () => {
-    const management = createManagementClient({
-      url: session.managementUrl,
-      token: session.accessToken,
-      userAgent,
-    });
-    return (await getApiV2Me({ client: management })).id;
-  });
+  const userId = await identify(env, async () => (await sessionUser(session, userAgent)).id);
   if (userId !== undefined) session.userId = userId;
   const path = credentialsFilePath(env);
   writeCredentialsFile(path, session);

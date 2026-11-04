@@ -1796,7 +1796,7 @@
     "auth:status": {
       "aliases": [],
       "args": {},
-      "description": "Say whether a session of `auth login` exists and whether the authorization server still accepts it.",
+      "description": "Say whether a session of `auth login` exists and whether the authorization server still accepts it, and who it logs in.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
         "<%= config.bin %> <%= command.id %> --output json"
