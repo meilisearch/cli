@@ -894,6 +894,33 @@ The file holds API keys and decides where every later command goes, for every pr
     },
     {
       "api": "management",
+      "description": "Delete a Meilisearch Cloud organization. Prints nothing on success.",
+      "examples": [
+        "meili delete organizations --id 7 --yes",
+        "meili delete organizations --id 7 --yes --output json",
+      ],
+      "flags": [
+        {
+          "description": "The organization to delete.",
+          "helpValue": "<id>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "name": "yes",
+          "required": true,
+          "type": "boolean",
+        },
+      ],
+      "id": "delete organizations",
+      "routes": [
+        "DELETE /api/v2/organizations/{id}",
+      ],
+    },
+    {
+      "api": "management",
       "description": "Delete a Meilisearch Cloud project, with its data. Prints nothing on success.",
       "examples": [
         "meili delete projects --id 343 --yes",
@@ -1753,6 +1780,29 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       "routes": [
         "GET /keys",
         "GET /keys/{key}",
+      ],
+    },
+    {
+      "api": "management",
+      "description": "List the Meilisearch Cloud organizations the token sees, or get one with --id.",
+      "examples": [
+        "meili get organizations",
+        "meili get organizations --output json",
+        "meili get organizations --id 7",
+        "meili get organizations --output ndjson",
+      ],
+      "flags": [
+        {
+          "description": "The organization to get. Without it, the command lists the organizations.",
+          "helpValue": "<id>",
+          "name": "id",
+          "type": "option",
+        },
+      ],
+      "id": "get organizations",
+      "routes": [
+        "GET /api/v2/organizations",
+        "GET /api/v2/organizations/{id}",
       ],
     },
     {
@@ -2791,6 +2841,49 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
     },
     {
       "api": "management",
+      "description": "Rename a Meilisearch Cloud organization.",
+      "examples": [
+        "meili update organizations --id 7 --name Acme",
+        "meili update organizations --id 7 --name Acme --output json",
+        "meili update organizations --id 7 --data '{"name":"Acme"}'",
+      ],
+      "flags": [
+        {
+          "description": "The organization to update.",
+          "helpValue": "<id>",
+          "name": "id",
+          "required": true,
+          "type": "option",
+        },
+        {
+          "description": "New name of the organization.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "Read the body from a file. \`-\` reads from stdin.",
+          "exclusive": [
+            "data",
+          ],
+          "helpValue": "<path>",
+          "name": "file",
+          "type": "option",
+        },
+        {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "name": "data",
+          "type": "option",
+        },
+      ],
+      "id": "update organizations",
+      "routes": [
+        "PATCH /api/v2/organizations/{id}",
+      ],
+    },
+    {
+      "api": "management",
       "description": "Rename a Meilisearch Cloud project.",
       "examples": [
         "meili update projects --id 343 --name renamed",
@@ -3149,6 +3242,13 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         ],
       },
       {
+        "description": "Delete a Meilisearch Cloud organization. Prints nothing on success.",
+        "id": "delete organizations",
+        "routes": [
+          "DELETE /api/v2/organizations/{id}",
+        ],
+      },
+      {
         "description": "Delete a Meilisearch Cloud project, with its data. Prints nothing on success.",
         "id": "delete projects",
         "routes": [
@@ -3218,6 +3318,14 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         "routes": [
           "GET /keys",
           "GET /keys/{key}",
+        ],
+      },
+      {
+        "description": "List the Meilisearch Cloud organizations the token sees, or get one with --id.",
+        "id": "get organizations",
+        "routes": [
+          "GET /api/v2/organizations",
+          "GET /api/v2/organizations/{id}",
         ],
       },
       {
@@ -3319,6 +3427,13 @@ An agent does the same without questions. Run \`meili auth login\`, then \`meili
         "id": "update keys",
         "routes": [
           "PATCH /keys/{key}",
+        ],
+      },
+      {
+        "description": "Rename a Meilisearch Cloud organization.",
+        "id": "update organizations",
+        "routes": [
+          "PATCH /api/v2/organizations/{id}",
         ],
       },
       {

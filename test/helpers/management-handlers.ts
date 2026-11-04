@@ -6,6 +6,7 @@
 import { HttpResponse, http } from "msw";
 import type {
   Error as ApiError,
+  Organization,
   Project,
   Region,
   Resource,
@@ -67,6 +68,17 @@ export const region: Region = {
   awsRegion: "us-west-1",
   countryCode: "US",
   regionUrl: "sfo.meilisearch.io",
+};
+
+/** The organization of `team`, as `GET /api/v2/organizations/{id}` returns it. */
+export const organization: Organization = {
+  id: 1,
+  name: "Acme",
+  identifier: "acme",
+  ownerId: "user-1",
+  isAdmin: true,
+  defaultTeamId: 12,
+  customerTier: null,
 };
 
 /** An error body as the document describes it: the same shape as a Meilisearch one. */
@@ -183,6 +195,35 @@ export const managementHandlers = {
   deleteProject: () =>
     http.delete(
       `${MANAGEMENT_URL}/api/v2/projects/:id`,
+      () => new HttpResponse(null, { status: 204 }),
+    ),
+
+  /** `GET /api/v2/organizations` answering `all` on one page. */
+  listOrganizations: (all: Organization[]) =>
+    http.get(`${MANAGEMENT_URL}/api/v2/organizations`, () =>
+      HttpResponse.json(onePage(all, 1, 20)),
+    ),
+
+  /** `GET /api/v2/organizations/{id}` answering the organization of `all` with that id, or the API's 403. */
+  getOrganization: (all: Organization[]) =>
+    http.get(`${MANAGEMENT_URL}/api/v2/organizations/:id`, ({ params }) => {
+      const found = all.find((each) => String(each.id) === params.id);
+      return found === undefined
+        ? HttpResponse.json(forbidden, { status: 403 })
+        : HttpResponse.json(found);
+    }),
+
+  /** `PATCH /api/v2/organizations/{id}` answering 200 with `organization` carrying the attributes received. */
+  updateOrganization: (received: ReceivedRequest[]) =>
+    http.patch(`${MANAGEMENT_URL}/api/v2/organizations/:id`, async ({ request }) => {
+      const body = (await record(received, request)) as Record<string, unknown>;
+      return HttpResponse.json({ ...organization, ...body });
+    }),
+
+  /** `DELETE /api/v2/organizations/{id}` answering 204. */
+  deleteOrganization: () =>
+    http.delete(
+      `${MANAGEMENT_URL}/api/v2/organizations/:id`,
       () => new HttpResponse(null, { status: 204 }),
     ),
 
