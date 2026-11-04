@@ -25,12 +25,11 @@ export default class GetResources extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(GetResources);
-    // One page and no paging flags yet (output.md, "Pagination").
-    await this.outputList(
-      (query) => getApiV2Resources({ client: this.managementClient, query }),
-      { regionId: flags["region-id"] },
-      false,
-      () => undefined,
+    await this.outputPage(
+      await getApiV2Resources({
+        client: this.managementClient,
+        query: { regionId: flags["region-id"] },
+      }),
     );
   }
 }

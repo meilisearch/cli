@@ -353,10 +353,7 @@ export abstract class BaseCommand extends Command {
     nextQuery: (query: Q, page: ListPage) => Q | undefined,
   ): Promise<void> {
     if (!all) {
-      const page = await fetchPage(query);
-      await this.output(this.outputMode === "ndjson" ? page.results : page, {
-        supportsNdjson: true,
-      });
+      await this.outputPage(await fetchPage(query));
       return;
     }
     if (this.outputMode === "ndjson") {
@@ -368,6 +365,15 @@ export abstract class BaseCommand extends Command {
     const pages: ListPage[] = [];
     for await (const page of iteratePages(fetchPage, query, nextQuery)) pages.push(page);
     await this.output(mergePages(pages));
+  }
+
+  /**
+   * Writes one page as the API sent it: the envelope with `json`, its `results`
+   * with `ndjson`. The list commands of the Management API end with this call,
+   * because they have no paging flags yet (output.md, "Pagination").
+   */
+  protected async outputPage(page: ListPage): Promise<void> {
+    await this.output(this.outputMode === "ndjson" ? page.results : page, { supportsNdjson: true });
   }
 
   /** The `--timeout` of `--wait`, or `MEILI_TIMEOUT`, or the default, in milliseconds. */
