@@ -1,5 +1,5 @@
 import { Flags } from "@oclif/core";
-import { type Api, BaseCommand, type WaitFlagValues } from "../../lib/base-command.js";
+import { type Api, BaseCommand } from "../../lib/base-command.js";
 import {
   getApiV2ProjectsById,
   postApiV2Projects,
@@ -64,6 +64,8 @@ export default class AddProjects extends BaseCommand {
 
   async run(): Promise<void> {
     const { flags } = await this.parse(AddProjects);
+    // An invalid --timeout fails here, before a project exists.
+    const timeoutMs = flags.wait ? this.waitTimeoutMs(flags) : undefined;
     const body = readBodyWithFields(flags, {
       name: flags.name,
       teamId: flags["team-id"],
@@ -85,7 +87,8 @@ export default class AddProjects extends BaseCommand {
       sync = { file, entry: body.name };
     }
     const created = await postApiV2Projects({ client: this.managementClient, body });
-    const project = flags.wait ? await this.waitForProject(created.id, flags) : created;
+    const project =
+      timeoutMs === undefined ? created : await this.waitForProject(created.id, timeoutMs);
     await this.output(
       project.masterKey === undefined
         ? project
@@ -125,8 +128,7 @@ export default class AddProjects extends BaseCommand {
   }
 
   /** The project once `running` or `failed`, as `GET /api/v2/projects/{id}` returns it: without its master key. */
-  private async waitForProject(id: number, flags: WaitFlagValues): Promise<Project> {
-    const timeoutMs = this.waitTimeoutMs(flags);
+  private async waitForProject(id: number, timeoutMs: number): Promise<Project> {
     return pollUntil(
       () => getApiV2ProjectsById({ client: this.managementClient, path: { id } }),
       (current) => FINAL_STATUSES.has(current.status),

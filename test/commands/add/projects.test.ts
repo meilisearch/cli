@@ -254,6 +254,21 @@ describe("meili add projects", () => {
     expect(readJson(path)).toEqual({ projects: {} });
   });
 
+  it("refuses an invalid --timeout before creating the project", async () => {
+    const received: ReceivedRequest[] = [];
+    server.use(managementHandlers.createProject(received));
+    const result = await runCommand(
+      AddProjects,
+      ["--name", "demo", "--wait", "--timeout", "soon"],
+      {
+        env,
+      },
+    );
+    expect(result.exitCode).toBe(2);
+    expect(JSON.parse(result.stderr).error.code).toBe("cli_usage");
+    expect(received).toEqual([]);
+  });
+
   it("fails with cli_timeout and exit 5 when the project is not running within --timeout", async () => {
     server.use(...creation("creating"));
     const result = await runCommand(
