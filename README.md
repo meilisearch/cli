@@ -43,11 +43,10 @@ meili add projects --name demo --team-id 12 --resource-id 3 --sync-config   # cr
 `meili teleport` moves the data of a Meilisearch instance, local or in production, to a new Meilisearch Cloud project. It asks its questions in the terminal:
 
 ```sh
-meili config set --project local --project-url http://localhost:7700 --project-api-key <your-key>
-meili teleport --project local   # or `meili teleport`, which asks for the project
+meili teleport
 ```
 
-It checks that the key of the source can export, logs you in to Meilisearch Cloud (and creates your account), creates the project on the free trial or on the plan you choose, adds it to the config file, and sends the data to it.
+It asks for the project to move, from the config file or by its URL and key. It checks that the key can export, logs you in to Meilisearch Cloud (and creates your account), creates the project on the free trial or on the plan you choose, adds it to the config file, and sends the data to it.
 
 `meili teleport` is interactive, for humans only. Coding agents must not run it: without a terminal, it fails. The same steps without questions:
 
