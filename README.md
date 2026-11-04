@@ -71,7 +71,7 @@ meili teleport
 
 It asks for the project to move, from the config file or by its URL and key. It checks that the key can export, logs you in to Meilisearch Cloud (and creates your account), creates the project on the free trial or on the plan you choose, adds it to the config file, and sends the data to it.
 
-`meili teleport` is interactive, for humans only. Coding agents must not run it: without a terminal, it fails. The same steps without questions:
+`meili teleport` is interactive. The same steps without questions:
 
 ```sh
 meili auth login   # a human logs in once, in a browser
@@ -80,7 +80,7 @@ meili export --project local --project-destination cloud --wait
 meili get tasks --project cloud --statuses enqueued,processing   # run it again until it lists no task
 ```
 
-The team id and the resource id are in the Meilisearch Cloud dashboard.
+The team id and the resource id can be fetched with `meili team list` and `meili resource list`.
 
 ## Documentation
 
