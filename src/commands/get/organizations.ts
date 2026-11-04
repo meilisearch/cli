@@ -30,13 +30,7 @@ export default class GetOrganizations extends BaseCommand {
   async run(): Promise<void> {
     const { flags } = await this.parse(GetOrganizations);
     if (flags.id === undefined) {
-      // One page and no paging flags yet (output.md, "Pagination").
-      await this.outputList(
-        (query) => getApiV2Organizations({ client: this.managementClient, query }),
-        {},
-        false,
-        () => undefined,
-      );
+      await this.outputPage(await getApiV2Organizations({ client: this.managementClient }));
       return;
     }
     await this.output(

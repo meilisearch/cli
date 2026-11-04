@@ -16,12 +16,6 @@ export default class GetRegions extends BaseCommand {
 
   async run(): Promise<void> {
     await this.parse(GetRegions);
-    // One page and no paging flags yet (output.md, "Pagination").
-    await this.outputList(
-      (query) => getApiV2Regions({ client: this.managementClient, query }),
-      {},
-      false,
-      () => undefined,
-    );
+    await this.outputPage(await getApiV2Regions({ client: this.managementClient }));
   }
 }

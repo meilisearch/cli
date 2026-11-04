@@ -62,7 +62,7 @@ Find the SDK method in `node_modules/meilisearch/dist/meilisearch.d.ts` or `node
 | read with a list route and a unit route | `src/commands/get/indexes.ts` | `outputList({...})` or `output(...)` by route |
 | write returning a task (the response is a task) | `src/commands/add/documents.ts` | `await this.outputTask(task, flags)` |
 | write with several routes, one per selector | `src/commands/delete/documents.ts` | `await this.outputTask(task, flags)` |
-| Management API, list route and unit route | `src/commands/get/projects.ts` | `outputList(...)` or `output(...)` by route |
+| Management API, list route and unit route | `src/commands/get/projects.ts` | `outputPage(...)` or `output(...)` by route |
 | Management API, write | `src/commands/update/projects.ts` | `await this.output(result)` |
 | offline (`schema`) | `src/commands/schema.ts` | `await this.output(result)` |
 

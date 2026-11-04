@@ -38,12 +38,11 @@ export default class GetProjects extends BaseCommand {
   async run(): Promise<void> {
     const { flags } = await this.parse(GetProjects);
     if (flags.id === undefined && flags.project === undefined) {
-      // One page and no paging flags yet (output.md, "Pagination").
-      await this.outputList(
-        (query) => getApiV2Projects({ client: this.managementClient, query }),
-        { teamId: flags["team-id"] },
-        false,
-        () => undefined,
+      await this.outputPage(
+        await getApiV2Projects({
+          client: this.managementClient,
+          query: { teamId: flags["team-id"] },
+        }),
       );
       return;
     }
