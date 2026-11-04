@@ -217,7 +217,7 @@ exports[`meili teleport > says the transfer goes on, with the links to watch it,
 [J  ⠋ Sending   ──────────────────────────────   0%  0s
 [J  ⠋ Sending   ──────────────────────────────   0%  0s
 
-  ⏳ The transfer goes on in Meilisearch Cloud. meili stopped watching it.
+  ⏳ The transfer continues in Meilisearch Cloud. meili CLI stopped watching it.
 
     Watch it          https://dashboard.test/teams/12/projects/343/batches
     Try it            https://dashboard.test/teams/12/projects/343/preview
