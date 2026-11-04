@@ -54,7 +54,8 @@ exports[`meili teleport > creates a free trial project, adds it to the config fi
 {
   "exitCode": 0,
   "stderr": "Logged in to Meilisearch Cloud as ada@example.com.
-While Meilisearch Cloud creates local-cloud, see the plans and prices at https://www.meilisearch.com/pricing
+Meilisearch Cloud is creating local-cloud. It can take several minutes.
+While you wait, see the plans and prices at https://www.meilisearch.com/pricing
 Project local-cloud is running, and is in the config file as \`local-cloud\`.
 Sending the data of local to local-cloud.
 
@@ -95,7 +96,8 @@ exports[`meili teleport > creates a free trial project, adds it to the config fi
 
 exports[`meili teleport > names the failed tasks of the new project, and what exists in Meilisearch Cloud 1`] = `
 "Logged in to Meilisearch Cloud as ada@example.com.
-While Meilisearch Cloud creates local-cloud, see the plans and prices at https://www.meilisearch.com/pricing
+Meilisearch Cloud is creating local-cloud. It can take several minutes.
+While you wait, see the plans and prices at https://www.meilisearch.com/pricing
 Project local-cloud is running, and is in the config file as \`local-cloud\`.
 Sending the data of local to local-cloud.
 

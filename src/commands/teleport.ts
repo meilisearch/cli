@@ -129,7 +129,8 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     const link = `${dashboard}/teams/${team.id}/projects/${created.id}`;
     this.created = { name, link, sourceName: source.name, inConfigFile: false };
 
-    say(`While Meilisearch Cloud creates ${name}, see the plans and prices at ${PRICING_URL}`);
+    say(`Meilisearch Cloud is creating ${name}. It can take several minutes.`);
+    say(`While you wait, see the plans and prices at ${PRICING_URL}`);
     const start = Date.now();
     const project = await waitForProject(client, created.id, {
       timeoutMs: this.waitTimeoutMs({}),
