@@ -8,7 +8,7 @@
  *                              or of the release named by MEILISEARCH_VERSION (for example v1.54.2)
  *   pnpm openapi:management    the management document, from the private meilisearch-cloud repository
  *
- * Both read GitHub with MEILI_BOT_GH_PAT, else GITHUB_TOKEN, else `gh auth token`. Without a token,
+ * Both read GitHub with GITHUB_TOKEN, else `gh auth token`. Without a token,
  * GitHub limits the requests and answers 403 at times. The management document needs one.
  */
 import { execFileSync } from "node:child_process";
@@ -57,7 +57,6 @@ async function downloadMeilisearch() {
 }
 
 function githubToken() {
-  if (process.env.MEILI_BOT_GH_PAT) return process.env.MEILI_BOT_GH_PAT;
   if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN;
   try {
     return execFileSync("gh", ["auth", "token"], {
@@ -73,7 +72,7 @@ async function downloadManagement() {
   const token = githubToken();
   if (!token) {
     console.error(
-      "openapi/management.json: skipped, no GitHub token. Run `gh auth login`, or set MEILI_BOT_GH_PAT, to read the private meilisearch-cloud repository.",
+      "openapi/management.json: skipped, no GitHub token. Run `gh auth login`, or set GITHUB_TOKEN, to read the private meilisearch-cloud repository.",
     );
     return;
   }
