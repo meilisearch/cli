@@ -67,6 +67,9 @@ Every API command declares its routes, `static routes = ["GET /indexes", "GET /i
 | `POST /api/v2/projects` | `meili add projects --name <name> --team-id <id> --resource-id <id> [--ms-version <version>] [--sync-config] [--wait [--timeout <duration>]]` |
 | `PATCH /api/v2/projects/{id}` | `meili update projects (--id <id> \| --project <name>) --name <name> [--sync-config]` |
 | `DELETE /api/v2/projects/{id}` | `meili delete projects (--id <id> \| --project <name>) --yes [--sync-config]` |
+| `GET /api/v2/organizations`, `GET /api/v2/organizations/{id}` | `meili get organizations [--id <id>]` |
+| `PATCH /api/v2/organizations/{id}` | `meili update organizations --id <id> --name <name>` |
+| `DELETE /api/v2/organizations/{id}` | `meili delete organizations --id <id> --yes` |
 | `GET /api/v2/regions` | `meili get regions` |
 | `GET /api/v2/team-members` | `meili get team-members --team-id <id>` |
 | `GET /api/v2/resources` | `meili get resources [--region-id <id>]` |
