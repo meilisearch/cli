@@ -22,6 +22,7 @@ export const ENV = {
   MANAGEMENT_DASHBOARD_URL: "MEILI_MANAGEMENT_DASHBOARD_URL",
   OUTPUT: "MEILI_OUTPUT",
   TIMEOUT: "MEILI_TIMEOUT",
+  NO_ANALYTICS: "MEILI_NO_ANALYTICS",
 } as const;
 
 export const DEFAULT_MANAGEMENT_URL = "https://api.meilisearch.com";
@@ -64,6 +65,11 @@ export const ENV_VARS: ReadonlyArray<{ name: string; description: string; flag?:
   },
   { name: ENV.OUTPUT, description: "Default output mode: json or ndjson.", flag: "output" },
   { name: ENV.TIMEOUT, description: "Default --timeout for --wait.", flag: "timeout" },
+  {
+    name: ENV.NO_ANALYTICS,
+    description:
+      "`true` or `1` turns off the anonymous usage data the CLI sends. `DO_NOT_TRACK=1` and `CI` turn it off too.",
+  },
 ];
 
 // Config file

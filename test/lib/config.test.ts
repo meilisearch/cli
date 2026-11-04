@@ -277,6 +277,7 @@ describe("ENV_VARS", () => {
       "MEILI_MANAGEMENT_DASHBOARD_URL",
       "MEILI_OUTPUT",
       "MEILI_TIMEOUT",
+      "MEILI_NO_ANALYTICS",
     ]);
     for (const variable of ENV_VARS) expect(variable.description.length).toBeGreaterThan(0);
   });

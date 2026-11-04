@@ -3,6 +3,9 @@
  * when nobody is logged in. See ADR 0009.
  */
 import { spawn } from "node:child_process";
+import { identify } from "./analytics.js";
+import { getApiV2Me } from "./clients/management/generated/sdk.gen.js";
+import { createManagementClient } from "./clients/management.js";
 import { logIn, SCOPES } from "./clients/oauth.js";
 import type { Env } from "./config.js";
 import {
@@ -16,12 +19,14 @@ import {
 const TIMEOUT_MS = 300_000;
 
 /**
- * Runs the OAuth flow, writes the session to the credentials file, and returns
- * both. `say` writes a line for the human: an interactive command draws it in its margin.
+ * Runs the OAuth flow, writes the session to the credentials file, with the
+ * Cloud user the usage events use from now on (ADR 0016), and returns both.
+ * `say` writes a line for the human: an interactive command draws it in its margin.
  */
 export async function logInWithBrowser(
   env: Env,
   browser: boolean,
+  userAgent: string,
   say: (line: string) => void = (line) => process.stderr.write(`${line}\n`),
 ): Promise<{ path: string; session: Session }> {
   const client = resolveOauthClient(env);
@@ -34,6 +39,15 @@ export async function logInWithBrowser(
     },
   });
   const session: Session = { ...client, ...tokens };
+  const userId = await identify(env, async () => {
+    const management = createManagementClient({
+      url: session.managementUrl,
+      token: session.accessToken,
+      userAgent,
+    });
+    return (await getApiV2Me({ client: management })).id;
+  });
+  if (userId !== undefined) session.userId = userId;
   const path = credentialsFilePath(env);
   writeCredentialsFile(path, session);
   return { path, session };

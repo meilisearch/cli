@@ -3,12 +3,38 @@
  * questions answered with the arrow keys, lines for the human, and a status
  * block that animates while the command waits. Everything goes to stderr:
  * stdout stays for data. Colors follow `NO_COLOR` and `FORCE_COLOR`.
+ *
+ * Every question has a `prompt` id, and every option may have an `id`: the
+ * analytics record them (ADR 0016), never the text of a free answer. A renamed
+ * id breaks the funnels that use it.
  */
 import { stripVTControlCharacters, styleText } from "node:util";
 import { input, password, Separator, select } from "@inquirer/prompts";
+import { track } from "./analytics.js";
 
 /** Where the questions are drawn. A function: tests replace `process.stderr.write`. The answer becomes a `step` line. */
 const context = () => ({ output: process.stderr, clearPromptOnDone: true });
+
+/** True for the error of a question the human left with Ctrl-C. */
+export function isPromptExit(error: unknown): boolean {
+  return error instanceof Error && error.name === "ExitPromptError";
+}
+
+/** The answer to the question `prompt`, recorded as answered or as left. */
+async function answer<T>(
+  prompt: string,
+  question: Promise<T>,
+  choice: (value: T) => string | undefined,
+): Promise<T> {
+  try {
+    const value = await question;
+    track("cli_prompt_answered", { prompt, choice: choice(value) });
+    return value;
+  } catch (error) {
+    if (isPromptExit(error)) track("cli_prompt_aborted", { prompt });
+    throw error;
+  }
+}
 
 /** The left margin of every line, questions included. */
 const MARGIN = "  ";
@@ -30,22 +56,32 @@ const theme = () => ({
   },
 });
 
+type Choice<T> = { name: string; value: T; id?: string };
+
 /** One answer out of a list, picked with the arrow keys. A `heading` starts a group of answers. */
 export function choose<T>(
+  prompt: string,
   message: string,
-  choices: Array<{ name: string; value: T } | Separator>,
+  choices: Array<Choice<T> | Separator>,
 ): Promise<T> {
   clearStatus();
-  return select(
-    {
-      message,
-      choices: choices.map((choice) =>
-        Separator.isSeparator(choice) ? choice : { ...choice, name: `${MARGIN}${choice.name}` },
-      ),
-      pageSize: 15,
-      theme: theme(),
-    },
-    context(),
+  return answer(
+    prompt,
+    select(
+      {
+        message,
+        choices: choices.map((choice) =>
+          Separator.isSeparator(choice) ? choice : { ...choice, name: `${MARGIN}${choice.name}` },
+        ),
+        pageSize: 15,
+        theme: theme(),
+      },
+      context(),
+    ),
+    (value) =>
+      choices.find(
+        (each): each is Choice<T> => !Separator.isSeparator(each) && each.value === value,
+      )?.id,
   );
 }
 
@@ -56,17 +92,22 @@ export function heading(title: string): Separator {
 
 /** A line of text, `default` when the human presses Enter. */
 export function ask(
+  prompt: string,
   message: string,
   options: { default?: string; validate?: (value: string) => string | true } = {},
 ): Promise<string> {
   clearStatus();
-  return input({ message, ...options, theme: theme() }, context());
+  return answer(prompt, input({ message, ...options, theme: theme() }, context()), (value) =>
+    value === options.default ? "default" : "custom",
+  );
 }
 
 /** A line of text that is never echoed. */
-export function askSecret(message: string): Promise<string> {
+export function askSecret(prompt: string, message: string): Promise<string> {
   clearStatus();
-  return password({ message, mask: true, theme: theme() }, context());
+  return answer(prompt, password({ message, mask: true, theme: theme() }, context()), (value) =>
+    value === "" ? "empty" : "custom",
+  );
 }
 
 /** `text` in `style`, when stderr shows colors. */

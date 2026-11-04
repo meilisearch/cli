@@ -124,7 +124,8 @@ The base URL is the URL of the Cloud that issued the session. With `MEILI_MANAGE
   "accessToken": "…",
   "refreshToken": "…",
   "expiresAt": "2026-10-20T21:00:00.000Z",
-  "scope": "read write"
+  "scope": "read write",
+  "userId": "…"
 }
 ```
 
@@ -132,6 +133,7 @@ The base URL is the URL of the Cloud that issued the session. With `MEILI_MANAGE
 - The file stores the URLs and the client id with the tokens. A later command can then refresh and revoke the tokens against the Cloud that issued them, without a flag.
 - An access token is valid for one hour. When the token of a management command has expired, or is about to expire, the command exchanges the refresh token for a new pair of tokens and writes it to the file before it calls the API. `meili auth refresh` does the same on demand, before the old token expires. A session without a refresh token, or whose refresh is refused, is `cli_auth_failed` and exit 3, with a hint to log in again.
 - `meili auth logout` revokes both tokens of the session at the authorization server, each with its `token_type_hint`, and removes the file. When the revocation fails, the CLI still removes the file, and the command exits with the code of what failed, see below. The local session is gone in both cases, but a token that is still valid somewhere must not be reported as a success.
+- `userId` is the UUID of the Cloud user, the `id` of `GET /api/v2/me`. `auth login` stores it only when usage data is sent, see "Analytics". It is not a credential.
 - Only `auth login` and the refresh above write this file. It is the only place on disk where the CLI reads a token.
 - The default client id is `meilisearch-cli`, the OAuth application of this CLI. Every Cloud registers it with this id, so the default applies to every Cloud, Meilisearch Cloud or another one (ADR 0014). `MEILI_MANAGEMENT_CLIENT_ID` replaces it, for development and tests. A client id is public by definition: it is the name that the consent page shows, not a secret. The CLI holds no secret for it.
 - The consent URL carries `prompt=create`. A human without a session on the dashboard lands on the sign-up page, which links to the login page. A human with a session goes straight to the consent page. So `auth login` also creates an account.
@@ -169,12 +171,14 @@ A command cannot build a client by itself. Commands with `api = "none"` (`schema
 | `MEILI_MANAGEMENT_DASHBOARD_URL` | Dashboard URL, which hosts the consent page of `auth login`. Default `https://cloud.meilisearch.com`. For development and tests. |
 | `MEILI_OUTPUT` | Default output mode: `json` or `ndjson`. |
 | `MEILI_TIMEOUT` | Default `--timeout` for `--wait`. |
+| `MEILI_NO_ANALYTICS` | `true` or `1` turns off the anonymous usage data the CLI sends, see "Analytics". |
 
 `meili --help` documents every variable. Adding a variable is a contract change.
 
 A variable that has the same role as a flag takes its name from the flag: `MEILI_` followed by the flag name in upper snake case. For example `--output` and `MEILI_OUTPUT`, `--timeout` and `MEILI_TIMEOUT`. Some variables and flags have no pair:
 
 - `MEILI_CONFIG` has no flag, because the file is chosen per process.
+- `MEILI_NO_ANALYTICS` has no flag, because it is set once, for every process. Meilisearch uses the same name for the same purpose.
 - The `MEILI_MANAGEMENT_*` variables have no flag. They are for development and tests, against another Cloud or with a token instead of the session.
 - The project flags, `--project`, `--project-url` and `--project-api-key`, have no variable, because a project is chosen per command.
 
@@ -186,3 +190,15 @@ The contract tests check the pairs.
 - A credential that an API *returns* is data, not one of these credentials. The `keys` commands print the `key` field as the API returns it, like every field of every other response (`output.md`, Pass-through). One exception: `add projects` masks the `masterKey` of the project it creates. Nobody runs that command to read this key, unlike `get keys`. `--sync-config`, or `config sync-with-cloud` later, writes the key to the config file without printing it (ADR 0013). Otherwise, the CLI hides nothing from the agent it works for. Redaction applies to the credentials the CLI holds, in the headers and body fields that the next bullet lists, never to the data stream. A credential that the agent passes itself goes where its route puts it. `get keys --id <key value>` puts the key in the request path, so a `--debug` trace prints it there. This exposes the key no more than before: it is already visible in the process list.
 - `--debug` redacts the `Authorization`, `Cookie` and `Set-Cookie` headers, because a session cookie of the authorization server is a credential like any other. It also redacts every field named `apiKey`, `apikey`, `masterKey`, `key`, `token`, `access_token`, `refresh_token` in request and response bodies. `apikey` is how the Management API spells the master key of a project. `masterKey` is how the same API spells the same key when it returns a project. `access_token` and `refresh_token` are how the authorization server spells its tokens. A form-encoded body, the format the token endpoint takes, is never printed. The redaction lives in `src/lib/config.ts` and is tested.
 - The CLI reads keys from the config file, and from nowhere else on disk. It warns when others can read the file. Passing a key in a flag is allowed. The documentation says that the key is then visible in the process list and in the shell history. `--project-api-key -` reads the key from stdin instead.
+
+## Analytics
+
+The CLI sends anonymous usage data to the PostHog project of Meilisearch Cloud, through `https://t.meilisearch.com` (ADR 0016).
+
+- **What is sent.** One `cli_command_run` event per command: the command, the names of its flags, its exit code, its error code, its duration. One `cli_prompt_answered` or `cli_prompt_aborted` event per question of an interactive command: the id of the question, and the id of the option chosen. Every event also has `site: "cli"`, the CLI version, the OS, the architecture, the Node version, and whether stdin and stderr are terminals.
+- **What is never sent.** The values of the flags, the text of a free answer, URLs, index names, documents, keys, tokens, emails.
+- **Who.** Before login, a random id, in `analytics.json` next to the config file. `MEILI_CONFIG` moves it, like `credentials.json`. When the file cannot be written, each process has a new id. These events create no person profile in PostHog.
+- **After login.** `auth login`, and the login step of `meili teleport`, call `GET /api/v2/me` and store its `id` in `credentials.json` as `userId`. They send one `$identify` event that joins the random id to it. While the session exists, every event uses `userId`. If `/me` fails, the CLI stays anonymous. `MEILI_MANAGEMENT_TOKEN` never identifies. `auth logout` removes the session and writes a new random id, so the next person on the machine is not joined to the previous one.
+- **When nothing is sent.** `MEILI_NO_ANALYTICS` is `true` or `1`. `DO_NOT_TRACK` is `true` or `1`. `CI` is set. `MEILI_MANAGEMENT_URL` names a Cloud other than Meilisearch Cloud.
+- **The notice.** The first time the CLI writes `analytics.json`, it writes one notice on stderr when stderr is a terminal, with the way to turn it off.
+- **No effect on the command.** The events are sent once, after the command ends, with a timeout of one second. A failure is ignored. stdout, stderr and the exit code stay the same.

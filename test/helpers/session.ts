@@ -26,7 +26,7 @@ export function makeSession(url: string, overrides: Partial<Session> = {}): Sess
 
 /** Writes that session where `env` points, and returns the path it went to. */
 export function storeSession(
-  env: Record<string, string>,
+  env: Record<string, string | undefined>,
   url: string,
   overrides: Partial<Session> = {},
 ): string {

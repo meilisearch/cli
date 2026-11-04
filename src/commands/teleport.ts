@@ -39,6 +39,7 @@ import {
   endStatus,
   field,
   heading,
+  isPromptExit,
   paint,
   problem,
   say,
@@ -142,10 +143,11 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
         say();
         field("Watch it", `${this.created.link}/batches`);
         sayLinks(this.created.link);
-        process.exit(0);
+        void this.exitNow(0);
+        return;
       }
       this.sayWhatExists();
-      process.exit(130);
+      void this.exitNow(130);
     };
     process.once("SIGINT", onInterrupt);
     try {
@@ -172,7 +174,7 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
       everyPage((query) => getApiV2Organizations({ client, query }), { page: 1 }),
       everyPage((query) => getApiV2Teams({ client, query }), { page: 1 }),
     ]);
-    const region = await choose("Region of the new project", await closestFirst(regions));
+    const region = await choose("region", "Region of the new project", await closestFirst(regions));
     step("Region", region.name);
     const team = await chooseTeam(organizations, teams);
 
@@ -266,16 +268,23 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
     const picked =
       names.length === 0
         ? null
-        : await choose<string | null>("Which project moves to Meilisearch Cloud?", [
-            ...names.map((each) => ({ name: `${each}  ${file.projects[each]?.url}`, value: each })),
-            { name: "Another one: enter its URL and its API key", value: null },
+        : await choose<string | null>("source", "Which project moves to Meilisearch Cloud?", [
+            ...names.map((each) => ({
+              name: `${each}  ${file.projects[each]?.url}`,
+              value: each,
+              id: "config-entry",
+            })),
+            { name: "Another one: enter its URL and its API key", value: null, id: "enter-url" },
           ]);
     if (picked !== null) return this.pickSource(file, picked);
-    const url = await ask("URL of the Meilisearch instance", {
+    const url = await ask("source-url", "URL of the Meilisearch instance", {
       validate: (value) =>
         isProjectUrl(value) || "Enter an HTTP(S) URL, for example http://localhost:7700.",
     });
-    const apiKey = await askSecret("Its API key, with the export action (empty when it has none)");
+    const apiKey = await askSecret(
+      "source-api-key",
+      "Its API key, with the export action (empty when it has none)",
+    );
     return { name: undefined, url, client: this.meilisearchClient(url, apiKey || undefined) };
   }
 
@@ -284,7 +293,7 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
     let me = await this.loggedInUser();
     if (me === undefined) {
       say("Log in to Meilisearch Cloud in your browser. Without an account, you create one there.");
-      await logInWithBrowser(this.env, true, detail);
+      await logInWithBrowser(this.env, true, this.userAgent, detail);
       await this.connectManagement();
       me = await getApiV2Me({ client: this.managementClient });
     }
@@ -392,7 +401,7 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
     }
     endStatus();
     // Ctrl-C on a question.
-    if (error instanceof Error && error.name === "ExitPromptError") {
+    if (isPromptExit(error)) {
       this.sayWhatExists();
       this.exit(130);
     }
@@ -443,7 +452,9 @@ async function exportProblem(client: Meilisearch): Promise<string | undefined> {
  * The regions as the dashboard shows them: the closest first, then by latency,
  * with a 🌱 on a green label region. A region that does not answer comes last.
  */
-async function closestFirst(regions: Region[]): Promise<Array<{ name: string; value: Region }>> {
+async function closestFirst(
+  regions: Region[],
+): Promise<Array<{ name: string; value: Region; id: string }>> {
   const measured = await Promise.all(
     regions.map(async (region) => ({ region, latency: await regionLatency(region.regionUrl) })),
   );
@@ -455,7 +466,7 @@ async function closestFirst(regions: Region[]): Promise<Array<{ name: string; va
     const name = `${region.name}${region.greenLabel ? " 🌱" : ""}`.padEnd(width);
     const ms = latency === undefined ? "" : `${String(latency).padStart(4)}ms`;
     const closest = index === 0 && latency !== undefined ? "  (closest)" : "";
-    return { name: `${name}${ms}${closest}`.trimEnd(), value: region };
+    return { name: `${name}${ms}${closest}`.trimEnd(), value: region, id: region.name };
   });
 }
 
@@ -466,6 +477,7 @@ async function chooseTeam(organizations: Organization[], teams: Team[]): Promise
     only !== undefined && teams.length === 1
       ? only
       : await choose(
+          "team",
           "Team of the new project",
           organizations.flatMap((organization) => {
             const its = teams.filter((each) => each.organizationId === organization.id);
@@ -484,7 +496,7 @@ async function chooseTeam(organizations: Organization[], teams: Team[]): Promise
 
 /** A name Meilisearch Cloud accepts and the config file does not have yet. */
 function askName(file: ConfigFile, suggested: string): Promise<string> {
-  return ask("Name of the new project", {
+  return ask("project-name", "Name of the new project", {
     default: suggested,
     validate: (value) =>
       !PROJECT_NAME.test(value)
@@ -510,12 +522,14 @@ function choosePlan(resources: Resource[], why: string): Promise<number> {
     return estimation === undefined ? [] : [{ resource, estimation }];
   });
   return choose(
+    "plan",
     "Plan of the new project",
     priced
       .sort((a, b) => rank(a.resource) - rank(b.resource))
       .map(({ resource, estimation }) => ({
         name: describeResource(resource, estimation),
         value: resource.id,
+        id: resource.name,
       })),
   );
 }

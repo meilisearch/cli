@@ -81,7 +81,10 @@ export function readJson(path: string): unknown {
   return JSON.parse(readFileSync(path, "utf8"));
 }
 
-/** A fresh environment: the developer's MEILI_* variables never leak in. */
+/**
+ * A fresh environment: the developer's MEILI_* variables never leak in, and no
+ * test sends analytics unless it unsets `MEILI_NO_ANALYTICS`.
+ */
 export function scrubbedEnv(
   overrides: Record<string, string | undefined> = {},
 ): Record<string, string | undefined> {
@@ -89,6 +92,7 @@ export function scrubbedEnv(
     PATH: process.env.PATH,
     HOME: scrubbedHome,
     MEILI_CONFIG: join(scrubbedHome, "config.json"),
+    MEILI_NO_ANALYTICS: "true",
     TMPDIR: process.env.TMPDIR,
     NODE_ENV: process.env.NODE_ENV,
     OCLIF_COLUMNS: process.env.OCLIF_COLUMNS,
