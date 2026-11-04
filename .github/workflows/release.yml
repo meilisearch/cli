@@ -127,7 +127,8 @@ jobs:
           persist-credentials: false
       - run: |
           url="https://registry.npmjs.org/@meilisearch/cli/-/cli-$VERSION.tgz"
-          # npm can answer 404 for minutes after the publish. A file, not a pipe: a failed download fails the job.
+          # The registry serves the tarball some minutes after the publish, with a 404 before.
+          # A file, not a pipe: a failed download fails the job.
           curl -fsSL --retry 30 --retry-delay 10 --retry-all-errors -o cli.tgz "$url"
           sha256=$(sha256sum cli.tgz | cut -d ' ' -f 1)
           git clone "https://x-access-token:$GH_TOKEN@github.com/meilisearch/homebrew-tap.git" tap
