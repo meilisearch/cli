@@ -44,6 +44,7 @@ describe("logIn", () => {
     expect(asked?.get("client_id")).toBe(STUB_CLIENT_ID);
     expect(asked?.get("redirect_uri")).toMatch(/^http:\/\/127\.0\.0\.1:\d+\/callback$/);
     expect(asked?.get("state")?.length).toBeGreaterThan(8);
+    expect(asked?.get("prompt")).toBe("create");
   });
 
   it("ignores a callback that carries another state, and waits until it times out", async () => {

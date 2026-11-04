@@ -28,12 +28,3 @@ EXAMPLES
 
 "
 `;
-
-exports[`meili auth login > refuses another Cloud without its application, before any network call 1`] = `
-{
-  "exitCode": 2,
-  "stderr": "{"error":{"code":"cli_usage","type":"cli","message":"No OAuth application on that Cloud. Set the \`MEILI_MANAGEMENT_CLIENT_ID\` environment variable.","hint":"The \`uid\` of a public OAuth application registered on that Cloud, with \`http://127.0.0.1/callback\` as its redirect URI. Only Meilisearch Cloud has a built-in one."}}
-",
-  "stdout": "",
-}
-`;

@@ -142,6 +142,11 @@ function authorizationUrl(
     state,
     code_challenge: challenge,
     code_challenge_method: "S256",
+    // Sends a human without a session to the sign-up page instead of the login
+    // page (OpenID Connect `prompt=create`). A human who already has an account
+    // still logs in from there: GitHub and Google log in an existing account, and
+    // the page links to the login page.
+    prompt: "create",
   }).toString();
   return url.href;
 }
