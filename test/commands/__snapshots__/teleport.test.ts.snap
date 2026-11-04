@@ -68,9 +68,9 @@ Sending the data of local to local-cloud.
 [2KIndexing  [##############################] 100%  3/3 tasks
 
 Your data is in Meilisearch Cloud, in project local-cloud.
-Search it:     meili search --project local-cloud --index movies --q "<query>"
-Try it:        https://dashboard.test/teams/12/projects/343/preview
-Its settings:  https://dashboard.test/teams/12/projects/343/settings/general
+Search it:         meili search --project local-cloud --index movies --q "<query>"
+Try it:            https://dashboard.test/teams/12/projects/343/preview
+Project settings:  https://dashboard.test/teams/12/projects/343/settings/general
 ",
   "stdout": "",
 }

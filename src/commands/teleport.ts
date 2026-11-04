@@ -162,10 +162,10 @@ An agent does the same without questions. ${WITHOUT_TELEPORT}`;
     say();
     say(`Your data is in Meilisearch Cloud, in project ${name}.`);
     if (index !== undefined) {
-      say(`Search it:     meili search --project ${name} --index ${index.uid} --q "<query>"`);
+      say(`Search it:         meili search --project ${name} --index ${index.uid} --q "<query>"`);
     }
-    say(`Try it:        ${link}/preview`);
-    say(`Its settings:  ${link}/settings/general`);
+    say(`Try it:            ${link}/preview`);
+    say(`Project settings:  ${link}/settings/general`);
   }
 
   /** The source named, else the one chosen, once its key can call `POST /export`. */
