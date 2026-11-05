@@ -50,6 +50,9 @@ jobs:
           github-token: ${{ secrets.MEILI_BOT_GH_PAT }}
           # The manifest holds the version, and CI checks that it matches the code.
           version-script: pnpm changeset:version
+        env:
+          # .changeset/changelog.mjs reads the pull request of each changeset from the GitHub API.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish:
     name: Publish on npm
