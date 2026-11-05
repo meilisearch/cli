@@ -3,7 +3,7 @@ import { type Api, BaseCommand } from "../lib/base-command.js";
 export default class Version extends BaseCommand {
   static api: Api = "none";
 
-  static override description = "Print the version of the CLI, the platform and the Node version.";
+  static override description = "Print the CLI version & platform information.";
 
   static override examples = ["<%= config.bin %> <%= command.id %>"];
 
