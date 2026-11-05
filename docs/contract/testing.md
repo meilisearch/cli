@@ -35,7 +35,7 @@ Contract tests are not per command. They protect the promises of `docs/contract/
 - every command has a description and at least two examples; every flag has a description, and a flag that takes a value documents it
 - every command in `src/commands/` has its test file in `test/commands/`
 - exit codes match the table in `output.md` for each `cli_` code
-- `--help` never opens a network connection
+- `--help` never calls an API
 - redaction removes every secret from `--debug` traces
 
 They also keep code and docs in sync:

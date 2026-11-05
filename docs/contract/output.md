@@ -120,7 +120,7 @@ Destructive commands are the commands of the verb `delete`, as `commands.md` der
 ## Help
 
 - Every command has a `description` of one sentence and at least two `examples`. Every flag has a description of one sentence. A flag that takes a value documents it with a `helpValue` or a list of options.
-- `--help` never makes a network call.
+- `--help` never calls an API. It sends only its `cli_help_shown` event, see "Analytics" in `config.md` (ADR 0020).
 - `meili --help` lists every resource with its commands, in three sections: the commands without a route, then those of the Meilisearch API, then those of the Management API. Then come the global flags and the environment variables (ADR 0018).
 - `meili schema` prints the index: the global flags once, then one entry per command with its `id`, its `description` and its `routes`. In the index, the description is only the first paragraph of the command description. The rest is a warning, and only the detail shows it. The index is the cheapest way for an agent to see everything that exists.
 - `meili schema --command "index list"` prints that one command in full: `id`, `description`, `api`, `routes`, `async`, `keyActions`, the `flags` the command declares itself, and its `examples`. The global flags are not repeated there, because they belong to the index. `meili config set --project` is listed, required and with its own description, because that command declares it. `--debug` is not listed, because no command declares it. An unknown `--command` is `cli_usage`, exit 2, with a hint that names the closest command, or `meili schema` when no command is close.

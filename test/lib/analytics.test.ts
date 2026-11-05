@@ -14,10 +14,11 @@ import {
 import { type Api, BaseCommand } from "../../src/lib/base-command.js";
 import { ANALYTICS_URL } from "../../src/lib/clients/analytics.js";
 import { DEFAULT_MANAGEMENT_URL as CLOUD } from "../../src/lib/config.js";
+import MeiliHelp from "../../src/lib/help.js";
 import { choose } from "../../src/lib/terminal.js";
 import { MEILISEARCH_URL, meilisearchHandlers } from "../helpers/meilisearch-handlers.js";
 import { countRequests, server, useMockServer } from "../helpers/msw.js";
-import { readJson, runCli, runCommand, scrubbedHome } from "../helpers/run-command.js";
+import { loadConfig, readJson, runCli, runCommand, scrubbedHome } from "../helpers/run-command.js";
 import { storeSession } from "../helpers/session.js";
 
 const select = vi.hoisted(() => vi.fn());
@@ -235,6 +236,32 @@ describe("analytics", () => {
     await runCommand(Health, health, { env });
 
     expect(batches[1]?.batch[0]?.distinct_id).not.toBe(batches[0]?.batch[0]?.distinct_id);
+  });
+
+  it("records which help shows, never what was typed", async () => {
+    const batches = posthog();
+    const help = new MeiliHelp(await loadConfig());
+    const write = vi.spyOn(process.stdout, "write").mockReturnValue(true);
+    await help.showHelp([]);
+    await help.showHelp(["index", "--help"]);
+    await help.showHelp(["index", "view", "--id", "movies", "--help"]);
+    write.mockRestore();
+    await sendAnalytics(analyticsEnv(), { cli_version: "1.0.0" });
+
+    expect(batches[0]?.batch.map((event) => [event.event, event.properties])).toEqual([
+      ["cli_help_shown", expect.objectContaining({ site: "cli" })],
+      ["cli_help_shown", expect.objectContaining({ topic: "index" })],
+      ["cli_help_shown", expect.objectContaining({ command: "index view" })],
+    ]);
+    expect(batches[0]?.batch[0]?.properties).not.toHaveProperty("command");
+    expect(batches[0]?.batch[0]?.properties).not.toHaveProperty("topic");
+    expect(JSON.stringify(batches)).not.toContain("movies");
+  });
+
+  it("sends nothing when no event was collected", async () => {
+    const batches = posthog();
+    await sendAnalytics(analyticsEnv(), { cli_version: "1.0.0" });
+    expect(batches).toEqual([]);
   });
 
   it("names only the flags the command declares", () => {

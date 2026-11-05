@@ -35,6 +35,11 @@ Package: `@meilisearch/cli` on npm. Binary: `meili`.
     - **Plain.** Short sentences, everyday words, no idioms.
     - **Clear over elegant.** Choose the sentence a reader understands on the first read.
     - **Tight.** A sentence stays only if removing it loses information.
+18. Everything the user types sends usage analytics to PostHog (ADR 0016, ADR 0019, ADR 0020). This covers each command line, and each answer in an interactive command such as `meili teleport`.
+    - **A command line.** `BaseCommand` sends `cli_command_run` when the command ends. So every command extends `BaseCommand` and exits through it: `this.exit`, or `this.exitNow` from a signal handler, never `process.exit`. A command line that runs no command sends its own event from `bin/run.js`: `cli_help_shown` for a help (ADR 0020), `cli_command_not_found` for an unknown command. `--version` sends nothing.
+    - **An answer.** Ask only with `choose`, `ask` and `askSecret` of `src/lib/terminal.ts`. They send `cli_prompt_answered` and `cli_prompt_aborted`. Give every new question a new, stable `prompt` id, and every option of `choose` a stable `id`. An option that is the user's own data, such as a team, has no `id`: the event then has no `choice`. A renamed id breaks the funnels in PostHog.
+    - **Never a value.** No flag value, free text, name, URL, key or document. Only names and fixed ids.
+    - **A new event or property is a contract change.** It goes in the "Analytics" section of `docs/contract/config.md`, with a new ADR.
 
 ## Stack
 

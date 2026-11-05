@@ -116,7 +116,7 @@ export function resetAnonymousId(env: Env): void {
 /** Sends the events the command collected, each with `common`, then forgets them. */
 export async function sendAnalytics(env: Env, common: Record<string, unknown>): Promise<void> {
   const events = collected.splice(0);
-  if (!enabled(env)) return;
+  if (events.length === 0 || !enabled(env)) return;
   const userId = sessionUserId(env);
   const distinctId = userId ?? anonymousId(env);
   const properties = {

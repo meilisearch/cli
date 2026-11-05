@@ -8,6 +8,7 @@
 - [ ] Output goes through `src/lib/output.ts`, errors through `src/lib/errors.ts`
 - [ ] The command never waits for a human: no prompt, no question, no `$EDITOR`, unless it is an interactive command of ADR 0015; a `delete` command spreads `BaseCommand.confirmFlags` and its examples carry `--yes`
 - [ ] The description starts with one short sentence, the summary that `meili --help` shows; the detail goes in the next paragraph. It says whether the command is interactive, never who it is for
+- [ ] What the user types sends analytics (rule 18): the command extends `BaseCommand` and never calls `process.exit`; every question goes through `src/lib/terminal.ts` with a stable `prompt` id, and every option of `choose` has a stable `id`, unless the option is the user's own data
 - [ ] The command never speaks HTTP itself: the SDK or the generated client only, no `fetch` outside `src/lib/clients/`
 
 ## Tests

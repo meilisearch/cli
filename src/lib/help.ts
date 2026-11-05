@@ -6,6 +6,7 @@
  * how to configure it.
  */
 import { type Command, Help, type Interfaces } from "@oclif/core";
+import { track } from "./analytics.js";
 import { type Api, BaseCommand, type LoadableCommand } from "./base-command.js";
 import { ENV_VARS } from "./config.js";
 
@@ -20,6 +21,22 @@ const SECTIONS: [string, Api][] = [
 const VERB_ORDER = ["list", "view", "add", "update", "delete"];
 
 export default class MeiliHelp extends Help {
+  /** `bin/run.js` sends the `cli_help_shown` of each help (ADR 0020): its command, its topic, or neither at the root. */
+  protected override async showRootHelp(): Promise<void> {
+    track("cli_help_shown", {});
+    await super.showRootHelp();
+  }
+
+  protected override async showTopicHelp(topic: Interfaces.Topic): Promise<void> {
+    track("cli_help_shown", { topic: topic.name });
+    await super.showTopicHelp(topic);
+  }
+
+  override async showCommandHelp(command: Command.Loadable): Promise<void> {
+    track("cli_help_shown", { command: command.id.replaceAll(":", " ") });
+    await super.showCommandHelp(command);
+  }
+
   /** The description and the usage. `meili version` and `meili --version` give the version. */
   override formatRoot(): string {
     return [

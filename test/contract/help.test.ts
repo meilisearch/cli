@@ -1,5 +1,5 @@
 /**
- * `--help` never opens a network connection and documents every environment
+ * `--help` never calls an API and documents every environment
  * variable but the development ones, which CONTRIBUTING.md documents.
  */
 import { describe, expect, it } from "vitest";
