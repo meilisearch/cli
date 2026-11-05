@@ -92,7 +92,8 @@ interface Source {
 export default class Teleport extends BaseCommand {
   static api: Api = "none";
 
-  static override description = `Interactive command. Move a project to Meilisearch Cloud.
+  static override description =
+    `Move a self-hosted project to Meilisearch Cloud. Interactive command.
 
 Moves the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal.
 
