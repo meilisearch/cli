@@ -37,6 +37,17 @@ describe("source rules", () => {
     }
   });
 
+  it("every command and every question sends analytics (rule 18)", async () => {
+    for (const { file, source } of await sourceFiles()) {
+      if (file !== "src/lib/terminal.ts") {
+        expect(source, `${file} asks without terminal.ts`).not.toContain("@inquirer/");
+      }
+      if (!file.startsWith("src/commands/")) continue;
+      expect(source, `${file} does not extend BaseCommand`).toMatch(/extends BaseCommand\b/);
+      expect(source, `${file} exits without BaseCommand`).not.toMatch(/process\.exit\(/);
+    }
+  });
+
   it("commands do not read process.env or build clients themselves", async () => {
     for (const { file, source } of await sourceFiles()) {
       if (!file.startsWith("src/commands/")) continue;

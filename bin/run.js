@@ -13,10 +13,8 @@ try {
 } catch (error) {
   const commandIds = config.commandIDs.map((id) => toConfiguredId(id, config));
   handleFatalError(error, argv, commandIds);
-  // No command ran, so no `BaseCommand` sends the event of the run.
   const unknown = unknownCommand(error, commandIds, argv);
-  if (unknown !== undefined) {
-    track("cli_command_not_found", unknown);
-    await sendAnalytics(process.env, { cli_version: config.version });
-  }
+  if (unknown !== undefined) track("cli_command_not_found", unknown);
 }
+// A help or an unknown command runs no command, so no `BaseCommand` sent its event.
+await sendAnalytics(process.env, { cli_version: config.version });

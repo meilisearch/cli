@@ -93,6 +93,6 @@ meili schema --command "index list" # one command in full, as JSON
 
 ## Analytics
 
-`meili` sends anonymous usage data to Meilisearch: the commands you run, the names of their flags, their errors, the command `meili` suggests when you type one that does not exist, and in `meili teleport` the options you choose. It never sends the values of the flags, your data or your keys. After `meili auth login`, the events are linked to your Meilisearch Cloud account. To turn it off, set `MEILI_NO_ANALYTICS=true`. `DO_NOT_TRACK=1` works too, and nothing is sent in CI. The details are in [`docs/contract/config.md`](docs/contract/config.md#analytics).
+`meili` sends anonymous usage data to Meilisearch: the commands you run, the names of their flags, their errors, the command `meili` suggests when you type one that does not exist, the commands whose help you read, and in `meili teleport` the options you choose. It never sends the values of the flags, your data or your keys. After `meili auth login`, the events are linked to your Meilisearch Cloud account. To turn it off, set `MEILI_NO_ANALYTICS=true`. `DO_NOT_TRACK=1` works too, and nothing is sent in CI. The details are in [`docs/contract/config.md`](docs/contract/config.md#analytics).
 
 To contribute, read [`CONTRIBUTING.md`](CONTRIBUTING.md). [MIT](LICENSE).
