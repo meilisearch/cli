@@ -12964,7 +12964,7 @@
     "version": {
       "aliases": [],
       "args": {},
-      "description": "Print the version of the CLI.",
+      "description": "Print the version of the CLI, the platform and the Node version.",
       "examples": [
         "<%= config.bin %> <%= command.id %>"
       ],

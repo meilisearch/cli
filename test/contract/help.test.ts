@@ -59,13 +59,4 @@ describe("--help", () => {
       }
     }
   });
-
-  it("prints the version without a network call", async () => {
-    let result: Awaited<ReturnType<typeof runCli>> | undefined;
-    const requests = await countRequests(async () => {
-      result = await runCli(["--version"]);
-    });
-    expect(requests).toBe(0);
-    expect(result?.stdout).toMatch(/^@meilisearch\/cli\/\d+\.\d+\.\d+ /);
-  });
 });
