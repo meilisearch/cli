@@ -14,7 +14,7 @@ Every setting goes back to its default value, which reindexes the documents.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --yes",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --yes --wait",
+    "<%= config.bin %> <%= command.id %> -p prod --index movies --yes --wait",
   ];
 
   static override flags = {

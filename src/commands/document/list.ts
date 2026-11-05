@@ -19,8 +19,8 @@ export default class DocumentList extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42,1344 --fields id,title",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --filter 'rating > 4' --sort rating:desc",
+    "<%= config.bin %> <%= command.id %> -p prod --index movies --ids 42,1344 --fields id,title",
+    "<%= config.bin %> <%= command.id %> -p prod --index movies --filter 'rating > 4' --sort rating:desc",
   ];
 
   static override flags = {

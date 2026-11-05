@@ -14,32 +14,33 @@ exports[`meili key add > prints its help without any network call 1`] = `
 
 USAGE
   $ meili key add [--debug] [--project-url <url>] [--project-api-key
-    <key>] [--project <name>] [--id <uuid>] [--actions <actions>] [--indexes
-    <indexes>] [--expires-at <date>] [--name <name>] [--description <text>]
-    [--file <path> | --data <json>]
+    <key>] [-p <name>] [--id <uuid>] [--actions <actions>] [--indexes <indexes>]
+    [--expires-at <date>] [--name <name>] [--description <text>] [--file <path>
+    | --data <json>]
 
 FLAGS
-  --actions=<actions>      Actions the key permits, comma-separated, for example
-                           \`search\` or \`documents.*\`. \`*\` permits them all.
-  --data=<json>            Inline JSON body.
-  --debug                  Print every HTTP request and response on stderr,
-                           secrets redacted.
-  --description=<text>     Description of the key.
-  --expires-at=<date>      Expiration date in RFC 3339 format. The value null
-                           creates a key that never expires.
-  --file=<path>            Read the body from a file. \`-\` reads from stdin.
-  --id=<uuid>              Uid of the key, a uuid v4. Without it, Meilisearch
-                           generates one.
-  --indexes=<indexes>      Indexes the key reaches, comma-separated. \`*\` reaches
-                           them all, and \`products_*\` every index of that
-                           prefix.
-  --name=<name>            Name of the key.
-  --project=<name>         A project of the config file. Cannot be combined with
-                           --project-url. One of --project or --project-url is
-                           required.
-  --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
-  --project-url=<url>      Project URL, the Meilisearch instance to talk to. One
-                           of --project or --project-url is required.
+  -p, --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. One of --project or
+                               --project-url is required.
+      --actions=<actions>      Actions the key permits, comma-separated, for
+                               example \`search\` or \`documents.*\`. \`*\` permits
+                               them all.
+      --data=<json>            Inline JSON body.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --description=<text>     Description of the key.
+      --expires-at=<date>      Expiration date in RFC 3339 format. The value
+                               null creates a key that never expires.
+      --file=<path>            Read the body from a file. \`-\` reads from stdin.
+      --id=<uuid>              Uid of the key, a uuid v4. Without it,
+                               Meilisearch generates one.
+      --indexes=<indexes>      Indexes the key reaches, comma-separated. \`*\`
+                               reaches them all, and \`products_*\` every index of
+                               that prefix.
+      --name=<name>            Name of the key.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
 
 DESCRIPTION
   Create an API key.
@@ -52,11 +53,11 @@ DESCRIPTION
 EXAMPLES
   $ meili key add --project prod --actions search --indexes movies --expires-at null
 
-  $ meili key add --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z
+  $ meili key add -p prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z
 
-  $ meili key add --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'
+  $ meili key add -p prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'
 
-  $ meili key add --project prod --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'
+  $ meili key add -p prod --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'
 
 "
 `;

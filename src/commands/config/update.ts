@@ -19,12 +19,13 @@ Changes the fields given, and refuses a name that does not exist. Talks to the M
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --sync-with-cloud",
-    "<%= config.bin %> <%= command.id %> --project prod --project-api-key - < key.txt",
-    "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7701",
+    "<%= config.bin %> <%= command.id %> -p prod --project-api-key - < key.txt",
+    "<%= config.bin %> <%= command.id %> -p local --project-url http://localhost:7701",
   ];
 
   static override flags = {
     project: Flags.string({
+      char: "p",
       required: true,
       description: "Name of the project to change.",
       helpValue: "<name>",

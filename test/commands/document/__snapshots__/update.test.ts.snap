@@ -14,32 +14,35 @@ exports[`meili document update > prints its help without any network call 1`] = 
 
 USAGE
   $ meili document update --index <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [--project <name>] [--primary-key <field>]
+    [--project-api-key <key>] [-p <name>] [--primary-key <field>]
     [--custom-metadata <string>] [--skip-creation] [--file <path> | --data
     <json>] [--timeout <duration> --wait]
 
 FLAGS
-  --custom-metadata=<string>  String attached to the task, returned in the task
-                              object.
-  --data=<json>               Inline JSON body.
-  --debug                     Print every HTTP request and response on stderr,
-                              secrets redacted.
-  --file=<path>               Read the body from a file. \`-\` reads from stdin.
-  --index=<index>             (required) The index to update the documents of.
-  --primary-key=<field>       Primary key of the index. Only taken into account
-                              on its first documents.
-  --project=<name>            A project of the config file. Cannot be combined
-                              with --project-url. One of --project or
-                              --project-url is required.
-  --project-api-key=<key>     Project API key. \`-\` reads it from stdin.
-  --project-url=<url>         Project URL, the Meilisearch instance to talk to.
-                              One of --project or --project-url is required.
-  --skip-creation             Only update documents that already exist, ignore
-                              the new ones.
-  --timeout=<duration>        Maximum wait time, for example 30s, 2m. Default
-                              10m. Only with --wait.
-  --wait                      Poll the task until it reaches a final status,
-                              then print the final task.
+  -p, --project=<name>            A project of the config file. Cannot be
+                                  combined with --project-url. One of --project
+                                  or --project-url is required.
+      --custom-metadata=<string>  String attached to the task, returned in the
+                                  task object.
+      --data=<json>               Inline JSON body.
+      --debug                     Print every HTTP request and response on
+                                  stderr, secrets redacted.
+      --file=<path>               Read the body from a file. \`-\` reads from
+                                  stdin.
+      --index=<index>             (required) The index to update the documents
+                                  of.
+      --primary-key=<field>       Primary key of the index. Only taken into
+                                  account on its first documents.
+      --project-api-key=<key>     Project API key. \`-\` reads it from stdin.
+      --project-url=<url>         Project URL, the Meilisearch instance to talk
+                                  to. One of --project or --project-url is
+                                  required.
+      --skip-creation             Only update documents that already exist,
+                                  ignore the new ones.
+      --timeout=<duration>        Maximum wait time, for example 30s, 2m.
+                                  Default 10m. Only with --wait.
+      --wait                      Poll the task until it reaches a final status,
+                                  then print the final task.
 
 DESCRIPTION
   Add or update documents in an index.
@@ -50,11 +53,11 @@ DESCRIPTION
 EXAMPLES
   $ meili document update --project prod --index movies --file changes.json
 
-  cat changes.json | meili document update --project prod --index movies --file -
+  cat changes.json | meili document update -p prod --index movies --file -
 
-  $ meili document update --project prod --index movies --data '[{"id":1,"rating":4}]'
+  $ meili document update -p prod --index movies --data '[{"id":1,"rating":4}]'
 
-  $ meili document update --project prod --index movies --file changes.json --wait
+  $ meili document update -p prod --index movies --file changes.json --wait
 
 "
 `;

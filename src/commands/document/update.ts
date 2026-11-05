@@ -17,9 +17,9 @@ The fields of a document are merged into the one that has the same primary key.`
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json",
-    "cat changes.json | <%= config.bin %> <%= command.id %> --project prod --index movies --file -",
-    '<%= config.bin %> <%= command.id %> --project prod --index movies --data \'[{"id":1,"rating":4}]\'',
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json --wait",
+    "cat changes.json | <%= config.bin %> <%= command.id %> -p prod --index movies --file -",
+    '<%= config.bin %> <%= command.id %> -p prod --index movies --data \'[{"id":1,"rating":4}]\'',
+    "<%= config.bin %> <%= command.id %> -p prod --index movies --file changes.json --wait",
   ];
 
   static override flags = {

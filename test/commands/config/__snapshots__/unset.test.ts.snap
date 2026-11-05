@@ -4,12 +4,12 @@ exports[`meili config unset > prints its help without any network call 1`] = `
 "Remove a project from the config file.
 
 USAGE
-  $ meili config unset --project <name> [--debug]
+  $ meili config unset -p <name> [--debug]
 
 FLAGS
-  --debug           Print every HTTP request and response on stderr, secrets
-                    redacted.
-  --project=<name>  (required) Name of the project to remove.
+  -p, --project=<name>  (required) Name of the project to remove.
+      --debug           Print every HTTP request and response on stderr, secrets
+                        redacted.
 
 DESCRIPTION
   Remove a project from the config file.

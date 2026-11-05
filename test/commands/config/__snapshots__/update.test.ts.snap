@@ -4,19 +4,19 @@ exports[`meili config update > prints its help without any network call 1`] = `
 "Change a project of the config file.
 
 USAGE
-  $ meili config update --project <name> [--debug] [--project-url <url>]
+  $ meili config update -p <name> [--debug] [--project-url <url>]
     [--project-api-key <key>] [--sync-with-cloud]
 
 FLAGS
-  --debug                  Print every HTTP request and response on stderr,
-                           secrets redacted.
-  --project=<name>         (required) Name of the project to change.
-  --project-api-key=<key>  New API key of the project. \`-\` reads it from stdin,
-                           out of the shell history.
-  --project-url=<url>      New URL of the project.
-  --sync-with-cloud        Write the entry's cloud identifiers from Meilisearch
-                           Cloud, and its master key when the entry has no key.
-                           Never replaces a key.
+  -p, --project=<name>         (required) Name of the project to change.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --project-api-key=<key>  New API key of the project. \`-\` reads it from
+                               stdin, out of the shell history.
+      --project-url=<url>      New URL of the project.
+      --sync-with-cloud        Write the entry's cloud identifiers from
+                               Meilisearch Cloud, and its master key when the
+                               entry has no key. Never replaces a key.
 
 DESCRIPTION
   Change a project of the config file.
@@ -27,9 +27,9 @@ DESCRIPTION
 EXAMPLES
   $ meili config update --project prod --sync-with-cloud
 
-  $ meili config update --project prod --project-api-key - < key.txt
+  $ meili config update -p prod --project-api-key - < key.txt
 
-  $ meili config update --project local --project-url http://localhost:7701
+  $ meili config update -p local --project-url http://localhost:7701
 
 "
 `;

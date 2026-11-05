@@ -23,10 +23,10 @@ The source is the project this command connects to, named by --project, --projec
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
-    "<%= config.bin %> <%= command.id %> --project staging --project-destination prod",
-    `<%= config.bin %> <%= command.id %> --project prod --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait`,
-    "<%= config.bin %> <%= command.id %> --project prod --url http://localhost:7701 --payload-size 24MiB",
-    `<%= config.bin %> <%= command.id %> --project prod --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'`,
+    "<%= config.bin %> <%= command.id %> -p staging --project-destination prod",
+    `<%= config.bin %> <%= command.id %> -p prod --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait`,
+    "<%= config.bin %> <%= command.id %> -p prod --url http://localhost:7701 --payload-size 24MiB",
+    `<%= config.bin %> <%= command.id %> -p prod --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'`,
   ];
 
   static override flags = {

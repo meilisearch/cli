@@ -155,13 +155,13 @@ exports[`meili teleport > prints its help without any network call 1`] = `
 "Move a self-hosted project to Meilisearch Cloud. Interactive command.
 
 USAGE
-  $ meili teleport [--debug] [--project <name>]
+  $ meili teleport [--debug] [-p <name>]
 
 FLAGS
-  --debug           Print every HTTP request and response on stderr, secrets
-                    redacted.
-  --project=<name>  A project of the config file, the one whose data moves to
-                    Meilisearch Cloud. Without it, the command asks.
+  -p, --project=<name>  A project of the config file, the one whose data moves
+                        to Meilisearch Cloud. Without it, the command asks.
+      --debug           Print every HTTP request and response on stderr, secrets
+                        redacted.
 
 DESCRIPTION
   Move a self-hosted project to Meilisearch Cloud. Interactive command.

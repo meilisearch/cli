@@ -19,9 +19,9 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes movies --expires-at null",
-    "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z",
-    "<%= config.bin %> <%= command.id %> --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
-    '<%= config.bin %> <%= command.id %> --project prod --data \'{"actions":["search"],"indexes":["movies"],"expiresAt":null}\'',
+    "<%= config.bin %> <%= command.id %> -p prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z",
+    "<%= config.bin %> <%= command.id %> -p prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
+    '<%= config.bin %> <%= command.id %> -p prod --data \'{"actions":["search"],"indexes":["movies"],"expiresAt":null}\'',
   ];
 
   static override flags = {

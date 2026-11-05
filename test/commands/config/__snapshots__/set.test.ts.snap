@@ -13,19 +13,19 @@ exports[`meili config set > prints its help without any network call 1`] = `
 "Add a project to the config file.
 
 USAGE
-  $ meili config set --project <name> --project-url <url> [--debug]
+  $ meili config set -p <name> --project-url <url> [--debug]
     [--project-api-key <key>] [--sync-with-cloud]
 
 FLAGS
-  --debug                  Print every HTTP request and response on stderr,
-                           secrets redacted.
-  --project=<name>         (required) Name of the project to set.
-  --project-api-key=<key>  API key of the project. \`-\` reads it from stdin, out
-                           of the shell history.
-  --project-url=<url>      (required) URL of the project.
-  --sync-with-cloud        Write the entry's cloud identifiers from Meilisearch
-                           Cloud, and its master key when the entry has no key.
-                           Never replaces a key.
+  -p, --project=<name>         (required) Name of the project to set.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --project-api-key=<key>  API key of the project. \`-\` reads it from stdin,
+                               out of the shell history.
+      --project-url=<url>      (required) URL of the project.
+      --sync-with-cloud        Write the entry's cloud identifiers from
+                               Meilisearch Cloud, and its master key when the
+                               entry has no key. Never replaces a key.
 
 DESCRIPTION
   Add a project to the config file.
@@ -36,9 +36,9 @@ DESCRIPTION
 EXAMPLES
   $ meili config set --project local --project-url http://localhost:7700
 
-  $ meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt
+  $ meili config set -p prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt
 
-  $ meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud
+  $ meili config set -p prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud
 
 "
 `;

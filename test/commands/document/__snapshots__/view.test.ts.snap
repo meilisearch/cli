@@ -14,24 +14,24 @@ exports[`meili document view > prints its help without any network call 1`] = `
 
 USAGE
   $ meili document view --index <index> --id <id> [--debug] [--project-url
-    <url>] [--project-api-key <key>] [--project <name>] [--fields <fields>]
+    <url>] [--project-api-key <key>] [-p <name>] [--fields <fields>]
     [--retrieve-vectors]
 
 FLAGS
-  --debug                  Print every HTTP request and response on stderr,
-                           secrets redacted.
-  --fields=<fields>        Document attributes to return, comma-separated.
-                           Defaults to all of them.
-  --id=<id>                (required) The document identifier.
-  --index=<index>          (required) The index to read the document from.
-  --project=<name>         A project of the config file. Cannot be combined with
-                           --project-url. One of --project or --project-url is
-                           required.
-  --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
-  --project-url=<url>      Project URL, the Meilisearch instance to talk to. One
-                           of --project or --project-url is required.
-  --retrieve-vectors       Include the vector embeddings of the document, if it
-                           has them.
+  -p, --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. One of --project or
+                               --project-url is required.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --fields=<fields>        Document attributes to return, comma-separated.
+                               Defaults to all of them.
+      --id=<id>                (required) The document identifier.
+      --index=<index>          (required) The index to read the document from.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
+      --retrieve-vectors       Include the vector embeddings of the document, if
+                               it has them.
 
 DESCRIPTION
   Get one document of an index.
@@ -39,7 +39,7 @@ DESCRIPTION
 EXAMPLES
   $ meili document view --project prod --index movies --id 42
 
-  $ meili document view --project prod --index movies --id 42 --fields id,title
+  $ meili document view -p prod --index movies --id 42 --fields id,title
 
 "
 `;

@@ -12,7 +12,7 @@ export default class IndexList extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod",
-    "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10",
+    "<%= config.bin %> <%= command.id %> -p prod --limit 5 --offset 10",
   ];
 
   static override flags = {

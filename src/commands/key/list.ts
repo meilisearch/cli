@@ -15,7 +15,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod",
-    "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10",
+    "<%= config.bin %> <%= command.id %> -p prod --limit 5 --offset 10",
   ];
 
   static override flags = {

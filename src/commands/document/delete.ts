@@ -21,10 +21,10 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42,1344 --yes",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42 --yes",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --filter 'rating < 2' --yes",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --file ids.json --yes",
-    "<%= config.bin %> <%= command.id %> --project prod --index movies --all --yes --wait",
+    "<%= config.bin %> <%= command.id %> -p prod --index movies --ids 42 --yes",
+    "<%= config.bin %> <%= command.id %> -p prod --index movies --filter 'rating < 2' --yes",
+    "<%= config.bin %> <%= command.id %> -p prod --index movies --file ids.json --yes",
+    "<%= config.bin %> <%= command.id %> -p prod --index movies --all --yes --wait",
   ];
 
   static override flags = {

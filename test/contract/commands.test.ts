@@ -118,8 +118,21 @@ describe("every example of a Meilisearch command names its project (config.md, R
       };
       if (command.api !== "meilisearch") continue;
       for (const example of command.examples ?? []) {
-        expect(example, `${file}: ${example}`).toMatch(/--project(-url)? /);
+        expect(example, `${file}: ${example}`).toMatch(/(--project(-url)?|-p) /);
       }
+    }
+  });
+});
+
+describe("examples write --project once, then -p (ADR 0022)", () => {
+  it("the first example that names a project writes --project, the next ones -p", () => {
+    for (const [id, command] of Object.entries(manifest.commands)) {
+      const names = (command.examples ?? []).flatMap(
+        (example) =>
+          (typeof example === "string" ? example : example.command).match(/ (--project|-p) /g) ??
+          [],
+      );
+      expect(names, id).toEqual(names.map((_, i) => (i === 0 ? " --project " : " -p ")));
     }
   });
 });

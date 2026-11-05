@@ -14,27 +14,26 @@ exports[`meili settings delete > prints its help without any network call 1`] = 
 
 USAGE
   $ meili settings delete --index <index> --yes [--debug] [--project-url
-    <url>] [--project-api-key <key>] [--project <name>] [--timeout <duration>
-    --wait]
+    <url>] [--project-api-key <key>] [-p <name>] [--timeout <duration> --wait]
 
 FLAGS
-  --debug                  Print every HTTP request and response on stderr,
-                           secrets redacted.
-  --index=<index>          (required) The index to reset the settings of.
-                           \`settings update --<setting> null\` resets one of
-                           them.
-  --project=<name>         A project of the config file. Cannot be combined with
-                           --project-url. One of --project or --project-url is
-                           required.
-  --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
-  --project-url=<url>      Project URL, the Meilisearch instance to talk to. One
-                           of --project or --project-url is required.
-  --timeout=<duration>     Maximum wait time, for example 30s, 2m. Default 10m.
-                           Only with --wait.
-  --wait                   Poll the task until it reaches a final status, then
-                           print the final task.
-  --yes                    (required) Confirm the deletion. Nothing is sent to
-                           the API without it.
+  -p, --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. One of --project or
+                               --project-url is required.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --index=<index>          (required) The index to reset the settings of.
+                               \`settings update --<setting> null\` resets one of
+                               them.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
+      --timeout=<duration>     Maximum wait time, for example 30s, 2m. Default
+                               10m. Only with --wait.
+      --wait                   Poll the task until it reaches a final status,
+                               then print the final task.
+      --yes                    (required) Confirm the deletion. Nothing is sent
+                               to the API without it.
 
 DESCRIPTION
   Reset the settings of an index.
@@ -44,7 +43,7 @@ DESCRIPTION
 EXAMPLES
   $ meili settings delete --project prod --index movies --yes
 
-  $ meili settings delete --project prod --index movies --yes --wait
+  $ meili settings delete -p prod --index movies --yes --wait
 
 "
 `;

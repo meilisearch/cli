@@ -14,28 +14,28 @@ exports[`meili export > prints its help without any network call 1`] = `
 
 USAGE
   $ meili export [--debug] [--project-url <url>] [--project-api-key
-    <key>] [--project <name>] [--api-key <key>] [--project-destination <name> |
-    --url <url>] [--payload-size <size>] [--indexes <json>] [--file <path> |
-    --data <json>] [--timeout <duration> --wait]
+    <key>] [-p <name>] [--api-key <key>] [--project-destination <name> | --url
+    <url>] [--payload-size <size>] [--indexes <json>] [--file <path> | --data
+    <json>] [--timeout <duration> --wait]
 
 FLAGS
-  --data=<json>            Inline JSON body.
-  --debug                  Print every HTTP request and response on stderr,
-                           secrets redacted.
-  --file=<path>            Read the body from a file. \`-\` reads from stdin.
-  --indexes=<json>         The indexes to export and how, as JSON: an index
-                           pattern per key, its filter and overrideSettings as
-                           value. Every index by default, \`{"*":{}}\`.
-  --project=<name>         A project of the config file. Cannot be combined with
-                           --project-url. One of --project or --project-url is
-                           required.
-  --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
-  --project-url=<url>      Project URL, the Meilisearch instance to talk to. One
-                           of --project or --project-url is required.
-  --timeout=<duration>     Maximum wait time, for example 30s, 2m. Default 10m.
-                           Only with --wait.
-  --wait                   Poll the task until it reaches a final status, then
-                           print the final task.
+  -p, --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. One of --project or
+                               --project-url is required.
+      --data=<json>            Inline JSON body.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --file=<path>            Read the body from a file. \`-\` reads from stdin.
+      --indexes=<json>         The indexes to export and how, as JSON: an index
+                               pattern per key, its filter and overrideSettings
+                               as value. Every index by default, \`{"*":{}}\`.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
+      --timeout=<duration>     Maximum wait time, for example 30s, 2m. Default
+                               10m. Only with --wait.
+      --wait                   Poll the task until it reaches a final status,
+                               then print the final task.
 
 DESTINATION FLAGS
   --api-key=<key>               API key of the destination instance, the one the
@@ -65,13 +65,13 @@ DESCRIPTION
 EXAMPLES
   $ meili export --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key>
 
-  $ meili export --project staging --project-destination prod
+  $ meili export -p staging --project-destination prod
 
-  $ meili export --project prod --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait
+  $ meili export -p prod --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait
 
-  $ meili export --project prod --url http://localhost:7701 --payload-size 24MiB
+  $ meili export -p prod --url http://localhost:7701 --payload-size 24MiB
 
-  $ meili export --project prod --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'
+  $ meili export -p prod --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'
 
 "
 `;
