@@ -999,7 +999,7 @@ export type GetApiV2TeamsResponse = GetApiV2TeamsResponses[keyof GetApiV2TeamsRe
 
 export type PostApiV2TeamsData = {
     body: {
-        name?: string;
+        name: string;
         organizationId: number;
     };
     path?: never;
@@ -1016,6 +1016,10 @@ export type PostApiV2TeamsErrors = {
      * Forbidden
      */
     403: Error;
+    /**
+     * Validation failed
+     */
+    422: Error;
 };
 
 export type PostApiV2TeamsError = PostApiV2TeamsErrors[keyof PostApiV2TeamsErrors];
@@ -1104,11 +1108,15 @@ export type PatchApiV2TeamsByIdData = {
 
 export type PatchApiV2TeamsByIdErrors = {
     /**
+     * Invalid body
+     */
+    400: Error;
+    /**
      * Team not found
      */
     404: Error;
     /**
-     * Team user is not member
+     * Validation failed
      */
     422: Error;
 };
