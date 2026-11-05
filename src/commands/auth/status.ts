@@ -1,7 +1,8 @@
+import { identify } from "../../lib/analytics.js";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { tokenInfo } from "../../lib/clients/oauth.js";
 import { MeiliCliError } from "../../lib/errors.js";
-import { ensureFreshSession, sessionUser } from "../../lib/session.js";
+import { ensureFreshSession, sessionUser, writeCredentialsFile } from "../../lib/session.js";
 
 export default class AuthStatus extends BaseCommand {
   static api: Api = "none";
@@ -32,8 +33,15 @@ Says whether a session of \`auth login\` exists, whether the authorization serve
       );
     }
 
+    const user = await sessionUser(fresh, this.userAgent);
+    // A session written before `auth login` stored the user is identified here (ADR 0019).
+    if (fresh.userId === undefined) {
+      const userId = await identify(this.env, fresh.managementUrl, async () => user.id);
+      if (userId !== undefined) writeCredentialsFile(path, { ...fresh, userId });
+    }
+
     await this.output({
-      user: await sessionUser(fresh, this.userAgent),
+      user,
       managementUrl: fresh.managementUrl,
       scope: info.scope ?? fresh.scope,
       expiresAt: info.expiresAt ?? fresh.expiresAt,

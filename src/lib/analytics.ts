@@ -82,15 +82,17 @@ function sessionUserId(env: Env): string | undefined {
 }
 
 /**
- * After a login, when usage data is sent: the id of the Cloud user, to store
- * in the session, and one `$identify` that joins the anonymous id to it.
- * Undefined when nothing is sent or `fetchUserId` fails: the CLI stays anonymous.
+ * For a session of Meilisearch Cloud, when usage data is sent: the id of the
+ * Cloud user, to store in the session, and one `$identify` that joins the
+ * anonymous id to it. Undefined when nothing is sent, the session belongs to
+ * another Cloud, or `fetchUserId` fails: the CLI stays anonymous.
  */
 export async function identify(
   env: Env,
+  managementUrl: string,
   fetchUserId: () => Promise<string>,
 ): Promise<string | undefined> {
-  if (!enabled(env)) return undefined;
+  if (!enabled(env) || managementUrl !== DEFAULT_MANAGEMENT_URL) return undefined;
   let userId: string;
   try {
     userId = await fetchUserId();
