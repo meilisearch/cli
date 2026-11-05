@@ -13,11 +13,13 @@ A reader understands the change at a glance: what kind of change, and which part
 - Then name the scope: a command (`meili task list`), a flag (`--wait`), or an area (usage analytics, install script).
 - Say what a user sees, not how the code does it.
 - No commit hash or title, no pull request number, no ADR number, no file path of the repository.
-- A breaking change starts with `**Breaking:**`. It can add one more line that says what to do instead.
+- After the scope, start with the verb: `prints the logged-in user`, not `it prints the logged-in user`.
+
+A breaking change starts with `**Breaking:**`. It can be longer than one line, to help the user move to the new version: show what to type before and what to type now, for example with a table. Stay clear and concise: give only what the user needs to change.
 
 ```md
 Add `meili stats --index <index>`.
-Fix `meili auth login --help`: it says that the command also creates an account.
-Change `meili --version`: it prints the same JSON as `meili version`.
-**Breaking:** Remove `--output`. Every command prints JSON.
+Fix `meili auth login --help`: says that the command also creates an account.
+Change `meili --version`: prints the same JSON as `meili version`.
+**Breaking:** Remove `--output`. Every command prints JSON: drop `--output json` from your scripts.
 ```
