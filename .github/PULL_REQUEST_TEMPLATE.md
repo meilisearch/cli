@@ -33,7 +33,7 @@
 ## Housekeeping
 
 - [ ] `oclif.manifest.json` regenerated
-- [ ] Changeset added, or the change is invisible to users of the package (docs of this repository, tests, CI)
+- [ ] Changeset added by the rules of `.changeset/README.md`, or the change is invisible to users of the package (docs of this repository, tests, CI)
 - [ ] New dependency justified below, or none added
 
 ## Notes for the reviewer

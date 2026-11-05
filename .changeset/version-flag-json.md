@@ -2,4 +2,4 @@
 "@meilisearch/cli": minor
 ---
 
-`meili --version` runs `meili version` (ADR 0021): both print `{"version", "platform", "node"}` as JSON.
+Change `meili --version`: prints the same JSON as `meili version`. ([#77](https://github.com/meilisearch/cli/pull/77))
