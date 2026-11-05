@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`meili auth login > prints its help without any network call 1`] = `
-"Log in to Meilisearch Cloud in a browser.
+"Log in to Meilisearch Cloud, or create an account, in a browser.
 
 USAGE
   $ meili auth login [--debug] [--browser]
@@ -13,7 +13,7 @@ FLAGS
                   redacted.
 
 DESCRIPTION
-  Log in to Meilisearch Cloud in a browser.
+  Log in to Meilisearch Cloud, or create an account, in a browser.
 
   Stores the token for the management commands.
 

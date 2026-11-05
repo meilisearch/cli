@@ -5,7 +5,7 @@ exports[`oclif.manifest.json > \`meili schema\` is a snapshot, the index and eve
   "commands": [
     {
       "api": "none",
-      "description": "Log in to Meilisearch Cloud in a browser.
+      "description": "Log in to Meilisearch Cloud, or create an account, in a browser.
 
 Stores the token for the management commands.",
       "examples": [
@@ -3577,7 +3577,7 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
   "index": {
     "commands": [
       {
-        "description": "Log in to Meilisearch Cloud in a browser.",
+        "description": "Log in to Meilisearch Cloud, or create an account, in a browser.",
         "id": "auth login",
       },
       {

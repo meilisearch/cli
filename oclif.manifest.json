@@ -3,7 +3,7 @@
     "auth:login": {
       "aliases": [],
       "args": {},
-      "description": "Log in to Meilisearch Cloud in a browser.\n\nStores the token for the management commands.",
+      "description": "Log in to Meilisearch Cloud, or create an account, in a browser.\n\nStores the token for the management commands.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
         "<%= config.bin %> <%= command.id %> --no-browser"
