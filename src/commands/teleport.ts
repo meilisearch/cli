@@ -61,6 +61,7 @@ const TIPS = [
   "`meili stats --project <name>` shows the number of documents of each index.",
   "`meili task list --project <name> --statuses failed` lists the tasks that failed.",
   "`meili config list` shows the projects of your config file.",
+  "`meili project update --project <name> --name <new-name> --sync-config` renames the project in Meilisearch Cloud and in your config file.",
 ];
 const TIP_MS = 8000;
 
