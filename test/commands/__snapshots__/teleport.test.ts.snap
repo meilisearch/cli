@@ -152,7 +152,7 @@ exports[`meili teleport > names the failed tasks of the new project, and what ex
 `;
 
 exports[`meili teleport > prints its help without any network call 1`] = `
-"Interactive command. Move a project to Meilisearch Cloud.
+"Move a self-hosted project to Meilisearch Cloud. Interactive command.
 
 USAGE
   $ meili teleport [--debug] [--project <name>]
@@ -164,7 +164,7 @@ FLAGS
                     Meilisearch Cloud. Without it, the command asks.
 
 DESCRIPTION
-  Interactive command. Move a project to Meilisearch Cloud.
+  Move a self-hosted project to Meilisearch Cloud. Interactive command.
 
   Moves the data of a Meilisearch project to a new Meilisearch Cloud project, by
   asking questions on the terminal.

@@ -3543,7 +3543,7 @@ Only the teams the token sees.",
     },
     {
       "api": "none",
-      "description": "Interactive command. Move a project to Meilisearch Cloud.
+      "description": "Move a self-hosted project to Meilisearch Cloud. Interactive command.
 
 Moves the data of a Meilisearch project to a new Meilisearch Cloud project, by asking questions on the terminal.
 
@@ -3956,7 +3956,7 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
         ],
       },
       {
-        "description": "Interactive command. Move a project to Meilisearch Cloud.",
+        "description": "Move a self-hosted project to Meilisearch Cloud. Interactive command.",
         "id": "teleport",
       },
       {

@@ -29,7 +29,8 @@ CLI COMMANDS
   auth      login, logout, refresh, status
   config    list, update, set, sync-with-cloud, unset
   schema    Describe the commands as JSON.
-  teleport  Interactive command. Move a project to Meilisearch Cloud.
+  teleport  Move a self-hosted project to Meilisearch Cloud. Interactive
+            command.
   version   Print the version of the CLI.
 
 MEILISEARCH COMMANDS
