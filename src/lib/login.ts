@@ -37,7 +37,11 @@ export async function logInWithBrowser(
     },
   });
   const session: Session = { ...client, ...tokens };
-  const userId = await identify(env, async () => (await sessionUser(session, userAgent)).id);
+  const userId = await identify(
+    env,
+    session.managementUrl,
+    async () => (await sessionUser(session, userAgent)).id,
+  );
   if (userId !== undefined) session.userId = userId;
   const path = credentialsFilePath(env);
   writeCredentialsFile(path, session);

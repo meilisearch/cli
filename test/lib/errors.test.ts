@@ -13,6 +13,7 @@ import {
   ManagementApiError,
   MeiliCliError,
   toRenderedError,
+  unknownCommand,
 } from "../../src/lib/errors.js";
 
 describe("ManagementApiError", () => {
@@ -191,6 +192,24 @@ describe("toRenderedError", () => {
     ]);
     expect(rendered.body.hint).toBe(
       "`meili index list` takes no positional argument: give each value with its flag. Run `meili index list --help` to see them.",
+    );
+  });
+
+  it("gives the usage event of an unknown command the suggestion, never what was typed", () => {
+    const commandIds = ["index list", "index view"];
+    const unknown = (typed: string, argv: string[] = []) =>
+      unknownCommand(new Errors.CLIError(`command ${typed} not found`), commandIds, argv);
+    expect(unknown("index:list movies")).toEqual({
+      reason: "positional",
+      suggestion: "index list",
+    });
+    expect(unknown("get indexes", ["--id", "movies"])).toEqual({
+      reason: "typo",
+      suggestion: "index view",
+    });
+    expect(unknown("frobnicate")).toEqual({ reason: "none" });
+    expect(unknownCommand(new Errors.CLIError("Unexpected argument: x"), commandIds, [])).toBe(
+      undefined,
     );
   });
 

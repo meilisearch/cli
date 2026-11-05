@@ -2,6 +2,7 @@ import { existsSync, mkdtempSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { HttpResponse, http } from "msw";
 import { describe, expect, it, vi } from "vitest";
+import AuthStatus from "../../src/commands/auth/status.js";
 import Health from "../../src/commands/health.js";
 import {
   flagNames,
@@ -12,6 +13,7 @@ import {
 } from "../../src/lib/analytics.js";
 import { type Api, BaseCommand } from "../../src/lib/base-command.js";
 import { ANALYTICS_URL } from "../../src/lib/clients/analytics.js";
+import { DEFAULT_MANAGEMENT_URL as CLOUD } from "../../src/lib/config.js";
 import { choose } from "../../src/lib/terminal.js";
 import { MEILISEARCH_URL, meilisearchHandlers } from "../helpers/meilisearch-handlers.js";
 import { countRequests, server, useMockServer } from "../helpers/msw.js";
@@ -169,8 +171,8 @@ describe("analytics", () => {
     await runCommand(Health, health, { env });
     const anonymous = batches[0]?.batch[0]?.distinct_id;
 
-    const userId = await identify(env, async () => "user-uuid");
-    storeSession(env, "https://api.meilisearch.com", { userId });
+    const userId = await identify(env, CLOUD, async () => "user-uuid");
+    storeSession(env, CLOUD, { userId });
     await sendAnalytics(env, { command: "auth login" });
     await runCommand(Health, health, { env });
 
@@ -187,11 +189,41 @@ describe("analytics", () => {
   it("stays anonymous when the user's id cannot be fetched", async () => {
     const batches = posthog();
     const env = analyticsEnv();
-    const userId = await identify(env, () => Promise.reject(new Error("offline")));
+    const userId = await identify(env, CLOUD, () => Promise.reject(new Error("offline")));
     await sendAnalytics(env, { command: "auth login" });
 
     expect(userId).toBeUndefined();
     expect(batches.flatMap((batch) => batch.batch)).toEqual([]);
+  });
+
+  it("never identifies the user of a session of another Cloud", async () => {
+    const batches = posthog();
+    const env = analyticsEnv();
+    const userId = await identify(env, "https://staging.test", async () => "user-uuid");
+    await sendAnalytics(env, { command: "auth status" });
+
+    expect(userId).toBeUndefined();
+    expect(batches.flatMap((batch) => batch.batch)).toEqual([]);
+  });
+
+  it("identifies, in auth status, a session that has no user yet, and stores the user", async () => {
+    server.use(
+      http.get(`${CLOUD}/oauth/token/info`, () => HttpResponse.json({ scope: ["read", "write"] })),
+      http.get(`${CLOUD}/api/v2/me`, () =>
+        HttpResponse.json({ id: "user-uuid", name: "Ada", email: "ada@example.com" }),
+      ),
+    );
+    const batches = posthog();
+    const env = analyticsEnv();
+    const path = storeSession(env, CLOUD);
+    const result = await runCommand(AuthStatus, [], { env });
+
+    expect(result.exitCode).toBe(0);
+    expect(readJson(path)).toMatchObject({ userId: "user-uuid" });
+    expect(batches[0]?.batch.map((event) => [event.event, event.distinct_id])).toEqual([
+      ["$identify", "user-uuid"],
+      ["cli_command_run", "user-uuid"],
+    ]);
   });
 
   it("gives a new anonymous id after logout", async () => {

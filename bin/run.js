@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Config, flush, run, toConfiguredId } from "@oclif/core";
-import { handleFatalError } from "../dist/lib/errors.js";
+import { sendAnalytics, track } from "../dist/lib/analytics.js";
+import { handleFatalError, unknownCommand } from "../dist/lib/errors.js";
 
 // oclif's own `execute()` prints errors as text. Errors here must follow
 // docs/contract/output.md, so the last-resort handler is ours.
@@ -12,4 +13,10 @@ try {
 } catch (error) {
   const commandIds = config.commandIDs.map((id) => toConfiguredId(id, config));
   handleFatalError(error, argv, commandIds);
+  // No command ran, so no `BaseCommand` sends the event of the run.
+  const unknown = unknownCommand(error, commandIds, argv);
+  if (unknown !== undefined) {
+    track("cli_command_not_found", unknown);
+    await sendAnalytics(process.env, { cli_version: config.version });
+  }
 }

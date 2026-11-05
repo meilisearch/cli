@@ -226,14 +226,14 @@ export function toRenderedError(
   if (error instanceof Errors.CLIError) {
     // oclif parse errors and "command not found". Their exit code is 2 by default.
     // oclif colors parts of its messages in a terminal: the JSON carries none of it.
-    const cleaned = stripVTControlCharacters(error.message).replace(HELP_SUFFIX, "");
-    const typed = cleaned.match(NOT_FOUND)?.[1]?.replaceAll(":", " ");
+    const cleaned = cleanedMessage(error);
+    const typed = typedCommand(error);
     return {
       body: {
         code: "cli_usage",
         type: "cli",
         message: typed === undefined ? cleaned : `Command \`${typed}\` not found.`,
-        hint: notFoundHint(typed, commandIds, argv),
+        hint: usageHint(unknownCommand(error, commandIds, argv)),
       },
       exitCode: EXIT_CODES.usage,
       stack: error.stack,
@@ -256,26 +256,54 @@ export function toRenderedError(
 /** oclif joins command ids with ":" in its messages, or with spaces when no topic matches. */
 const NOT_FOUND = /^command (.+) not found$/;
 
+const cleanedMessage = (error: Errors.CLIError): string =>
+  stripVTControlCharacters(error.message).replace(HELP_SUFFIX, "");
+
+/** What was typed, `get indexes`, when oclif found no command of that name. */
+const typedCommand = (error: Errors.CLIError): string | undefined =>
+  cleanedMessage(error).match(NOT_FOUND)?.[1]?.replaceAll(":", " ");
+
 /**
- * The hint of an unknown command. A command followed by a value is a
- * positional argument, which meili never takes. Anything else is a typo, the
- * order of another CLI, or both.
+ * What an unknown command is closest to. `positional`: a command followed by a
+ * value, which meili never takes. `typo`: a typo, the order of another CLI, or
+ * both. `suggestion` is a command of the manifest, never what was typed, which
+ * can hold a value.
  */
-function notFoundHint(
-  typed: string | undefined,
+export type UnknownCommand =
+  | { reason: "positional" | "typo"; suggestion: string }
+  | { reason: "none" };
+
+/** The unknown command of a `command not found` error, for its usage event (ADR 0019). */
+export function unknownCommand(
+  error: unknown,
   commandIds: readonly string[],
   argv: readonly string[],
-): string {
-  const command = commandIds.find((id) => typed?.startsWith(`${id} `));
-  if (command !== undefined) {
-    return `\`meili ${command}\` takes no positional argument: give each value with its flag. Run \`meili ${command} --help\` to see them.`;
-  }
+): UnknownCommand | undefined {
+  const typed = error instanceof Errors.CLIError ? typedCommand(error) : undefined;
+  return typed === undefined ? undefined : closestTo(typed, commandIds, argv);
+}
+
+function closestTo(
+  typed: string,
+  commandIds: readonly string[],
+  argv: readonly string[],
+): UnknownCommand {
+  const command = commandIds.find((id) => typed.startsWith(`${id} `));
+  if (command !== undefined) return { reason: "positional", suggestion: command };
   // `--id` names one item: `meili get indexes --id movies` is `meili index view --id movies`.
   const oneItem = argv.some((arg) => arg === "--id" || arg.startsWith("--id="));
-  const closest = typed === undefined ? undefined : closestCommand(typed, commandIds, oneItem);
-  return closest === undefined
-    ? "Run `meili --help` or `meili <command> --help` to see the usage."
-    : `Did you mean \`meili ${closest}\`?`;
+  const closest = closestCommand(typed, commandIds, oneItem);
+  return closest === undefined ? { reason: "none" } : { reason: "typo", suggestion: closest };
+}
+
+function usageHint(unknown: UnknownCommand | undefined): string {
+  if (unknown === undefined || unknown.reason === "none") {
+    return "Run `meili --help` or `meili <command> --help` to see the usage.";
+  }
+  const command = unknown.suggestion;
+  return unknown.reason === "positional"
+    ? `\`meili ${command}\` takes no positional argument: give each value with its flag. Run \`meili ${command} --help\` to see them.`
+    : `Did you mean \`meili ${command}\`?`;
 }
 
 /** Words of other CLIs, and the word of meili they mean. */
