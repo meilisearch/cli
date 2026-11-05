@@ -1,4 +1,4 @@
-/** Runs the built CLI (`bin/run.js`) as a child process. Used by integration tests. */
+/** Runs the built CLI (`bin/run.js`) as a child process, for what only `bin/run.js` does. */
 import { execFile } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { scrubbedEnv } from "./run-command.js";
