@@ -101,7 +101,7 @@ A Management API command has none: Meilisearch Cloud does not run locally (`docs
 ## 6. Manifest, changeset
 
 - `pnpm gen:manifest`: builds and rewrites `oclif.manifest.json`. The file is committed; CI fails if it differs from the code. The `meili schema` snapshot in `test/contract/__snapshots__/` changes with it: update it on purpose with `pnpm test -u`, and read the diff.
-- Changeset: a new command is visible to users of the package, so it needs a line. Write `.changeset/add-<command-with-dashes>.md` by hand: the interactive `pnpm changeset` cannot be answered by an agent. The line names the command with its required flags; the optional ones live in `--help`:
+- Changeset: a new command is visible to users of the package, so it needs a line. Write `.changeset/add-<command-with-dashes>.md` by hand, by the rules of the Changesets section of `CLAUDE.md`: the interactive `pnpm changeset` cannot be answered by an agent. The line names the command with its required flags; the optional ones live in `--help`:
 
   ```md
   ---
