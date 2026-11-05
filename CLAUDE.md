@@ -79,7 +79,7 @@ Use the skill: `/add-command <command>`, for example `/add-command stats`. If th
 
 ## Changesets
 
-Every pull request that changes the CLI for its users adds a changeset. Read `.changeset/README.md` before you write one: it gives the version type and the rules for the text, which becomes the entry of `CHANGELOG.md`.
+Every pull request that changes the CLI for its users adds a changeset. Read `.changeset/README.md` before you write one.
 
 ## Before you finish
 

@@ -1,6 +1,14 @@
 # Changesets
 
-Every pull request that changes the CLI for its users adds a changeset in `.changeset/`, written by hand because `pnpm changeset` is interactive. A new command is `minor`, a fix is `patch`, a change to the public contract (output shape, error shape, exit codes, command names) is `major`, or `minor` before 1.0 (`docs/contract/output.md`, section Versioning). `.changeset/changelog.mjs` copies the text into `CHANGELOG.md` as it is, with no commit hash.
+Every pull request that changes the CLI for its users adds a changeset in `.changeset/`. Write it by hand: `pnpm changeset` is interactive.
+
+The version type follows `docs/contract/output.md`, section Versioning:
+
+- `minor`: a new command, a new flag, or a new optional field in a response owned by the CLI.
+- `patch`: a fix.
+- `major`: a breaking change to the output shape, the error shape, the exit codes or the command names. Before 1.0, it is `minor`.
+
+`.changeset/changelog.mjs` copies the text into `CHANGELOG.md` as it is, with no commit hash.
 
 A reader understands the change at a glance: what kind of change, and which part of the CLI.
 
