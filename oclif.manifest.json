@@ -12964,7 +12964,7 @@
     "version": {
       "aliases": [],
       "args": {},
-      "description": "Print the CLI version & platform information.",
+      "description": "Print the CLI version and platform information.",
       "examples": [
         "<%= config.bin %> <%= command.id %>"
       ],

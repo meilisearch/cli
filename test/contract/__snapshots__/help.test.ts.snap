@@ -31,7 +31,7 @@ CLI COMMANDS
   schema    Describe the commands as JSON.
   teleport  Move a self-hosted project to Meilisearch Cloud. Interactive
             command.
-  version   Print the CLI version & platform information.
+  version   Print the CLI version and platform information.
 
 MEILISEARCH COMMANDS
   batch         list, view

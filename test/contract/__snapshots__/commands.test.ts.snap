@@ -3566,7 +3566,7 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
     },
     {
       "api": "none",
-      "description": "Print the CLI version & platform information.",
+      "description": "Print the CLI version and platform information.",
       "examples": [
         "meili version",
       ],
@@ -3960,7 +3960,7 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
         "id": "teleport",
       },
       {
-        "description": "Print the CLI version & platform information.",
+        "description": "Print the CLI version and platform information.",
         "id": "version",
       },
     ],
