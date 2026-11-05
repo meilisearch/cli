@@ -74,30 +74,12 @@ Use the skill: `/add-command <command>`, for example `/add-command stats`. If th
 6. Create `test/commands/<same path>.test.ts` from the sibling test. It must snapshot the `--help` output and the JSON output for one success case and one error case, with `msw` mocks.
 7. For a Meilisearch command, add one integration test in `test/integration/meilisearch/`. Meilisearch runs locally from the `docker compose` file of this repository. A management command has no integration test. Meilisearch Cloud does not run locally. Its OpenAPI document is the source of truth, and the unit tests mock the API from that document (`docs/contract/testing.md`). If the document does not describe something, report the gap to the Cloud team. Do not guess.
 8. Run `pnpm gen:manifest` so `oclif.manifest.json` and `meili schema` know the command.
-9. Add a changeset of type `minor`, by the rules of the Changesets section below.
+9. Add a changeset of type `minor`, by the rules of `.changeset/README.md`.
 10. Run the "Before you finish" list.
 
 ## Changesets
 
-Every pull request that changes the CLI for its users adds a changeset in `.changeset/`, written by hand because `pnpm changeset` is interactive. A new command is `minor`, a fix is `patch`, a change to the public contract (output shape, error shape, exit codes, command names) is `major`, or `minor` before 1.0 (`docs/contract/output.md`, section Versioning). `.changeset/changelog.mjs` copies the text into `CHANGELOG.md` as it is, with no commit hash.
-
-A reader understands the change at a glance: what kind of change, and which part of the CLI.
-
-- One line, one sentence, about 15 words at most.
-- Start with the kind of change: `Add`, `Fix`, `Change` or `Remove`.
-- Then name the scope: a command (`meili task list`), a flag (`--wait`), or an area (usage analytics, install script).
-- Say what a user sees, not how the code does it.
-- No commit hash or title, no pull request number, no ADR number, no file path of the repository.
-- After the scope, start with the verb: `prints the logged-in user`, not `it prints the logged-in user`.
-
-A breaking change starts with `**Breaking:**`. It can be longer than one line, to help the user move to the new version: show what to type before and what to type now, for example with a table. Stay clear and concise: give only what the user needs to change.
-
-```md
-Add `meili stats --index <index>`.
-Fix `meili auth login --help`: says that the command also creates an account.
-Change `meili --version`: prints the same JSON as `meili version`.
-**Breaking:** Remove `--output`. Every command prints JSON: drop `--output json` from your scripts.
-```
+Every pull request that changes the CLI for its users adds a changeset. Read `.changeset/README.md` before you write one: it gives the version type and the rules for the text, which becomes the entry of `CHANGELOG.md`.
 
 ## Before you finish
 
