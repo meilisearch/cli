@@ -23,18 +23,18 @@ exports[`meili index view > prints its help without any network call 1`] = `
 
 USAGE
   $ meili index view --id <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [--project <name>]
+    [--project-api-key <key>] [-p <name>]
 
 FLAGS
-  --debug                  Print every HTTP request and response on stderr,
-                           secrets redacted.
-  --id=<index>             (required) The index to get.
-  --project=<name>         A project of the config file. Cannot be combined with
-                           --project-url. One of --project or --project-url is
-                           required.
-  --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
-  --project-url=<url>      Project URL, the Meilisearch instance to talk to. One
-                           of --project or --project-url is required.
+  -p, --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. One of --project or
+                               --project-url is required.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --id=<index>             (required) The index to get.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
 
 DESCRIPTION
   Get one index.

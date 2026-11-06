@@ -11,6 +11,7 @@ export default class ConfigUnset extends BaseCommand {
 
   static override flags = {
     project: Flags.string({
+      char: "p",
       required: true,
       description: "Name of the project to remove.",
       helpValue: "<name>",

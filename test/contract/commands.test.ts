@@ -118,8 +118,25 @@ describe("every example of a Meilisearch command names its project (config.md, R
       };
       if (command.api !== "meilisearch") continue;
       for (const example of command.examples ?? []) {
-        expect(example, `${file}: ${example}`).toMatch(/--project(-url)? /);
+        expect(example, `${file}: ${example}`).toMatch(/(--project(-url)?|-p) /);
       }
+    }
+  });
+});
+
+describe("examples write the long form once, then the short form (ADR 0022)", () => {
+  it.each([
+    ["--project", "-p"],
+    ["--index", "-i"],
+  ])("the first example that uses %s writes it in full, the next ones %s", (long, short) => {
+    for (const [id, command] of Object.entries(manifest.commands)) {
+      const names = (command.examples ?? []).flatMap(
+        (example) =>
+          (typeof example === "string" ? example : example.command).match(
+            new RegExp(` (${long}|${short}) `, "g"),
+          ) ?? [],
+      );
+      expect(names, id).toEqual(names.map((_, i) => ` ${i === 0 ? long : short} `));
     }
   });
 });

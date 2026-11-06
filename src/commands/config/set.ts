@@ -18,12 +18,13 @@ Creates the file, owner-only, and refuses a name that exists. Talks to the Manag
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700",
-    "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
-    "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
+    "<%= config.bin %> <%= command.id %> -p prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
+    "<%= config.bin %> <%= command.id %> -p prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
   ];
 
   static override flags = {
     project: Flags.string({
+      char: "p",
       required: true,
       description: "Name of the project to set.",
       helpValue: "<name>",

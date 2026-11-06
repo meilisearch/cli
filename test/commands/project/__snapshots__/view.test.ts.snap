@@ -22,15 +22,15 @@ exports[`meili project view > prints its help without any network call 1`] = `
 "Get one Meilisearch Cloud project.
 
 USAGE
-  $ meili project view [--debug] [--project <name>] [--id <id>]
+  $ meili project view [--debug] [-p <name>] [--id <id>]
 
 FLAGS
-  --debug           Print every HTTP request and response on stderr, secrets
-                    redacted.
-  --id=<id>         The project to get, or give --project <name> and its
-                    cloud.id from the config file.
-  --project=<name>  A project of the config file, whose cloud.id names the Cloud
-                    project, in place of --id.
+  -p, --project=<name>  A project of the config file, whose cloud.id names the
+                        Cloud project, in place of --id.
+      --debug           Print every HTTP request and response on stderr, secrets
+                        redacted.
+      --id=<id>         The project to get, or give --project <name> and its
+                        cloud.id from the config file.
 
 DESCRIPTION
   Get one Meilisearch Cloud project.

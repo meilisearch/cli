@@ -14,24 +14,24 @@ exports[`meili index delete > prints its help without any network call 1`] = `
 
 USAGE
   $ meili index delete --id <index> --yes [--debug] [--project-url <url>]
-    [--project-api-key <key>] [--project <name>] [--timeout <duration> --wait]
+    [--project-api-key <key>] [-p <name>] [--timeout <duration> --wait]
 
 FLAGS
-  --debug                  Print every HTTP request and response on stderr,
-                           secrets redacted.
-  --id=<index>             (required) The index to delete.
-  --project=<name>         A project of the config file. Cannot be combined with
-                           --project-url. One of --project or --project-url is
-                           required.
-  --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
-  --project-url=<url>      Project URL, the Meilisearch instance to talk to. One
-                           of --project or --project-url is required.
-  --timeout=<duration>     Maximum wait time, for example 30s, 2m. Default 10m.
-                           Only with --wait.
-  --wait                   Poll the task until it reaches a final status, then
-                           print the final task.
-  --yes                    (required) Confirm the deletion. Nothing is sent to
-                           the API without it.
+  -p, --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. One of --project or
+                               --project-url is required.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --id=<index>             (required) The index to delete.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
+      --timeout=<duration>     Maximum wait time, for example 30s, 2m. Default
+                               10m. Only with --wait.
+      --wait                   Poll the task until it reaches a final status,
+                               then print the final task.
+      --yes                    (required) Confirm the deletion. Nothing is sent
+                               to the API without it.
 
 DESCRIPTION
   Delete an index.
@@ -41,7 +41,7 @@ DESCRIPTION
 EXAMPLES
   $ meili index delete --project prod --id movies --yes
 
-  $ meili index delete --project prod --id movies --yes --wait
+  $ meili index delete -p prod --id movies --yes --wait
 
 "
 `;

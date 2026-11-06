@@ -17,9 +17,9 @@ Each query of --queries names its index. The results come side by side, or merge
 
   static override examples = [
     '<%= config.bin %> <%= command.id %> --project prod --queries \'[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]\'',
-    '<%= config.bin %> <%= command.id %> --project prod --queries \'[{"indexUid":"movies","q":"nosferatu"}]\'',
-    '<%= config.bin %> <%= command.id %> --project prod --queries \'[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]\' --federation \'{"limit":5}\'',
-    "cat queries.json | <%= config.bin %> <%= command.id %> --project prod --file -",
+    '<%= config.bin %> <%= command.id %> -p prod --queries \'[{"indexUid":"movies","q":"nosferatu"}]\'',
+    '<%= config.bin %> <%= command.id %> -p prod --queries \'[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]\' --federation \'{"limit":5}\'',
+    "cat queries.json | <%= config.bin %> <%= command.id %> -p prod --file -",
   ];
 
   static override flags = {

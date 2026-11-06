@@ -109,6 +109,7 @@ The same steps, without questions: ${WITHOUT_TELEPORT}`;
 
   static override flags = {
     project: Flags.string({
+      char: "p",
       description:
         "A project of the config file, the one whose data moves to Meilisearch Cloud. Without it, the command asks.",
       helpValue: "<name>",

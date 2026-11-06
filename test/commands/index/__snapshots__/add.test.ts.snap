@@ -14,28 +14,28 @@ exports[`meili index add > prints its help without any network call 1`] = `
 
 USAGE
   $ meili index add --id <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [--project <name>] [--primary-key <field>] [--file
-    <path> | --data <json>] [--timeout <duration> --wait]
+    [--project-api-key <key>] [-p <name>] [--primary-key <field>] [--file <path>
+    | --data <json>] [--timeout <duration> --wait]
 
 FLAGS
-  --data=<json>            Inline JSON body.
-  --debug                  Print every HTTP request and response on stderr,
-                           secrets redacted.
-  --file=<path>            Read the body from a file. \`-\` reads from stdin.
-  --id=<index>             (required) The index to create.
-  --primary-key=<field>    The field that holds the identifier of each document.
-                           Without it, Meilisearch infers it from the first
-                           documents.
-  --project=<name>         A project of the config file. Cannot be combined with
-                           --project-url. One of --project or --project-url is
-                           required.
-  --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
-  --project-url=<url>      Project URL, the Meilisearch instance to talk to. One
-                           of --project or --project-url is required.
-  --timeout=<duration>     Maximum wait time, for example 30s, 2m. Default 10m.
-                           Only with --wait.
-  --wait                   Poll the task until it reaches a final status, then
-                           print the final task.
+  -p, --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. One of --project or
+                               --project-url is required.
+      --data=<json>            Inline JSON body.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --file=<path>            Read the body from a file. \`-\` reads from stdin.
+      --id=<index>             (required) The index to create.
+      --primary-key=<field>    The field that holds the identifier of each
+                               document. Without it, Meilisearch infers it from
+                               the first documents.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
+      --timeout=<duration>     Maximum wait time, for example 30s, 2m. Default
+                               10m. Only with --wait.
+      --wait                   Poll the task until it reaches a final status,
+                               then print the final task.
 
 DESCRIPTION
   Create an index.
@@ -45,9 +45,9 @@ DESCRIPTION
 EXAMPLES
   $ meili index add --project prod --id movies
 
-  $ meili index add --project prod --id movies --primary-key id
+  $ meili index add -p prod --id movies --primary-key id
 
-  $ meili index add --project prod --id movies --wait
+  $ meili index add -p prod --id movies --wait
 
 "
 `;

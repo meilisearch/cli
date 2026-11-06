@@ -14,9 +14,9 @@ Cancels the enqueued and processing tasks matched by --ids, --statuses, --types 
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --ids 42,1344",
-    "<%= config.bin %> <%= command.id %> --project prod --ids 42",
-    "<%= config.bin %> <%= command.id %> --project prod --statuses enqueued --index-ids movies",
-    "<%= config.bin %> <%= command.id %> --project prod --statuses processing --wait",
+    "<%= config.bin %> <%= command.id %> -p prod --ids 42",
+    "<%= config.bin %> <%= command.id %> -p prod --statuses enqueued --index-ids movies",
+    "<%= config.bin %> <%= command.id %> -p prod --statuses processing --wait",
   ];
 
   static override flags = {

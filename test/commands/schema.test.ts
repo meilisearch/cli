@@ -58,6 +58,7 @@ describe("meili schema", () => {
       {
         name: "project",
         type: "option",
+        char: "p",
         required: true,
         description: "Name of the project to set.",
         helpValue: "<name>",

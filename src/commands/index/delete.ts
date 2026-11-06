@@ -14,7 +14,7 @@ Deletes its documents, its settings and its task history too.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --id movies --yes",
-    "<%= config.bin %> <%= command.id %> --project prod --id movies --yes --wait",
+    "<%= config.bin %> <%= command.id %> -p prod --id movies --yes --wait",
   ];
 
   static override flags = {

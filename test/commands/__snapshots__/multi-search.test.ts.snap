@@ -14,27 +14,27 @@ exports[`meili multi-search > prints its help without any network call 1`] = `
 
 USAGE
   $ meili multi-search [--debug] [--project-url <url>] [--project-api-key
-    <key>] [--project <name>] [--queries <json>] [--federation <json>] [--file
-    <path> | --data <json>]
+    <key>] [-p <name>] [--queries <json>] [--federation <json>] [--file <path> |
+    --data <json>]
 
 FLAGS
-  --data=<json>            Inline JSON body.
-  --debug                  Print every HTTP request and response on stderr,
-                           secrets redacted.
-  --federation=<json>      Merge the hits of every query into one ranked list,
-                           as JSON: \`{}\` for the defaults, \`{"limit":5}\` to
-                           narrow it. Without it each query answers its own
-                           envelope.
-  --file=<path>            Read the body from a file. \`-\` reads from stdin.
-  --project=<name>         A project of the config file. Cannot be combined with
-                           --project-url. One of --project or --project-url is
-                           required.
-  --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
-  --project-url=<url>      Project URL, the Meilisearch instance to talk to. One
-                           of --project or --project-url is required.
-  --queries=<json>         The search queries as a JSON array, each one an index
-                           to search and its search parameters:
-                           \`[{"indexUid":"movies","q":"nosferatu"}]\`.
+  -p, --project=<name>         A project of the config file. Cannot be combined
+                               with --project-url. One of --project or
+                               --project-url is required.
+      --data=<json>            Inline JSON body.
+      --debug                  Print every HTTP request and response on stderr,
+                               secrets redacted.
+      --federation=<json>      Merge the hits of every query into one ranked
+                               list, as JSON: \`{}\` for the defaults,
+                               \`{"limit":5}\` to narrow it. Without it each query
+                               answers its own envelope.
+      --file=<path>            Read the body from a file. \`-\` reads from stdin.
+      --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
+      --project-url=<url>      Project URL, the Meilisearch instance to talk to.
+                               One of --project or --project-url is required.
+      --queries=<json>         The search queries as a JSON array, each one an
+                               index to search and its search parameters:
+                               \`[{"indexUid":"movies","q":"nosferatu"}]\`.
 
 DESCRIPTION
   Run several searches in one request.
@@ -45,11 +45,11 @@ DESCRIPTION
 EXAMPLES
   $ meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]'
 
-  $ meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"}]'
+  $ meili multi-search -p prod --queries '[{"indexUid":"movies","q":"nosferatu"}]'
 
-  $ meili multi-search --project prod --queries '[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]' --federation '{"limit":5}'
+  $ meili multi-search -p prod --queries '[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]' --federation '{"limit":5}'
 
-  cat queries.json | meili multi-search --project prod --file -
+  cat queries.json | meili multi-search -p prod --file -
 
 "
 `;

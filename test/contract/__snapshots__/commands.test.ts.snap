@@ -61,9 +61,9 @@ Says whether a session of \`auth login\` exists, whether the authorization serve
 --ids, --task-ids, --statuses and the other filters of the route narrow the list.",
       "examples": [
         "meili batch list --project prod",
-        "meili batch list --project prod --ids 7",
-        "meili batch list --project prod --task-ids 42",
-        "meili batch list --project prod --statuses failed --index-ids movies --limit 5",
+        "meili batch list -p prod --ids 7",
+        "meili batch list -p prod --task-ids 42",
+        "meili batch list -p prod --statuses failed --index-ids movies --limit 5",
       ],
       "flags": [
         {
@@ -79,6 +79,7 @@ Says whether a session of \`auth login\` exists, whether the authorization serve
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -207,6 +208,7 @@ Says whether a session of \`auth login\` exists, whether the authorization serve
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -247,11 +249,12 @@ Prints the path of the file and its projects as JSON, keys masked.",
 Creates the file, owner-only, and refuses a name that exists. Talks to the Management API only with --sync-with-cloud.",
       "examples": [
         "meili config set --project local --project-url http://localhost:7700",
-        "meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
-        "meili config set --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
+        "meili config set -p prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
+        "meili config set -p prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud",
       ],
       "flags": [
         {
+          "char": "p",
           "description": "Name of the project to set.",
           "helpValue": "<name>",
           "name": "project",
@@ -325,6 +328,7 @@ Gives every project of the scope an entry, with its cloud identifiers, and its m
       ],
       "flags": [
         {
+          "char": "p",
           "description": "Name of the project to remove.",
           "helpValue": "<name>",
           "name": "project",
@@ -341,11 +345,12 @@ Gives every project of the scope an entry, with its cloud identifiers, and its m
 Changes the fields given, and refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.",
       "examples": [
         "meili config update --project prod --sync-with-cloud",
-        "meili config update --project prod --project-api-key - < key.txt",
-        "meili config update --project local --project-url http://localhost:7701",
+        "meili config update -p prod --project-api-key - < key.txt",
+        "meili config update -p local --project-url http://localhost:7701",
       ],
       "flags": [
         {
+          "char": "p",
           "description": "Name of the project to change.",
           "helpValue": "<name>",
           "name": "project",
@@ -380,9 +385,9 @@ Changes the fields given, and refuses a name that does not exist. Talks to the M
 A document replaces the one that has the same primary key.",
       "examples": [
         "meili document add --project prod --index movies --file movies.json",
-        "cat movies.json | meili document add --project prod --index movies --file -",
-        "meili document add --project prod --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
-        "meili document add --project prod --index movies --file movies.json --wait",
+        "cat movies.json | meili document add -p prod -i movies --file -",
+        "meili document add -p prod -i movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
+        "meili document add -p prod -i movies --file movies.json --wait",
       ],
       "flags": [
         {
@@ -398,12 +403,14 @@ A document replaces the one that has the same primary key.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to add the documents to.",
           "helpValue": "<index>",
           "name": "index",
@@ -473,10 +480,10 @@ A document replaces the one that has the same primary key.",
 Deletes the documents named by --ids, matched by --filter, or every one of them with --all.",
       "examples": [
         "meili document delete --project prod --index movies --ids 42,1344 --yes",
-        "meili document delete --project prod --index movies --ids 42 --yes",
-        "meili document delete --project prod --index movies --filter 'rating < 2' --yes",
-        "meili document delete --project prod --index movies --file ids.json --yes",
-        "meili document delete --project prod --index movies --all --yes --wait",
+        "meili document delete -p prod -i movies --ids 42 --yes",
+        "meili document delete -p prod -i movies --filter 'rating < 2' --yes",
+        "meili document delete -p prod -i movies --file ids.json --yes",
+        "meili document delete -p prod -i movies --all --yes --wait",
       ],
       "flags": [
         {
@@ -492,12 +499,14 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to delete the documents from.",
           "helpValue": "<index>",
           "name": "index",
@@ -594,8 +603,8 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
 --ids or --filter narrow the list.",
       "examples": [
         "meili document list --project prod --index movies",
-        "meili document list --project prod --index movies --ids 42,1344 --fields id,title",
-        "meili document list --project prod --index movies --filter 'rating > 4' --sort rating:desc",
+        "meili document list -p prod -i movies --ids 42,1344 --fields id,title",
+        "meili document list -p prod -i movies --filter 'rating > 4' --sort rating:desc",
       ],
       "flags": [
         {
@@ -611,12 +620,14 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to read the documents from.",
           "helpValue": "<index>",
           "name": "index",
@@ -701,9 +712,9 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
 The fields of a document are merged into the one that has the same primary key.",
       "examples": [
         "meili document update --project prod --index movies --file changes.json",
-        "cat changes.json | meili document update --project prod --index movies --file -",
-        "meili document update --project prod --index movies --data '[{"id":1,"rating":4}]'",
-        "meili document update --project prod --index movies --file changes.json --wait",
+        "cat changes.json | meili document update -p prod -i movies --file -",
+        "meili document update -p prod -i movies --data '[{"id":1,"rating":4}]'",
+        "meili document update -p prod -i movies --file changes.json --wait",
       ],
       "flags": [
         {
@@ -719,12 +730,14 @@ The fields of a document are merged into the one that has the same primary key."
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to update the documents of.",
           "helpValue": "<index>",
           "name": "index",
@@ -791,7 +804,7 @@ The fields of a document are merged into the one that has the same primary key."
       "description": "Get one document of an index.",
       "examples": [
         "meili document view --project prod --index movies --id 42",
-        "meili document view --project prod --index movies --id 42 --fields id,title",
+        "meili document view -p prod -i movies --id 42 --fields id,title",
       ],
       "flags": [
         {
@@ -807,12 +820,14 @@ The fields of a document are merged into the one that has the same primary key."
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to read the document from.",
           "helpValue": "<index>",
           "name": "index",
@@ -856,10 +871,10 @@ Sends the documents and the settings to the destination instance, and prints the
 The source is the project this command connects to, named by --project, --project-url and --project-api-key as on every command: it receives the request and does the export. The destination is --url with --api-key, or --project-destination, an entry of the config file. --indexes narrows the export to the indexes those patterns match.",
       "examples": [
         "meili export --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
-        "meili export --project staging --project-destination prod",
-        "meili export --project prod --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait",
-        "meili export --project prod --url http://localhost:7701 --payload-size 24MiB",
-        "meili export --project prod --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'",
+        "meili export -p staging --project-destination prod",
+        "meili export -p prod --url http://localhost:7701 --indexes '{"movies":{"filter":"rating > 4"}}' --wait",
+        "meili export -p prod --url http://localhost:7701 --payload-size 24MiB",
+        "meili export -p prod --data '{"url":"http://localhost:7701","indexes":{"*":{"overrideSettings":true}}}'",
       ],
       "flags": [
         {
@@ -875,6 +890,7 @@ The source is the project this command connects to, named by --project, --projec
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -958,8 +974,8 @@ The source is the project this command connects to, named by --project, --projec
 Counts the values on the documents that --q and --filter keep.",
       "examples": [
         "meili facet-search --project prod --index movies --facet-name genres --facet-query ac",
-        "meili facet-search --project prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
-        "meili facet-search --project prod --index movies --data '{"facetName":"genres","facetQuery":"ac"}'",
+        "meili facet-search -p prod -i movies --facet-name genres --q horror --filter 'rating > 4'",
+        "meili facet-search -p prod -i movies --data '{"facetName":"genres","facetQuery":"ac"}'",
       ],
       "flags": [
         {
@@ -975,12 +991,14 @@ Counts the values on the documents that --q and --filter keep.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to search the facet values in.",
           "helpValue": "<index>",
           "name": "index",
@@ -1101,6 +1119,7 @@ Counts the values on the documents that --q and --filter keep.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1120,8 +1139,8 @@ Counts the values on the documents that --q and --filter keep.",
 --id names it, and --primary-key sets its primary key.",
       "examples": [
         "meili index add --project prod --id movies",
-        "meili index add --project prod --id movies --primary-key id",
-        "meili index add --project prod --id movies --wait",
+        "meili index add -p prod --id movies --primary-key id",
+        "meili index add -p prod --id movies --wait",
       ],
       "flags": [
         {
@@ -1137,6 +1156,7 @@ Counts the values on the documents that --q and --filter keep.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1201,7 +1221,7 @@ Counts the values on the documents that --q and --filter keep.",
 Deletes its documents, its settings and its task history too.",
       "examples": [
         "meili index delete --project prod --id movies --yes",
-        "meili index delete --project prod --id movies --yes --wait",
+        "meili index delete -p prod --id movies --yes --wait",
       ],
       "flags": [
         {
@@ -1217,6 +1237,7 @@ Deletes its documents, its settings and its task history too.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1263,7 +1284,7 @@ Deletes its documents, its settings and its task history too.",
       "description": "List the indexes of the instance.",
       "examples": [
         "meili index list --project prod",
-        "meili index list --project prod --limit 5 --offset 10",
+        "meili index list -p prod --limit 5 --offset 10",
       ],
       "flags": [
         {
@@ -1279,6 +1300,7 @@ Deletes its documents, its settings and its task history too.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1318,8 +1340,8 @@ Deletes its documents, its settings and its task history too.",
 --primary-key changes the primary key, and --new-id renames the index.",
       "examples": [
         "meili index update --project prod --id movies --primary-key movie_id",
-        "meili index update --project prod --id movies --new-id films",
-        "meili index update --project prod --id movies --new-id films --wait",
+        "meili index update -p prod --id movies --new-id films",
+        "meili index update -p prod --id movies --new-id films --wait",
       ],
       "flags": [
         {
@@ -1335,6 +1357,7 @@ Deletes its documents, its settings and its task history too.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1417,6 +1440,7 @@ Deletes its documents, its settings and its task history too.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1460,6 +1484,7 @@ Prints the version of Meilisearch and the commit it was built from.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1483,9 +1508,9 @@ The key runs --actions on --indexes until --expires-at.
 The answer carries the \`key\` field, the credential itself, on stdout like any other data.",
       "examples": [
         "meili key add --project prod --actions search --indexes movies --expires-at null",
-        "meili key add --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z",
-        "meili key add --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
-        "meili key add --project prod --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'",
+        "meili key add -p prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z",
+        "meili key add -p prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
+        "meili key add -p prod --data '{"actions":["search"],"indexes":["movies"],"expiresAt":null}'",
       ],
       "flags": [
         {
@@ -1501,6 +1526,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1588,6 +1614,7 @@ Every request that carries the key fails afterwards.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1622,7 +1649,7 @@ Every request that carries the key fails afterwards.",
 The answer is the API body as it is, so it carries the \`key\` field of every key it returns: credentials that work, on stdout, like any other data.",
       "examples": [
         "meili key list --project prod",
-        "meili key list --project prod --limit 5 --offset 10",
+        "meili key list -p prod --limit 5 --offset 10",
       ],
       "flags": [
         {
@@ -1638,6 +1665,7 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1676,8 +1704,8 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
 These are the two fields the route takes. The value null resets one.",
       "examples": [
         "meili key update --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
-        "meili key update --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly'",
-        "meili key update --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null",
+        "meili key update -p prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly'",
+        "meili key update -p prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null",
       ],
       "flags": [
         {
@@ -1693,6 +1721,7 @@ These are the two fields the route takes. The value null resets one.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1763,6 +1792,7 @@ The answer is the API body as it is, so it carries the \`key\` field: a credenti
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -1791,9 +1821,9 @@ The answer is the API body as it is, so it carries the \`key\` field: a credenti
 Each query of --queries names its index. The results come side by side, or merged into one ranked list with --federation.",
       "examples": [
         "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"},{"indexUid":"books","q":"nosferatu"}]'",
-        "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"nosferatu"}]'",
-        "meili multi-search --project prod --queries '[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]' --federation '{"limit":5}'",
-        "cat queries.json | meili multi-search --project prod --file -",
+        "meili multi-search -p prod --queries '[{"indexUid":"movies","q":"nosferatu"}]'",
+        "meili multi-search -p prod --queries '[{"indexUid":"movies","q":"horror"},{"indexUid":"books","q":"horror"}]' --federation '{"limit":5}'",
+        "cat queries.json | meili multi-search -p prod --file -",
       ],
       "flags": [
         {
@@ -1809,6 +1839,7 @@ Each query of --queries names its index. The results come side by side, or merge
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -2041,10 +2072,11 @@ Prints nothing on success.",
       "examples": [
         "meili project delete --id 343 --yes",
         "meili project delete --project staging --yes",
-        "meili project delete --project staging --yes --sync-config",
+        "meili project delete -p staging --yes --sync-config",
       ],
       "flags": [
         {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "name": "project",
@@ -2101,11 +2133,12 @@ Only the projects the token sees.",
       "examples": [
         "meili project update --id 343 --name renamed",
         "meili project update --project prod --name renamed",
-        "meili project update --project prod --name renamed --sync-config",
+        "meili project update -p prod --name renamed --sync-config",
         "meili project update --id 343 --data '{"name":"renamed"}'",
       ],
       "flags": [
         {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "name": "project",
@@ -2160,6 +2193,7 @@ Only the projects the token sees.",
       ],
       "flags": [
         {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "name": "project",
@@ -2240,9 +2274,9 @@ Prints one line per command, or one command in full with --command, from the ocl
 --q and the search parameters of the route shape the search.",
       "examples": [
         "meili search --project prod --index movies --q nosferatu",
-        "meili search --project prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
-        "meili search --project prod --index movies --facets genres --attributes-to-retrieve id,title",
-        "meili search --project prod --index movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'",
+        "meili search -p prod -i movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
+        "meili search -p prod -i movies --facets genres --attributes-to-retrieve id,title",
+        "meili search -p prod -i movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'",
       ],
       "flags": [
         {
@@ -2258,12 +2292,14 @@ Prints one line per command, or one command in full with --command, from the ocl
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to search in.",
           "helpValue": "<index>",
           "name": "index",
@@ -2463,7 +2499,7 @@ Prints one line per command, or one command in full with --command, from the ocl
 Every setting goes back to its default value, which reindexes the documents.",
       "examples": [
         "meili settings delete --project prod --index movies --yes",
-        "meili settings delete --project prod --index movies --yes --wait",
+        "meili settings delete -p prod -i movies --yes --wait",
       ],
       "flags": [
         {
@@ -2479,12 +2515,14 @@ Every setting goes back to its default value, which reindexes the documents.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to reset the settings of. \`settings update --<setting> null\` resets one of them.",
           "helpValue": "<index>",
           "name": "index",
@@ -2528,10 +2566,10 @@ Every setting goes back to its default value, which reindexes the documents.",
 Changes the settings given and leaves the others. The value null resets one.",
       "examples": [
         "meili settings update --project prod --index movies --searchable-attributes title,overview",
-        "meili settings update --project prod --index movies --filterable-attributes genres,release_date",
-        "meili settings update --project prod --index movies --stop-words null",
-        "meili settings update --project prod --index movies --typo-tolerance '{"enabled":false}' --wait",
-        "meili settings update --project prod --index movies --file settings.json",
+        "meili settings update -p prod -i movies --filterable-attributes genres,release_date",
+        "meili settings update -p prod -i movies --stop-words null",
+        "meili settings update -p prod -i movies --typo-tolerance '{"enabled":false}' --wait",
+        "meili settings update -p prod -i movies --file settings.json",
       ],
       "flags": [
         {
@@ -2547,12 +2585,14 @@ Changes the settings given and leaves the others. The value null resets one.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to update the settings of.",
           "helpValue": "<index>",
           "name": "index",
@@ -2751,12 +2791,14 @@ Each setting has its current value or its default.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to read the settings of.",
           "helpValue": "<index>",
           "name": "index",
@@ -2779,8 +2821,8 @@ Each setting has its current value or its default.",
 --id names the document, and --embedder the embedder that compares them.",
       "examples": [
         "meili similar --project prod --index movies --id 143 --embedder default",
-        "meili similar --project prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
-        "meili similar --project prod --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'",
+        "meili similar -p prod -i movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
+        "meili similar -p prod -i movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'",
       ],
       "flags": [
         {
@@ -2796,12 +2838,14 @@ Each setting has its current value or its default.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to search in.",
           "helpValue": "<index>",
           "name": "index",
@@ -2901,8 +2945,8 @@ Each setting has its current value or its default.",
 --index names the index.",
       "examples": [
         "meili stats --project prod",
-        "meili stats --project prod --index movies",
-        "meili stats --project prod --index movies --size-format human --show-internal-database-sizes",
+        "meili stats -p prod --index movies",
+        "meili stats -p prod -i movies --size-format human --show-internal-database-sizes",
       ],
       "flags": [
         {
@@ -2918,12 +2962,14 @@ Each setting has its current value or its default.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to read the statistics of. Without it, the whole instance.",
           "helpValue": "<index>",
           "name": "index",
@@ -2961,9 +3007,9 @@ Each setting has its current value or its default.",
 Cancels the enqueued and processing tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
         "meili task cancel --project prod --ids 42,1344",
-        "meili task cancel --project prod --ids 42",
-        "meili task cancel --project prod --statuses enqueued --index-ids movies",
-        "meili task cancel --project prod --statuses processing --wait",
+        "meili task cancel -p prod --ids 42",
+        "meili task cancel -p prod --statuses enqueued --index-ids movies",
+        "meili task cancel -p prod --statuses processing --wait",
       ],
       "flags": [
         {
@@ -2979,6 +3025,7 @@ Cancels the enqueued and processing tasks matched by --ids, --statuses, --types 
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -3087,9 +3134,9 @@ Cancels the enqueued and processing tasks matched by --ids, --statuses, --types 
 Deletes the finished tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
         "meili task delete --project prod --ids 42,1344 --yes",
-        "meili task delete --project prod --ids 42 --yes",
-        "meili task delete --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
-        "meili task delete --project prod --index-ids movies --yes --wait",
+        "meili task delete -p prod --ids 42 --yes",
+        "meili task delete -p prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
+        "meili task delete -p prod --index-ids movies --yes --wait",
       ],
       "flags": [
         {
@@ -3105,6 +3152,7 @@ Deletes the finished tasks matched by --ids, --statuses, --types and the other f
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -3218,9 +3266,9 @@ Deletes the finished tasks matched by --ids, --statuses, --types and the other f
 --ids, --statuses, --types and the other filters of the route narrow the list.",
       "examples": [
         "meili task list --project prod",
-        "meili task list --project prod --ids 42",
-        "meili task list --project prod --statuses failed,canceled --limit 5",
-        "meili task list --project prod --index-ids movies --types documentAdditionOrUpdate",
+        "meili task list -p prod --ids 42",
+        "meili task list -p prod --statuses failed,canceled --limit 5",
+        "meili task list -p prod --index-ids movies --types documentAdditionOrUpdate",
       ],
       "flags": [
         {
@@ -3236,6 +3284,7 @@ Deletes the finished tasks matched by --ids, --statuses, --types and the other f
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -3366,6 +3415,7 @@ Prints its status and its error.",
           "type": "option",
         },
         {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "name": "project",
@@ -3556,6 +3606,7 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
       ],
       "flags": [
         {
+          "char": "p",
           "description": "A project of the config file, the one whose data moves to Meilisearch Cloud. Without it, the command asks.",
           "helpValue": "<name>",
           "name": "project",

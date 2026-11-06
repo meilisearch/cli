@@ -15,9 +15,9 @@ Deletes the finished tasks matched by --ids, --statuses, --types and the other f
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --ids 42,1344 --yes",
-    "<%= config.bin %> <%= command.id %> --project prod --ids 42 --yes",
-    "<%= config.bin %> <%= command.id %> --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
-    "<%= config.bin %> <%= command.id %> --project prod --index-ids movies --yes --wait",
+    "<%= config.bin %> <%= command.id %> -p prod --ids 42 --yes",
+    "<%= config.bin %> <%= command.id %> -p prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
+    "<%= config.bin %> <%= command.id %> -p prod --index-ids movies --yes --wait",
   ];
 
   static override flags = {

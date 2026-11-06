@@ -15,7 +15,7 @@ Prints nothing on success.`;
   static override examples = [
     "<%= config.bin %> <%= command.id %> --id 343 --yes",
     "<%= config.bin %> <%= command.id %> --project staging --yes",
-    "<%= config.bin %> <%= command.id %> --project staging --yes --sync-config",
+    "<%= config.bin %> <%= command.id %> -p staging --yes --sync-config",
   ];
 
   static override flags = {

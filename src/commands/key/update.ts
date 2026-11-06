@@ -17,8 +17,8 @@ These are the two fields the route takes. The value null resets one.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
-    "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly'",
-    "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null",
+    "<%= config.bin %> <%= command.id %> -p prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly'",
+    "<%= config.bin %> <%= command.id %> -p prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null",
   ];
 
   static override flags = {

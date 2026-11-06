@@ -109,6 +109,7 @@ export abstract class BaseCommand extends Command {
       parse: async (value) => (value === "-" ? readStdin() : value),
     }),
     project: Flags.string({
+      char: "p",
       description:
         "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
       helpValue: "<name>",
@@ -122,6 +123,7 @@ export abstract class BaseCommand extends Command {
    */
   static cloudProjectFlags = {
     project: Flags.string({
+      char: "p",
       description:
         "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
       helpValue: "<name>",

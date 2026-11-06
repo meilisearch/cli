@@ -17,6 +17,7 @@ Each setting has its current value or its default.`;
   static override flags = {
     ...BaseCommand.connectionFlags,
     index: Flags.string({
+      char: "i",
       required: true,
       description: "The index to read the settings of.",
       helpValue: "<index>",

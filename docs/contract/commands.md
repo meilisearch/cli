@@ -134,6 +134,10 @@ This flag works on every command, whatever it talks to.
 |---|---|
 | `--debug` | Print every HTTP request and response on stderr, secrets redacted. |
 
+## Short flags
+
+`-p` is the short form of `--project`, and `-i` the short form of `--index`, on every command that declares the flag. They are the only short forms, besides `-h` for `--help`. A new one is a contract change, with its own ADR. In the examples of `--help`, the first example that uses the flag writes its long form, and the next ones write its short form. See ADR 0022.
+
 ## Shared flag groups
 
 Commands reuse these groups. A command that matches a group uses the whole group, with the same names.
@@ -144,7 +148,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 |---|---|
 | `--project-url <url>` | Project URL, the Meilisearch instance to talk to. One of `--project` and `--project-url` is required. |
 | `--project-api-key <key>` | Project API key. `-` reads it from stdin. |
-| `--project <name>` | A project of the config file. Cannot be combined with `--project-url`. One of `--project` and `--project-url` is required. See `config.md`. |
+| `--project <name>`, `-p <name>` | A project of the config file. Cannot be combined with `--project-url`. One of `--project` and `--project-url` is required. See `config.md`. |
 
 `meili config set` writes these three values. It does not connect with them. So it declares its own three flags, with its own descriptions. `meili config update` declares its own optional ones. See ADR 0010.
 
@@ -152,7 +156,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 
 | Flag | Meaning |
 |---|---|
-| `--project <name>` | The entry of the config file whose `cloud.id` names the project, in place of `--id`. Cannot be combined with `--id`. See `config.md`. |
+| `--project <name>`, `-p <name>` | The entry of the config file whose `cloud.id` names the project, in place of `--id`. Cannot be combined with `--id`. See `config.md`. |
 
 **Write commands** (any command whose API response is a task, and `project add`):
 

@@ -49,6 +49,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -58,6 +59,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -208,6 +210,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -217,6 +220,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -367,6 +371,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -376,6 +381,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -526,6 +532,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -535,6 +542,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -649,9 +657,9 @@
       "description": "List the batches of tasks.\n\n--ids, --task-ids, --statuses and the other filters of the route narrow the list.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --ids 7",
-        "<%= config.bin %> <%= command.id %> --project prod --task-ids 42",
-        "<%= config.bin %> <%= command.id %> --project prod --statuses failed --index-ids movies --limit 5"
+        "<%= config.bin %> <%= command.id %> -p prod --ids 7",
+        "<%= config.bin %> <%= command.id %> -p prod --task-ids 42",
+        "<%= config.bin %> <%= command.id %> -p prod --statuses failed --index-ids movies --limit 5"
       ],
       "flags": {
         "debug": {
@@ -677,6 +685,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -849,6 +858,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -858,6 +868,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -997,6 +1008,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -1045,6 +1057,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -1054,6 +1067,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -1205,6 +1219,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -1214,6 +1229,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -1328,8 +1344,8 @@
       "description": "Add a project to the config file.\n\nCreates the file, owner-only, and refuses a name that exists. Talks to the Management API only with --sync-with-cloud.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7700",
-        "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
-        "<%= config.bin %> <%= command.id %> --project prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud"
+        "<%= config.bin %> <%= command.id %> -p prod --project-url https://ms-abc.sfo.meilisearch.io --project-api-key - < key.txt",
+        "<%= config.bin %> <%= command.id %> -p prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud"
       ],
       "flags": {
         "debug": {
@@ -1339,6 +1355,7 @@
           "type": "boolean"
         },
         "project": {
+          "char": "p",
           "description": "Name of the project to set.",
           "name": "project",
           "required": true,
@@ -1398,6 +1415,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -1407,6 +1425,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -1590,6 +1609,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -1599,6 +1619,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -1722,6 +1743,7 @@
           "type": "boolean"
         },
         "project": {
+          "char": "p",
           "description": "Name of the project to remove.",
           "name": "project",
           "required": true,
@@ -1758,6 +1780,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -1767,6 +1790,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -1881,8 +1905,8 @@
       "description": "Change a project of the config file.\n\nChanges the fields given, and refuses a name that does not exist. Talks to the Management API only with --sync-with-cloud.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --sync-with-cloud",
-        "<%= config.bin %> <%= command.id %> --project prod --project-api-key - < key.txt",
-        "<%= config.bin %> <%= command.id %> --project local --project-url http://localhost:7701"
+        "<%= config.bin %> <%= command.id %> -p prod --project-api-key - < key.txt",
+        "<%= config.bin %> <%= command.id %> -p local --project-url http://localhost:7701"
       ],
       "flags": {
         "debug": {
@@ -1892,6 +1916,7 @@
           "type": "boolean"
         },
         "project": {
+          "char": "p",
           "description": "Name of the project to change.",
           "name": "project",
           "required": true,
@@ -1950,6 +1975,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -1959,6 +1985,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -2073,9 +2100,9 @@
       "description": "Add or replace documents in an index.\n\nA document replaces the one that has the same primary key.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json",
-        "cat movies.json | <%= config.bin %> <%= command.id %> --project prod --index movies --file -",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --data '[{\"id\":1,\"title\":\"Nosferatu\"}]' --primary-key id",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json --wait"
+        "cat movies.json | <%= config.bin %> <%= command.id %> -p prod -i movies --file -",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --data '[{\"id\":1,\"title\":\"Nosferatu\"}]' --primary-key id",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --file movies.json --wait"
       ],
       "flags": {
         "debug": {
@@ -2101,6 +2128,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -2109,6 +2137,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to add the documents to.",
           "name": "index",
           "required": true,
@@ -2207,6 +2236,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -2216,6 +2246,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -2330,10 +2361,10 @@
       "description": "Delete documents from an index.\n\nDeletes the documents named by --ids, matched by --filter, or every one of them with --all.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42,1344 --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42 --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --filter 'rating < 2' --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --file ids.json --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --all --yes --wait"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --ids 42 --yes",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --filter 'rating < 2' --yes",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --file ids.json --yes",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --all --yes --wait"
       ],
       "flags": {
         "debug": {
@@ -2359,6 +2390,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -2367,6 +2399,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to delete the documents from.",
           "name": "index",
           "required": true,
@@ -2496,6 +2529,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -2505,6 +2539,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -2619,8 +2654,8 @@
       "description": "List the documents of an index.\n\n--ids or --filter narrow the list.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42,1344 --fields id,title",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --filter 'rating > 4' --sort rating:desc"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --ids 42,1344 --fields id,title",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --filter 'rating > 4' --sort rating:desc"
       ],
       "flags": {
         "debug": {
@@ -2646,6 +2681,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -2654,6 +2690,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to read the documents from.",
           "name": "index",
           "required": true,
@@ -2773,6 +2810,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -2782,6 +2820,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -2896,9 +2935,9 @@
       "description": "Add or update documents in an index.\n\nThe fields of a document are merged into the one that has the same primary key.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json",
-        "cat changes.json | <%= config.bin %> <%= command.id %> --project prod --index movies --file -",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --data '[{\"id\":1,\"rating\":4}]'",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json --wait"
+        "cat changes.json | <%= config.bin %> <%= command.id %> -p prod -i movies --file -",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --data '[{\"id\":1,\"rating\":4}]'",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --file changes.json --wait"
       ],
       "flags": {
         "debug": {
@@ -2924,6 +2963,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -2932,6 +2972,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to update the documents of.",
           "name": "index",
           "required": true,
@@ -3030,6 +3071,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -3039,6 +3081,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -3153,7 +3196,7 @@
       "description": "Get one document of an index.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --id 42",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --id 42 --fields id,title"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --id 42 --fields id,title"
       ],
       "flags": {
         "debug": {
@@ -3179,6 +3222,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -3187,6 +3231,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to read the document from.",
           "name": "index",
           "required": true,
@@ -3250,6 +3295,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -3259,6 +3305,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -3373,10 +3420,10 @@
       "description": "Export the data of the instance to another instance.\n\nSends the documents and the settings to the destination instance, and prints the task that does it.\n\nThe source is the project this command connects to, named by --project, --project-url and --project-api-key as on every command: it receives the request and does the export. The destination is --url with --api-key, or --project-destination, an entry of the config file. --indexes narrows the export to the indexes those patterns match.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --url https://ms-1234.heaven.meilisearch.com --api-key <key>",
-        "<%= config.bin %> <%= command.id %> --project staging --project-destination prod",
-        "<%= config.bin %> <%= command.id %> --project prod --url http://localhost:7701 --indexes '{\"movies\":{\"filter\":\"rating > 4\"}}' --wait",
-        "<%= config.bin %> <%= command.id %> --project prod --url http://localhost:7701 --payload-size 24MiB",
-        "<%= config.bin %> <%= command.id %> --project prod --data '{\"url\":\"http://localhost:7701\",\"indexes\":{\"*\":{\"overrideSettings\":true}}}'"
+        "<%= config.bin %> <%= command.id %> -p staging --project-destination prod",
+        "<%= config.bin %> <%= command.id %> -p prod --url http://localhost:7701 --indexes '{\"movies\":{\"filter\":\"rating > 4\"}}' --wait",
+        "<%= config.bin %> <%= command.id %> -p prod --url http://localhost:7701 --payload-size 24MiB",
+        "<%= config.bin %> <%= command.id %> -p prod --data '{\"url\":\"http://localhost:7701\",\"indexes\":{\"*\":{\"overrideSettings\":true}}}'"
       ],
       "flags": {
         "debug": {
@@ -3402,6 +3449,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -3524,6 +3572,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -3533,6 +3582,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -3646,8 +3696,8 @@
       "description": "Search the values of a facet.\n\nCounts the values on the documents that --q and --filter keep.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --data '{\"facetName\":\"genres\",\"facetQuery\":\"ac\"}'"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --facet-name genres --q horror --filter 'rating > 4'",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --data '{\"facetName\":\"genres\",\"facetQuery\":\"ac\"}'"
       ],
       "flags": {
         "debug": {
@@ -3673,6 +3723,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -3681,6 +3732,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to search the facet values in.",
           "name": "index",
           "required": true,
@@ -3830,6 +3882,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -3839,6 +3892,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -3978,6 +4032,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -4015,6 +4070,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -4024,6 +4080,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -4137,8 +4194,8 @@
       "description": "Create an index.\n\n--id names it, and --primary-key sets its primary key.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --id movies",
-        "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key id",
-        "<%= config.bin %> <%= command.id %> --project prod --id movies --wait"
+        "<%= config.bin %> <%= command.id %> -p prod --id movies --primary-key id",
+        "<%= config.bin %> <%= command.id %> -p prod --id movies --wait"
       ],
       "flags": {
         "debug": {
@@ -4164,6 +4221,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -4259,6 +4317,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -4268,6 +4327,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -4382,7 +4442,7 @@
       "description": "Delete an index.\n\nDeletes its documents, its settings and its task history too.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --id movies --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --id movies --yes --wait"
+        "<%= config.bin %> <%= command.id %> -p prod --id movies --yes --wait"
       ],
       "flags": {
         "debug": {
@@ -4408,6 +4468,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -4480,6 +4541,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -4489,6 +4551,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -4603,7 +4666,7 @@
       "description": "List the indexes of the instance.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10"
+        "<%= config.bin %> <%= command.id %> -p prod --limit 5 --offset 10"
       ],
       "flags": {
         "debug": {
@@ -4629,6 +4692,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -4690,6 +4754,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -4699,6 +4764,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -4813,8 +4879,8 @@
       "description": "Change the primary key or the name of an index.\n\n--primary-key changes the primary key, and --new-id renames the index.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --id movies --primary-key movie_id",
-        "<%= config.bin %> <%= command.id %> --project prod --id movies --new-id films",
-        "<%= config.bin %> <%= command.id %> --project prod --id movies --new-id films --wait"
+        "<%= config.bin %> <%= command.id %> -p prod --id movies --new-id films",
+        "<%= config.bin %> <%= command.id %> -p prod --id movies --new-id films --wait"
       ],
       "flags": {
         "debug": {
@@ -4840,6 +4906,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -4943,6 +5010,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -4952,6 +5020,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -5091,6 +5160,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -5139,6 +5209,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -5148,6 +5219,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -5287,6 +5359,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -5326,6 +5399,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -5335,6 +5409,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -5448,9 +5523,9 @@
       "description": "Create an API key.\n\nThe key runs --actions on --indexes until --expires-at.\n\nThe answer carries the `key` field, the credential itself, on stdout like any other data.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes movies --expires-at null",
-        "<%= config.bin %> <%= command.id %> --project prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z",
-        "<%= config.bin %> <%= command.id %> --project prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
-        "<%= config.bin %> <%= command.id %> --project prod --data '{\"actions\":[\"search\"],\"indexes\":[\"movies\"],\"expiresAt\":null}'"
+        "<%= config.bin %> <%= command.id %> -p prod --actions search --indexes '*' --expires-at 2027-01-01T00:00:00Z",
+        "<%= config.bin %> <%= command.id %> -p prod --actions documents.add,documents.delete --indexes movies --expires-at null --name 'CI indexer'",
+        "<%= config.bin %> <%= command.id %> -p prod --data '{\"actions\":[\"search\"],\"indexes\":[\"movies\"],\"expiresAt\":null}'"
       ],
       "flags": {
         "debug": {
@@ -5476,6 +5551,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -5585,6 +5661,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -5594,6 +5671,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -5733,6 +5811,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -5788,6 +5867,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -5797,6 +5877,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -5911,7 +5992,7 @@
       "description": "List the API keys of the instance.\n\nThe answer is the API body as it is, so it carries the `key` field of every key it returns: credentials that work, on stdout, like any other data.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --limit 5 --offset 10"
+        "<%= config.bin %> <%= command.id %> -p prod --limit 5 --offset 10"
       ],
       "flags": {
         "debug": {
@@ -5937,6 +6018,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -5998,6 +6080,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -6007,6 +6090,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -6121,8 +6205,8 @@
       "description": "Change the name or the description of an API key.\n\nThese are the two fields the route takes. The value null resets one.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --name 'CI indexer'",
-        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly'",
-        "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null"
+        "<%= config.bin %> <%= command.id %> -p prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description 'Indexes the catalog nightly'",
+        "<%= config.bin %> <%= command.id %> -p prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null"
       ],
       "flags": {
         "debug": {
@@ -6148,6 +6232,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -6231,6 +6316,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -6240,6 +6326,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -6379,6 +6466,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -6427,6 +6515,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -6436,6 +6525,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -6550,9 +6640,9 @@
       "description": "Run several searches in one request.\n\nEach query of --queries names its index. The results come side by side, or merged into one ranked list with --federation.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --queries '[{\"indexUid\":\"movies\",\"q\":\"nosferatu\"},{\"indexUid\":\"books\",\"q\":\"nosferatu\"}]'",
-        "<%= config.bin %> <%= command.id %> --project prod --queries '[{\"indexUid\":\"movies\",\"q\":\"nosferatu\"}]'",
-        "<%= config.bin %> <%= command.id %> --project prod --queries '[{\"indexUid\":\"movies\",\"q\":\"horror\"},{\"indexUid\":\"books\",\"q\":\"horror\"}]' --federation '{\"limit\":5}'",
-        "cat queries.json | <%= config.bin %> <%= command.id %> --project prod --file -"
+        "<%= config.bin %> <%= command.id %> -p prod --queries '[{\"indexUid\":\"movies\",\"q\":\"nosferatu\"}]'",
+        "<%= config.bin %> <%= command.id %> -p prod --queries '[{\"indexUid\":\"movies\",\"q\":\"horror\"},{\"indexUid\":\"books\",\"q\":\"horror\"}]' --federation '{\"limit\":5}'",
+        "cat queries.json | <%= config.bin %> <%= command.id %> -p prod --file -"
       ],
       "flags": {
         "debug": {
@@ -6578,6 +6668,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -6652,6 +6743,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -6661,6 +6753,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -6828,6 +6921,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -6837,6 +6931,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -6989,6 +7084,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -6998,6 +7094,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -7187,6 +7284,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -7196,6 +7294,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -7357,6 +7456,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -7366,6 +7466,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -7597,6 +7698,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -7606,6 +7708,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -7721,7 +7824,7 @@
       "examples": [
         "<%= config.bin %> <%= command.id %> --id 343 --yes",
         "<%= config.bin %> <%= command.id %> --project staging --yes",
-        "<%= config.bin %> <%= command.id %> --project staging --yes --sync-config"
+        "<%= config.bin %> <%= command.id %> -p staging --yes --sync-config"
       ],
       "flags": {
         "debug": {
@@ -7731,6 +7834,7 @@
           "type": "boolean"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -7789,6 +7893,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -7798,6 +7903,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -7959,6 +8065,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -7968,6 +8075,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -8083,7 +8191,7 @@
       "examples": [
         "<%= config.bin %> <%= command.id %> --id 343 --name renamed",
         "<%= config.bin %> <%= command.id %> --project prod --name renamed",
-        "<%= config.bin %> <%= command.id %> --project prod --name renamed --sync-config",
+        "<%= config.bin %> <%= command.id %> -p prod --name renamed --sync-config",
         "<%= config.bin %> <%= command.id %> --id 343 --data '{\"name\":\"renamed\"}'"
       ],
       "flags": {
@@ -8094,6 +8202,7 @@
           "type": "boolean"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -8172,6 +8281,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -8181,6 +8291,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -8305,6 +8416,7 @@
           "type": "boolean"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -8350,6 +8462,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -8359,6 +8472,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -8511,6 +8625,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -8520,6 +8635,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -8681,6 +8797,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -8690,6 +8807,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -8850,6 +8968,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -8859,6 +8978,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -8972,9 +9092,9 @@
       "description": "Search the documents of an index.\n\n--q and the search parameters of the route shape the search.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --q nosferatu",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --facets genres --attributes-to-retrieve id,title",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --data '{\"q\":\"nosferatu\",\"hybrid\":{\"embedder\":\"default\",\"semanticRatio\":0.5}}'"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --facets genres --attributes-to-retrieve id,title",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --data '{\"q\":\"nosferatu\",\"hybrid\":{\"embedder\":\"default\",\"semanticRatio\":0.5}}'"
       ],
       "flags": {
         "debug": {
@@ -9000,6 +9120,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -9008,6 +9129,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to search in.",
           "name": "index",
           "required": true,
@@ -9277,6 +9399,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -9286,6 +9409,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -9399,7 +9523,7 @@
       "description": "Reset the settings of an index.\n\nEvery setting goes back to its default value, which reindexes the documents.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --yes --wait"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --yes --wait"
       ],
       "flags": {
         "debug": {
@@ -9425,6 +9549,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -9433,6 +9558,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to reset the settings of. `settings update --<setting> null` resets one of them.",
           "name": "index",
           "required": true,
@@ -9497,6 +9623,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -9506,6 +9633,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -9620,10 +9748,10 @@
       "description": "Change the settings of an index.\n\nChanges the settings given and leaves the others. The value null resets one.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --searchable-attributes title,overview",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --filterable-attributes genres,release_date",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --stop-words null",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --typo-tolerance '{\"enabled\":false}' --wait",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --file settings.json"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --filterable-attributes genres,release_date",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --stop-words null",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --typo-tolerance '{\"enabled\":false}' --wait",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --file settings.json"
       ],
       "flags": {
         "debug": {
@@ -9649,6 +9777,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -9657,6 +9786,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to update the settings of.",
           "name": "index",
           "required": true,
@@ -9909,6 +10039,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -9918,6 +10049,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -10057,6 +10189,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -10065,6 +10198,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to read the settings of.",
           "name": "index",
           "required": true,
@@ -10105,6 +10239,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -10114,6 +10249,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -10228,8 +10364,8 @@
       "description": "Find the documents similar to one document.\n\n--id names the document, and --embedder the embedder that compares them.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --id 143 --embedder default",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --data '{\"id\":143,\"embedder\":\"default\",\"retrieveVectors\":true}'"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --data '{\"id\":143,\"embedder\":\"default\",\"retrieveVectors\":true}'"
       ],
       "flags": {
         "debug": {
@@ -10255,6 +10391,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -10263,6 +10400,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to search in.",
           "name": "index",
           "required": true,
@@ -10402,6 +10540,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -10411,6 +10550,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -10524,8 +10664,8 @@
       "description": "Get the statistics of the instance, or of one index.\n\n--index names the index.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies",
-        "<%= config.bin %> <%= command.id %> --project prod --index movies --size-format human --show-internal-database-sizes"
+        "<%= config.bin %> <%= command.id %> -p prod --index movies",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --size-format human --show-internal-database-sizes"
       ],
       "flags": {
         "debug": {
@@ -10551,6 +10691,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -10559,6 +10700,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to read the statistics of. Without it, the whole instance.",
           "name": "index",
           "hasDynamicHelp": false,
@@ -10616,6 +10758,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -10625,6 +10768,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -10738,9 +10882,9 @@
       "description": "Cancel tasks.\n\nCancels the enqueued and processing tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --ids 42,1344",
-        "<%= config.bin %> <%= command.id %> --project prod --ids 42",
-        "<%= config.bin %> <%= command.id %> --project prod --statuses enqueued --index-ids movies",
-        "<%= config.bin %> <%= command.id %> --project prod --statuses processing --wait"
+        "<%= config.bin %> <%= command.id %> -p prod --ids 42",
+        "<%= config.bin %> <%= command.id %> -p prod --statuses enqueued --index-ids movies",
+        "<%= config.bin %> <%= command.id %> -p prod --statuses processing --wait"
       ],
       "flags": {
         "debug": {
@@ -10766,6 +10910,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -10927,6 +11072,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -10936,6 +11082,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -11050,9 +11197,9 @@
       "description": "Delete finished tasks.\n\nDeletes the finished tasks matched by --ids, --statuses, --types and the other filters of the route.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --ids 42,1344 --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --ids 42 --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
-        "<%= config.bin %> <%= command.id %> --project prod --index-ids movies --yes --wait"
+        "<%= config.bin %> <%= command.id %> -p prod --ids 42 --yes",
+        "<%= config.bin %> <%= command.id %> -p prod --statuses succeeded --before-enqueued-at 2026-01-01T00:00:00Z --yes",
+        "<%= config.bin %> <%= command.id %> -p prod --index-ids movies --yes --wait"
       ],
       "flags": {
         "debug": {
@@ -11078,6 +11225,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -11246,6 +11394,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -11255,6 +11404,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -11369,9 +11519,9 @@
       "description": "List the tasks of the instance.\n\n--ids, --statuses, --types and the other filters of the route narrow the list.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
-        "<%= config.bin %> <%= command.id %> --project prod --ids 42",
-        "<%= config.bin %> <%= command.id %> --project prod --statuses failed,canceled --limit 5",
-        "<%= config.bin %> <%= command.id %> --project prod --index-ids movies --types documentAdditionOrUpdate"
+        "<%= config.bin %> <%= command.id %> -p prod --ids 42",
+        "<%= config.bin %> <%= command.id %> -p prod --statuses failed,canceled --limit 5",
+        "<%= config.bin %> <%= command.id %> -p prod --index-ids movies --types documentAdditionOrUpdate"
       ],
       "flags": {
         "debug": {
@@ -11397,6 +11547,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -11569,6 +11720,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -11578,6 +11730,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -11717,6 +11870,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -11765,6 +11919,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -11774,6 +11929,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -11962,6 +12118,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -11971,6 +12128,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -12139,6 +12297,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -12148,6 +12307,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -12300,6 +12460,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -12309,6 +12470,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -12507,6 +12669,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -12516,6 +12679,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -12677,6 +12841,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -12686,6 +12851,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -12810,6 +12976,7 @@
           "type": "boolean"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file, the one whose data moves to Meilisearch Cloud. Without it, the command asks.",
           "name": "project",
           "hasDynamicHelp": false,
@@ -12845,6 +13012,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -12854,6 +13022,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],
@@ -13003,6 +13172,7 @@
           "type": "option"
         },
         "project": {
+          "char": "p",
           "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
           "helpValue": "<name>",
           "input": [],
@@ -13012,6 +13182,7 @@
       },
       "cloudProjectFlags": {
         "project": {
+          "char": "p",
           "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
           "helpValue": "<name>",
           "input": [],

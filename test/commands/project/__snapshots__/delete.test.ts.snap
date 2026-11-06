@@ -13,20 +13,21 @@ exports[`meili project delete > prints its help without any network call 1`] = `
 "Delete a Meilisearch Cloud project and its data.
 
 USAGE
-  $ meili project delete --yes [--debug] [--project <name>] [--id <id>]
+  $ meili project delete --yes [--debug] [-p <name>] [--id <id>]
     [--sync-config]
 
 FLAGS
-  --debug           Print every HTTP request and response on stderr, secrets
-                    redacted.
-  --id=<id>         The project to delete, or give --project <name> and its
-                    cloud.id from the config file.
-  --project=<name>  A project of the config file, whose cloud.id names the Cloud
-                    project, in place of --id.
-  --sync-config     Remove the project's entry from the config file: the entry
-                    --project names, or the one whose cloud.id is --id.
-  --yes             (required) Confirm the deletion. Nothing is sent to the API
-                    without it.
+  -p, --project=<name>  A project of the config file, whose cloud.id names the
+                        Cloud project, in place of --id.
+      --debug           Print every HTTP request and response on stderr, secrets
+                        redacted.
+      --id=<id>         The project to delete, or give --project <name> and its
+                        cloud.id from the config file.
+      --sync-config     Remove the project's entry from the config file: the
+                        entry --project names, or the one whose cloud.id is
+                        --id.
+      --yes             (required) Confirm the deletion. Nothing is sent to the
+                        API without it.
 
 DESCRIPTION
   Delete a Meilisearch Cloud project and its data.
@@ -38,7 +39,7 @@ EXAMPLES
 
   $ meili project delete --project staging --yes
 
-  $ meili project delete --project staging --yes --sync-config
+  $ meili project delete -p staging --yes --sync-config
 
 "
 `;

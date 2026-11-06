@@ -13,22 +13,22 @@ exports[`meili project update > prints its help without any network call 1`] = `
 "Rename a Meilisearch Cloud project.
 
 USAGE
-  $ meili project update [--debug] [--project <name>] [--id <id>] [--name
-    <name>] [--sync-config] [--file <path> | --data <json>]
+  $ meili project update [--debug] [-p <name>] [--id <id>] [--name <name>]
+    [--sync-config] [--file <path> | --data <json>]
 
 FLAGS
-  --data=<json>     Inline JSON body.
-  --debug           Print every HTTP request and response on stderr, secrets
-                    redacted.
-  --file=<path>     Read the body from a file. \`-\` reads from stdin.
-  --id=<id>         The project to update, or give --project <name> and its
-                    cloud.id from the config file.
-  --name=<name>     New name of the project.
-  --project=<name>  A project of the config file, whose cloud.id names the Cloud
-                    project, in place of --id.
-  --sync-config     Rename the project's entry of the config file after it: the
-                    entry --project names, or the one whose cloud.id is --id.
-                    Refreshes its cloud identifiers.
+  -p, --project=<name>  A project of the config file, whose cloud.id names the
+                        Cloud project, in place of --id.
+      --data=<json>     Inline JSON body.
+      --debug           Print every HTTP request and response on stderr, secrets
+                        redacted.
+      --file=<path>     Read the body from a file. \`-\` reads from stdin.
+      --id=<id>         The project to update, or give --project <name> and its
+                        cloud.id from the config file.
+      --name=<name>     New name of the project.
+      --sync-config     Rename the project's entry of the config file after it:
+                        the entry --project names, or the one whose cloud.id is
+                        --id. Refreshes its cloud identifiers.
 
 DESCRIPTION
   Rename a Meilisearch Cloud project.
@@ -38,7 +38,7 @@ EXAMPLES
 
   $ meili project update --project prod --name renamed
 
-  $ meili project update --project prod --name renamed --sync-config
+  $ meili project update -p prod --name renamed --sync-config
 
   $ meili project update --id 343 --data '{"name":"renamed"}'
 
