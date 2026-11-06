@@ -16,14 +16,13 @@ USAGE
   $ meili document list -i <index> [--debug] [--project-url <url>]
     [--project-api-key <key>] [-p <name>] [--ids <ids>] [--filter <filter>]
     [--fields <fields>] [--sort <sort>] [--retrieve-vectors] [--limit <n>]
-    [--offset <n>] [--all] [--file <path> | --data <json>]
+    [--offset <n>] [--file <path> | --data <json>]
 
 FLAGS
   -i, --index=<index>          (required) The index to read the documents from.
   -p, --project=<name>         A project of the config file. Cannot be combined
                                with --project-url. One of --project or
                                --project-url is required.
-      --all                    Fetch every page, and print them as one list.
       --data=<json>            Inline JSON body.
       --debug                  Print every HTTP request and response on stderr,
                                secrets redacted.
@@ -46,7 +45,8 @@ FLAGS
 DESCRIPTION
   List the documents of an index.
 
-  --ids or --filter narrow the list.
+  --ids or --filter narrow the list. --limit and --offset page through it. There
+  is no --all: an index can hold millions of documents.
 
 EXAMPLES
   $ meili document list --project prod --index movies
