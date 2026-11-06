@@ -1,5 +1,20 @@
 # @meilisearch/cli
 
+## 0.3.0
+
+### Minor Changes
+
+- Add usage analytics for each help shown. ([#75](https://github.com/meilisearch/cli/pull/75))
+- Add `-p` and `-i`, the short forms of `--project` and `--index`. ([#80](https://github.com/meilisearch/cli/pull/80))
+- Add usage analytics for unknown commands, and link `meili auth status` sessions to their Cloud user. ([#72](https://github.com/meilisearch/cli/pull/72))
+- Change `meili --version`: prints the same JSON as `meili version`. ([#77](https://github.com/meilisearch/cli/pull/77))
+
+### Patch Changes
+
+- Fix `meili auth login --help`: says that the command also creates an account. ([#74](https://github.com/meilisearch/cli/pull/74))
+- `meili teleport` shows a tip on how to rename the new project.
+- Fix `meili teleport --help`: says that the command moves a self-hosted project and is interactive. ([#71](https://github.com/meilisearch/cli/pull/71))
+
 ## 0.2.0
 
 ### Minor Changes
