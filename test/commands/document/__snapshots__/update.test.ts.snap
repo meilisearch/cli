@@ -13,12 +13,14 @@ exports[`meili document update > prints its help without any network call 1`] = 
 "Add or update documents in an index.
 
 USAGE
-  $ meili document update --index <index> [--debug] [--project-url <url>]
+  $ meili document update -i <index> [--debug] [--project-url <url>]
     [--project-api-key <key>] [-p <name>] [--primary-key <field>]
     [--custom-metadata <string>] [--skip-creation] [--file <path> | --data
     <json>] [--timeout <duration> --wait]
 
 FLAGS
+  -i, --index=<index>             (required) The index to update the documents
+                                  of.
   -p, --project=<name>            A project of the config file. Cannot be
                                   combined with --project-url. One of --project
                                   or --project-url is required.
@@ -29,8 +31,6 @@ FLAGS
                                   stderr, secrets redacted.
       --file=<path>               Read the body from a file. \`-\` reads from
                                   stdin.
-      --index=<index>             (required) The index to update the documents
-                                  of.
       --primary-key=<field>       Primary key of the index. Only taken into
                                   account on its first documents.
       --project-api-key=<key>     Project API key. \`-\` reads it from stdin.
@@ -53,11 +53,11 @@ DESCRIPTION
 EXAMPLES
   $ meili document update --project prod --index movies --file changes.json
 
-  cat changes.json | meili document update -p prod --index movies --file -
+  cat changes.json | meili document update -p prod -i movies --file -
 
-  $ meili document update -p prod --index movies --data '[{"id":1,"rating":4}]'
+  $ meili document update -p prod -i movies --data '[{"id":1,"rating":4}]'
 
-  $ meili document update -p prod --index movies --file changes.json --wait
+  $ meili document update -p prod -i movies --file changes.json --wait
 
 "
 `;

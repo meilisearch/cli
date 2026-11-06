@@ -136,7 +136,7 @@ This flag works on every command, whatever it talks to.
 
 ## Short flags
 
-`-p` is the short form of `--project`, on every command that declares `--project`. It is the only short form, besides `-h` for `--help`. A new one is a contract change, with its own ADR. In the examples of `--help`, the first example that names a project writes `--project`, and the next ones write `-p`. See ADR 0022.
+`-p` is the short form of `--project`, and `-i` the short form of `--index`, on every command that declares the flag. They are the only short forms, besides `-h` for `--help`. A new one is a contract change, with its own ADR. In the examples of `--help`, the first example that uses the flag writes its long form, and the next ones write its short form. See ADR 0022.
 
 ## Shared flag groups
 

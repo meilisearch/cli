@@ -13,7 +13,7 @@ exports[`meili facet-search > prints its help without any network call 1`] = `
 "Search the values of a facet.
 
 USAGE
-  $ meili facet-search --index <index> [--debug] [--project-url <url>]
+  $ meili facet-search -i <index> [--debug] [--project-url <url>]
     [--project-api-key <key>] [-p <name>] [--facet-name <attribute>]
     [--facet-query <query>] [--q <query>] [--filter <filter>]
     [--matching-strategy last|all|frequency] [--attributes-to-search-on
@@ -22,6 +22,8 @@ USAGE
     <path> | --data <json>]
 
 FLAGS
+  -i, --index=<index>                     (required) The index to search the
+                                          facet values in.
   -p, --project=<name>                    A project of the config file. Cannot
                                           be combined with --project-url. One of
                                           --project or --project-url is
@@ -48,8 +50,6 @@ FLAGS
       --hybrid=<json>                     Hybrid search as JSON, for example
                                           \`{"embedder":"default","semanticRatio"
                                           :0.5}\`.
-      --index=<index>                     (required) The index to search the
-                                          facet values in.
       --locales=<locales>                 ISO-639 locales of the query,
                                           comma-separated, instead of
                                           auto-detection.
@@ -79,9 +79,9 @@ DESCRIPTION
 EXAMPLES
   $ meili facet-search --project prod --index movies --facet-name genres --facet-query ac
 
-  $ meili facet-search -p prod --index movies --facet-name genres --q horror --filter 'rating > 4'
+  $ meili facet-search -p prod -i movies --facet-name genres --q horror --filter 'rating > 4'
 
-  $ meili facet-search -p prod --index movies --data '{"facetName":"genres","facetQuery":"ac"}'
+  $ meili facet-search -p prod -i movies --data '{"facetName":"genres","facetQuery":"ac"}'
 
 "
 `;

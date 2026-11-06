@@ -385,9 +385,9 @@ Changes the fields given, and refuses a name that does not exist. Talks to the M
 A document replaces the one that has the same primary key.",
       "examples": [
         "meili document add --project prod --index movies --file movies.json",
-        "cat movies.json | meili document add -p prod --index movies --file -",
-        "meili document add -p prod --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
-        "meili document add -p prod --index movies --file movies.json --wait",
+        "cat movies.json | meili document add -p prod -i movies --file -",
+        "meili document add -p prod -i movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id",
+        "meili document add -p prod -i movies --file movies.json --wait",
       ],
       "flags": [
         {
@@ -410,6 +410,7 @@ A document replaces the one that has the same primary key.",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to add the documents to.",
           "helpValue": "<index>",
           "name": "index",
@@ -479,10 +480,10 @@ A document replaces the one that has the same primary key.",
 Deletes the documents named by --ids, matched by --filter, or every one of them with --all.",
       "examples": [
         "meili document delete --project prod --index movies --ids 42,1344 --yes",
-        "meili document delete -p prod --index movies --ids 42 --yes",
-        "meili document delete -p prod --index movies --filter 'rating < 2' --yes",
-        "meili document delete -p prod --index movies --file ids.json --yes",
-        "meili document delete -p prod --index movies --all --yes --wait",
+        "meili document delete -p prod -i movies --ids 42 --yes",
+        "meili document delete -p prod -i movies --filter 'rating < 2' --yes",
+        "meili document delete -p prod -i movies --file ids.json --yes",
+        "meili document delete -p prod -i movies --all --yes --wait",
       ],
       "flags": [
         {
@@ -505,6 +506,7 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to delete the documents from.",
           "helpValue": "<index>",
           "name": "index",
@@ -601,8 +603,8 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
 --ids or --filter narrow the list.",
       "examples": [
         "meili document list --project prod --index movies",
-        "meili document list -p prod --index movies --ids 42,1344 --fields id,title",
-        "meili document list -p prod --index movies --filter 'rating > 4' --sort rating:desc",
+        "meili document list -p prod -i movies --ids 42,1344 --fields id,title",
+        "meili document list -p prod -i movies --filter 'rating > 4' --sort rating:desc",
       ],
       "flags": [
         {
@@ -625,6 +627,7 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to read the documents from.",
           "helpValue": "<index>",
           "name": "index",
@@ -709,9 +712,9 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
 The fields of a document are merged into the one that has the same primary key.",
       "examples": [
         "meili document update --project prod --index movies --file changes.json",
-        "cat changes.json | meili document update -p prod --index movies --file -",
-        "meili document update -p prod --index movies --data '[{"id":1,"rating":4}]'",
-        "meili document update -p prod --index movies --file changes.json --wait",
+        "cat changes.json | meili document update -p prod -i movies --file -",
+        "meili document update -p prod -i movies --data '[{"id":1,"rating":4}]'",
+        "meili document update -p prod -i movies --file changes.json --wait",
       ],
       "flags": [
         {
@@ -734,6 +737,7 @@ The fields of a document are merged into the one that has the same primary key."
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to update the documents of.",
           "helpValue": "<index>",
           "name": "index",
@@ -800,7 +804,7 @@ The fields of a document are merged into the one that has the same primary key."
       "description": "Get one document of an index.",
       "examples": [
         "meili document view --project prod --index movies --id 42",
-        "meili document view -p prod --index movies --id 42 --fields id,title",
+        "meili document view -p prod -i movies --id 42 --fields id,title",
       ],
       "flags": [
         {
@@ -823,6 +827,7 @@ The fields of a document are merged into the one that has the same primary key."
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to read the document from.",
           "helpValue": "<index>",
           "name": "index",
@@ -969,8 +974,8 @@ The source is the project this command connects to, named by --project, --projec
 Counts the values on the documents that --q and --filter keep.",
       "examples": [
         "meili facet-search --project prod --index movies --facet-name genres --facet-query ac",
-        "meili facet-search -p prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
-        "meili facet-search -p prod --index movies --data '{"facetName":"genres","facetQuery":"ac"}'",
+        "meili facet-search -p prod -i movies --facet-name genres --q horror --filter 'rating > 4'",
+        "meili facet-search -p prod -i movies --data '{"facetName":"genres","facetQuery":"ac"}'",
       ],
       "flags": [
         {
@@ -993,6 +998,7 @@ Counts the values on the documents that --q and --filter keep.",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to search the facet values in.",
           "helpValue": "<index>",
           "name": "index",
@@ -2268,9 +2274,9 @@ Prints one line per command, or one command in full with --command, from the ocl
 --q and the search parameters of the route shape the search.",
       "examples": [
         "meili search --project prod --index movies --q nosferatu",
-        "meili search -p prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
-        "meili search -p prod --index movies --facets genres --attributes-to-retrieve id,title",
-        "meili search -p prod --index movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'",
+        "meili search -p prod -i movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
+        "meili search -p prod -i movies --facets genres --attributes-to-retrieve id,title",
+        "meili search -p prod -i movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'",
       ],
       "flags": [
         {
@@ -2293,6 +2299,7 @@ Prints one line per command, or one command in full with --command, from the ocl
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to search in.",
           "helpValue": "<index>",
           "name": "index",
@@ -2492,7 +2499,7 @@ Prints one line per command, or one command in full with --command, from the ocl
 Every setting goes back to its default value, which reindexes the documents.",
       "examples": [
         "meili settings delete --project prod --index movies --yes",
-        "meili settings delete -p prod --index movies --yes --wait",
+        "meili settings delete -p prod -i movies --yes --wait",
       ],
       "flags": [
         {
@@ -2515,6 +2522,7 @@ Every setting goes back to its default value, which reindexes the documents.",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to reset the settings of. \`settings update --<setting> null\` resets one of them.",
           "helpValue": "<index>",
           "name": "index",
@@ -2558,10 +2566,10 @@ Every setting goes back to its default value, which reindexes the documents.",
 Changes the settings given and leaves the others. The value null resets one.",
       "examples": [
         "meili settings update --project prod --index movies --searchable-attributes title,overview",
-        "meili settings update -p prod --index movies --filterable-attributes genres,release_date",
-        "meili settings update -p prod --index movies --stop-words null",
-        "meili settings update -p prod --index movies --typo-tolerance '{"enabled":false}' --wait",
-        "meili settings update -p prod --index movies --file settings.json",
+        "meili settings update -p prod -i movies --filterable-attributes genres,release_date",
+        "meili settings update -p prod -i movies --stop-words null",
+        "meili settings update -p prod -i movies --typo-tolerance '{"enabled":false}' --wait",
+        "meili settings update -p prod -i movies --file settings.json",
       ],
       "flags": [
         {
@@ -2584,6 +2592,7 @@ Changes the settings given and leaves the others. The value null resets one.",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to update the settings of.",
           "helpValue": "<index>",
           "name": "index",
@@ -2789,6 +2798,7 @@ Each setting has its current value or its default.",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to read the settings of.",
           "helpValue": "<index>",
           "name": "index",
@@ -2811,8 +2821,8 @@ Each setting has its current value or its default.",
 --id names the document, and --embedder the embedder that compares them.",
       "examples": [
         "meili similar --project prod --index movies --id 143 --embedder default",
-        "meili similar -p prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
-        "meili similar -p prod --index movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'",
+        "meili similar -p prod -i movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
+        "meili similar -p prod -i movies --data '{"id":143,"embedder":"default","retrieveVectors":true}'",
       ],
       "flags": [
         {
@@ -2835,6 +2845,7 @@ Each setting has its current value or its default.",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to search in.",
           "helpValue": "<index>",
           "name": "index",
@@ -2935,7 +2946,7 @@ Each setting has its current value or its default.",
       "examples": [
         "meili stats --project prod",
         "meili stats -p prod --index movies",
-        "meili stats -p prod --index movies --size-format human --show-internal-database-sizes",
+        "meili stats -p prod -i movies --size-format human --show-internal-database-sizes",
       ],
       "flags": [
         {
@@ -2958,6 +2969,7 @@ Each setting has its current value or its default.",
           "type": "option",
         },
         {
+          "char": "i",
           "description": "The index to read the statistics of. Without it, the whole instance.",
           "helpValue": "<index>",
           "name": "index",

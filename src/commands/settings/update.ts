@@ -17,15 +17,16 @@ Changes the settings given and leaves the others. The value null resets one.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --searchable-attributes title,overview",
-    "<%= config.bin %> <%= command.id %> -p prod --index movies --filterable-attributes genres,release_date",
-    "<%= config.bin %> <%= command.id %> -p prod --index movies --stop-words null",
-    "<%= config.bin %> <%= command.id %> -p prod --index movies --typo-tolerance '{\"enabled\":false}' --wait",
-    "<%= config.bin %> <%= command.id %> -p prod --index movies --file settings.json",
+    "<%= config.bin %> <%= command.id %> -p prod -i movies --filterable-attributes genres,release_date",
+    "<%= config.bin %> <%= command.id %> -p prod -i movies --stop-words null",
+    "<%= config.bin %> <%= command.id %> -p prod -i movies --typo-tolerance '{\"enabled\":false}' --wait",
+    "<%= config.bin %> <%= command.id %> -p prod -i movies --file settings.json",
   ];
 
   static override flags = {
     ...BaseCommand.connectionFlags,
     index: Flags.string({
+      char: "i",
       required: true,
       description: "The index to update the settings of.",
       helpValue: "<index>",

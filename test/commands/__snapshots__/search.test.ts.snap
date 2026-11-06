@@ -13,7 +13,7 @@ exports[`meili search > prints its help without any network call 1`] = `
 "Search the documents of an index.
 
 USAGE
-  $ meili search --index <index> [--debug] [--project-url <url>]
+  $ meili search -i <index> [--debug] [--project-url <url>]
     [--project-api-key <key>] [-p <name>] [--q <query>] [--offset <n>] [--limit
     <n>] [--page <n>] [--hits-per-page <n>] [--attributes-to-retrieve <fields>]
     [--attributes-to-crop <fields>] [--crop-length <n>] [--crop-marker <string>]
@@ -27,6 +27,7 @@ USAGE
     [--show-performance-details] [--file <path> | --data <json>]
 
 FLAGS
+  -i, --index=<index>                     (required) The index to search in.
   -p, --project=<name>                    A project of the config file. Cannot
                                           be combined with --project-url. One of
                                           --project or --project-url is
@@ -69,7 +70,6 @@ FLAGS
       --hybrid=<json>                     Hybrid search as JSON, for example
                                           \`{"embedder":"default","semanticRatio"
                                           :0.5}\`.
-      --index=<index>                     (required) The index to search in.
       --limit=<n>                         Maximum number of documents to return,
                                           20 by default. Ignored when --page or
                                           --hits-per-page is given.
@@ -121,11 +121,11 @@ DESCRIPTION
 EXAMPLES
   $ meili search --project prod --index movies --q nosferatu
 
-  $ meili search -p prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5
+  $ meili search -p prod -i movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5
 
-  $ meili search -p prod --index movies --facets genres --attributes-to-retrieve id,title
+  $ meili search -p prod -i movies --facets genres --attributes-to-retrieve id,title
 
-  $ meili search -p prod --index movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'
+  $ meili search -p prod -i movies --data '{"q":"nosferatu","hybrid":{"embedder":"default","semanticRatio":0.5}}'
 
 "
 `;

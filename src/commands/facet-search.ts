@@ -17,13 +17,14 @@ Counts the values on the documents that --q and --filter keep.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac",
-    "<%= config.bin %> <%= command.id %> -p prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
-    '<%= config.bin %> <%= command.id %> -p prod --index movies --data \'{"facetName":"genres","facetQuery":"ac"}\'',
+    "<%= config.bin %> <%= command.id %> -p prod -i movies --facet-name genres --q horror --filter 'rating > 4'",
+    '<%= config.bin %> <%= command.id %> -p prod -i movies --data \'{"facetName":"genres","facetQuery":"ac"}\'',
   ];
 
   static override flags = {
     ...BaseCommand.connectionFlags,
     index: Flags.string({
+      char: "i",
       required: true,
       description: "The index to search the facet values in.",
       helpValue: "<index>",

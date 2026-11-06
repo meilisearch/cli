@@ -2100,9 +2100,9 @@
       "description": "Add or replace documents in an index.\n\nA document replaces the one that has the same primary key.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --file movies.json",
-        "cat movies.json | <%= config.bin %> <%= command.id %> -p prod --index movies --file -",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --data '[{\"id\":1,\"title\":\"Nosferatu\"}]' --primary-key id",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --file movies.json --wait"
+        "cat movies.json | <%= config.bin %> <%= command.id %> -p prod -i movies --file -",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --data '[{\"id\":1,\"title\":\"Nosferatu\"}]' --primary-key id",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --file movies.json --wait"
       ],
       "flags": {
         "debug": {
@@ -2137,6 +2137,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to add the documents to.",
           "name": "index",
           "required": true,
@@ -2360,10 +2361,10 @@
       "description": "Delete documents from an index.\n\nDeletes the documents named by --ids, matched by --filter, or every one of them with --all.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --ids 42,1344 --yes",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --ids 42 --yes",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --filter 'rating < 2' --yes",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --file ids.json --yes",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --all --yes --wait"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --ids 42 --yes",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --filter 'rating < 2' --yes",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --file ids.json --yes",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --all --yes --wait"
       ],
       "flags": {
         "debug": {
@@ -2398,6 +2399,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to delete the documents from.",
           "name": "index",
           "required": true,
@@ -2652,8 +2654,8 @@
       "description": "List the documents of an index.\n\n--ids or --filter narrow the list.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --ids 42,1344 --fields id,title",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --filter 'rating > 4' --sort rating:desc"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --ids 42,1344 --fields id,title",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --filter 'rating > 4' --sort rating:desc"
       ],
       "flags": {
         "debug": {
@@ -2688,6 +2690,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to read the documents from.",
           "name": "index",
           "required": true,
@@ -2932,9 +2935,9 @@
       "description": "Add or update documents in an index.\n\nThe fields of a document are merged into the one that has the same primary key.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --file changes.json",
-        "cat changes.json | <%= config.bin %> <%= command.id %> -p prod --index movies --file -",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --data '[{\"id\":1,\"rating\":4}]'",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --file changes.json --wait"
+        "cat changes.json | <%= config.bin %> <%= command.id %> -p prod -i movies --file -",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --data '[{\"id\":1,\"rating\":4}]'",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --file changes.json --wait"
       ],
       "flags": {
         "debug": {
@@ -2969,6 +2972,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to update the documents of.",
           "name": "index",
           "required": true,
@@ -3192,7 +3196,7 @@
       "description": "Get one document of an index.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --id 42",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --id 42 --fields id,title"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --id 42 --fields id,title"
       ],
       "flags": {
         "debug": {
@@ -3227,6 +3231,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to read the document from.",
           "name": "index",
           "required": true,
@@ -3691,8 +3696,8 @@
       "description": "Search the values of a facet.\n\nCounts the values on the documents that --q and --filter keep.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --facet-name genres --facet-query ac",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --facet-name genres --q horror --filter 'rating > 4'",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --data '{\"facetName\":\"genres\",\"facetQuery\":\"ac\"}'"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --facet-name genres --q horror --filter 'rating > 4'",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --data '{\"facetName\":\"genres\",\"facetQuery\":\"ac\"}'"
       ],
       "flags": {
         "debug": {
@@ -3727,6 +3732,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to search the facet values in.",
           "name": "index",
           "required": true,
@@ -9086,9 +9092,9 @@
       "description": "Search the documents of an index.\n\n--q and the search parameters of the route shape the search.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --q nosferatu",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --facets genres --attributes-to-retrieve id,title",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --data '{\"q\":\"nosferatu\",\"hybrid\":{\"embedder\":\"default\",\"semanticRatio\":0.5}}'"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --q horror --filter 'rating > 4' --sort rating:desc --limit 5",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --facets genres --attributes-to-retrieve id,title",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --data '{\"q\":\"nosferatu\",\"hybrid\":{\"embedder\":\"default\",\"semanticRatio\":0.5}}'"
       ],
       "flags": {
         "debug": {
@@ -9123,6 +9129,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to search in.",
           "name": "index",
           "required": true,
@@ -9516,7 +9523,7 @@
       "description": "Reset the settings of an index.\n\nEvery setting goes back to its default value, which reindexes the documents.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --yes",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --yes --wait"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --yes --wait"
       ],
       "flags": {
         "debug": {
@@ -9551,6 +9558,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to reset the settings of. `settings update --<setting> null` resets one of them.",
           "name": "index",
           "required": true,
@@ -9740,10 +9748,10 @@
       "description": "Change the settings of an index.\n\nChanges the settings given and leaves the others. The value null resets one.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --searchable-attributes title,overview",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --filterable-attributes genres,release_date",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --stop-words null",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --typo-tolerance '{\"enabled\":false}' --wait",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --file settings.json"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --filterable-attributes genres,release_date",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --stop-words null",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --typo-tolerance '{\"enabled\":false}' --wait",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --file settings.json"
       ],
       "flags": {
         "debug": {
@@ -9778,6 +9786,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to update the settings of.",
           "name": "index",
           "required": true,
@@ -10189,6 +10198,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to read the settings of.",
           "name": "index",
           "required": true,
@@ -10354,8 +10364,8 @@
       "description": "Find the documents similar to one document.\n\n--id names the document, and --embedder the embedder that compares them.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies --id 143 --embedder default",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --data '{\"id\":143,\"embedder\":\"default\",\"retrieveVectors\":true}'"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --data '{\"id\":143,\"embedder\":\"default\",\"retrieveVectors\":true}'"
       ],
       "flags": {
         "debug": {
@@ -10390,6 +10400,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to search in.",
           "name": "index",
           "required": true,
@@ -10654,7 +10665,7 @@
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod",
         "<%= config.bin %> <%= command.id %> -p prod --index movies",
-        "<%= config.bin %> <%= command.id %> -p prod --index movies --size-format human --show-internal-database-sizes"
+        "<%= config.bin %> <%= command.id %> -p prod -i movies --size-format human --show-internal-database-sizes"
       ],
       "flags": {
         "debug": {
@@ -10689,6 +10700,7 @@
           "type": "option"
         },
         "index": {
+          "char": "i",
           "description": "The index to read the statistics of. Without it, the whole instance.",
           "name": "index",
           "hasDynamicHelp": false,

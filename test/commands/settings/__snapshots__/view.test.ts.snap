@@ -13,16 +13,16 @@ exports[`meili settings view > prints its help without any network call 1`] = `
 "Get the settings of an index.
 
 USAGE
-  $ meili settings view --index <index> [--debug] [--project-url <url>]
+  $ meili settings view -i <index> [--debug] [--project-url <url>]
     [--project-api-key <key>] [-p <name>]
 
 FLAGS
+  -i, --index=<index>          (required) The index to read the settings of.
   -p, --project=<name>         A project of the config file. Cannot be combined
                                with --project-url. One of --project or
                                --project-url is required.
       --debug                  Print every HTTP request and response on stderr,
                                secrets redacted.
-      --index=<index>          (required) The index to read the settings of.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
                                One of --project or --project-url is required.

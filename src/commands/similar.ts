@@ -17,13 +17,14 @@ export default class Similar extends BaseCommand {
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies --id 143 --embedder default",
-    "<%= config.bin %> <%= command.id %> -p prod --index movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
-    '<%= config.bin %> <%= command.id %> -p prod --index movies --data \'{"id":143,"embedder":"default","retrieveVectors":true}\'',
+    "<%= config.bin %> <%= command.id %> -p prod -i movies --id 143 --embedder default --filter 'genres = horror' --limit 5",
+    '<%= config.bin %> <%= command.id %> -p prod -i movies --data \'{"id":143,"embedder":"default","retrieveVectors":true}\'',
   ];
 
   static override flags = {
     ...BaseCommand.connectionFlags,
     index: Flags.string({
+      char: "i",
       required: true,
       description: "The index to search in.",
       helpValue: "<index>",

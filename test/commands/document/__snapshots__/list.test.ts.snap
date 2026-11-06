@@ -13,12 +13,13 @@ exports[`meili document list > prints its help without any network call 1`] = `
 "List the documents of an index.
 
 USAGE
-  $ meili document list --index <index> [--debug] [--project-url <url>]
+  $ meili document list -i <index> [--debug] [--project-url <url>]
     [--project-api-key <key>] [-p <name>] [--ids <ids>] [--filter <filter>]
     [--fields <fields>] [--sort <sort>] [--retrieve-vectors] [--limit <n>]
     [--offset <n>] [--all] [--file <path> | --data <json>]
 
 FLAGS
+  -i, --index=<index>          (required) The index to read the documents from.
   -p, --project=<name>         A project of the config file. Cannot be combined
                                with --project-url. One of --project or
                                --project-url is required.
@@ -32,7 +33,6 @@ FLAGS
       --filter=<filter>        Filter expression, for example \`rating > 4\`. Its
                                array-of-arrays form goes through --data.
       --ids=<ids>              Document identifiers to return, comma-separated.
-      --index=<index>          (required) The index to read the documents from.
       --limit=<n>              Passed to the API.
       --offset=<n>             Passed to the API.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
@@ -51,9 +51,9 @@ DESCRIPTION
 EXAMPLES
   $ meili document list --project prod --index movies
 
-  $ meili document list -p prod --index movies --ids 42,1344 --fields id,title
+  $ meili document list -p prod -i movies --ids 42,1344 --fields id,title
 
-  $ meili document list -p prod --index movies --filter 'rating > 4' --sort rating:desc
+  $ meili document list -p prod -i movies --filter 'rating > 4' --sort rating:desc
 
 "
 `;

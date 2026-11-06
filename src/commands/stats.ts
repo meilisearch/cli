@@ -16,12 +16,13 @@ export default class Stats extends BaseCommand {
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod",
     "<%= config.bin %> <%= command.id %> -p prod --index movies",
-    "<%= config.bin %> <%= command.id %> -p prod --index movies --size-format human --show-internal-database-sizes",
+    "<%= config.bin %> <%= command.id %> -p prod -i movies --size-format human --show-internal-database-sizes",
   ];
 
   static override flags = {
     ...BaseCommand.connectionFlags,
     index: Flags.string({
+      char: "i",
       description: "The index to read the statistics of. Without it, the whole instance.",
       helpValue: "<index>",
     }),

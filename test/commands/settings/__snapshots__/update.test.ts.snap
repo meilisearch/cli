@@ -13,7 +13,7 @@ exports[`meili settings update > prints its help without any network call 1`] = 
 "Change the settings of an index.
 
 USAGE
-  $ meili settings update --index <index> [--debug] [--project-url <url>]
+  $ meili settings update -i <index> [--debug] [--project-url <url>]
     [--project-api-key <key>] [-p <name>] [--displayed-attributes <fields>]
     [--searchable-attributes <fields>] [--filterable-attributes <fields>]
     [--sortable-attributes <fields>] [--foreign-keys <json>] [--ranking-rules
@@ -26,6 +26,8 @@ USAGE
     [--file <path> | --data <json>] [--timeout <duration> --wait]
 
 FLAGS
+  -i, --index=<index>                    (required) The index to update the
+                                         settings of.
   -p, --project=<name>                   A project of the config file. Cannot be
                                          combined with --project-url. One of
                                          --project or --project-url is required.
@@ -57,8 +59,6 @@ FLAGS
       --foreign-keys=<json>              Foreign keys for cross-index filtering,
                                          as JSON: \`[{"foreignIndexUid":"products
                                          ","fieldName":"productId"}]\`.
-      --index=<index>                    (required) The index to update the
-                                         settings of.
       --localized-attributes=<json>      Locales of the attributes, as JSON:
                                          \`[{"locales":["jpn"],"attributePatterns
                                          ":["*_ja"]}]\`.
@@ -109,13 +109,13 @@ DESCRIPTION
 EXAMPLES
   $ meili settings update --project prod --index movies --searchable-attributes title,overview
 
-  $ meili settings update -p prod --index movies --filterable-attributes genres,release_date
+  $ meili settings update -p prod -i movies --filterable-attributes genres,release_date
 
-  $ meili settings update -p prod --index movies --stop-words null
+  $ meili settings update -p prod -i movies --stop-words null
 
-  $ meili settings update -p prod --index movies --typo-tolerance '{"enabled":false}' --wait
+  $ meili settings update -p prod -i movies --typo-tolerance '{"enabled":false}' --wait
 
-  $ meili settings update -p prod --index movies --file settings.json
+  $ meili settings update -p prod -i movies --file settings.json
 
 "
 `;

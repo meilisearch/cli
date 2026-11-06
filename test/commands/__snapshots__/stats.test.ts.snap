@@ -14,17 +14,17 @@ exports[`meili stats > prints its help without any network call 1`] = `
 
 USAGE
   $ meili stats [--debug] [--project-url <url>] [--project-api-key
-    <key>] [-p <name>] [--index <index>] [--show-internal-database-sizes]
+    <key>] [-p <name>] [-i <index>] [--show-internal-database-sizes]
     [--size-format raw|human]
 
 FLAGS
+  -i, --index=<index>                 The index to read the statistics of.
+                                      Without it, the whole instance.
   -p, --project=<name>                A project of the config file. Cannot be
                                       combined with --project-url. One of
                                       --project or --project-url is required.
       --debug                         Print every HTTP request and response on
                                       stderr, secrets redacted.
-      --index=<index>                 The index to read the statistics of.
-                                      Without it, the whole instance.
       --project-api-key=<key>         Project API key. \`-\` reads it from stdin.
       --project-url=<url>             Project URL, the Meilisearch instance to
                                       talk to. One of --project or --project-url
@@ -46,7 +46,7 @@ EXAMPLES
 
   $ meili stats -p prod --index movies
 
-  $ meili stats -p prod --index movies --size-format human --show-internal-database-sizes
+  $ meili stats -p prod -i movies --size-format human --show-internal-database-sizes
 
 "
 `;

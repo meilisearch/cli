@@ -124,15 +124,19 @@ describe("every example of a Meilisearch command names its project (config.md, R
   });
 });
 
-describe("examples write --project once, then -p (ADR 0022)", () => {
-  it("the first example that names a project writes --project, the next ones -p", () => {
+describe("examples write the long form once, then the short form (ADR 0022)", () => {
+  it.each([
+    ["--project", "-p"],
+    ["--index", "-i"],
+  ])("the first example that uses %s writes it in full, the next ones %s", (long, short) => {
     for (const [id, command] of Object.entries(manifest.commands)) {
       const names = (command.examples ?? []).flatMap(
         (example) =>
-          (typeof example === "string" ? example : example.command).match(/ (--project|-p) /g) ??
-          [],
+          (typeof example === "string" ? example : example.command).match(
+            new RegExp(` (${long}|${short}) `, "g"),
+          ) ?? [],
       );
-      expect(names, id).toEqual(names.map((_, i) => (i === 0 ? " --project " : " -p ")));
+      expect(names, id).toEqual(names.map((_, i) => ` ${i === 0 ? long : short} `));
     }
   });
 });

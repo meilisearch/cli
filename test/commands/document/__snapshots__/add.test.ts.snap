@@ -13,12 +13,13 @@ exports[`meili document add > prints its help without any network call 1`] = `
 "Add or replace documents in an index.
 
 USAGE
-  $ meili document add --index <index> [--debug] [--project-url <url>]
+  $ meili document add -i <index> [--debug] [--project-url <url>]
     [--project-api-key <key>] [-p <name>] [--primary-key <field>]
     [--custom-metadata <string>] [--skip-creation] [--file <path> | --data
     <json>] [--timeout <duration> --wait]
 
 FLAGS
+  -i, --index=<index>             (required) The index to add the documents to.
   -p, --project=<name>            A project of the config file. Cannot be
                                   combined with --project-url. One of --project
                                   or --project-url is required.
@@ -29,7 +30,6 @@ FLAGS
                                   stderr, secrets redacted.
       --file=<path>               Read the body from a file. \`-\` reads from
                                   stdin.
-      --index=<index>             (required) The index to add the documents to.
       --primary-key=<field>       Primary key of the index. Only taken into
                                   account on its first documents.
       --project-api-key=<key>     Project API key. \`-\` reads it from stdin.
@@ -51,11 +51,11 @@ DESCRIPTION
 EXAMPLES
   $ meili document add --project prod --index movies --file movies.json
 
-  cat movies.json | meili document add -p prod --index movies --file -
+  cat movies.json | meili document add -p prod -i movies --file -
 
-  $ meili document add -p prod --index movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id
+  $ meili document add -p prod -i movies --data '[{"id":1,"title":"Nosferatu"}]' --primary-key id
 
-  $ meili document add -p prod --index movies --file movies.json --wait
+  $ meili document add -p prod -i movies --file movies.json --wait
 
 "
 `;

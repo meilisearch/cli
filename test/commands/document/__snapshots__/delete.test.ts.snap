@@ -13,12 +13,14 @@ exports[`meili document delete > prints its help without any network call 1`] = 
 "Delete documents from an index.
 
 USAGE
-  $ meili document delete --index <index> --yes [--debug] [--project-url
-    <url>] [--project-api-key <key>] [-p <name>] [--ids <ids> | --filter
-    <filter> | --all] [--custom-metadata <string>] [--file <path> | --data
-    <json>] [--timeout <duration> --wait]
+  $ meili document delete -i <index> --yes [--debug] [--project-url <url>]
+    [--project-api-key <key>] [-p <name>] [--ids <ids> | --filter <filter> |
+    --all] [--custom-metadata <string>] [--file <path> | --data <json>]
+    [--timeout <duration> --wait]
 
 FLAGS
+  -i, --index=<index>             (required) The index to delete the documents
+                                  from.
   -p, --project=<name>            A project of the config file. Cannot be
                                   combined with --project-url. One of --project
                                   or --project-url is required.
@@ -34,8 +36,6 @@ FLAGS
                                   expression, for example \`rating < 2\`.
       --ids=<ids>                 Document identifiers to delete,
                                   comma-separated.
-      --index=<index>             (required) The index to delete the documents
-                                  from.
       --project-api-key=<key>     Project API key. \`-\` reads it from stdin.
       --project-url=<url>         Project URL, the Meilisearch instance to talk
                                   to. One of --project or --project-url is
@@ -56,13 +56,13 @@ DESCRIPTION
 EXAMPLES
   $ meili document delete --project prod --index movies --ids 42,1344 --yes
 
-  $ meili document delete -p prod --index movies --ids 42 --yes
+  $ meili document delete -p prod -i movies --ids 42 --yes
 
-  $ meili document delete -p prod --index movies --filter 'rating < 2' --yes
+  $ meili document delete -p prod -i movies --filter 'rating < 2' --yes
 
-  $ meili document delete -p prod --index movies --file ids.json --yes
+  $ meili document delete -p prod -i movies --file ids.json --yes
 
-  $ meili document delete -p prod --index movies --all --yes --wait
+  $ meili document delete -p prod -i movies --all --yes --wait
 
 "
 `;

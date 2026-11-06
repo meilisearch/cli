@@ -13,18 +13,18 @@ exports[`meili settings delete > prints its help without any network call 1`] = 
 "Reset the settings of an index.
 
 USAGE
-  $ meili settings delete --index <index> --yes [--debug] [--project-url
-    <url>] [--project-api-key <key>] [-p <name>] [--timeout <duration> --wait]
+  $ meili settings delete -i <index> --yes [--debug] [--project-url <url>]
+    [--project-api-key <key>] [-p <name>] [--timeout <duration> --wait]
 
 FLAGS
+  -i, --index=<index>          (required) The index to reset the settings of.
+                               \`settings update --<setting> null\` resets one of
+                               them.
   -p, --project=<name>         A project of the config file. Cannot be combined
                                with --project-url. One of --project or
                                --project-url is required.
       --debug                  Print every HTTP request and response on stderr,
                                secrets redacted.
-      --index=<index>          (required) The index to reset the settings of.
-                               \`settings update --<setting> null\` resets one of
-                               them.
       --project-api-key=<key>  Project API key. \`-\` reads it from stdin.
       --project-url=<url>      Project URL, the Meilisearch instance to talk to.
                                One of --project or --project-url is required.
@@ -43,7 +43,7 @@ DESCRIPTION
 EXAMPLES
   $ meili settings delete --project prod --index movies --yes
 
-  $ meili settings delete -p prod --index movies --yes --wait
+  $ meili settings delete -p prod -i movies --yes --wait
 
 "
 `;
