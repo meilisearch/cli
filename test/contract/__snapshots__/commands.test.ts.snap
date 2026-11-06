@@ -600,7 +600,7 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
       "api": "meilisearch",
       "description": "List the documents of an index.
 
---ids or --filter narrow the list.",
+--ids or --filter narrow the list. --limit and --offset page through it. There is no --all: an index can hold millions of documents.",
       "examples": [
         "meili document list --project prod --index movies",
         "meili document list -p prod -i movies --ids 42,1344 --fields id,title",
@@ -674,11 +674,6 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
           "helpValue": "<n>",
           "name": "offset",
           "type": "option",
-        },
-        {
-          "description": "Fetch every page, and print them as one list.",
-          "name": "all",
-          "type": "boolean",
         },
         {
           "description": "Read the body from a file. \`-\` reads from stdin.",

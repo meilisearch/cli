@@ -2651,7 +2651,7 @@
     "document:list": {
       "aliases": [],
       "args": {},
-      "description": "List the documents of an index.\n\n--ids or --filter narrow the list.",
+      "description": "List the documents of an index.\n\n--ids or --filter narrow the list. --limit and --offset page through it. There is no --all: an index can hold millions of documents.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies",
         "<%= config.bin %> <%= command.id %> -p prod -i movies --ids 42,1344 --fields id,title",
@@ -2752,12 +2752,6 @@
           "helpValue": "<n>",
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "name": "all",
-          "allowNo": false,
-          "type": "boolean"
         },
         "file": {
           "description": "Read the body from a file. `-` reads from stdin.",

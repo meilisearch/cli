@@ -124,24 +124,6 @@ describe("meili document list", () => {
     expect(JSON.parse(result?.stderr ?? "").error.code).toBe("cli_input_invalid");
   });
 
-  it("follows every page with --all and merges them into one envelope in JSON", async () => {
-    server.use(meilisearchHandlers.documentsFetch(documents));
-    let result: Awaited<ReturnType<typeof runCommand>> | undefined;
-    const requests = await countRequests(async () => {
-      result = await runCommand(DocumentList, [
-        "--index",
-        "movies",
-        "--all",
-        "--limit",
-        "2",
-        ...project,
-      ]);
-    });
-    expect(requests).toBe(2);
-    expect(result?.exitCode).toBe(0);
-    expect(JSON.parse(result?.stdout ?? "")).toEqual({ results: documents, total: 3 });
-  });
-
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(
       meilisearchHandlers.apiError("/indexes/movies/documents/fetch", 403, invalidApiKeyError),
