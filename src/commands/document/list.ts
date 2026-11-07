@@ -4,7 +4,6 @@ import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { fetchDocuments } from "../../lib/clients/meilisearch.js";
 import { MeiliCliError } from "../../lib/errors.js";
 import { isJsonObject, readJsonBody } from "../../lib/input.js";
-import { nextOffsetQuery } from "../../lib/pagination.js";
 
 export default class DocumentList extends BaseCommand {
   static api: Api = "meilisearch";
@@ -51,7 +50,8 @@ export default class DocumentList extends BaseCommand {
     "retrieve-vectors": Flags.boolean({
       description: "Include the vector embeddings of the documents that have them.",
     }),
-    ...BaseCommand.paginationFlags,
+    limit: BaseCommand.paginationFlags.limit,
+    offset: BaseCommand.paginationFlags.offset,
     ...BaseCommand.bodyInputFlags,
   };
 
@@ -75,12 +75,6 @@ export default class DocumentList extends BaseCommand {
     if (flags.limit !== undefined) query.limit = flags.limit;
     if (flags.offset !== undefined) query.offset = flags.offset;
 
-    const { limit, offset, ...rest } = query;
-    await this.outputList(
-      (page) => fetchDocuments(this.meilisearch, flags.index, { ...rest, ...page }),
-      { limit, offset },
-      flags.all,
-      nextOffsetQuery,
-    );
+    await this.output(await fetchDocuments(this.meilisearch, flags.index, query));
   }
 }

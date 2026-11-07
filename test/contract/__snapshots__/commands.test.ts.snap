@@ -676,11 +676,6 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
           "type": "option",
         },
         {
-          "description": "Fetch every page, and print them as one list.",
-          "name": "all",
-          "type": "boolean",
-        },
-        {
           "description": "Read the body from a file. \`-\` reads from stdin.",
           "exclusive": [
             "data",
