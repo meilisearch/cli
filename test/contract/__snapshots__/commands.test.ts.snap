@@ -174,11 +174,6 @@ Says whether a session of \`auth login\` exists, whether the authorization serve
           "name": "from",
           "type": "option",
         },
-        {
-          "description": "Fetch every page, and print them as one list.",
-          "name": "all",
-          "type": "boolean",
-        },
       ],
       "id": "batch list",
       "keyActions": [
@@ -3380,11 +3375,6 @@ Deletes the finished tasks matched by --ids, --statuses, --types and the other f
           "helpValue": "<uid>",
           "name": "from",
           "type": "option",
-        },
-        {
-          "description": "Fetch every page, and print them as one list.",
-          "name": "all",
-          "type": "boolean",
         },
       ],
       "id": "task list",

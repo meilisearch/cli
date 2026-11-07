@@ -1,5 +1,4 @@
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { nextOffsetQuery } from "../../lib/pagination.js";
 
 export default class IndexList extends BaseCommand {
   static api: Api = "meilisearch";
@@ -26,7 +25,6 @@ export default class IndexList extends BaseCommand {
       (query) => this.meilisearch.getRawIndexes(query),
       { limit: flags.limit, offset: flags.offset },
       flags.all,
-      nextOffsetQuery,
     );
   }
 }

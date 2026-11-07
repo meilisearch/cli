@@ -25,7 +25,7 @@ describe.skipIf(!meilisearchUp)("meili batch list against a real Meilisearch", (
   });
 
   it("returns the list envelope filtered by --index-ids", async () => {
-    const result = await runBinary(["batch", "list", "--index-ids", uid, "--all", ...project]);
+    const result = await runBinary(["batch", "list", "--index-ids", uid, ...project]);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     const page = JSON.parse(result.stdout) as { results: Array<{ uid: number }> };

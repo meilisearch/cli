@@ -151,7 +151,7 @@ Destructive commands are the commands of the verb `delete`, as `commands.md` der
 ## Pagination
 
 - `--limit` and `--offset` (or `--from` for tasks and batches) are passed to the API unchanged.
-- `--all` follows the API pagination until the end. The CLI returns the envelope of the last page, with `results` replaced by the full list and without the fields that describe one page: `limit` and `offset`, or `limit` and `from` on the routes that page with a cursor.
+- `--all` follows the API pagination until the end. The CLI returns the envelope of the last page, with `results` replaced by the full list and without the fields that describe one page: `limit` and `offset`. Tasks and batches have no `--all`: an instance can hold millions of them.
 - The list commands of the Management API do not offer these flags yet. The Management API numbers its pages instead of counting an offset, and the flags wait until the two APIs page the same way. Each command prints the first page as the API sends it, envelope included.
 
 ## Help

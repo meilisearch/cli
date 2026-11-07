@@ -173,7 +173,7 @@ Commands reuse these groups. A command that matches a group uses the whole group
 |---|---|
 | `--limit <n>` | Passed to the API. |
 | `--offset <n>` or `--from <uid>` | Passed to the API. The name is the API parameter name for that route. |
-| `--all` | Fetch every page, and print them as one list. `document list` has no `--all`: an index can hold millions of documents. On `document delete`, select the route that deletes every document. |
+| `--all` | Fetch every page, and print them as one list. `document list`, `task list` and `batch list` have no `--all`: an index can hold millions of documents, and an instance millions of tasks and batches. On `document delete`, select the route that deletes every document. |
 
 **Body input** (commands that send a JSON body):
 

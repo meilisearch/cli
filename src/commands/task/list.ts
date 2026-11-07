@@ -1,6 +1,5 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { nextFromQuery } from "../../lib/pagination.js";
 import { taskFilterFlags, taskFilterQuery } from "../../lib/task-filters.js";
 
 export default class TaskList extends BaseCommand {
@@ -36,11 +35,8 @@ export default class TaskList extends BaseCommand {
       ...taskFilterQuery(flags),
       reverse: flags.reverse ? true : undefined,
     };
-    await this.outputList(
-      (page) => this.meilisearch.tasks.getTasks({ ...filters, ...page }),
-      { limit: flags.limit, from: flags.from },
-      flags.all,
-      nextFromQuery,
+    await this.output(
+      await this.meilisearch.tasks.getTasks({ ...filters, limit: flags.limit, from: flags.from }),
     );
   }
 }
