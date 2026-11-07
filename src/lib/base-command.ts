@@ -108,6 +108,9 @@ export abstract class BaseCommand extends Command {
    */
   static keyActions: readonly string[] = [];
 
+  /** Compact JSON whatever stdout is: a command whose output is for programs, `schema` (ADR 0023). */
+  static alwaysJson = false;
+
   /** The global flags of docs/contract/commands.md, in the same order: on every command. */
   static override baseFlags = {
     json: Flags.boolean({
@@ -242,7 +245,10 @@ export abstract class BaseCommand extends Command {
 
   override async init(): Promise<void> {
     // Before the flags are parsed, so that a usage error is written in the right format.
-    setOutputMode(outputOptions(this.argv, this.env));
+    const options = outputOptions(this.argv, this.env);
+    setOutputMode(
+      (this.constructor as typeof BaseCommand).alwaysJson ? { ...options, json: true } : options,
+    );
     await super.init();
     const { flags } = await this.parse({
       flags: this.ctor.flags,

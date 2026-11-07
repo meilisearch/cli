@@ -47,6 +47,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -222,6 +223,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -397,6 +399,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -572,6 +575,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -912,6 +916,7 @@
       "keyActions": [
         "tasks.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -1125,6 +1130,7 @@
       "keyActions": [
         "tasks.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -1301,6 +1307,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -1511,6 +1518,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -1719,6 +1727,7 @@
       "api": "management",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -1904,6 +1913,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -2113,6 +2123,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -2388,6 +2399,7 @@
       "keyActions": [
         "documents.add"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -2695,6 +2707,7 @@
       "keyActions": [
         "documents.delete"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -2984,6 +2997,7 @@
       "keyActions": [
         "documents.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -3259,6 +3273,7 @@
       "keyActions": [
         "documents.add"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -3497,6 +3512,7 @@
       "keyActions": [
         "documents.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -3788,6 +3804,7 @@
       "keyActions": [
         "export"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -4112,6 +4129,7 @@
       "keyActions": [
         "search"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -4314,6 +4332,7 @@
         "GET /health"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -4575,6 +4594,7 @@
       "keyActions": [
         "indexes.create"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -4813,6 +4833,7 @@
       "keyActions": [
         "indexes.delete"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -5040,6 +5061,7 @@
       "keyActions": [
         "indexes.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -5310,6 +5332,7 @@
       "keyActions": [
         "indexes.update"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -5523,6 +5546,7 @@
       "keyActions": [
         "indexes.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -5727,6 +5751,7 @@
       "keyActions": [
         "version"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -6003,6 +6028,7 @@
       "keyActions": [
         "keys.create"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -6223,6 +6249,7 @@
       "keyActions": [
         "keys.delete"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -6450,6 +6477,7 @@
       "keyActions": [
         "keys.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -6700,6 +6728,7 @@
       "keyActions": [
         "keys.update"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -6913,6 +6942,7 @@
       "keyActions": [
         "keys.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -7155,6 +7185,7 @@
       "keyActions": [
         "search"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -7347,6 +7378,7 @@
         "DELETE /api/v2/organizations/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -7524,6 +7556,7 @@
         "GET /api/v2/organizations"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -7738,6 +7771,7 @@
         "PATCH /api/v2/organizations/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -7924,6 +7958,7 @@
         "GET /api/v2/organizations/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -8180,6 +8215,7 @@
         "POST /api/v2/projects"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -8389,6 +8425,7 @@
         "DELETE /api/v2/projects/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -8575,6 +8612,7 @@
         "GET /api/v2/projects"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -8805,6 +8843,7 @@
         "PATCH /api/v2/projects/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -9000,6 +9039,7 @@
         "GET /api/v2/projects/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -9177,6 +9217,7 @@
         "GET /api/v2/regions"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -9363,6 +9404,7 @@
         "GET /api/v2/resources"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -9501,7 +9543,7 @@
     "schema": {
       "aliases": [],
       "args": {},
-      "description": "Describe the commands as JSON.\n\nPrints one line per command, or one command in full with --command, from the oclif manifest.",
+      "description": "Describe the commands as JSON. --command <name> describes one in full.\n\nPrints one line per command, or one command in full with --command, from the oclif manifest. Always compact JSON, in a terminal too, whatever --json and MEILI_JSON say.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
         "<%= config.bin %> <%= command.id %> --command \"index list\"",
@@ -9548,6 +9590,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": true,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -9993,6 +10036,7 @@
       "keyActions": [
         "search"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -10231,6 +10275,7 @@
       "keyActions": [
         "settings.update"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -10661,6 +10706,7 @@
       "keyActions": [
         "settings.update"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -10875,6 +10921,7 @@
       "keyActions": [
         "settings.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -11190,6 +11237,7 @@
       "keyActions": [
         "search"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -11422,6 +11470,7 @@
       "keyActions": [
         "stats.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -11750,6 +11799,7 @@
       "keyActions": [
         "tasks.cancel"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -12086,6 +12136,7 @@
       "keyActions": [
         "tasks.delete"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -12426,6 +12477,7 @@
       "keyActions": [
         "tasks.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -12639,6 +12691,7 @@
       "keyActions": [
         "tasks.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -12852,6 +12905,7 @@
         "POST /api/v2/teams"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -13045,6 +13099,7 @@
         "DELETE /api/v2/teams/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -13222,6 +13277,7 @@
         "GET /api/v2/teams"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -13445,6 +13501,7 @@
         "PATCH /api/v2/teams/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -13631,6 +13688,7 @@
         "GET /api/v2/teams/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -13816,6 +13874,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -13990,6 +14049,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",

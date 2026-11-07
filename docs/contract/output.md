@@ -39,7 +39,7 @@ The text holds the same data as the JSON, with these rules:
 - Colors only carry meaning: the status, the symbols, and grey for the labels and the absent values. `--no-color` or `NO_COLOR` removes them.
 - The `masterKey` of `project add` stays masked, like in the JSON.
 
-Every command has this text. By default, `BaseCommand` builds it from the API response with the rules above. The project and document commands have their own text, with sentences about what they did and what to run next.
+Every command has this text, except `meili schema`, which always prints compact JSON (see "Help"). By default, `BaseCommand` builds it from the API response with the rules above. The project and document commands have their own text, with sentences about what they did and what to run next.
 
 An interactive command writes on the stderr of its own terminal, see "Streams".
 
@@ -157,7 +157,8 @@ Destructive commands are the commands of the verb `delete`, as `commands.md` der
 - The help of a command shows its output flags first, `--json` and `--no-color`, right after the usage.
 - `--help` never calls an API. It sends only its `cli_help_shown` event, see "Analytics" in `config.md` (ADR 0020).
 - `meili --help` lists every resource with its commands, in three sections: the commands without a route, then those of the Meilisearch API, then those of the Management API. Then come the global flags and the environment variables (ADR 0018).
-- `meili schema` prints the index: the global flags once, then one entry per command with its `id`, its `description` and its `routes`. In the index, the description is only the first paragraph of the command description. The rest is a warning, and only the detail shows it. The index is the cheapest way for an agent to see everything that exists.
+- `meili schema` always prints compact JSON, in a terminal too, whatever `--json` and `MEILI_JSON` say. Its output is for programs: a human reads `--help`.
+- `meili schema` prints the index: `commandDetail`, the command that prints one command in full, then the global flags once, then one entry per command with its `id`, its `description` and its `routes`. In the index, the description is only the first paragraph of the command description. The rest is a warning, and only the detail shows it. The index is the cheapest way for an agent to see everything that exists.
 - `meili schema --command "index list"` prints that one command in full: `id`, `description`, `api`, `routes`, `async`, `keyActions`, the `flags` the command declares itself, and its `examples`. The global flags are not repeated there, because they belong to the index. `meili config set --project` is listed, required and with its own description, because that command declares it. `--debug` is not listed, because no command declares it. An unknown `--command` is `cli_usage`, exit 2, with a hint that names the closest command, or `meili schema` when no command is close.
 - A field that would say nothing is absent, not empty or false: no `routes` on a command without an API, no `keyActions` when the routes need none, no `async` on a command that offers no `--wait`, and no `required` on an optional flag. Every command that returns a task offers `--wait`, and so does `project add`.
 - The index reads the oclif manifest. `--command` reads it too, and loads the command class for its own flags. Both always match the code. There is no third level: `oclif.manifest.json` is there for anyone who wants everything. See ADR 0008.

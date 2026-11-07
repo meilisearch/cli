@@ -2244,9 +2244,9 @@ The active plans a project runs on, with their pricing.",
     },
     {
       "api": "none",
-      "description": "Describe the commands as JSON.
+      "description": "Describe the commands as JSON. --command <name> describes one in full.
 
-Prints one line per command, or one command in full with --command, from the oclif manifest.",
+Prints one line per command, or one command in full with --command, from the oclif manifest. Always compact JSON, in a terminal too, whatever --json and MEILI_JSON say.",
       "examples": [
         "meili schema",
         "meili schema --command "index list"",
@@ -3621,6 +3621,7 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
     },
   ],
   "index": {
+    "commandDetail": "meili schema --command "<id>"",
     "commands": [
       {
         "description": "Log in to Meilisearch Cloud, or create an account, in a browser.",
@@ -3892,7 +3893,7 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
         ],
       },
       {
-        "description": "Describe the commands as JSON.",
+        "description": "Describe the commands as JSON. --command <name> describes one in full.",
         "id": "schema",
       },
       {

@@ -25,6 +25,7 @@ Alternatives considered:
 - **The text never hides data.** No value is cut, except where the text says so. No relative date, pager, spinner or emoji. A list that shows only some fields says so, and says how to see everything.
 - **Errors and warnings are text for a human too**: the message and the code, the hint, then the link.
 - **Every command has a text, present and future.** By default, the text comes from the API response: a table for a list, every attribute for one item, the task for a write. A command may give its own text, with sentences about what it did and what to run next. The project and document commands do.
+- **`meili schema` always prints compact JSON**, in a terminal too. It describes the CLI for programs, and it is often the first command an agent runs, before it sets `MEILI_JSON`. A human reads `--help`.
 - **The text is not a contract.** It may change in any version. The JSON, the error shape, the exit codes and the command names stay the contract.
 - **The help of every command shows the output flags first**, right after the usage.
 

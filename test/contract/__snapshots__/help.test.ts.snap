@@ -30,7 +30,8 @@ USAGE
 CLI COMMANDS
   auth      login, logout, refresh, status
   config    list, update, set, sync-with-cloud, unset
-  schema    Describe the commands as JSON.
+  schema    Describe the commands as JSON. --command <name> describes one in
+            full.
   teleport  Move a self-hosted project to Meilisearch Cloud. Interactive
             command.
   version   Print the CLI version and platform information.
