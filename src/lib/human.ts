@@ -130,11 +130,9 @@ export function projectView(project: Project): string {
   if (project.masterKey !== undefined) rows.push(["Master key", project.masterKey]);
   return [
     `${paint("bold", project.name)}  ${projectStatus(project.status)}`,
-    [
-      `Project ${project.id} of team ${project.teamId}`,
-      `Meilisearch ${project.msVersion}`,
-      `${project.workloadType} workload`,
-    ].join(dot),
+    [`Project ${project.id} of team ${project.teamId}`, `Meilisearch ${project.msVersion}`].join(
+      dot,
+    ),
     `Plan ${project.resource.displayName ?? project.resource.plan} on resource ${project.resourceId}, region ${project.resource.regionId}`,
     "",
     fields(rows),
