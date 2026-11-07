@@ -36,7 +36,7 @@ export const project: Project = {
   status: "running",
   paused: false,
   createdAt: "2026-10-14T10:00:00Z",
-  resource: { id: 3, name: "build", plan: "build", regionId: 1 },
+  resource: { id: 3, name: "build", displayName: "Build", plan: "build", regionId: 1 },
 };
 
 /** The resource of `project`, as `GET /api/v2/resources` returns it. */

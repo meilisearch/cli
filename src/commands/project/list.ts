@@ -43,11 +43,11 @@ Only the projects the token sees.`;
           : {
               status: [paint("bold", `Showing ${results.length} of ${total} projects`)],
               data: table(
-                ["ID", "NAME", "PLAN", "STATUS", "MEILISEARCH", "TEAM", "URL"],
+                ["ID", "NAME", "PLAN", "STATUS", "MEILISEARCH", "TEAM_ID", "URL"],
                 results.map((project) => [
                   String(project.id),
                   project.name,
-                  project.resource.plan,
+                  project.resource.displayName ?? project.resource.plan,
                   projectStatus(project.status),
                   project.msVersion,
                   String(project.teamId),

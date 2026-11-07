@@ -133,7 +133,7 @@ export function projectView(project: Project): string {
       `${project.workloadType} workload`,
     ].join(dot),
     [
-      `Plan ${project.resource.plan} on resource ${project.resourceId}, region ${project.resource.regionId}`,
+      `Plan ${project.resource.displayName ?? project.resource.plan} on resource ${project.resourceId}, region ${project.resource.regionId}`,
       ...(project.freeTrialEndsAt ? [`Free trial until ${project.freeTrialEndsAt}`] : []),
     ].join(dot),
     "",
