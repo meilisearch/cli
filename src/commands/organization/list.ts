@@ -17,16 +17,16 @@ Only the organizations the token sees.`;
     await this.parse(OrganizationList);
     await this.output(
       await getApiV2Organizations({ client: this.managementClient }),
-      // The table shows isAdmin where ownerId was: who owns it matters less than what the token may do.
+      // The table shows isAdmin where ownerId was, and no customerTier: what matters is what the token may do.
       ({ results, ...page }) =>
         defaultView({
           ...page,
-          results: results.map(({ ownerId: _ownerId, id, name, identifier, isAdmin, ...rest }) => ({
+          results: results.map(({ id, name, identifier, isAdmin, defaultTeamId }) => ({
             id,
             name,
             identifier,
             isAdmin,
-            ...rest,
+            defaultTeamId,
           })),
         }),
     );
