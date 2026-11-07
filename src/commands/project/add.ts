@@ -74,15 +74,15 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
       sync = { file, entry: body.name };
     }
     const created = await postApiV2Projects({ client: this.managementClient, body });
-    const progress = this.waitProgress(`Project ${created.id}`);
     const project =
       timeoutMs === undefined
         ? created
-        : await waitForProject(this.managementClient, created.id, {
-            timeoutMs,
-            onProgress: (current) => progress.update(current.status),
-          });
-    progress.end();
+        : await this.watch(
+            `Project ${created.id}`,
+            `meili project view --id ${created.id}`,
+            (onProgress) =>
+              waitForProject(this.managementClient, created.id, { timeoutMs, onProgress }),
+          );
     const running = project.status === "running";
     await this.output(
       project.masterKey === undefined

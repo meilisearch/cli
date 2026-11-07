@@ -1,5 +1,23 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`meili document add > exits 130 on Ctrl-C during --wait, and tells a human how to follow the task 1`] = `
+{
+  "code": 130,
+  "stderr": "
+◐ Task 42 is still in progress. meili CLI stopped watching it.
+
+Follow it: meili task view --id 42
+",
+}
+`;
+
+exports[`meili document add > exits 130 on Ctrl-C during --wait, and writes nothing more without a human 1`] = `
+{
+  "code": 130,
+  "stderr": "",
+}
+`;
+
 exports[`meili document add > passes the 404 of an unknown index through and exits 4 1`] = `
 {
   "exitCode": 4,

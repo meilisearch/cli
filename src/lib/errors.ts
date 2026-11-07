@@ -23,6 +23,7 @@ export const EXIT_CODES = {
   timeout: 5,
   network: 6,
   taskFailed: 7,
+  interrupted: 130,
 } as const;
 
 export type ExitCode = (typeof EXIT_CODES)[keyof typeof EXIT_CODES];

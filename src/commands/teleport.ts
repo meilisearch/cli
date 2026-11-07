@@ -21,6 +21,7 @@ import { regionLatency } from "../lib/clients/ping.js";
 import { cloudOf, everyPage, type ReachableProject, waitForProject } from "../lib/cloud-sync.js";
 import { assertNoProject, type ConfigFile, isProjectUrl, writeConfigFile } from "../lib/config.js";
 import {
+  EXIT_CODES,
   ManagementApiError,
   MeiliCliError,
   parseErrorBody,
@@ -151,7 +152,7 @@ The same steps, without questions: ${WITHOUT_TELEPORT}`;
         return;
       }
       this.sayWhatExists();
-      void this.exitNow(130);
+      void this.exitNow(EXIT_CODES.interrupted);
     };
     process.once("SIGINT", onInterrupt);
     try {
@@ -407,7 +408,7 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
     // Ctrl-C on a question.
     if (isPromptExit(error)) {
       this.sayWhatExists();
-      this.exit(130);
+      this.exit(EXIT_CODES.interrupted);
     }
     const { body, exitCode } = toRenderedError(error);
     say();

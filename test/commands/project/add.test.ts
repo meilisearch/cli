@@ -1,5 +1,5 @@
 import { HttpResponse, http } from "msw";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import ProjectAdd from "../../../src/commands/project/add.js";
 import { writeConfigFile } from "../../../src/lib/config.js";
 import {
@@ -241,6 +241,34 @@ describe("meili project add", () => {
       message: `Project 343 finished with status failed, so it was not added to ${path}.`,
     });
     expect(readJson(path)).toEqual({ projects: {} });
+  });
+
+  it("exits 130 on Ctrl-C during --wait, and tells a human how to follow the project", async () => {
+    let exit: { code: unknown; stderr: string } | undefined;
+    let stderr = "";
+    vi.spyOn(process, "exit").mockImplementationOnce((code) => {
+      exit = { code, stderr };
+      return undefined as never;
+    });
+    server.use(
+      http.get(`${MANAGEMENT_URL}/api/v2/projects/343`, () => {
+        process.emit("SIGINT");
+        return HttpResponse.json(polled);
+      }),
+      ...creation("running"),
+    );
+    await runCommand(
+      ProjectAdd,
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--wait"],
+      {
+        env,
+        tty: true,
+        onStderr: (chunk) => {
+          stderr += chunk;
+        },
+      },
+    );
+    expect(exit).toMatchSnapshot();
   });
 
   it("tells a human in a terminal that the project is starting, and how to save it once running", async () => {
