@@ -118,6 +118,24 @@ export function projectSummary(project: Project): string[] {
   ];
 }
 
+/** A project with its resource as its display name alone, under `resourceId`, as `project add` and `project update` show it. */
+export function projectBrief(project: Project): string {
+  const { resource, ...rest } = project;
+  const entries = Object.entries(rest).flatMap(([key, value]) =>
+    key === "resourceId"
+      ? [
+          [key, value],
+          ["resource", resource.displayName],
+        ]
+      : [[key, value]],
+  );
+  return objectLines(Object.fromEntries(entries)).join("\n");
+}
+
+/** What a human reads after a project shown in brief: how to see it in full. */
+export const projectBriefNext = (id: number): string =>
+  `${paint("dim", "Simplified view. See the project in full:")} meili project view --id ${id}${paint("dim", ". See every field:")} --json${paint("dim", ".")}`;
+
 /** The status sentence of a task that ended: ✓ and what it did, or ✗ and its error. */
 export function taskOutcome(task: Task, succeeded?: (task: Task) => string): string[] {
   if (task.status === "succeeded") {

@@ -5,7 +5,7 @@ import type { PostApiV2ProjectsData } from "../../lib/clients/management/generat
 import { cloudOf, readTeamNames, waitForProject } from "../../lib/cloud-sync.js";
 import { assertNoProject, type ConfigFile, maskSecret, writeConfigFile } from "../../lib/config.js";
 import { MeiliCliError } from "../../lib/errors.js";
-import { objectLines } from "../../lib/human.js";
+import { projectBrief, projectBriefNext } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
 import { paint } from "../../lib/output.js";
 
@@ -97,9 +97,10 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
                   ? `${paint("green", "✓")} Project ${project.name} is running.`
                   : `${paint("yellow", "◐")} Project ${project.name} is created and is starting. This takes a few minutes.`,
               ],
-        data: objectLines(shown).join("\n"),
-        next:
-          sync !== undefined || project.status === "failed"
+        data: projectBrief(shown),
+        next: [
+          projectBriefNext(project.id),
+          ...(sync !== undefined || project.status === "failed"
             ? []
             : [
                 ...(running
@@ -113,7 +114,8 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
                 ),
                 // The URL names this project alone; two teams may have a project of this name.
                 `  meili config sync-with-cloud ${project.url == null ? `--project-name ${project.name}` : `--project-url ${project.url}`}`,
-              ],
+              ]),
+        ],
       }),
     );
     if (project.status === "failed") {
