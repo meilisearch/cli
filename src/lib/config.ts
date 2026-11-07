@@ -148,7 +148,7 @@ export function configFilePath(env: Env): string {
  */
 export function readConfigFile(path: string, warn: (warning: MeiliCliError) => void): ConfigFile {
   const text = readOwnerOnly(path, "config", warn);
-  if (text === undefined) return { path, projects: {} };
+  if (text === undefined) return { path, projects: Object.create(null) };
   let parsed: unknown;
   try {
     parsed = JSON.parse(text);
@@ -166,7 +166,7 @@ function parseProjects(parsed: unknown, path: string): Record<string, ProjectEnt
     );
   const projects = isRecord(parsed) ? parsed.projects : undefined;
   if (!isRecord(projects)) throw shape();
-  const result: Record<string, ProjectEntry> = {};
+  const result: Record<string, ProjectEntry> = Object.create(null);
   for (const [name, entry] of Object.entries(projects)) {
     if (!isRecord(entry) || typeof entry.url !== "string") throw shape();
     if (entry.apiKey !== undefined && typeof entry.apiKey !== "string") throw shape();

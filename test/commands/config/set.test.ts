@@ -157,6 +157,20 @@ describe("meili config set", () => {
     expect(read(path)).toEqual({ projects: { a: { url: "http://a" }, b: { url: "http://b" } } });
   });
 
+  it("accepts a name that every JavaScript object has, such as toString", async () => {
+    const path = join(scrubbedHome, "inherited.json");
+    const env = { MEILI_CONFIG: path };
+    for (const name of ["toString", "constructor"]) {
+      const result = await runCommand(ConfigSet, ["--project", name, "--project-url", "http://a"], {
+        env,
+      });
+      expect(result.exitCode).toBe(0);
+    }
+    expect(read(path)).toEqual({
+      projects: { toString: { url: "http://a" }, constructor: { url: "http://a" } },
+    });
+  });
+
   it("rejects a URL that is invalid or not HTTP(S) with cli_usage", async () => {
     for (const url of ["not a url", "ftp://example.com", "localhost:7700"]) {
       const result = await runCommand(ConfigSet, ["--project", "ok", "--project-url", url], {
