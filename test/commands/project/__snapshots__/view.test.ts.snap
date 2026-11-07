@@ -56,15 +56,21 @@ exports[`meili project view > prints the project for a human in a terminal, and 
   "stderr": "",
   "stdout": "staging  Running
 Project 344 of team 12 • Meilisearch v1.54.0 • production workload
-Plan Build on resource 3, region 1
 
-  URL          https://ms-def.sfo.meilisearch.io
-  Project UID  ms-abc
-  Read only    no
-  Paused       no
-  Created      2026-10-14T10:00:00Z
-  Terminated   no
-  Master key   projectmasterkey9z8y
+  URL              https://ms-def.sfo.meilisearch.io
+  Project UID      ms-abc
+  Read only        no
+  Paused           no
+  Created          2026-10-14T10:00:00Z
+  Terminated       no
+  Free trial ends  no
+  Master key       projectmasterkey9z8y
+  Resource
+    id           3
+    name         build
+    displayName  Build
+    plan         build
+    regionId     1
 ",
 }
 `;

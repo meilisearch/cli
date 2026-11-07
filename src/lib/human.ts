@@ -7,12 +7,13 @@ import { stripVTControlCharacters } from "node:util";
 import type { EnqueuedTask, Task } from "meilisearch";
 import type { Project } from "./clients/management/generated/types.gen.js";
 import { describeError, isRecord } from "./errors.js";
-import { paint } from "./output.js";
+import { type HumanView, paint } from "./output.js";
 
 const width = (text: string): number => stripVTControlCharacters(text).length;
 const padEnd = (text: string, size: number): string =>
   text + " ".repeat(Math.max(0, size - width(text)));
-const columns = (): number => process.stdout.columns ?? 80;
+/** The width of the terminal, 80 when it does not say (0 or undefined). */
+const columns = (): number => process.stdout.columns || 80;
 
 /** Columns two spaces apart, under a bold header. */
 export function table(header: string[], rows: string[][]): string {
@@ -42,6 +43,7 @@ export function fields(rows: [string, string][], indent = 2): string {
 /** A value that fits on one line: text, a number, a boolean, null, or an array of those. */
 export function simpleValue(value: unknown): string | undefined {
   if (value === null) return paint("dim", "null");
+  if (value === "") return paint("dim", '""');
   if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
     return String(value);
   }
@@ -71,14 +73,16 @@ function wrap(text: string, size: number): string[] {
  * an object or an array of objects goes below its label, indented.
  */
 export function objectLines(object: Record<string, unknown>, indent = 2): string[] {
-  const entries = Object.entries(object);
+  // An undefined attribute is not in the JSON either.
+  const entries = Object.entries(object).filter(([, value]) => value !== undefined);
   if (entries.length === 0) return [`${" ".repeat(indent)}${paint("dim", "empty")}`];
   const column = indent + Math.max(...entries.map(([key]) => key.length)) + 2;
   return entries.flatMap(([key, value]) => {
     const label = `${" ".repeat(indent)}${paint("dim", key)}`;
     const simple = simpleValue(value);
     if (simple !== undefined) {
-      const [first = "", ...rest] = wrap(simple, columns() - column);
+      const size = Math.max(columns() - column, 20);
+      const [first = "", ...rest] = simple.split("\n").flatMap((line) => wrap(line, size));
       return [padEnd(label, column) + first, ...rest.map((line) => " ".repeat(column) + line)];
     }
     if (isRecord(value)) return [label, ...objectLines(value, indent + 2)];
@@ -95,6 +99,7 @@ function itemLines(item: unknown, indent: number): string[] {
 }
 
 const STATUS_COLORS: Record<string, "green" | "red"> = {
+  available: "green",
   running: "green",
   succeeded: "green",
   failed: "red",
@@ -113,7 +118,7 @@ export function projectStatus(value: string): string {
 
 const yesNo = (value: boolean): string => (value ? "yes" : "no");
 
-/** A Cloud project in full: its name and status, a summary, then its fields. */
+/** A Cloud project in full: its name and status, a summary, then every other field. */
 export function projectView(project: Project): string {
   const dot = paint("dim", " • ");
   const rows: [string, string][] = [
@@ -123,6 +128,7 @@ export function projectView(project: Project): string {
     ["Paused", yesNo(project.paused)],
     ["Created", project.createdAt],
     ["Terminated", project.terminatedAt ?? paint("dim", "no")],
+    ["Free trial ends", project.freeTrialEndsAt ?? paint("dim", "no")],
   ];
   if (project.masterKey !== undefined) rows.push(["Master key", project.masterKey]);
   return [
@@ -132,12 +138,10 @@ export function projectView(project: Project): string {
       `Meilisearch ${project.msVersion}`,
       `${project.workloadType} workload`,
     ].join(dot),
-    [
-      `Plan ${project.resource.displayName ?? project.resource.plan} on resource ${project.resourceId}, region ${project.resource.regionId}`,
-      ...(project.freeTrialEndsAt ? [`Free trial until ${project.freeTrialEndsAt}`] : []),
-    ].join(dot),
     "",
     fields(rows),
+    `  ${paint("dim", "Resource")}`,
+    ...objectLines(project.resource, 4),
   ].join("\n");
 }
 
@@ -166,9 +170,10 @@ export function taskView(task: EnqueuedTask | Task): string {
 }
 
 /** The status sentence of a task that ended: ✓ and what it did, or ✗ and its error. */
-export function taskOutcome(task: Task, succeeded: (task: Task) => string): string[] {
+export function taskOutcome(task: Task, succeeded?: (task: Task) => string): string[] {
   if (task.status === "succeeded") {
-    return [`${paint("green", "✓")} Task ${task.uid} succeeded: ${succeeded(task)}`];
+    const what = succeeded === undefined ? "." : `: ${succeeded(task)}`;
+    return [`${paint("green", "✓")} Task ${task.uid} succeeded${what}`];
   }
   if (task.error == null) return [`${paint("red", "✗")} Task ${task.uid} was ${task.status}.`];
   return describeError(paint("red", "✗"), {
@@ -182,4 +187,77 @@ export function commandLine(args: string[]): string {
   return ["meili", ...args]
     .map((arg) => (/^[\w@%+=:,./-]+$/.test(arg) ? arg : `'${arg.replaceAll("'", `'\\''`)}'`))
     .join(" ");
+}
+
+/** `teamId` as a table header: `TEAM_ID`. */
+const header = (name: string): string =>
+  name.replaceAll(/([a-z0-9])([A-Z])/g, "$1_$2").toUpperCase();
+
+/** The attributes a list holds, in their order, and the ones a table shows: simple in every row, at most 6. */
+function tableColumns(rows: Record<string, unknown>[]): { all: string[]; shown: string[] } {
+  const all = [...new Set(rows.flatMap((row) => Object.keys(row)))];
+  const shown = all
+    .filter((name) =>
+      rows.every((row) => row[name] === undefined || simpleValue(row[name]) !== undefined),
+    )
+    .slice(0, 6);
+  return { all, shown };
+}
+
+/** The key of the list in an API body, when it holds one: `results`, `hits` or `facetHits`. */
+function listKey(data: Record<string, unknown>): string | undefined {
+  return ["results", "hits", "facetHits"].find(
+    (key) => Array.isArray(data[key]) && (data[key] as unknown[]).every(isRecord),
+  );
+}
+
+/**
+ * The text of a command that has none of its own: a table for a list, every
+ * attribute for an object. A table that leaves attributes out says so.
+ */
+export function defaultView(data: unknown): HumanView {
+  if (Array.isArray(data) && data.every(isRecord)) return listView(data, {});
+  if (!isRecord(data)) return { data: simpleValue(data) ?? JSON.stringify(data) };
+  const key = listKey(data);
+  if (key === undefined) return { data: objectLines(data, 0).join("\n") };
+  const { [key]: rows, ...envelope } = data;
+  return listView(rows as Record<string, unknown>[], envelope);
+}
+
+function listView(rows: Record<string, unknown>[], envelope: Record<string, unknown>): HumanView {
+  const { total, totalHits, estimatedTotalHits, ...rest } = envelope;
+  const count = total ?? totalHits ?? estimatedTotalHits;
+  const about = count === estimatedTotalHits && count !== undefined ? "about " : "";
+  const summary = [
+    paint("bold", `Showing ${rows.length}${count === undefined ? "" : ` of ${about}${count}`}`),
+  ];
+  const others = Object.entries(rest).map(([name, value]) => [name, simpleValue(value)] as const);
+  const simple = others.filter(([, value]) => value !== undefined);
+  if (simple.length > 0) {
+    summary.push(paint("dim", simple.map(([name, value]) => `${name} ${value}`).join(" • ")));
+  }
+  if (rows.length === 0) return { status: summary };
+  const { all, shown } = tableColumns(rows);
+  const next =
+    shown.length < all.length || simple.length < others.length
+      ? [
+          `${paint("dim", `Simplified view: ${shown.length} of ${all.length} attributes. See every field:`)} --json${paint("dim", ".")}`,
+        ]
+      : [];
+  return {
+    status: summary,
+    data: table(
+      shown.map(header),
+      rows.map((row) =>
+        shown.map((name) => {
+          const value = row[name];
+          if (value === undefined) return "";
+          return name === "status" && typeof value === "string"
+            ? status(value)
+            : (simpleValue(value) ?? "");
+        }),
+      ),
+    ),
+    next,
+  };
 }

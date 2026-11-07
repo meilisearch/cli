@@ -22,7 +22,7 @@ import {
   resolveProjectConnection,
 } from "./config.js";
 import { MeiliCliError, toRenderedError, writeError, writeNotice, writeWarning } from "./errors.js";
-import { taskOutcome, taskView } from "./human.js";
+import { defaultView, taskOutcome, taskView } from "./human.js";
 import { readStdin } from "./input.js";
 import {
   type HumanView,
@@ -76,9 +76,15 @@ export interface TaskSentences {
   enqueued: (taskUid: number) => string;
   /** What is true until the task succeeds, before the command that follows it. */
   pending: string;
-  /** What the task did, after "Task 1532 succeeded: ". */
-  succeeded: (task: Task) => string;
+  /** What the task did, after "Task 1532 succeeded: ". Without it, the sentence ends at "succeeded". */
+  succeeded?: (task: Task) => string;
 }
+
+/** What a write command without sentences of its own tells a human about its task. */
+const TASK_SENTENCES: TaskSentences = {
+  enqueued: (taskUid) => `Task ${taskUid} is enqueued.`,
+  pending: "It is not done yet. Follow it:",
+};
 
 export abstract class BaseCommand extends Command {
   /** Which API this command uses. Every command sets it. */
@@ -366,10 +372,11 @@ export abstract class BaseCommand extends Command {
 
   /**
    * Writes the API response as it is, or for a human in a terminal the text
-   * `view` makes of it. Read commands end with this call.
+   * `view` makes of it, a table or every attribute by default. Read commands
+   * end with this call.
    */
-  protected async output<T>(data: T, view?: (data: T) => HumanView): Promise<void> {
-    if (view !== undefined && outputMode().human) writeView(view(data));
+  protected async output<T>(data: T, view: (data: T) => HumanView = defaultView): Promise<void> {
+    if (outputMode().human) writeView(view(data));
     else writeData(data);
   }
 
@@ -406,27 +413,23 @@ export abstract class BaseCommand extends Command {
   /**
    * Writes the task the API returned, or with `--wait` the final task. Exits 7
    * through `cli_task_failed` when the task failed or was canceled. Write
-   * commands end with this call. With `sentences`, a human reads what the task
-   * does, and a failure before the task.
+   * commands end with this call. A human reads what the task does, in the
+   * command's `sentences` or in generic ones, and a failure before the task.
    */
   protected async outputTask(
     task: EnqueuedTask,
     flags: WaitFlagValues,
-    sentences?: TaskSentences,
+    sentences = TASK_SENTENCES,
   ): Promise<void> {
     if (flags.wait !== true) {
-      await this.output(
-        task,
-        sentences &&
-          (() => ({
-            status: [`${paint("yellow", "◐")} ${sentences.enqueued(task.taskUid)}`],
-            data: taskView(task),
-            next: [
-              `${paint("dim", sentences.pending)} meili task view --id ${task.taskUid}`,
-              `${paint("dim", "Next time, wait for the end with")} --wait${paint("dim", ".")}`,
-            ],
-          })),
-      );
+      await this.output(task, () => ({
+        status: [`${paint("yellow", "◐")} ${sentences.enqueued(task.taskUid)}`],
+        data: taskView(task),
+        next: [
+          `${paint("dim", sentences.pending)} meili task view --id ${task.taskUid}`,
+          `${paint("dim", "Next time, wait for the end with")} --wait${paint("dim", ".")}`,
+        ],
+      }));
       return;
     }
     const finalTask = await waitForTask(this.meilisearch, task.taskUid, {
@@ -435,21 +438,17 @@ export abstract class BaseCommand extends Command {
         writeNotice(`waiting for task ${current.uid}, status ${current.status}`);
       },
     });
-    await this.output(
-      finalTask,
-      sentences &&
-        (() => ({
-          status: taskOutcome(finalTask, sentences.succeeded),
-          data: taskView(finalTask),
-        })),
-    );
+    await this.output(finalTask, () => ({
+      status: taskOutcome(finalTask, sentences.succeeded),
+      data: taskView(finalTask),
+    }));
     if (isTaskFailure(finalTask)) {
       const error = new MeiliCliError(
         "cli_task_failed",
         `Task ${finalTask.uid} finished with status ${finalTask.status}.`,
         { hint: `Run \`meili task view --id ${finalTask.uid}\` to see the error details.` },
       );
-      if (sentences !== undefined && outputMode().human) this.shownError = error;
+      if (outputMode().human) this.shownError = error;
       throw error;
     }
   }

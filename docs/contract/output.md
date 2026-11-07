@@ -31,11 +31,14 @@ The text holds the same data as the JSON, with these rules:
 
 - No value is cut. Dates and durations stay as the API writes them. No relative date, pager, spinner or emoji.
 - A list that shows only some fields says "Simplified view", and how to see everything.
+- A list is a table. Its headers are the attribute names in upper snake case, `TEAM_ID` for `teamId`. It shows the attributes with a simple value (text, number, boolean, null), at most 6. Its other envelope fields, such as `limit`, go on the status line.
+- One item shows every attribute, one per line, nested ones indented.
+- A write prints its task: `◐` and the command to follow it, or with `--wait`, `✓` or `✗` and the final task.
 - The headers of a document list keep the exact attribute names, which `--fields` takes. A document list shows the attributes that `--fields` chose, or else the first ones with a simple value (text, number, boolean), at most 4.
 - Colors only carry meaning: the status, the symbols, and grey for the labels and the absent values. `--no-color` or `NO_COLOR` removes them.
 - The `masterKey` of `project add` stays masked, like in the JSON.
 
-The project commands and the document commands have this text. Any other command prints its JSON indented with two spaces in a terminal, until it gets its own text. Its errors are text all the same.
+Every command has this text. By default, `BaseCommand` builds it from the API response with the rules above. The project and document commands have their own text, with sentences about what they did and what to run next.
 
 An interactive command writes on the stderr of its own terminal, see "Streams".
 

@@ -1,0 +1,48 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`defaultView > prints a list envelope as a table, with its pagination on the status line 1`] = `
+{
+  "data": "UID     PRIMARY_KEY  CREATED_AT
+movies  id           2026-10-14T10:00:00Z
+books   null         2026-10-14T10:00:00Z",
+  "next": [],
+  "status": [
+    "Showing 2 of 2",
+    "offset 0 • limit 20",
+  ],
+}
+`;
+
+exports[`defaultView > prints an array of objects as a table, and an empty list as its count 1`] = `
+{
+  "data": "ID  NAME    ORGANIZATION_ID
+1   Search  1",
+  "next": [],
+  "status": [
+    "Showing 1",
+  ],
+}
+`;
+
+exports[`defaultView > prints every attribute of an object, nested ones indented 1`] = `
+{
+  "data": "uid       movies
+status    available
+settings
+  rankingRules  words",
+}
+`;
+
+exports[`defaultView > shows at most 6 simple attributes, and says the view is simplified 1`] = `
+{
+  "data": "ID  A  B  C  D  E
+1   1  2  3  4  5",
+  "next": [
+    "Simplified view: 6 of 8 attributes. See every field: --json.",
+  ],
+  "status": [
+    "Showing 1 of about 1",
+    "query "" • processingTimeMs 1",
+  ],
+}
+`;

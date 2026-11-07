@@ -9,6 +9,21 @@ exports[`meili index list > passes an authentication error through with a hint a
 }
 `;
 
+exports[`meili index list > prints a table for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Showing 3 of 3
+offset 0 • limit 20
+
+",
+  "stdout": "UID     PRIMARY_KEY  CREATED_AT                   UPDATED_AT
+movies  id           2026-09-24T10:00:00.000000Z  2026-09-24T10:00:00.000000Z
+books   isbn         2026-09-24T10:00:00.000000Z  2026-09-24T10:00:00.000000Z
+songs                2026-09-24T10:00:00.000000Z  2026-09-24T10:00:00.000000Z
+",
+}
+`;
+
 exports[`meili index list > prints its help without any network call 1`] = `
 "List the indexes of the instance.
 

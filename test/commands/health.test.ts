@@ -22,6 +22,12 @@ describe("meili health", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints every attribute for a human in a terminal", async () => {
+    server.use(meilisearchHandlers.health());
+    const result = await runCommand(Health, ["--project-url", MEILISEARCH_URL], { tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("takes the project named by --project from the config file", async () => {
     const path = join(scrubbedHome, "projects.json");
     writeConfigFile({

@@ -32,14 +32,14 @@ export function paint(style: Parameters<typeof styleText>[0], text: string): str
   return mode.color ? styleText(style, text, { validateStream: false }) : text;
 }
 
-/** JSON, compact, or indented for a human when the command has no text of its own. Pure, so tests can snapshot it. */
-export function formatData(value: unknown, pretty: boolean): string {
-  return `${pretty ? JSON.stringify(value, null, 2) : JSON.stringify(value)}\n`;
+/** Compact JSON on one line. Pure, so tests can snapshot it. */
+export function formatData(value: unknown): string {
+  return `${JSON.stringify(value)}\n`;
 }
 
-/** Writes one result on stdout. Data only, nothing else, ever. */
+/** Writes one result on stdout, as compact JSON. Data only, nothing else, ever. */
 export function writeData(value: unknown): void {
-  process.stdout.write(formatData(value, mode.human));
+  process.stdout.write(formatData(value));
 }
 
 /**

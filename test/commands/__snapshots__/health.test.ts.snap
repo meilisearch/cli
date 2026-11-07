@@ -9,6 +9,15 @@ exports[`meili health > passes an API error through and exits 1 1`] = `
 }
 `;
 
+exports[`meili health > prints every attribute for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "status  available
+",
+}
+`;
+
 exports[`meili health > prints its help without any network call 1`] = `
 "Check that the instance is available.
 

@@ -40,6 +40,12 @@ describe("meili index add", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("tells a human in a terminal that the task is enqueued, and how to follow it", async () => {
+    server.use(meilisearchHandlers.indexCreate(created));
+    const result = await runCommand(IndexAdd, ["--id", "movies", ...project], { tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("sends the index and its primary key in the body", async () => {
     expect(await sentBody(["--id", "movies", "--primary-key", "id"])).toEqual({
       uid: "movies",

@@ -24,13 +24,14 @@ Alternatives considered:
 - **The text has three parts.** A status sentence on stderr (`✓` done, `◐` in progress, `✗` failed). The data on stdout. The next step on stderr, with the exact command to run. stdout keeps carrying data only.
 - **The text never hides data.** No value is cut. No relative date, pager, spinner or emoji. A list that shows only some fields says so, and says how to see everything.
 - **Errors and warnings are text for a human too**: the message and the code, the hint, then the link.
-- **The project and document commands get their text first.** The other commands print indented JSON in a terminal until they get their own text, each in its own pull request.
+- **Every command has a text, present and future.** By default, the text comes from the API response: a table for a list, every attribute for one item, the task for a write. A command may give its own text, with sentences about what it did and what to run next. The project and document commands do.
 - **The text is not a contract.** It may change in any version. The JSON, the error shape, the exit codes and the command names stay the contract.
 - **The help of every command shows the output flags first**, right after the usage.
 
 ## Consequences
 
 - An agent in a pseudo-terminal must set `MEILI_JSON=1` or give `--json`. The docs and the help say so. This is the cost that ADR 0002 refused. We accept it, because the default of a terminal is a human.
-- Compact JSON is the only JSON format of the contract. Indented JSON in a terminal is now the text of a command that has no text yet.
+- Compact JSON is the only JSON format. There is no indented JSON anymore.
+- A new command has a text without any work. Its own text is optional.
 - Each command with a text has snapshot tests of that text.
 - Analytics do not change: `--json` and `--no-color` are flag names like the others.
