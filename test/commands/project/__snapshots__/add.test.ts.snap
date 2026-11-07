@@ -86,6 +86,7 @@ exports[`meili project add > tells a human in a terminal that the project is sta
   "stderr": "◐ Project demo is created and is starting. This takes a few minutes.
 
 
+Simplified view. See the project in full: meili project view --id 343. See every field: --json.
 Check when it is ready: meili project view --id 343
 Once it is Running, save its URL and master key in the config file:
   meili config sync-with-cloud --project-name demo
@@ -97,18 +98,13 @@ Once it is Running, save its URL and master key in the config file:
   masterKey     ****9z8y
   teamId        12
   resourceId    3
+  resource      Build
   msVersion     v1.54.0
   workloadType  production
   readOnly      false
   status        creating
   paused        false
   createdAt     2026-10-14T10:00:00Z
-  resource
-    id           3
-    name         build
-    displayName  Build
-    plan         build
-    regionId     1
 ",
 }
 `;
@@ -120,17 +116,12 @@ exports[`meili project add > tells a human in a terminal that the project runs a
   url           https://ms-abc.sfo.meilisearch.io
   teamId        12
   resourceId    3
+  resource      Build
   msVersion     v1.54.0
   workloadType  production
   readOnly      false
   status        running
   paused        false
   createdAt     2026-10-14T10:00:00Z
-  resource
-    id           3
-    name         build
-    displayName  Build
-    plan         build
-    regionId     1
 "
 `;

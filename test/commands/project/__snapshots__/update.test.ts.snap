@@ -64,6 +64,8 @@ exports[`meili project update > tells a human in a terminal the new name, then t
   "stderr": "✓ Project 343 is renamed to demo-2.
 
 
+Simplified view. See the project in full: meili project view --id 343. See every field: --json.
+
 ✓ Config entry demo is renamed to demo-2.
 ",
   "stdout": "  id            343
@@ -73,18 +75,13 @@ exports[`meili project update > tells a human in a terminal the new name, then t
   masterKey     projectmasterkey9z8y
   teamId        12
   resourceId    3
+  resource      Build
   msVersion     v1.54.0
   workloadType  production
   readOnly      false
   status        running
   paused        false
   createdAt     2026-10-14T10:00:00Z
-  resource
-    id           3
-    name         build
-    displayName  Build
-    plan         build
-    regionId     1
 ",
 }
 `;
