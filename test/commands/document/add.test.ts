@@ -139,6 +139,66 @@ describe("meili document add", () => {
     expect(JSON.parse(result.stderr).error.code).toBe("cli_task_failed");
   });
 
+  it("tells a human in a terminal what the task will do, then what it did with --wait", async () => {
+    const human = { tty: true };
+    server.use(meilisearchHandlers.documentsAdd(makeEnqueuedTask()));
+    const enqueued = await runCommand(
+      DocumentAdd,
+      ["--index", "movies", "--data", documents, ...project],
+      human,
+    );
+    expect(enqueued).toMatchSnapshot();
+
+    server.use(
+      meilisearchHandlers.taskSequence(42, [
+        makeTask({
+          uid: 42,
+          status: "succeeded",
+          type: "documentAdditionOrUpdate",
+          details: { receivedDocuments: 2, indexedDocuments: 2 },
+          duration: "PT1.204S",
+          startedAt: "2026-09-24T10:00:00Z",
+          finishedAt: "2026-09-24T10:00:01Z",
+        }),
+      ]),
+    );
+    const succeeded = await runCommand(
+      DocumentAdd,
+      ["--index", "movies", "--data", documents, "--wait", ...project],
+      human,
+    );
+    expect(succeeded.exitCode).toBe(0);
+    expect(succeeded.stdout).toMatchSnapshot();
+    expect(succeeded.stderr).toContain(
+      "✓ Task 42 succeeded: 2 of 2 documents added to index movies.",
+    );
+  });
+
+  it("writes the error of a failed task first for a human, once, and exits 7", async () => {
+    server.use(
+      meilisearchHandlers.documentsAdd(makeEnqueuedTask()),
+      meilisearchHandlers.taskSequence(42, [
+        makeTask({
+          uid: 42,
+          status: "failed",
+          type: "documentAdditionOrUpdate",
+          error: {
+            message: "The primary key of index `movies` is missing.",
+            code: "index_primary_key_no_candidate_found",
+            type: "invalid_request",
+            link: "https://docs.meilisearch.com/errors#index_primary_key_no_candidate_found",
+          },
+        }),
+      ]),
+    );
+    const result = await runCommand(
+      DocumentAdd,
+      ["--index", "movies", "--data", documents, "--wait", ...project],
+      { tty: true },
+    );
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes the 404 of an unknown index through and exits 4", async () => {
     server.use(
       meilisearchHandlers.apiError("/indexes/nope/documents", 404, {

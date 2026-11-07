@@ -27,8 +27,12 @@ exports[`meili config sync-with-cloud > prints its help without any network call
 "Add the Meilisearch Cloud projects to the config file.
 
 USAGE
-  $ meili config sync-with-cloud [--debug] [--all] [--team-ids <ids>]
-    [--project-name <name>] [--project-url <url>]
+  $ meili config sync-with-cloud [--json] [--no-color] [--debug] [--all] [--team-ids
+    <ids>] [--project-name <name>] [--project-url <url>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --all                  Every project the token sees.

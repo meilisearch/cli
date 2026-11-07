@@ -2,6 +2,7 @@ import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { deleteApiV2ProjectsById } from "../../lib/clients/management/generated/sdk.gen.js";
 import { cloudProjectEntry, writeConfigFile } from "../../lib/config.js";
+import { paint } from "../../lib/output.js";
 
 export default class ProjectDelete extends BaseCommand {
   static api: Api = "management";
@@ -10,7 +11,7 @@ export default class ProjectDelete extends BaseCommand {
 
   static override description = `Delete a Meilisearch Cloud project and its data.
 
-Prints nothing on success.`;
+Prints nothing on stdout on success.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --id 343 --yes",
@@ -41,8 +42,10 @@ Prints nothing on success.`;
         ? undefined
         : cloudProjectEntry(file, flags.project, id, ": nothing was deleted.");
     await deleteApiV2ProjectsById({ client: this.managementClient, path: { id } });
+    this.say(`${paint("green", "✓")} Project ${id} is deleted, with its data.`);
     if (file === undefined || entry === undefined) return;
     const { [entry]: _removed, ...projects } = file.projects;
     writeConfigFile({ path: file.path, projects });
+    this.say(`${paint("green", "✓")} Removed from the config file: ${entry}.`);
   }
 }

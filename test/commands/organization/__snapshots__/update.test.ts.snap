@@ -13,8 +13,12 @@ exports[`meili organization update > prints its help without any network call 1`
 "Rename a Meilisearch Cloud organization.
 
 USAGE
-  $ meili organization update --id <id> [--debug] [--name <name>] [--file <path>
-    | --data <json>]
+  $ meili organization update --id <id> [--json] [--no-color] [--debug] [--name
+    <name>] [--file <path> | --data <json>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --data=<json>  Inline JSON body.

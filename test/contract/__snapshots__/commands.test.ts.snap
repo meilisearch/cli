@@ -2063,7 +2063,7 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
       "api": "management",
       "description": "Delete a Meilisearch Cloud project and its data.
 
-Prints nothing on success.",
+Prints nothing on stdout on success.",
       "examples": [
         "meili project delete --id 343 --yes",
         "meili project delete --project staging --yes",
@@ -4011,6 +4011,16 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
       },
     ],
     "globalFlags": [
+      {
+        "description": "Print compact JSON. The default when stdout is not a terminal.",
+        "name": "json",
+        "type": "boolean",
+      },
+      {
+        "description": "Print without colors. NO_COLOR does the same.",
+        "name": "no-color",
+        "type": "boolean",
+      },
       {
         "description": "Print every HTTP request and response on stderr, secrets redacted.",
         "name": "debug",

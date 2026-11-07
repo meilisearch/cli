@@ -13,8 +13,12 @@ exports[`meili key delete > prints its help without any network call 1`] = `
 "Delete an API key.
 
 USAGE
-  $ meili key delete --id <key> --yes [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>]
+  $ meili key delete --id <key> --yes [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         A project of the config file. Cannot be combined

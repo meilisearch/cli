@@ -11,6 +11,7 @@ import {
   MeilisearchRequestError,
   MeilisearchRequestTimeOutError,
 } from "meilisearch";
+import { outputMode, paint } from "./output.js";
 
 /** Exit codes, as listed in the table of docs/contract/output.md. */
 export const EXIT_CODES = {
@@ -391,16 +392,27 @@ export function deepestCauseMessage(cause: unknown): string | undefined {
 }
 
 export interface RenderErrorOptions {
-  /** Indent the JSON. True when stderr is a TTY. */
-  pretty: boolean;
   /** Append the stack trace. Only with --debug. */
   debug: boolean;
 }
 
-/** Formats an error for stderr: one JSON document, then the stack trace with --debug. */
+/**
+ * The lines of an error, a warning or a failed task for a human: the message,
+ * the fix, then the reference in grey.
+ */
+export function describeError(symbol: string, body: ErrorBody): string[] {
+  return [
+    `${symbol} ${body.message} ${paint("dim", `(${body.code})`)}`,
+    ...(body.hint === undefined ? [] : [`  ${body.hint}`]),
+    ...(body.link === undefined ? [] : [`  ${paint("dim", `Docs: ${body.link}`)}`]),
+  ];
+}
+
+/** Formats an error for stderr: text for a human or one JSON document, then the stack trace with --debug. */
 export function formatError(rendered: RenderedError, options: RenderErrorOptions): string {
-  const document = { error: rendered.body };
-  const lines = [options.pretty ? JSON.stringify(document, null, 2) : JSON.stringify(document)];
+  const lines = outputMode().human
+    ? describeError(paint("red", "✗"), rendered.body)
+    : [JSON.stringify({ error: rendered.body })];
   if (options.debug && rendered.stack !== undefined) lines.push(rendered.stack);
   return `${lines.join("\n")}\n`;
 }
@@ -419,16 +431,16 @@ export function writeNotice(line: string): void {
 }
 
 /**
- * Writes a warning on stderr, `{ "warning": ... }` in the shape of an error,
- * and the command goes on. Indented when stderr is a TTY, like errors. An API
- * error the command goes on through keeps the API's code.
+ * Writes a warning on stderr, text for a human or `{ "warning": ... }` in the
+ * shape of an error, and the command goes on. An API error the command goes on
+ * through keeps the API's code.
  */
 export function writeWarning(warning: MeiliCliError | ErrorBody): void {
-  const document = { warning: warning instanceof MeiliCliError ? warning.toBody() : warning };
-  const pretty = process.stderr.isTTY === true;
-  process.stderr.write(
-    `${pretty ? JSON.stringify(document, null, 2) : JSON.stringify(document)}\n`,
-  );
+  const body = warning instanceof MeiliCliError ? warning.toBody() : warning;
+  const lines = outputMode().human
+    ? describeError(paint("yellow", "!"), body)
+    : [JSON.stringify({ warning: body })];
+  process.stderr.write(`${lines.join("\n")}\n`);
 }
 
 /**
@@ -443,10 +455,7 @@ export function handleFatalError(
 ): void {
   const rendered = toRenderedError(error, commandIds, false, argv);
   if (!(error instanceof Errors.ExitError)) {
-    writeError(rendered, {
-      pretty: process.stderr.isTTY === true,
-      debug: argv.includes("--debug"),
-    });
+    writeError(rendered, { debug: argv.includes("--debug") });
   }
   process.exitCode = rendered.exitCode;
 }

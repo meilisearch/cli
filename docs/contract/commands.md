@@ -128,10 +128,12 @@ A route gets an explicit exception, with a reason, when the maintainers choose a
 
 ## Global flags
 
-This flag works on every command, whatever it talks to.
+These flags work on every command, whatever it talks to. `--json` and `--no-color` are the output flags, see "Format" in `output.md`.
 
 | Flag | Meaning |
 |---|---|
+| `--json` | Print compact JSON. The default when stdout is not a terminal. |
+| `--no-color` | Print without colors. `NO_COLOR` does the same. |
 | `--debug` | Print every HTTP request and response on stderr, secrets redacted. |
 
 ## Short flags

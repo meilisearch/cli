@@ -4,17 +4,40 @@ This file defines what `meili` writes, where it writes it, and in which format. 
 
 ## Streams
 
-- stdout carries data only. One command writes one JSON document. Nothing else, ever.
-- stderr carries everything else: errors, warnings, progress, debug traces, deprecation notices.
-- A command that produces no data (for example a delete that the API answers with 204) writes nothing on stdout and exits with code 0. It may write one line on stderr when stderr is a TTY.
+- stdout carries data only: one JSON document, or for a human the text of that data. Nothing else, ever.
+- stderr carries everything else: errors, warnings, progress, debug traces, deprecation notices, and for a human the status sentence and the next steps of a command.
+- A command that produces no data (for example a delete that the API answers with 204) writes nothing on stdout and exits with code 0. It may write one line on stderr when stderr is a TTY, and for a human it says what it did.
 - A command that waits for a human, `auth login`, writes on stderr what that human must act on, TTY or not. The URL to approve must reach a person even when the output is piped.
 - An interactive command, such as `teleport`, writes its questions, its progress and its messages on stderr, and nothing on stdout. It is for humans, so the rules of this file for readability do not bind it: in a terminal, it may use colors, symbols and animations. `NO_COLOR` removes the colors. Its errors are text for a human. Without a terminal, it fails with the JSON error of this file. See ADR 0015.
 
 ## Format
 
-Every command writes JSON, in a terminal or not. It is compact (one line) when stdout is not a TTY, and indented with two spaces when it is. Field order and names are the API's.
+The format depends on stdout, and on two switches. See ADR 0023.
 
-There is no other format, no table and no color, except on the stderr of an interactive command. In a terminal the JSON is indented, and this makes it readable.
+| | stdout is a terminal | stdout is not a terminal |
+|---|---|---|
+| Default | Text for a human, with colors | Compact JSON |
+| `--json` or `MEILI_JSON=1` | Compact JSON | Compact JSON |
+
+Compact JSON is one line. Field order and names are the API's. This is the format for agents and scripts: an agent that runs in a pseudo-terminal gives `--json` or sets `MEILI_JSON=1`.
+
+The text for a human has three parts:
+
+- a **status sentence** on stderr, with a symbol: `✓` done, `◐` in progress, `✗` failed
+- the **data** on stdout: a table for a list, one field per line for one item
+- the **next step** on stderr, with the exact command to run
+
+The text holds the same data as the JSON, with these rules:
+
+- No value is cut. Dates and durations stay as the API writes them. No relative date, pager, spinner or emoji.
+- A list that shows only some fields says "Simplified view", and how to see everything.
+- The headers of a document list keep the exact attribute names, which `--fields` takes. A document list shows the attributes that `--fields` chose, or else the first ones with a simple value (text, number, boolean), at most 4.
+- Colors only carry meaning: the status, the symbols, and grey for the labels and the absent values. `--no-color` or `NO_COLOR` removes them.
+- The `masterKey` of `project add` stays masked, like in the JSON.
+
+The project commands and the document commands have this text. Any other command prints its JSON indented with two spaces in a terminal, until it gets its own text. Its errors are text all the same.
+
+An interactive command writes on the stderr of its own terminal, see "Streams".
 
 ## Pass-through
 
@@ -30,7 +53,7 @@ Pass-through has three consequences:
 
 ## Errors
 
-Errors go to stderr as one JSON document: compact when stderr is not a TTY, indented when it is.
+Errors go to stderr. In JSON, they are one compact JSON document:
 
 ```json
 {
@@ -50,9 +73,16 @@ Errors go to stderr as one JSON document: compact when stderr is not a TTY, inde
 - An HTTP error with no error body does not come from the API: a proxy or a wrong URL answered. For either API, it is `cli_network`, exit 6, and the message names the server and the status.
 - Stack traces appear only with `--debug`.
 
+For a human, the error is text with the same fields: the message and the code first, then the hint, then the link in grey.
+
+```
+✗ Index `movis` not found. (index_not_found)
+  Docs: https://docs.meilisearch.com/errors#index_not_found
+```
+
 ## Warnings
 
-A warning is a condition that does not stop the command. It goes to stderr as one JSON document with the shape of an error, under `warning` instead of `error`, with a code from the table of this file. The exit code and stdout do not change. It is compact when stderr is not a TTY, indented when it is.
+A warning is a condition that does not stop the command. It goes to stderr as one compact JSON document with the shape of an error, under `warning` instead of `error`, with a code from the table of this file. The exit code and stdout do not change. For a human, it is text like an error, with `!` in place of `✗`.
 
 ```json
 {"warning":{"code":"cli_config","type":"cli","message":"The config file /home/me/.config/meili/config.json is readable by others.","hint":"Run `chmod 600 /home/me/.config/meili/config.json`."}}
@@ -80,7 +110,7 @@ No other code is used on purpose. If a new situation needs its own code, add it 
 Most write operations of the Meilisearch API return a task, not a result. The CLI keeps that model.
 
 - Without `--wait`, the command prints the task the API returned (`taskUid`, `status: "enqueued"`, ...) and exits 0.
-- With `--wait`, the command polls `GET /tasks/{uid}` until the status is `succeeded`, `failed` or `canceled`. It prints the final task object and exits with 0 or 7.
+- With `--wait`, the command polls `GET /tasks/{uid}` until the status is `succeeded`, `failed` or `canceled`. It prints the final task object and exits with 0 or 7. For a human, the error of a failed task comes first, then the task.
 - Polling starts at 100 ms and grows to a maximum of 1 s between calls.
 - `--timeout` accepts a duration: `500ms`, `30s`, `2m`. Default `10m`. On timeout, the CLI prints an error with code `cli_timeout` and exits 5. The task keeps running on the server.
 - Progress ("waiting for task 42, status processing") goes to stderr, and only when stderr is a TTY.
@@ -120,6 +150,7 @@ Destructive commands are the commands of the verb `delete`, as `commands.md` der
 ## Help
 
 - Every command has a `description` of one sentence and at least two `examples`. Every flag has a description of one sentence. A flag that takes a value documents it with a `helpValue` or a list of options.
+- The help of a command shows its output flags first, `--json` and `--no-color`, right after the usage.
 - `--help` never calls an API. It sends only its `cli_help_shown` event, see "Analytics" in `config.md` (ADR 0020).
 - `meili --help` lists every resource with its commands, in three sections: the commands without a route, then those of the Meilisearch API, then those of the Management API. Then come the global flags and the environment variables (ADR 0018).
 - `meili schema` prints the index: the global flags once, then one entry per command with its `id`, its `description` and its `routes`. In the index, the description is only the first paragraph of the command description. The rest is a warning, and only the detail shows it. The index is the cheapest way for an agent to see everything that exists.
@@ -129,6 +160,6 @@ Destructive commands are the commands of the verb `delete`, as `commands.md` der
 
 ## Versioning
 
-- The JSON output shape, the error shape, the exit codes and the command names are the public contract. A breaking change to any of them is a major version.
+- The JSON output shape, the error shape, the exit codes and the command names are the public contract. The text for a human is not: it may change in any version, so a script or an agent reads the JSON. A breaking change to any of them is a major version.
 - A new command, a new flag, or a new optional field in a response owned by the CLI is a minor version.
 - Before 1.0, a breaking change is a minor version.

@@ -13,8 +13,12 @@ exports[`meili settings view > prints its help without any network call 1`] = `
 "Get the settings of an index.
 
 USAGE
-  $ meili settings view -i <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>]
+  $ meili settings view -i <index> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>          (required) The index to read the settings of.

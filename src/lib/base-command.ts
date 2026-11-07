@@ -5,7 +5,7 @@
  * Commands never touch stdout, credentials or HTTP themselves.
  */
 import { Command, Errors, Flags, type Interfaces } from "@oclif/core";
-import type { EnqueuedTask, Meilisearch } from "meilisearch";
+import type { EnqueuedTask, Meilisearch, Task } from "meilisearch";
 import { flagNames, sendAnalytics, track } from "./analytics.js";
 import { createManagementClient, type ManagementClient } from "./clients/management.js";
 import { createMeilisearchClient } from "./clients/meilisearch.js";
@@ -16,13 +16,22 @@ import {
   ENV,
   type Env,
   nonEmpty,
+  outputOptions,
   readConfigFile,
   resolveCloudProjectId,
   resolveProjectConnection,
 } from "./config.js";
 import { MeiliCliError, toRenderedError, writeError, writeNotice, writeWarning } from "./errors.js";
+import { taskOutcome, taskView } from "./human.js";
 import { readStdin } from "./input.js";
-import { writeData } from "./output.js";
+import {
+  type HumanView,
+  outputMode,
+  paint,
+  setOutputMode,
+  writeData,
+  writeView,
+} from "./output.js";
 import { iteratePages, type ListPage, mergePages } from "./pagination.js";
 import {
   credentialsFilePath,
@@ -61,6 +70,16 @@ export interface WaitFlagValues {
   timeout?: string | undefined;
 }
 
+/** What a write command tells a human about its task, around the task itself. */
+export interface TaskSentences {
+  /** What the task will do, once enqueued: "Task 1532 will add them to index movies." */
+  enqueued: (taskUid: number) => string;
+  /** What is true until the task succeeds, before the command that follows it. */
+  pending: string;
+  /** What the task did, after "Task 1532 succeeded: ". */
+  succeeded: (task: Task) => string;
+}
+
 export abstract class BaseCommand extends Command {
   /** Which API this command uses. Every command sets it. */
   static api: Api = "none";
@@ -85,6 +104,14 @@ export abstract class BaseCommand extends Command {
 
   /** The global flags of docs/contract/commands.md, in the same order: on every command. */
   static override baseFlags = {
+    json: Flags.boolean({
+      description: "Print compact JSON. The default when stdout is not a terminal.",
+      helpGroup: "OUTPUT",
+    }),
+    "no-color": Flags.boolean({
+      description: "Print without colors. NO_COLOR does the same.",
+      helpGroup: "OUTPUT",
+    }),
     debug: Flags.boolean({
       description: "Print every HTTP request and response on stderr, secrets redacted.",
     }),
@@ -208,6 +235,8 @@ export abstract class BaseCommand extends Command {
   }
 
   override async init(): Promise<void> {
+    // Before the flags are parsed, so that a usage error is written in the right format.
+    setOutputMode(outputOptions(this.argv, this.env));
     await super.init();
     const { flags } = await this.parse({
       flags: this.ctor.flags,
@@ -300,6 +329,9 @@ export abstract class BaseCommand extends Command {
     });
   }
 
+  /** An error the human already read, before the data it is about: it is not written again. */
+  private shownError: MeiliCliError | undefined;
+
   /** Renders every error as the contract says, then exits with its code. */
   protected override async catch(error: unknown): Promise<never> {
     if (error instanceof Errors.ExitError) throw error;
@@ -308,10 +340,9 @@ export abstract class BaseCommand extends Command {
       [],
       nonEmpty(this.env[ENV.MANAGEMENT_TOKEN]) !== undefined,
     );
-    writeError(rendered, {
-      pretty: process.stderr.isTTY === true,
-      debug: this.globalFlags?.debug ?? this.argv.includes("--debug"),
-    });
+    if (error !== this.shownError) {
+      writeError(rendered, { debug: this.globalFlags?.debug ?? this.argv.includes("--debug") });
+    }
     this.exit(rendered.exitCode);
   }
 
@@ -333,9 +364,18 @@ export abstract class BaseCommand extends Command {
     return { path, session: readCredentialsFile(path, writeWarning) };
   }
 
-  /** Writes the API response as it is. Read commands end with this call. */
-  protected async output(data: unknown): Promise<void> {
-    writeData(data);
+  /**
+   * Writes the API response as it is, or for a human in a terminal the text
+   * `view` makes of it. Read commands end with this call.
+   */
+  protected async output<T>(data: T, view?: (data: T) => HumanView): Promise<void> {
+    if (view !== undefined && outputMode().human) writeView(view(data));
+    else writeData(data);
+  }
+
+  /** Lines for a human on stderr, such as what a command did beyond its data. Nothing without a human. */
+  protected say(...lines: string[]): void {
+    if (outputMode().human) writeView({ status: lines });
   }
 
   /**
@@ -366,11 +406,27 @@ export abstract class BaseCommand extends Command {
   /**
    * Writes the task the API returned, or with `--wait` the final task. Exits 7
    * through `cli_task_failed` when the task failed or was canceled. Write
-   * commands end with this call.
+   * commands end with this call. With `sentences`, a human reads what the task
+   * does, and a failure before the task.
    */
-  protected async outputTask(task: EnqueuedTask, flags: WaitFlagValues): Promise<void> {
+  protected async outputTask(
+    task: EnqueuedTask,
+    flags: WaitFlagValues,
+    sentences?: TaskSentences,
+  ): Promise<void> {
     if (flags.wait !== true) {
-      await this.output(task);
+      await this.output(
+        task,
+        sentences &&
+          (() => ({
+            status: [`${paint("yellow", "◐")} ${sentences.enqueued(task.taskUid)}`],
+            data: taskView(task),
+            next: [
+              `${paint("dim", sentences.pending)} meili task view --id ${task.taskUid}`,
+              `${paint("dim", "Next time, wait for the end with")} --wait${paint("dim", ".")}`,
+            ],
+          })),
+      );
       return;
     }
     const finalTask = await waitForTask(this.meilisearch, task.taskUid, {
@@ -379,13 +435,22 @@ export abstract class BaseCommand extends Command {
         writeNotice(`waiting for task ${current.uid}, status ${current.status}`);
       },
     });
-    await this.output(finalTask);
+    await this.output(
+      finalTask,
+      sentences &&
+        (() => ({
+          status: taskOutcome(finalTask, sentences.succeeded),
+          data: taskView(finalTask),
+        })),
+    );
     if (isTaskFailure(finalTask)) {
-      throw new MeiliCliError(
+      const error = new MeiliCliError(
         "cli_task_failed",
         `Task ${finalTask.uid} finished with status ${finalTask.status}.`,
         { hint: `Run \`meili task view --id ${finalTask.uid}\` to see the error details.` },
       );
+      if (sentences !== undefined && outputMode().human) this.shownError = error;
+      throw error;
     }
   }
 }

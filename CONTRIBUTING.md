@@ -20,7 +20,7 @@ pnpm build                              # after every change
 ./bin/run.js --help
 
 ./bin/run.js config set --project local --project-url http://localhost:7700 --project-api-key masterKey
-./bin/run.js health --project local              # JSON: indented in a terminal, compact when piped
+./bin/run.js health --project local              # text in a terminal, compact JSON when piped or with --json
 ./bin/run.js index list --project local --debug  # HTTP trace on stderr, keys masked
 ```
 

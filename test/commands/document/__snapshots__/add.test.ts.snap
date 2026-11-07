@@ -13,10 +13,14 @@ exports[`meili document add > prints its help without any network call 1`] = `
 "Add or replace documents in an index.
 
 USAGE
-  $ meili document add -i <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--primary-key <field>]
-    [--custom-metadata <string>] [--skip-creation] [--file <path> | --data
-    <json>] [--timeout <duration> --wait]
+  $ meili document add -i <index> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--primary-key
+    <field>] [--custom-metadata <string>] [--skip-creation] [--file <path> |
+    --data <json>] [--timeout <duration> --wait]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>             (required) The index to add the documents to.
@@ -65,6 +69,54 @@ exports[`meili document add > prints the enqueued task as the API returned it, w
   "exitCode": 0,
   "stderr": "",
   "stdout": "{"taskUid":42,"indexUid":"movies","status":"enqueued","type":"documentAdditionOrUpdate","enqueuedAt":"2026-09-24T10:00:00Z"}
+",
+}
+`;
+
+exports[`meili document add > tells a human in a terminal what the task will do, then what it did with --wait 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Meilisearch received the documents. Task 42 will add them to index movies.
+
+
+The documents are not searchable yet. Follow the task: meili task view --id 42
+Next time, wait for the end with --wait.
+",
+  "stdout": "  Task      42
+  Status    enqueued
+  Type      documentAdditionOrUpdate
+  Index     movies
+  Enqueued  2026-09-24T10:00:00Z
+",
+}
+`;
+
+exports[`meili document add > tells a human in a terminal what the task will do, then what it did with --wait 2`] = `
+"  Task      42
+  Status    succeeded
+  Type      documentAdditionOrUpdate
+  Index     movies
+  Received  2 documents
+  Indexed   2 documents
+  Duration  PT1.204S
+  Enqueued  2026-09-24T10:00:00Z
+  Started   2026-09-24T10:00:00Z
+  Finished  2026-09-24T10:00:01Z
+"
+`;
+
+exports[`meili document add > writes the error of a failed task first for a human, once, and exits 7 1`] = `
+{
+  "exitCode": 7,
+  "stderr": "✗ Task 42 failed: The primary key of index \`movies\` is missing. (index_primary_key_no_candidate_found)
+  Docs: https://docs.meilisearch.com/errors#index_primary_key_no_candidate_found
+
+",
+  "stdout": "  Task      42
+  Status    failed
+  Type      documentAdditionOrUpdate
+  Index     movies
+  Enqueued  2026-09-24T10:00:00Z
 ",
 }
 `;

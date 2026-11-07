@@ -18,11 +18,40 @@ exports[`meili project list > lists the projects in the envelope the API returns
 }
 `;
 
+exports[`meili project list > prints a table for a human in a terminal, and says what to do when there is no project 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Showing 2 of 2 projects
+
+
+Simplified view. See one project in full: meili project view --id <id>. See every field: --json.
+",
+  "stdout": "ID   NAME     PLAN   STATUS    MEILISEARCH  TEAM  URL
+343  demo     build  Creating  v1.54.0      12    none yet
+344  staging  build  Running   v1.54.0      12    https://ms-def.sfo.meilisearch.io
+",
+}
+`;
+
+exports[`meili project list > prints a table for a human in a terminal, and says what to do when there is no project 2`] = `
+{
+  "exitCode": 0,
+  "stderr": "No projects yet. Create one: meili project add --name <name> --team-id <id> --resource-id <id>
+Find the ids with meili team list and meili resource list.
+",
+  "stdout": "",
+}
+`;
+
 exports[`meili project list > prints its help without any network call 1`] = `
 "List the Meilisearch Cloud projects.
 
 USAGE
-  $ meili project list [--debug] [--team-id <id>]
+  $ meili project list [--json] [--no-color] [--debug] [--team-id <id>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --debug         Print every HTTP request and response on stderr, secrets

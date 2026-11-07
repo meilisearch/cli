@@ -1,5 +1,23 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`meili document delete > names the selector for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Task 43 will delete the documents matching rating < 2 in index movies.
+
+
+They are still there until the task succeeds. Follow it: meili task view --id 43
+Next time, wait for the end with --wait.
+",
+  "stdout": "  Task      43
+  Status    enqueued
+  Type      documentDeletion
+  Index     movies
+  Enqueued  2026-09-24T10:00:00Z
+",
+}
+`;
+
 exports[`meili document delete > passes an authentication error through with a hint and exits 3 1`] = `
 {
   "exitCode": 3,
@@ -13,10 +31,14 @@ exports[`meili document delete > prints its help without any network call 1`] = 
 "Delete documents from an index.
 
 USAGE
-  $ meili document delete -i <index> --yes [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--ids <ids> | --filter <filter> |
-    --all] [--custom-metadata <string>] [--file <path> | --data <json>]
-    [--timeout <duration> --wait]
+  $ meili document delete -i <index> --yes [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--ids <ids> |
+    --filter <filter> | --all] [--custom-metadata <string>] [--file <path> |
+    --data <json>] [--timeout <duration> --wait]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>             (required) The index to delete the documents

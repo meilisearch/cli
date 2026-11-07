@@ -5,7 +5,9 @@ import type { PostApiV2ProjectsData } from "../../lib/clients/management/generat
 import { cloudOf, readTeamNames, waitForProject } from "../../lib/cloud-sync.js";
 import { assertNoProject, type ConfigFile, maskSecret, writeConfigFile } from "../../lib/config.js";
 import { MeiliCliError, writeNotice } from "../../lib/errors.js";
+import { projectView } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
+import { paint } from "../../lib/output.js";
 
 export default class ProjectAdd extends BaseCommand {
   static api: Api = "management";
@@ -81,10 +83,37 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
               writeNotice(`waiting for project ${created.id}, status ${current.status}`);
             },
           });
+    const running = project.status === "running";
     await this.output(
       project.masterKey === undefined
         ? project
         : { ...project, masterKey: maskSecret(project.masterKey) },
+      (shown) => ({
+        status:
+          project.status === "failed"
+            ? []
+            : [
+                running
+                  ? `${paint("green", "✓")} Project ${project.name} is running.`
+                  : `${paint("yellow", "◐")} Project ${project.name} is created and is starting. This takes a few minutes.`,
+              ],
+        data: projectView(shown),
+        next:
+          sync !== undefined || project.status === "failed"
+            ? []
+            : [
+                ...(running
+                  ? []
+                  : [
+                      `${paint("dim", "Check when it is ready:")} meili project view --id ${project.id}`,
+                    ]),
+                paint(
+                  "dim",
+                  `${running ? "Save" : "Once it is Running, save"} its URL and master key in the config file:`,
+                ),
+                `  meili config sync-with-cloud --project-name ${project.name}`,
+              ],
+      }),
     );
     if (project.status === "failed") {
       throw new MeiliCliError(
@@ -117,5 +146,8 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
         [sync.entry]: { url: project.url, apiKey: created.masterKey, cloud },
       },
     });
+    this.say(
+      `${paint("green", "✓")} Added to the config file as ${sync.entry}. Use it with -p ${sync.entry}.`,
+    );
   }
 }

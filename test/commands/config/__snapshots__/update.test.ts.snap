@@ -4,8 +4,12 @@ exports[`meili config update > prints its help without any network call 1`] = `
 "Change a project of the config file.
 
 USAGE
-  $ meili config update -p <name> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [--sync-with-cloud]
+  $ meili config update -p <name> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [--sync-with-cloud]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         (required) Name of the project to change.

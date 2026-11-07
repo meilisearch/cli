@@ -4,7 +4,11 @@ exports[`meili config unset > prints its help without any network call 1`] = `
 "Remove a project from the config file.
 
 USAGE
-  $ meili config unset -p <name> [--debug]
+  $ meili config unset -p <name> [--json] [--no-color] [--debug]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>  (required) Name of the project to remove.

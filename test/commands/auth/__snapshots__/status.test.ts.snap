@@ -4,7 +4,11 @@ exports[`meili auth status > prints its help without any network call 1`] = `
 "Show the Meilisearch Cloud session.
 
 USAGE
-  $ meili auth status [--debug]
+  $ meili auth status [--json] [--no-color] [--debug]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --debug  Print every HTTP request and response on stderr, secrets redacted.

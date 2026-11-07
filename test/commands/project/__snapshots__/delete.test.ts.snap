@@ -13,8 +13,12 @@ exports[`meili project delete > prints its help without any network call 1`] = `
 "Delete a Meilisearch Cloud project and its data.
 
 USAGE
-  $ meili project delete --yes [--debug] [-p <name>] [--id <id>]
-    [--sync-config]
+  $ meili project delete --yes [--json] [--no-color] [--debug] [-p <name>]
+    [--id <id>] [--sync-config]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>  A project of the config file, whose cloud.id names the
@@ -32,7 +36,7 @@ FLAGS
 DESCRIPTION
   Delete a Meilisearch Cloud project and its data.
 
-  Prints nothing on success.
+  Prints nothing on stdout on success.
 
 EXAMPLES
   $ meili project delete --id 343 --yes
@@ -42,4 +46,14 @@ EXAMPLES
   $ meili project delete -p staging --yes --sync-config
 
 "
+`;
+
+exports[`meili project delete > tells a human in a terminal what it deleted, and prints nothing on stdout 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "✓ Project 343 is deleted, with its data.
+✓ Removed from the config file: demo.
+",
+  "stdout": "",
+}
 `;

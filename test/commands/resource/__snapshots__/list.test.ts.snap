@@ -22,7 +22,11 @@ exports[`meili resource list > prints its help without any network call 1`] = `
 "List the Meilisearch Cloud resources.
 
 USAGE
-  $ meili resource list [--debug] [--region-id <id>]
+  $ meili resource list [--json] [--no-color] [--debug] [--region-id <id>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --debug           Print every HTTP request and response on stderr, secrets

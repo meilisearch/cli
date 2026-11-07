@@ -13,8 +13,12 @@ exports[`meili project update > prints its help without any network call 1`] = `
 "Rename a Meilisearch Cloud project.
 
 USAGE
-  $ meili project update [--debug] [-p <name>] [--id <id>] [--name <name>]
-    [--sync-config] [--file <path> | --data <json>]
+  $ meili project update [--json] [--no-color] [--debug] [-p <name>] [--id
+    <id>] [--name <name>] [--sync-config] [--file <path> | --data <json>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>  A project of the config file, whose cloud.id names the
@@ -50,6 +54,28 @@ exports[`meili project update > sends the new name for the project of --id, and 
   "exitCode": 0,
   "stderr": "",
   "stdout": "{"id":343,"name":"renamed","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","masterKey":"projectmasterkey9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","plan":"build","regionId":1}}
+",
+}
+`;
+
+exports[`meili project update > tells a human in a terminal the new name, then the entry renamed with --sync-config 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "✓ Project 343 is renamed to demo-2.
+
+✓ Config entry demo is renamed to demo-2.
+",
+  "stdout": "demo-2  Running
+Project 343 of team 12 • Meilisearch v1.54.0 • production workload
+Plan build on resource 3, region 1
+
+  URL          https://ms-abc.sfo.meilisearch.io
+  Project UID  ms-abc
+  Read only    no
+  Paused       no
+  Created      2026-10-14T10:00:00Z
+  Terminated   no
+  Master key   projectmasterkey9z8y
 ",
 }
 `;

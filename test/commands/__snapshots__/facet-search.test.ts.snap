@@ -13,13 +13,17 @@ exports[`meili facet-search > prints its help without any network call 1`] = `
 "Search the values of a facet.
 
 USAGE
-  $ meili facet-search -i <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--facet-name <attribute>]
-    [--facet-query <query>] [--q <query>] [--filter <filter>]
+  $ meili facet-search -i <index> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--facet-name
+    <attribute>] [--facet-query <query>] [--q <query>] [--filter <filter>]
     [--matching-strategy last|all|frequency] [--attributes-to-search-on
     <fields>] [--ranking-score-threshold <number>] [--locales <locales>]
     [--hybrid <json>] [--vector <numbers>] [--exhaustive-facet-count] [--file
     <path> | --data <json>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>                     (required) The index to search the

@@ -12,6 +12,7 @@ import {
   DEFAULT_MANAGEMENT_URL,
   ENV,
   type Env,
+  isOn,
   nonEmpty,
   writeSecretFile,
 } from "./config.js";
@@ -27,9 +28,6 @@ const collected: Array<Omit<AnalyticsEvent, "distinct_id">> = [];
 export function track(event: string, properties: Record<string, unknown>): void {
   collected.push({ event, properties, timestamp: new Date().toISOString() });
 }
-
-const isOn = (value: string | undefined): boolean =>
-  value === "1" || value?.toLowerCase() === "true";
 
 /**
  * Off when the human asks, in CI, and against a Cloud other than Meilisearch

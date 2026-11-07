@@ -13,10 +13,14 @@ exports[`meili document update > prints its help without any network call 1`] = 
 "Add or update documents in an index.
 
 USAGE
-  $ meili document update -i <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--primary-key <field>]
-    [--custom-metadata <string>] [--skip-creation] [--file <path> | --data
-    <json>] [--timeout <duration> --wait]
+  $ meili document update -i <index> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--primary-key
+    <field>] [--custom-metadata <string>] [--skip-creation] [--file <path> |
+    --data <json>] [--timeout <duration> --wait]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>             (required) The index to update the documents
@@ -67,6 +71,24 @@ exports[`meili document update > prints the enqueued task as the API returned it
   "exitCode": 0,
   "stderr": "",
   "stdout": "{"taskUid":42,"indexUid":"movies","status":"enqueued","type":"documentAdditionOrUpdate","enqueuedAt":"2026-09-24T10:00:00Z"}
+",
+}
+`;
+
+exports[`meili document update > tells a human in a terminal that the documents keep their old values until the task succeeds 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Meilisearch received the changes. Task 42 will update documents in index movies.
+
+
+The documents keep their old values until the task succeeds. Follow it: meili task view --id 42
+Next time, wait for the end with --wait.
+",
+  "stdout": "  Task      42
+  Status    enqueued
+  Type      documentAdditionOrUpdate
+  Index     movies
+  Enqueued  2026-09-24T10:00:00Z
 ",
 }
 `;

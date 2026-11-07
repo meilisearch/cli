@@ -13,10 +13,15 @@ exports[`meili export > prints its help without any network call 1`] = `
 "Export the data of the instance to another instance.
 
 USAGE
-  $ meili export [--debug] [--project-url <url>] [--project-api-key
-    <key>] [-p <name>] [--api-key <key>] [--project-destination <name> | --url
-    <url>] [--payload-size <size>] [--indexes <json>] [--file <path> | --data
-    <json>] [--timeout <duration> --wait]
+  $ meili export [--json] [--no-color] [--debug] [--project-url
+    <url>] [--project-api-key <key>] [-p <name>] [--api-key <key>]
+    [--project-destination <name> | --url <url>] [--payload-size <size>]
+    [--indexes <json>] [--file <path> | --data <json>] [--timeout <duration>
+    --wait]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         A project of the config file. Cannot be combined

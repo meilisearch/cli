@@ -4,7 +4,12 @@ exports[`meili schema > prints its help without any network call 1`] = `
 "Describe the commands as JSON.
 
 USAGE
-  $ meili schema [--debug] [--command <command>]
+  $ meili schema [--json] [--no-color] [--debug] [--command
+    <command>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --command=<command>  Print this command in full instead of the index: its API,

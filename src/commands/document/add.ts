@@ -58,6 +58,12 @@ A document replaces the one that has the same primary key.`;
       customMetadata: flags["custom-metadata"],
       skipCreation: flags["skip-creation"] ? true : undefined,
     });
-    await this.outputTask(task, flags);
+    await this.outputTask(task, flags, {
+      enqueued: (uid) =>
+        `Meilisearch received the documents. Task ${uid} will add them to index ${flags.index}.`,
+      pending: "The documents are not searchable yet. Follow the task:",
+      succeeded: ({ details }) =>
+        `${details?.indexedDocuments} of ${details?.receivedDocuments} documents added to index ${flags.index}.`,
+    });
   }
 }

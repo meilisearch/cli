@@ -13,9 +13,13 @@ exports[`meili multi-search > prints its help without any network call 1`] = `
 "Run several searches in one request.
 
 USAGE
-  $ meili multi-search [--debug] [--project-url <url>] [--project-api-key
-    <key>] [-p <name>] [--queries <json>] [--federation <json>] [--file <path> |
-    --data <json>]
+  $ meili multi-search [--json] [--no-color] [--debug] [--project-url
+    <url>] [--project-api-key <key>] [-p <name>] [--queries <json>]
+    [--federation <json>] [--file <path> | --data <json>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         A project of the config file. Cannot be combined

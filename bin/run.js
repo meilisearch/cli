@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 import { Config, flush, run, toConfiguredId } from "@oclif/core";
 import { sendAnalytics, track } from "../dist/lib/analytics.js";
+import { outputOptions } from "../dist/lib/config.js";
 import { handleFatalError, unknownCommand } from "../dist/lib/errors.js";
+import { setOutputMode } from "../dist/lib/output.js";
 
 // oclif's own `execute()` prints errors as text. Errors here must follow
 // docs/contract/output.md, so the last-resort handler is ours.
@@ -13,6 +15,7 @@ try {
   await run(argv, config);
   await flush();
 } catch (error) {
+  setOutputMode(outputOptions(argv, process.env));
   const commandIds = config.commandIDs.map((id) => toConfiguredId(id, config));
   handleFatalError(error, argv, commandIds);
   const unknown = unknownCommand(error, commandIds, argv);

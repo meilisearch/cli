@@ -13,9 +13,13 @@ exports[`meili stats > prints its help without any network call 1`] = `
 "Get the statistics of the instance, or of one index.
 
 USAGE
-  $ meili stats [--debug] [--project-url <url>] [--project-api-key
-    <key>] [-p <name>] [-i <index>] [--show-internal-database-sizes]
-    [--size-format raw|human]
+  $ meili stats [--json] [--no-color] [--debug] [--project-url
+    <url>] [--project-api-key <key>] [-p <name>] [-i <index>]
+    [--show-internal-database-sizes] [--size-format raw|human]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>                 The index to read the statistics of.

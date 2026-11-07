@@ -22,7 +22,12 @@ exports[`meili project view > prints its help without any network call 1`] = `
 "Get one Meilisearch Cloud project.
 
 USAGE
-  $ meili project view [--debug] [-p <name>] [--id <id>]
+  $ meili project view [--json] [--no-color] [--debug] [-p <name>] [--id
+    <id>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>  A project of the config file, whose cloud.id names the
@@ -43,4 +48,33 @@ EXAMPLES
   $ meili project view --project prod
 
 "
+`;
+
+exports[`meili project view > prints the project for a human in a terminal, and compact JSON with --json or MEILI_JSON 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "staging  Running
+Project 344 of team 12 • Meilisearch v1.54.0 • production workload
+Plan build on resource 3, region 1
+
+  URL          https://ms-def.sfo.meilisearch.io
+  Project UID  ms-abc
+  Read only    no
+  Paused       no
+  Created      2026-10-14T10:00:00Z
+  Terminated   no
+  Master key   projectmasterkey9z8y
+",
+}
+`;
+
+exports[`meili project view > writes an error as text for a human in a terminal 1`] = `
+{
+  "exitCode": 3,
+  "stderr": "✗ You cannot access this project. (project_not_accessible)
+  Docs: https://www.meilisearch.com/docs/reference/errors#project_not_accessible
+",
+  "stdout": "",
+}
 `;

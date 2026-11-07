@@ -13,18 +13,22 @@ exports[`meili search > prints its help without any network call 1`] = `
 "Search the documents of an index.
 
 USAGE
-  $ meili search -i <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--q <query>] [--offset <n>] [--limit
-    <n>] [--page <n>] [--hits-per-page <n>] [--attributes-to-retrieve <fields>]
-    [--attributes-to-crop <fields>] [--crop-length <n>] [--crop-marker <string>]
-    [--attributes-to-highlight <fields>] [--highlight-pre-tag <string>]
-    [--highlight-post-tag <string>] [--show-matches-position] [--filter
-    <filter>] [--sort <sort>] [--distinct <attribute>] [--facets <facets>]
-    [--matching-strategy last|all|frequency] [--attributes-to-search-on
-    <fields>] [--ranking-score-threshold <number>] [--locales <locales>]
-    [--hybrid <json>] [--vector <numbers>] [--retrieve-vectors]
-    [--show-ranking-score] [--show-ranking-score-details]
+  $ meili search -i <index> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--q <query>]
+    [--offset <n>] [--limit <n>] [--page <n>] [--hits-per-page <n>]
+    [--attributes-to-retrieve <fields>] [--attributes-to-crop <fields>]
+    [--crop-length <n>] [--crop-marker <string>] [--attributes-to-highlight
+    <fields>] [--highlight-pre-tag <string>] [--highlight-post-tag <string>]
+    [--show-matches-position] [--filter <filter>] [--sort <sort>] [--distinct
+    <attribute>] [--facets <facets>] [--matching-strategy last|all|frequency]
+    [--attributes-to-search-on <fields>] [--ranking-score-threshold <number>]
+    [--locales <locales>] [--hybrid <json>] [--vector <numbers>]
+    [--retrieve-vectors] [--show-ranking-score] [--show-ranking-score-details]
     [--show-performance-details] [--file <path> | --data <json>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>                     (required) The index to search in.

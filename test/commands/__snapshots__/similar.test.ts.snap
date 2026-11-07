@@ -13,12 +13,17 @@ exports[`meili similar > prints its help without any network call 1`] = `
 "Find the documents similar to one document.
 
 USAGE
-  $ meili similar -i <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--id <id>] [--embedder <embedder>]
-    [--offset <n>] [--limit <n>] [--filter <filter>] [--attributes-to-retrieve
-    <fields>] [--retrieve-vectors] [--show-ranking-score]
-    [--show-ranking-score-details] [--show-performance-details]
-    [--ranking-score-threshold <number>] [--file <path> | --data <json>]
+  $ meili similar -i <index> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--id <id>]
+    [--embedder <embedder>] [--offset <n>] [--limit <n>] [--filter <filter>]
+    [--attributes-to-retrieve <fields>] [--retrieve-vectors]
+    [--show-ranking-score] [--show-ranking-score-details]
+    [--show-performance-details] [--ranking-score-threshold <number>] [--file
+    <path> | --data <json>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>                     (required) The index to search in.

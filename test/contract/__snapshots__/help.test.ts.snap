@@ -7,7 +7,9 @@ USAGE
   $ meili index COMMAND
 
 GLOBAL FLAGS
-  --debug  Print every HTTP request and response on stderr, secrets redacted.
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
+  --debug     Print every HTTP request and response on stderr, secrets redacted.
 
 COMMANDS
   index add     Create an index.
@@ -57,7 +59,9 @@ CLOUD MANAGEMENT COMMANDS
   team          list, view, add, update, delete
 
 GLOBAL FLAGS
-  --debug  Print every HTTP request and response on stderr, secrets redacted.
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
+  --debug     Print every HTTP request and response on stderr, secrets redacted.
 
 ENVIRONMENT VARIABLES
   MEILI_CONFIG        Config file path. Default ~/.config/meili/config.json.
@@ -65,6 +69,8 @@ ENVIRONMENT VARIABLES
   MEILI_TIMEOUT       Default --timeout for --wait.
   MEILI_NO_ANALYTICS  \`true\` or \`1\` turns off the anonymous usage data the CLI
                       sends. \`DO_NOT_TRACK=1\` and \`CI\` turn it off too.
+  MEILI_JSON          \`true\` or \`1\` prints compact JSON, like --json. Set it
+                      once for an agent that runs in a terminal.
 
 "
 `;

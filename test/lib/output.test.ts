@@ -4,7 +4,7 @@ import { formatData } from "../../src/lib/output.js";
 describe("formatData", () => {
   const value = { status: "available", nested: { a: 1 }, list: [1, 2] };
 
-  it("prints compact JSON off a TTY and indented JSON on a TTY", () => {
+  it("prints compact JSON, or indented JSON for a human", () => {
     expect(formatData(value, false)).toBe(`${JSON.stringify(value)}\n`);
     expect(formatData(value, true)).toBe(`${JSON.stringify(value, null, 2)}\n`);
   });

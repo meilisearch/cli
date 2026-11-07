@@ -13,9 +13,13 @@ exports[`meili index add > prints its help without any network call 1`] = `
 "Create an index.
 
 USAGE
-  $ meili index add --id <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--primary-key <field>] [--file <path>
-    | --data <json>] [--timeout <duration> --wait]
+  $ meili index add --id <index> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--primary-key
+    <field>] [--file <path> | --data <json>] [--timeout <duration> --wait]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         A project of the config file. Cannot be combined

@@ -26,6 +26,31 @@ describe("meili document view", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints every attribute for a human in a terminal, long text wrapped and nested values indented", async () => {
+    server.use(
+      meilisearchHandlers.document([
+        {
+          id: 11,
+          title: "Star Wars",
+          overview:
+            "Princess Leia is captured and held hostage by the evil Imperial forces in their effort to take over the galactic Empire.",
+          genres: ["Adventure", "Action", "Science Fiction"],
+          rating: 4.8,
+          sequel: null,
+          cast: [
+            { name: "Mark Hamill", character: "Luke Skywalker" },
+            { name: "Harrison Ford", character: "Han Solo" },
+          ],
+          studio: { name: "Lucasfilm", country: "US" },
+        },
+      ]),
+    );
+    const result = await runCommand(DocumentView, ["--index", "movies", "--id", "11", ...project], {
+      tty: true,
+    });
+    expect(result).toMatchSnapshot();
+  });
+
   it("sends --fields and --retrieve-vectors as the query parameters of the route", async () => {
     server.use(meilisearchHandlers.document(documents));
     const requests = await recordRequests(async () => {

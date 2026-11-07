@@ -37,6 +37,8 @@ export interface RunOptions {
   env?: Record<string, string | undefined>;
   /** Called with every chunk written to stderr while the command runs, for a command that waits. */
   onStderr?: (chunk: string) => void;
+  /** Runs as in a terminal 80 columns wide, where a human reads the text of the command. */
+  tty?: boolean;
 }
 
 interface RunnableCommand {
@@ -50,7 +52,7 @@ export async function runCommand(
   options: RunOptions = {},
 ): Promise<RunResult> {
   const config = await loadConfig();
-  return capture(options.env, () => command.run(argv, config), options.onStderr);
+  return capture(options.env, () => command.run(argv, config), options.onStderr, options.tty);
 }
 
 /**
@@ -60,7 +62,7 @@ export async function runCommand(
  */
 export async function runCli(argv: string[], options: RunOptions = {}): Promise<RunResult> {
   const config = await Config.load({ root: PROJECT_ROOT });
-  return capture(options.env, () => oclifRun(argv, config), options.onStderr);
+  return capture(options.env, () => oclifRun(argv, config), options.onStderr, options.tty);
 }
 
 /** A temporary home per test file, where tests may write config files. */
@@ -110,6 +112,7 @@ async function capture(
   env: Record<string, string | undefined> | undefined,
   fn: () => Promise<unknown>,
   onStderr?: (chunk: string) => void,
+  tty = false,
 ): Promise<RunResult> {
   const stdout: string[] = [];
   const stderr: string[] = [];
@@ -131,6 +134,8 @@ async function capture(
       stderr.push(`${format(...args)}\n`);
     }),
   ];
+  const saved = { isTTY: process.stdout.isTTY, columns: process.stdout.columns };
+  Object.assign(process.stdout, tty ? { isTTY: true, columns: 80 } : { isTTY: false });
   const savedEnv = process.env;
   // `--debug` wraps the global fetch for the rest of the process: put it back,
   // so one command's trace never follows the next test.
@@ -144,6 +149,7 @@ async function capture(
     exitCode = error.oclif.exit ?? 1;
   } finally {
     process.env = savedEnv;
+    Object.assign(process.stdout, saved);
     globalThis.fetch = savedFetch;
     for (const spy of spies) spy.mockRestore();
   }

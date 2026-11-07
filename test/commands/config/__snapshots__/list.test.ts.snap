@@ -4,7 +4,11 @@ exports[`meili config list > prints its help without any network call 1`] = `
 "List the projects of the config file.
 
 USAGE
-  $ meili config list [--debug]
+  $ meili config list [--json] [--no-color] [--debug]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --debug  Print every HTTP request and response on stderr, secrets redacted.

@@ -74,6 +74,18 @@ describe("meili project delete", () => {
     });
   });
 
+  it("tells a human in a terminal what it deleted, and prints nothing on stdout", async () => {
+    server.use(managementHandlers.deleteProject());
+    const { env: configEnv } = tempConfig("delete-human.json", {
+      demo: { url: "https://ms-abc.sfo.meilisearch.io", cloud: { id: 343 } },
+    });
+    const result = await runCommand(ProjectDelete, ["-p", "demo", "--yes", "--sync-config"], {
+      env: { ...env, ...configEnv },
+      tty: true,
+    });
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes the API's error body through on a 403, with exit 3", async () => {
     server.use(managementHandlers.apiError("/api/v2/projects/343", 403, forbidden));
     const result = await runCommand(ProjectDelete, ["--id", "343", "--yes"], {

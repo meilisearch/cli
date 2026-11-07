@@ -4,7 +4,11 @@ exports[`meili auth login > prints its help without any network call 1`] = `
 "Log in to Meilisearch Cloud, or create an account, in a browser.
 
 USAGE
-  $ meili auth login [--debug] [--browser]
+  $ meili auth login [--json] [--no-color] [--debug] [--browser]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --[no-]browser  Open the consent page in a browser. --no-browser only prints

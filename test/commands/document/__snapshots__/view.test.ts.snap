@@ -9,13 +9,42 @@ exports[`meili document view > passes the 404 of an unknown document through and
 }
 `;
 
+exports[`meili document view > prints every attribute for a human in a terminal, long text wrapped and nested values indented 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Document 11 in index movies
+
+",
+  "stdout": "  id        11
+  title     Star Wars
+  overview  Princess Leia is captured and held hostage by the evil Imperial
+            forces in their effort to take over the galactic Empire.
+  genres    Adventure, Action, Science Fiction
+  rating    4.8
+  sequel    null
+  cast
+    - name       Mark Hamill
+      character  Luke Skywalker
+    - name       Harrison Ford
+      character  Han Solo
+  studio
+    name     Lucasfilm
+    country  US
+",
+}
+`;
+
 exports[`meili document view > prints its help without any network call 1`] = `
 "Get one document of an index.
 
 USAGE
-  $ meili document view -i <index> --id <id> [--debug] [--project-url
-    <url>] [--project-api-key <key>] [-p <name>] [--fields <fields>]
-    [--retrieve-vectors]
+  $ meili document view -i <index> --id <id> [--json] [--no-color]
+    [--debug] [--project-url <url>] [--project-api-key <key>] [-p <name>]
+    [--fields <fields>] [--retrieve-vectors]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>          (required) The index to read the document from.
