@@ -4,8 +4,8 @@ exports[`meili config update > prints its help without any network call 1`] = `
 "Change a project of the config file.
 
 USAGE
-  $ meili config update -p <name> [--json] [--no-color] [--debug]
-    [--project-url <url>] [--project-api-key <key>] [--sync-with-cloud]
+  $ meili config update -p <name> [--json] [--no-color] [--debug] [--rename
+    <name>] [--project-url <url>] [--project-api-key <key>] [--sync-with-cloud]
 
 OUTPUT FLAGS
   --json      Print compact JSON. The default when stdout is not a terminal.
@@ -18,6 +18,7 @@ FLAGS
       --project-api-key=<key>  New API key of the project. \`-\` reads it from
                                stdin, out of the shell history.
       --project-url=<url>      New URL of the project.
+      --rename=<name>          New name of the project.
       --sync-with-cloud        Write the entry's cloud identifiers from
                                Meilisearch Cloud, and its master key when the
                                entry has no key. Never replaces a key.
@@ -34,6 +35,8 @@ EXAMPLES
   $ meili config update -p prod --project-api-key - < key.txt
 
   $ meili config update -p local --project-url http://localhost:7701
+
+  $ meili config update -p local --rename local-dev
 
 "
 `;

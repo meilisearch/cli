@@ -2056,7 +2056,8 @@
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --sync-with-cloud",
         "<%= config.bin %> <%= command.id %> -p prod --project-api-key - < key.txt",
-        "<%= config.bin %> <%= command.id %> -p local --project-url http://localhost:7701"
+        "<%= config.bin %> <%= command.id %> -p local --project-url http://localhost:7701",
+        "<%= config.bin %> <%= command.id %> -p local --rename local-dev"
       ],
       "flags": {
         "json": {
@@ -2084,6 +2085,14 @@
           "description": "Name of the project to change.",
           "name": "project",
           "required": true,
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "rename": {
+          "description": "New name of the project.",
+          "name": "rename",
           "hasDynamicHelp": false,
           "helpValue": "<name>",
           "multiple": false,

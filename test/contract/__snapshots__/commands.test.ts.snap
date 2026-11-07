@@ -347,6 +347,7 @@ Changes the fields given, and refuses a name that does not exist. Talks to the M
         "meili config update --project prod --sync-with-cloud",
         "meili config update -p prod --project-api-key - < key.txt",
         "meili config update -p local --project-url http://localhost:7701",
+        "meili config update -p local --rename local-dev",
       ],
       "flags": [
         {
@@ -355,6 +356,12 @@ Changes the fields given, and refuses a name that does not exist. Talks to the M
           "helpValue": "<name>",
           "name": "project",
           "required": true,
+          "type": "option",
+        },
+        {
+          "description": "New name of the project.",
+          "helpValue": "<name>",
+          "name": "rename",
           "type": "option",
         },
         {
