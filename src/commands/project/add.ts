@@ -4,7 +4,7 @@ import { postApiV2Projects } from "../../lib/clients/management/generated/sdk.ge
 import type { PostApiV2ProjectsData } from "../../lib/clients/management/generated/types.gen.js";
 import { cloudOf, readTeamNames, waitForProject } from "../../lib/cloud-sync.js";
 import { assertNoProject, type ConfigFile, maskSecret, writeConfigFile } from "../../lib/config.js";
-import { MeiliCliError, writeNotice } from "../../lib/errors.js";
+import { MeiliCliError } from "../../lib/errors.js";
 import { projectView } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
 import { paint } from "../../lib/output.js";
@@ -74,15 +74,15 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
       sync = { file, entry: body.name };
     }
     const created = await postApiV2Projects({ client: this.managementClient, body });
+    const progress = this.waitProgress(`Project ${created.id}`);
     const project =
       timeoutMs === undefined
         ? created
         : await waitForProject(this.managementClient, created.id, {
             timeoutMs,
-            onProgress: (current) => {
-              writeNotice(`waiting for project ${created.id}, status ${current.status}`);
-            },
+            onProgress: (current) => progress.update(current.status),
           });
+    progress.end();
     const running = project.status === "running";
     await this.output(
       project.masterKey === undefined

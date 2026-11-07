@@ -405,6 +405,28 @@ export abstract class BaseCommand extends Command {
     await this.output(mergePages(pages));
   }
 
+  /**
+   * What `--wait` writes on stderr while it polls: one line each time the
+   * status changes, with the time spent, and a blank line once it is over.
+   */
+  protected waitProgress(what: string): { update: (status: string) => void; end: () => void } {
+    const startedAt = performance.now();
+    let last: string | undefined;
+    return {
+      update: (status) => {
+        if (status === last) return;
+        last = status;
+        const seconds = Math.round((performance.now() - startedAt) / 1000);
+        writeNotice(
+          `${paint("yellow", "◐")} ${what} is ${status.replaceAll("_", " ")} (${seconds}s)`,
+        );
+      },
+      end: () => {
+        if (last !== undefined) writeNotice("");
+      },
+    };
+  }
+
   /** The `--timeout` of `--wait`, or `MEILI_TIMEOUT`, or the default, in milliseconds. */
   protected waitTimeoutMs(flags: WaitFlagValues): number {
     return parseDuration(flags.timeout ?? this.env[ENV.TIMEOUT] ?? DEFAULT_TIMEOUT);
@@ -432,12 +454,12 @@ export abstract class BaseCommand extends Command {
       }));
       return;
     }
+    const progress = this.waitProgress(`Task ${task.taskUid}`);
     const finalTask = await waitForTask(this.meilisearch, task.taskUid, {
       timeoutMs: this.waitTimeoutMs(flags),
-      onProgress: (current) => {
-        writeNotice(`waiting for task ${current.uid}, status ${current.status}`);
-      },
+      onProgress: (current) => progress.update(current.status),
     });
+    progress.end();
     await this.output(finalTask, () => ({
       status: taskOutcome(finalTask, sentences.succeeded),
       data: taskView(finalTask),

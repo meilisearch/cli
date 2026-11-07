@@ -116,7 +116,7 @@ Most write operations of the Meilisearch API return a task, not a result. The CL
 - With `--wait`, the command polls `GET /tasks/{uid}` until the status is `succeeded`, `failed` or `canceled`. It prints the final task object and exits with 0 or 7. For a human, the error of a failed task comes first, then the task.
 - Polling starts at 100 ms and grows to a maximum of 1 s between calls.
 - `--timeout` accepts a duration: `500ms`, `30s`, `2m`. Default `10m`. On timeout, the CLI prints an error with code `cli_timeout` and exits 5. The task keeps running on the server.
-- Progress ("waiting for task 42, status processing") goes to stderr, and only when stderr is a TTY.
+- Progress goes to stderr, and only when stderr is a TTY: one line each time the status changes, with the time spent, such as "◐ Task 42 is processing (3s)".
 
 A Cloud project is not ready when `POST /api/v2/projects` answers. Its `status` says when it is ready, and its `url` may be `null` until then. `meili project add --wait` follows the same rules, with the project instead of the task:
 
@@ -124,7 +124,7 @@ A Cloud project is not ready when `POST /api/v2/projects` answers. Its `status` 
 - Polling starts at 1 s and grows to a maximum of 5 s between calls, because creating a project takes minutes.
 - The final project is printed as `GET /api/v2/projects/{id}` returns it, without `masterKey`: only the creation returns it. `--sync-config` writes the key from the creation to the config file.
 - On timeout, the CLI returns `cli_timeout` and exits 5. The creation continues on the server, and nothing is written to the config file.
-- Progress ("waiting for project 343, status creating") goes to stderr, and only when stderr is a TTY.
+- Progress goes to stderr, and only when stderr is a TTY: one line each time the status changes, such as "◐ Project 343 is health checking (95s)".
 
 ## Destructive commands
 
