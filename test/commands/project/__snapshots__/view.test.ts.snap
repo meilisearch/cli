@@ -56,6 +56,7 @@ exports[`meili project view > prints the project for a human in a terminal, and 
   "stderr": "",
   "stdout": "staging  Running
 Project 344 of team 12 • Meilisearch v1.54.0 • production workload
+Plan Build on resource 3, region 1
 
   URL              https://ms-def.sfo.meilisearch.io
   Project UID      ms-abc

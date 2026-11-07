@@ -92,6 +92,7 @@ Once it is Running, save its URL and master key in the config file:
 ",
   "stdout": "demo  Creating
 Project 343 of team 12 • Meilisearch v1.54.0 • production workload
+Plan Build on resource 3, region 1
 
   URL              none yet
   Project UID      ms-abc
@@ -114,6 +115,7 @@ Project 343 of team 12 • Meilisearch v1.54.0 • production workload
 exports[`meili project add > tells a human in a terminal that the project runs and is in the config file, with --wait --sync-config 1`] = `
 "demo  Running
 Project 343 of team 12 • Meilisearch v1.54.0 • production workload
+Plan Build on resource 3, region 1
 
   URL              https://ms-abc.sfo.meilisearch.io
   Project UID      ms-abc

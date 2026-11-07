@@ -32,14 +32,9 @@ export function paint(style: Parameters<typeof styleText>[0], text: string): str
   return mode.color ? styleText(style, text, { validateStream: false }) : text;
 }
 
-/** Compact JSON on one line. Pure, so tests can snapshot it. */
-export function formatData(value: unknown): string {
-  return `${JSON.stringify(value)}\n`;
-}
-
 /** Writes one result on stdout, as compact JSON. Data only, nothing else, ever. */
 export function writeData(value: unknown): void {
-  process.stdout.write(formatData(value));
+  process.stdout.write(`${JSON.stringify(value)}\n`);
 }
 
 /**

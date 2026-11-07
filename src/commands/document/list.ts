@@ -3,7 +3,7 @@ import type { DocumentsQuery } from "meilisearch";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { fetchDocuments } from "../../lib/clients/meilisearch.js";
 import { MeiliCliError } from "../../lib/errors.js";
-import { commandLine, simpleValue, table } from "../../lib/human.js";
+import { commandLine, simpleValue, table, tableColumns } from "../../lib/human.js";
 import { isJsonObject, readJsonBody } from "../../lib/input.js";
 import { type HumanView, paint } from "../../lib/output.js";
 
@@ -114,17 +114,8 @@ function view(
       ],
     };
   }
-  const attributes = [...new Set(results.flatMap((document) => Object.keys(document)))];
-  const shown =
-    query.fields === undefined
-      ? attributes
-          .filter((name) =>
-            results.every(
-              (document) => document[name] === null || typeof document[name] !== "object",
-            ),
-          )
-          .slice(0, 4)
-      : attributes;
+  const { all: attributes, shown: simple } = tableColumns(results, 4);
+  const shown = query.fields === undefined ? simple : attributes;
   const end = offset + results.length;
   const next: string[] = [];
   if (shown.length < attributes.length) {

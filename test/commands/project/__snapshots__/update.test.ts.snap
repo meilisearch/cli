@@ -67,6 +67,7 @@ exports[`meili project update > tells a human in a terminal the new name, then t
 ",
   "stdout": "demo-2  Running
 Project 343 of team 12 • Meilisearch v1.54.0 • production workload
+Plan Build on resource 3, region 1
 
   URL              https://ms-abc.sfo.meilisearch.io
   Project UID      ms-abc

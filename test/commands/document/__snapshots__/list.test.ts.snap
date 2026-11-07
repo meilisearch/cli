@@ -32,9 +32,9 @@ exports[`meili document list > for a human in a terminal > shows the first 4 sim
 Simplified view: 4 of 7 attributes. Choose them with --fields, or see them all with --json.
 Next page: meili document list -i movies --limit 2 --project-url http://meili.test:7700 --project-api-key '<key>' --offset 2
 ",
-  "stdout": "id  title    release_date  rating
-1   Movie 1  1988-10-21    4
-2   Movie 2  1988-10-21    4
+  "stdout": "id  title    genres         release_date
+1   Movie 1  Drama, Comedy  1988-10-21
+2   Movie 2  Drama, Comedy  1988-10-21
 ",
 }
 `;

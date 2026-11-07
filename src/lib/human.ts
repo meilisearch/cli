@@ -30,13 +30,10 @@ export function table(header: string[], rows: string[][]): string {
 }
 
 /** One `label  value` per line, the labels in grey and the values aligned. */
-export function fields(rows: [string, string][], indent = 2): string {
+export function fields(rows: [string, string][]): string {
   const labelWidth = Math.max(...rows.map(([label]) => label.length));
   return rows
-    .map(
-      ([label, value]) =>
-        `${" ".repeat(indent)}${padEnd(paint("dim", label), labelWidth + 2)}${value}`,
-    )
+    .map(([label, value]) => `  ${padEnd(paint("dim", label), labelWidth + 2)}${value}`)
     .join("\n");
 }
 
@@ -77,11 +74,11 @@ export function objectLines(object: Record<string, unknown>, indent = 2): string
   const entries = Object.entries(object).filter(([, value]) => value !== undefined);
   if (entries.length === 0) return [`${" ".repeat(indent)}${paint("dim", "empty")}`];
   const column = indent + Math.max(...entries.map(([key]) => key.length)) + 2;
+  const size = Math.max(columns() - column, 20);
   return entries.flatMap(([key, value]) => {
     const label = `${" ".repeat(indent)}${paint("dim", key)}`;
     const simple = simpleValue(value);
     if (simple !== undefined) {
-      const size = Math.max(columns() - column, 20);
       const [first = "", ...rest] = simple.split("\n").flatMap((line) => wrap(line, size));
       return [padEnd(label, column) + first, ...rest.map((line) => " ".repeat(column) + line)];
     }
@@ -107,18 +104,18 @@ const STATUS_COLORS: Record<string, "green" | "red"> = {
 };
 
 /** A status in green when it is done, red when it failed, yellow while it moves. */
-export function status(value: string): string {
-  return paint(STATUS_COLORS[value] ?? "yellow", value);
+export function status(value: string, label = value): string {
+  return paint(STATUS_COLORS[value] ?? "yellow", label);
 }
 
 /** The status of a Cloud project, capitalized like the dashboard writes it: `Running`. */
 export function projectStatus(value: string): string {
-  return paint(STATUS_COLORS[value] ?? "yellow", value.charAt(0).toUpperCase() + value.slice(1));
+  return status(value, value.charAt(0).toUpperCase() + value.slice(1));
 }
 
 const yesNo = (value: boolean): string => (value ? "yes" : "no");
 
-/** A Cloud project in full: its name and status, a summary, then every other field. */
+/** A Cloud project in full: its name and status, a summary, then every field. */
 export function projectView(project: Project): string {
   const dot = paint("dim", " • ");
   const rows: [string, string][] = [
@@ -138,6 +135,7 @@ export function projectView(project: Project): string {
       `Meilisearch ${project.msVersion}`,
       `${project.workloadType} workload`,
     ].join(dot),
+    `Plan ${project.resource.displayName ?? project.resource.plan} on resource ${project.resourceId}, region ${project.resource.regionId}`,
     "",
     fields(rows),
     `  ${paint("dim", "Resource")}`,
@@ -147,17 +145,17 @@ export function projectView(project: Project): string {
 
 /** A task, as enqueued or as it ended: what it is, what it did, and when. */
 export function taskView(task: EnqueuedTask | Task): string {
-  const head = (uid: number): [string, string][] => [
-    ["Task", String(uid)],
+  const head: [string, string][] = [
+    ["Task", String("uid" in task ? task.uid : task.taskUid)],
     ["Status", status(task.status)],
     ["Type", task.type],
     ["Index", task.indexUid ?? paint("dim", "none")],
   ];
-  if (!("uid" in task)) return fields([...head(task.taskUid), ["Enqueued", task.enqueuedAt]]);
+  if (!("uid" in task)) return fields([...head, ["Enqueued", task.enqueuedAt]]);
   const documents = (count: number | undefined) =>
     count === undefined ? undefined : `${count} documents`;
   const rows: [string, string | null | undefined][] = [
-    ...head(task.uid),
+    ...head,
     ["Received", documents(task.details?.receivedDocuments)],
     ["Indexed", documents(task.details?.indexedDocuments)],
     ["Deleted", documents(task.details?.deletedDocuments)],
@@ -193,14 +191,19 @@ export function commandLine(args: string[]): string {
 const header = (name: string): string =>
   name.replaceAll(/([a-z0-9])([A-Z])/g, "$1_$2").toUpperCase();
 
-/** The attributes a list holds, in their order, and the ones a table shows: simple in every row, at most 6. */
-function tableColumns(rows: Record<string, unknown>[]): { all: string[]; shown: string[] } {
+/** The attributes a list holds, in their order, and the ones a table shows: simple in every row, at most `max`. */
+export function tableColumns(
+  rows: Record<string, unknown>[],
+  max: number,
+): { all: string[]; shown: string[] } {
   const all = [...new Set(rows.flatMap((row) => Object.keys(row)))];
-  const shown = all
-    .filter((name) =>
-      rows.every((row) => row[name] === undefined || simpleValue(row[name]) !== undefined),
-    )
-    .slice(0, 6);
+  const shown: string[] = [];
+  for (const name of all) {
+    if (shown.length === max) break;
+    if (rows.every((row) => row[name] === undefined || simpleValue(row[name]) !== undefined)) {
+      shown.push(name);
+    }
+  }
   return { all, shown };
 }
 
@@ -237,7 +240,7 @@ function listView(rows: Record<string, unknown>[], envelope: Record<string, unkn
     summary.push(paint("dim", simple.map(([name, value]) => `${name} ${value}`).join(" • ")));
   }
   if (rows.length === 0) return { status: summary };
-  const { all, shown } = tableColumns(rows);
+  const { all, shown } = tableColumns(rows, 6);
   const next =
     shown.length < all.length || simple.length < others.length
       ? [
