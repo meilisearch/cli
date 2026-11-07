@@ -1,5 +1,19 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`meili project add > exits 130 on Ctrl-C during --wait, tells a human how to follow the project, and writes no config 1`] = `
+{
+  "code": 130,
+  "stderr": "
+◐ Project 343 is still in progress. meili CLI stopped watching it.
+It was not added to the config file.
+
+Follow it: meili project view --id 343
+Once it is Running, add it to the config file:
+  meili config sync-with-cloud --project-name demo
+",
+}
+`;
+
 exports[`meili project add > fails with cli_timeout and exit 5 when the project is not running within --timeout 1`] = `
 {
   "exitCode": 5,

@@ -1,7 +1,8 @@
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { HttpResponse, http } from "msw";
+import { describe, expect, it, vi } from "vitest";
 import DocumentAdd from "../../../src/commands/document/add.js";
 import {
   MEILISEARCH_URL,
@@ -119,6 +120,56 @@ describe("meili document add", () => {
     ]);
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stdout)).toMatchObject({ uid: 42, status: "succeeded" });
+  });
+
+  it.each([
+    ["tells a human how to follow the task", true],
+    ["writes nothing more without a human", false],
+  ])("exits 130 on Ctrl-C during --wait, and %s", async (_, tty) => {
+    let exit: { code: unknown; stderr: string } | undefined;
+    let stderr = "";
+    vi.spyOn(process, "exit").mockImplementationOnce((code) => {
+      exit = { code, stderr };
+      return undefined as never;
+    });
+    server.use(
+      meilisearchHandlers.documentsAdd(makeEnqueuedTask()),
+      http.get(`${MEILISEARCH_URL}/tasks/42`, () => {
+        process.emit("SIGINT");
+        return HttpResponse.json(makeTask({ uid: 42, status: "succeeded" }));
+      }),
+    );
+    await runCommand(
+      DocumentAdd,
+      ["--index", "movies", "--data", documents, "--wait", ...project],
+      {
+        tty,
+        onStderr: (chunk) => {
+          stderr += chunk;
+        },
+      },
+    );
+    expect(exit).toMatchSnapshot();
+  });
+
+  it("exits 130 without an error when the last poll fails after Ctrl-C", async () => {
+    vi.spyOn(process, "exit").mockImplementationOnce(() => undefined as never);
+    server.use(
+      meilisearchHandlers.documentsAdd(makeEnqueuedTask()),
+      http.get(`${MEILISEARCH_URL}/tasks/42`, () => {
+        process.emit("SIGINT");
+        return HttpResponse.error();
+      }),
+    );
+    const result = await runCommand(DocumentAdd, [
+      "--index",
+      "movies",
+      "--data",
+      documents,
+      "--wait",
+      ...project,
+    ]);
+    expect(result).toEqual({ stdout: "", stderr: "", exitCode: 130 });
   });
 
   it("prints the final task and exits 7 when the task failed", async () => {

@@ -106,6 +106,7 @@ The CLI warns when the config file is readable by others, see `config.md`.
 | 5 | Timeout: `--wait` exceeded `--timeout`, or the HTTP request timed out. |
 | 6 | Cannot connect: DNS failure, connection refused, TLS error. |
 | 7 | Task finished with status `failed` or `canceled`, or the project of `project add` with status `failed` (only with `--wait`). The final task or project is still printed on stdout. |
+| 130 | Interrupted: Ctrl-C (SIGINT) stopped `--wait`, or `teleport`. |
 
 No other code is used on purpose. If a new situation needs its own code, add it to this table first.
 
@@ -118,6 +119,7 @@ Most write operations of the Meilisearch API return a task, not a result. The CL
 - Polling starts at 100 ms and grows to a maximum of 1 s between calls.
 - `--timeout` accepts a duration: `500ms`, `30s`, `2m`. Default `10m`. On timeout, the CLI prints an error with code `cli_timeout` and exits 5. The task keeps running on the server.
 - Progress goes to stderr, and only when stderr is a TTY: one line each time the status changes, with the time spent, such as "◐ Task 42 is processing (3s)".
+- Ctrl-C stops the wait and exits 130. The task keeps running on the server. A human reads that the CLI stopped watching it, and the command to follow it: `meili task view --id <uid>`.
 
 A Cloud project is not ready when `POST /api/v2/projects` answers. Its `status` says when it is ready, and its `url` may be `null` until then. `meili project add --wait` follows the same rules, with the project instead of the task:
 
@@ -126,6 +128,7 @@ A Cloud project is not ready when `POST /api/v2/projects` answers. Its `status` 
 - The final project is printed as `GET /api/v2/projects/{id}` returns it, without `masterKey`: only the creation returns it. `--sync-config` writes the key from the creation to the config file.
 - On timeout, the CLI returns `cli_timeout` and exits 5. The creation continues on the server, and nothing is written to the config file.
 - Progress goes to stderr, and only when stderr is a TTY: one line each time the status changes, such as "◐ Project 343 is health checking (95s)".
+- Ctrl-C stops the wait and exits 130, like a timeout: the creation continues, and nothing is written to the config file. A human reads the command to follow it: `meili project view --id <id>`. With `--sync-config`, the human also reads that the project is not in the config file, and the command that adds it later: `meili config sync-with-cloud`.
 
 ## Destructive commands
 

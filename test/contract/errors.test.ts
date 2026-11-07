@@ -16,9 +16,9 @@ describe("error codes", () => {
 describe("exit codes", () => {
   const table = tableRows(section(outputDoc, "Exit codes")).map((row) => Number(row[0]));
 
-  it("EXIT_CODES is exactly the table 0 to 7", () => {
-    expect(table).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
-    expect([...Object.values(EXIT_CODES)].sort()).toEqual(table);
+  it("EXIT_CODES is exactly the table 0 to 7 and 130", () => {
+    expect(table).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 130]);
+    expect([...Object.values(EXIT_CODES)].sort((a, b) => a - b)).toEqual(table);
   });
 
   it("every code maps to the exit code its situation has in the table", () => {
