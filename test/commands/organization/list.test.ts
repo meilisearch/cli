@@ -26,6 +26,14 @@ describe("meili organization list", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints a table for a human in a terminal, isAdmin in place of ownerId", async () => {
+    server.use(managementHandlers.listOrganizations([organization, other]));
+    const result = await runCommand(OrganizationList, [], { env, tty: true });
+    expect(result).toMatchSnapshot();
+    expect(result.stdout).toContain("IS_ADMIN");
+    expect(result.stdout).not.toContain("OWNER_ID");
+  });
+
   it("exits 6 on a 401 without a body", async () => {
     server.use(managementHandlers.apiError("/api/v2/organizations", 401));
     const result = await runCommand(OrganizationList, [], { env });
