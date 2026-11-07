@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`meili project add > exits 130 on Ctrl-C during --wait, and tells a human how to follow the project 1`] = `
+exports[`meili project add > exits 130 on Ctrl-C during --wait, tells a human how to follow the project, and writes no config 1`] = `
 {
   "code": 130,
   "stderr": "

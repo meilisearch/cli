@@ -432,6 +432,7 @@ export abstract class BaseCommand extends Command {
   ): Promise<T> {
     const startedAt = performance.now();
     let last: string | undefined;
+    let exiting: Promise<never> | undefined;
     const onInterrupt = () => {
       if (outputMode().human) {
         writeView({
@@ -442,7 +443,7 @@ export abstract class BaseCommand extends Command {
           next: [`${paint("dim", "Follow it:")} ${follow}`],
         });
       }
-      void this.exitNow(EXIT_CODES.interrupted);
+      exiting = this.exitNow(EXIT_CODES.interrupted);
     };
     process.once("SIGINT", onInterrupt);
     try {
@@ -454,6 +455,11 @@ export abstract class BaseCommand extends Command {
           `${paint("yellow", "◐")} ${what} is ${status.replaceAll("_", " ")} (${seconds}s)`,
         );
       });
+      // Ctrl-C during the last poll: the command never goes on with its result.
+      if (exiting !== undefined) {
+        await exiting;
+        this.exit(EXIT_CODES.interrupted);
+      }
       if (last !== undefined) writeNotice("");
       return final;
     } finally {

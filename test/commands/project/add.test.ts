@@ -243,7 +243,7 @@ describe("meili project add", () => {
     expect(readJson(path)).toEqual({ projects: {} });
   });
 
-  it("exits 130 on Ctrl-C during --wait, and tells a human how to follow the project", async () => {
+  it("exits 130 on Ctrl-C during --wait, tells a human how to follow the project, and writes no config", async () => {
     let exit: { code: unknown; stderr: string } | undefined;
     let stderr = "";
     vi.spyOn(process, "exit").mockImplementationOnce((code) => {
@@ -257,11 +257,12 @@ describe("meili project add", () => {
       }),
       ...creation("running"),
     );
-    await runCommand(
+    const { path, env: configEnv } = tempConfig("wait-interrupted.json", {});
+    const result = await runCommand(
       ProjectAdd,
-      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--wait"],
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--wait", "--sync-config"],
       {
-        env,
+        env: { ...env, ...configEnv },
         tty: true,
         onStderr: (chunk) => {
           stderr += chunk;
@@ -269,6 +270,8 @@ describe("meili project add", () => {
       },
     );
     expect(exit).toMatchSnapshot();
+    expect(result).toEqual({ stdout: "", stderr, exitCode: 130 });
+    expect(readJson(path)).toEqual({ projects: {} });
   });
 
   it("tells a human in a terminal that the project is starting, and how to save it once running", async () => {
