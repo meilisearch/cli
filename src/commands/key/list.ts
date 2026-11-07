@@ -2,7 +2,7 @@ import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { fetchKeys } from "../../lib/clients/meilisearch.js";
 import { defaultView } from "../../lib/human.js";
 import { type HumanView, paint } from "../../lib/output.js";
-import { type ListPage, nextOffsetQuery } from "../../lib/pagination.js";
+import type { ListPage } from "../../lib/pagination.js";
 
 /** The length a description keeps in the table, ellipsis included. */
 const DESCRIPTION_LENGTH = 30;
@@ -34,7 +34,6 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
       (query) => fetchKeys(this.meilisearch, query),
       { limit: flags.limit, offset: flags.offset },
       flags.all,
-      nextOffsetQuery,
       view,
     );
   }

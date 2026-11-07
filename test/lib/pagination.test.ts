@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   iteratePages,
   mergePages,
-  nextFromQuery,
   nextOffsetQuery,
   type OffsetQuery,
 } from "../../src/lib/pagination.js";
@@ -25,21 +24,6 @@ describe("nextOffsetQuery", () => {
   });
 });
 
-describe("nextFromQuery", () => {
-  it("follows the next cursor the API answers", () => {
-    expect(nextFromQuery({ limit: 2 }, { results: [5, 4], from: 5, limit: 2, next: 3 })).toEqual({
-      limit: 2,
-      from: 3,
-    });
-  });
-
-  it("stops on the last page, which answers a null next", () => {
-    expect(
-      nextFromQuery({ limit: 2, from: 3 }, { results: [3], from: 3, limit: 2, next: null }),
-    ).toBeUndefined();
-  });
-});
-
 describe("iteratePages", () => {
   it("fetches page after page and yields each one", async () => {
     const calls: number[] = [];
@@ -58,26 +42,6 @@ describe("iteratePages", () => {
     expect(calls).toEqual([0, 2, 4]);
     expect(pages).toEqual([[1, 2], [3, 4], [5]]);
   });
-
-  it("walks a cursor route down from one uid to the next", async () => {
-    const uids = [5, 4, 3, 2, 1];
-    const calls: Array<number | undefined> = [];
-    const pages: unknown[][] = [];
-    for await (const page of iteratePages(
-      async (query: { from?: number | undefined }) => {
-        calls.push(query.from);
-        const start = uids.indexOf(query.from ?? 5);
-        const results = uids.slice(start, start + 2);
-        return { results, from: results[0], limit: 2, next: uids[start + 2] ?? null };
-      },
-      {},
-      nextFromQuery,
-    )) {
-      pages.push([...page.results]);
-    }
-    expect(calls).toEqual([undefined, 3, 1]);
-    expect(pages).toEqual([[5, 4], [3, 2], [1]]);
-  });
 });
 
 describe("mergePages", () => {
@@ -88,12 +52,5 @@ describe("mergePages", () => {
         { results: [3], offset: 2, limit: 2, total: 3 },
       ]),
     ).toEqual({ results: [1, 2, 3], total: 3 });
-
-    expect(
-      mergePages([
-        { results: [5, 4], from: 5, limit: 2, next: 3 },
-        { results: [3], from: 3, limit: 2, next: null },
-      ]),
-    ).toEqual({ results: [5, 4, 3], next: null });
   });
 });

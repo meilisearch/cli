@@ -141,11 +141,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -317,11 +312,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -493,11 +483,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -669,11 +654,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -893,12 +873,6 @@
           "helpValue": "<uid>",
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "name": "all",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "hasDynamicHelp": false,
@@ -1010,11 +984,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -1224,11 +1193,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -1401,11 +1365,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -1612,11 +1571,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -1821,11 +1775,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -2007,11 +1956,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -2226,11 +2170,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -2502,11 +2441,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -2810,11 +2744,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -3100,11 +3029,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -3376,11 +3300,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -3615,11 +3534,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -3907,11 +3821,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -4232,11 +4141,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -4435,11 +4339,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -4697,11 +4596,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -4936,11 +4830,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -5164,11 +5053,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -5435,11 +5319,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -5649,11 +5528,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -5854,11 +5728,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -6131,11 +6000,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -6352,11 +6216,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -6580,11 +6439,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -6831,11 +6685,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -7045,11 +6894,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -7288,11 +7132,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -7481,11 +7320,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -7659,11 +7493,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -7874,11 +7703,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -8061,11 +7885,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -8318,11 +8137,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -8528,11 +8342,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -8715,11 +8524,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -8946,11 +8750,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -9142,11 +8941,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -9320,11 +9114,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -9507,11 +9296,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -9693,11 +9477,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -10139,11 +9918,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -10378,11 +10152,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -10809,11 +10578,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -11024,11 +10788,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -11340,11 +11099,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -11573,11 +11327,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -11902,11 +11651,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -12239,11 +11983,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -12463,12 +12202,6 @@
           "helpValue": "<uid>",
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "name": "all",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "hasDynamicHelp": false,
@@ -12580,11 +12313,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -12794,11 +12522,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -13008,11 +12731,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -13202,11 +12920,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -13380,11 +13093,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -13604,11 +13312,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -13791,11 +13494,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -13977,11 +13675,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {
@@ -14152,11 +13845,6 @@
           "input": [],
           "multiple": false,
           "type": "option"
-        },
-        "all": {
-          "description": "Fetch every page, and print them as one list.",
-          "allowNo": false,
-          "type": "boolean"
         }
       },
       "bodyInputFlags": {

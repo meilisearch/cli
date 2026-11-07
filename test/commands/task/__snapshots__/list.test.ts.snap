@@ -19,7 +19,7 @@ USAGE
     [--statuses <statuses>] [--after-enqueued-at <date>] [--before-enqueued-at
     <date>] [--after-started-at <date>] [--before-started-at <date>]
     [--after-finished-at <date>] [--before-finished-at <date>] [--reverse]
-    [--limit <n>] [--from <uid>] [--all]
+    [--limit <n>] [--from <uid>]
 
 OUTPUT FLAGS
   --json      Print compact JSON. The default when stdout is not a terminal.
@@ -35,7 +35,6 @@ FLAGS
                                    RFC 3339 format.
       --after-started-at=<date>    Match the tasks started after this date, in
                                    RFC 3339 format.
-      --all                        Fetch every page, and print them as one list.
       --batch-ids=<uids>           Match the tasks of these batch uids,
                                    comma-separated. \`*\` matches every one.
       --before-enqueued-at=<date>  Match the tasks enqueued before this date, in

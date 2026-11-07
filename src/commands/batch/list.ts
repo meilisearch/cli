@@ -1,6 +1,5 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { nextFromQuery } from "../../lib/pagination.js";
 import { batchFilterFlags, batchFilterQuery } from "../../lib/task-filters.js";
 
 export default class BatchList extends BaseCommand {
@@ -36,11 +35,12 @@ export default class BatchList extends BaseCommand {
       ...batchFilterQuery(flags),
       reverse: flags.reverse ? true : undefined,
     };
-    await this.outputList(
-      (page) => this.meilisearch.batches.getBatches({ ...filters, ...page }),
-      { limit: flags.limit, from: flags.from },
-      flags.all,
-      nextFromQuery,
+    await this.output(
+      await this.meilisearch.batches.getBatches({
+        ...filters,
+        limit: flags.limit,
+        from: flags.from,
+      }),
     );
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Pagination for list routes: `--limit`, `--offset` or `--from`, and `--all`.
+ * Pagination for list routes: `--limit`, `--offset` and `--all`.
  * See docs/contract/output.md, section Pagination.
  */
 
@@ -11,14 +11,8 @@ export interface OffsetQuery {
   offset?: number | undefined;
 }
 
-/** The query of a route that pages with a cursor: tasks and batches. */
-export interface FromQuery {
-  limit?: number | undefined;
-  from?: number | undefined;
-}
-
 /** The envelope fields that describe one page rather than the whole list. */
-const PAGE_FIELDS = ["limit", "offset", "from"];
+const PAGE_FIELDS = ["limit", "offset"];
 
 function numberField(page: ListPage, name: string): number {
   const value = page[name];
@@ -30,16 +24,6 @@ export function nextOffsetQuery(query: OffsetQuery, page: ListPage): OffsetQuery
   const offset = numberField(page, "offset") + page.results.length;
   const done = page.results.length === 0 || offset >= numberField(page, "total");
   return done ? undefined : { ...query, offset };
-}
-
-/**
- * The query of the page after `page` on a cursor route: the API answers the
- * `from` of the next page in `next`, and a `next` that is not a number, null
- * on the last page, ends the walk.
- */
-export function nextFromQuery(query: FromQuery, page: ListPage): FromQuery | undefined {
-  const next = page.next;
-  return typeof next === "number" ? { ...query, from: next } : undefined;
 }
 
 /** The query of a route that pages by number: the Management API's. */
@@ -70,8 +54,7 @@ export async function* iteratePages<Q, P extends ListPage>(
 
 /**
  * The envelope of the last page with `results` replaced by every item and the
- * fields that describe one page removed. The others, like `total`, stay. A
- * route carries one pair or the other, so dropping all three is dropping its.
+ * fields that describe one page removed. The others, like `total`, stay.
  */
 export function mergePages(pages: readonly ListPage[]): ListPage {
   const last = { ...(pages.at(-1) ?? { results: [] }) };

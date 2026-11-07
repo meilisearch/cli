@@ -6,7 +6,7 @@ import {
   makeTask,
   meilisearchHandlers,
 } from "../../helpers/meilisearch-handlers.js";
-import { countRequests, recordRequests, server, useMockServer } from "../../helpers/msw.js";
+import { recordRequests, server, useMockServer } from "../../helpers/msw.js";
 import { runCli, runCommand } from "../../helpers/run-command.js";
 
 useMockServer();
@@ -80,17 +80,6 @@ describe("meili task list", () => {
       uids: "3",
       indexUids: "movies",
     });
-  });
-
-  it("follows the next cursor with --all and merges every page into one envelope", async () => {
-    server.use(meilisearchHandlers.tasks(five));
-    let result: Awaited<ReturnType<typeof runCommand>> | undefined;
-    const requests = await countRequests(async () => {
-      result = await runCommand(TaskList, ["--all", "--limit", "2", ...project]);
-    });
-    expect(requests).toBe(3);
-    expect(result?.exitCode).toBe(0);
-    expect(JSON.parse(result?.stdout ?? "")).toEqual({ results: five, total: 5, next: null });
   });
 
   it("passes an authentication error through with a hint and exits 3", async () => {

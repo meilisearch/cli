@@ -39,7 +39,13 @@ import {
   writeData,
   writeView,
 } from "./output.js";
-import { iteratePages, type ListPage, mergePages } from "./pagination.js";
+import {
+  iteratePages,
+  type ListPage,
+  mergePages,
+  nextOffsetQuery,
+  type OffsetQuery,
+} from "./pagination.js";
 import {
   credentialsFilePath,
   readCredentialsFile,
@@ -66,11 +72,8 @@ export type GlobalFlags = Interfaces.InferredFlags<
     typeof BaseCommand.syncWithCloudFlags
 >;
 
-/** The two flags a list route declares whichever way it pages, shared by both groups below. */
+/** `--limit`, which a list route declares whichever way it pages, shared by both groups below. */
 const LIMIT_FLAG = Flags.integer({ description: "Passed to the API.", helpValue: "<n>" });
-const ALL_FLAG = Flags.boolean({
-  description: "Fetch every page, and print them as one list.",
-});
 
 export interface WaitFlagValues {
   wait?: boolean | undefined;
@@ -200,13 +203,14 @@ export abstract class BaseCommand extends Command {
   static paginationFlags = {
     limit: LIMIT_FLAG,
     offset: Flags.integer({ description: "Passed to the API.", helpValue: "<n>" }),
-    all: ALL_FLAG,
+    all: Flags.boolean({ description: "Fetch every page, and print them as one list." }),
   };
 
   /**
    * The same group for a route that pages with a cursor rather than an offset:
    * tasks and batches take `from` and answer `next`. One group per cursor name,
    * because the contract names the flag after the parameter of its route.
+   * No `--all`: an instance can hold millions of tasks and batches.
    */
   static fromPaginationFlags = {
     limit: LIMIT_FLAG,
@@ -214,7 +218,6 @@ export abstract class BaseCommand extends Command {
       description: "Passed to the API: the uid the page starts at, going down.",
       helpValue: "<uid>",
     }),
-    all: ALL_FLAG,
   };
 
   /** Shared group for commands that send a JSON body. */
@@ -403,11 +406,10 @@ export abstract class BaseCommand extends Command {
    * one envelope. List routes end with this call. `fetchPage` is one API call,
    * returning the API body as it is. `view` is the text for a human, as in `output`.
    */
-  protected async outputList<Q>(
-    fetchPage: (query: Q) => Promise<ListPage>,
-    query: Q,
+  protected async outputList(
+    fetchPage: (query: OffsetQuery) => Promise<ListPage>,
+    query: OffsetQuery,
     all: boolean,
-    nextQuery: (query: Q, page: ListPage) => Q | undefined,
     view?: (page: ListPage) => HumanView,
   ): Promise<void> {
     if (!all) {
@@ -415,7 +417,7 @@ export abstract class BaseCommand extends Command {
       return;
     }
     const pages: ListPage[] = [];
-    for await (const page of iteratePages(fetchPage, query, nextQuery)) pages.push(page);
+    for await (const page of iteratePages(fetchPage, query, nextOffsetQuery)) pages.push(page);
     await this.output(mergePages(pages), view);
   }
 
