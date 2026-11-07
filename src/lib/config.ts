@@ -85,13 +85,12 @@ export const ENV_VARS: ReadonlyArray<{
   },
   {
     name: ENV.JSON,
-    description:
-      "`true` or `1` prints compact JSON, like --json. Set it once for an agent that runs in a terminal.",
+    description: "`true` or `1` prints compact JSON, like --json.",
     flag: "json",
   },
   {
     name: ENV.NO_COLOR,
-    description: "Any value prints without colors, like --no-color. Read by many CLIs.",
+    description: "Any value prints without colors, like --no-color.",
   },
 ];
 

@@ -69,10 +69,8 @@ ENVIRONMENT VARIABLES
   MEILI_TIMEOUT       Default --timeout for --wait.
   MEILI_NO_ANALYTICS  \`true\` or \`1\` turns off the anonymous usage data the CLI
                       sends. \`DO_NOT_TRACK=1\` and \`CI\` turn it off too.
-  MEILI_JSON          \`true\` or \`1\` prints compact JSON, like --json. Set it
-                      once for an agent that runs in a terminal.
-  NO_COLOR            Any value prints without colors, like --no-color. Read by
-                      many CLIs.
+  MEILI_JSON          \`true\` or \`1\` prints compact JSON, like --json.
+  NO_COLOR            Any value prints without colors, like --no-color.
 
 "
 `;

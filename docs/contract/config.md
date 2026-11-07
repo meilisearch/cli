@@ -171,8 +171,8 @@ A command cannot build a client by itself. Commands with `api = "none"` (`schema
 | `MEILI_MANAGEMENT_DASHBOARD_URL` | Dashboard URL, which hosts the consent page of `auth login`. Default `https://cloud.meilisearch.com`. For development and tests. |
 | `MEILI_TIMEOUT` | Default `--timeout` for `--wait`. |
 | `MEILI_NO_ANALYTICS` | `true` or `1` turns off the anonymous usage data the CLI sends, see "Analytics". |
-| `MEILI_JSON` | `true` or `1` prints compact JSON, like `--json`. Set it once for an agent that runs in a terminal. |
-| `NO_COLOR` | Any value prints without colors, like `--no-color`. Read by many CLIs, see no-color.org. |
+| `MEILI_JSON` | `true` or `1` prints compact JSON, like `--json`. |
+| `NO_COLOR` | Any value prints without colors, like `--no-color`. |
 
 `meili --help` documents every variable except the `MEILI_MANAGEMENT_*` ones, which are for development and tests: `CONTRIBUTING.md` documents them. Adding a variable is a contract change.
 
