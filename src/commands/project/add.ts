@@ -5,7 +5,7 @@ import type { PostApiV2ProjectsData } from "../../lib/clients/management/generat
 import { cloudOf, readTeamNames, waitForProject } from "../../lib/cloud-sync.js";
 import { assertNoProject, type ConfigFile, maskSecret, writeConfigFile } from "../../lib/config.js";
 import { MeiliCliError } from "../../lib/errors.js";
-import { projectView } from "../../lib/human.js";
+import { objectLines } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
 import { paint } from "../../lib/output.js";
 
@@ -97,7 +97,7 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
                   ? `${paint("green", "✓")} Project ${project.name} is running.`
                   : `${paint("yellow", "◐")} Project ${project.name} is created and is starting. This takes a few minutes.`,
               ],
-        data: projectView(shown),
+        data: objectLines(shown).join("\n"),
         next:
           sync !== undefined || project.status === "failed"
             ? []

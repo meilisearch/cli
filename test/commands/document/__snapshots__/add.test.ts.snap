@@ -82,26 +82,29 @@ exports[`meili document add > tells a human in a terminal what the task will do,
 The documents are not searchable yet. Follow the task: meili task view --id 42
 Next time, wait for the end with --wait.
 ",
-  "stdout": "  Task      42
-  Status    enqueued
-  Type      documentAdditionOrUpdate
-  Index     movies
-  Enqueued  2026-09-24T10:00:00Z
+  "stdout": "  taskUid     42
+  indexUid    movies
+  status      enqueued
+  type        documentAdditionOrUpdate
+  enqueuedAt  2026-09-24T10:00:00Z
 ",
 }
 `;
 
 exports[`meili document add > tells a human in a terminal what the task will do, then what it did with --wait 2`] = `
-"  Task      42
-  Status    succeeded
-  Type      documentAdditionOrUpdate
-  Index     movies
-  Received  2 documents
-  Indexed   2 documents
-  Duration  PT1.204S
-  Enqueued  2026-09-24T10:00:00Z
-  Started   2026-09-24T10:00:00Z
-  Finished  2026-09-24T10:00:01Z
+"  indexUid    movies
+  type        documentAdditionOrUpdate
+  enqueuedAt  2026-09-24T10:00:00Z
+  startedAt   2026-09-24T10:00:00Z
+  finishedAt  2026-09-24T10:00:01Z
+  duration    PT1.204S
+  batchUid    null
+  canceledBy  null
+  details
+    receivedDocuments  2
+    indexedDocuments   2
+  uid         42
+  status      succeeded
 "
 `;
 
@@ -112,11 +115,21 @@ exports[`meili document add > writes the error of a failed task first for a huma
   Docs: https://docs.meilisearch.com/errors#index_primary_key_no_candidate_found
 
 ",
-  "stdout": "  Task      42
-  Status    failed
-  Type      documentAdditionOrUpdate
-  Index     movies
-  Enqueued  2026-09-24T10:00:00Z
+  "stdout": "  indexUid    movies
+  type        documentAdditionOrUpdate
+  enqueuedAt  2026-09-24T10:00:00Z
+  startedAt   null
+  finishedAt  null
+  duration    null
+  batchUid    null
+  canceledBy  null
+  error
+    message  The primary key of index \`movies\` is missing.
+    code     index_primary_key_no_candidate_found
+    type     invalid_request
+    link     https://docs.meilisearch.com/errors#index_primary_key_no_candidate_found
+  uid         42
+  status      failed
 ",
 }
 `;

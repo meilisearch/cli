@@ -4,7 +4,7 @@
  * cut, and a date or a duration stays as the API writes it.
  */
 import { stripVTControlCharacters } from "node:util";
-import type { EnqueuedTask, Task } from "meilisearch";
+import type { Task } from "meilisearch";
 import type { Project } from "./clients/management/generated/types.gen.js";
 import { describeError, isRecord } from "./errors.js";
 import { type HumanView, paint } from "./output.js";
@@ -27,14 +27,6 @@ export function table(header: string[], rows: string[][]): string {
       )
       .join("  ");
   return [paint("bold", line(header)), ...rows.map(line)].join("\n");
-}
-
-/** One `label  value` per line, the labels in grey and the values aligned. */
-export function fields(rows: [string, string][]): string {
-  const labelWidth = Math.max(...rows.map(([label]) => label.length));
-  return rows
-    .map(([label, value]) => `  ${padEnd(paint("dim", label), labelWidth + 2)}${value}`)
-    .join("\n");
 }
 
 /** A value that fits on one line: text, a number, a boolean, null, or an array of those. */
@@ -113,56 +105,16 @@ export function projectStatus(value: string): string {
   return status(value, value.charAt(0).toUpperCase() + value.slice(1));
 }
 
-const yesNo = (value: boolean): string => (value ? "yes" : "no");
-
-/** A Cloud project in full: its name and status, a summary, then every field. */
-export function projectView(project: Project): string {
-  const dot = paint("dim", " • ");
-  const rows: [string, string][] = [
-    ["URL", project.url ?? paint("dim", "none yet")],
-    ["Project UID", project.projectUid],
-    ["Read only", yesNo(project.readOnly)],
-    ["Paused", yesNo(project.paused)],
-    ["Created", project.createdAt],
-    ["Terminated", project.terminatedAt ?? paint("dim", "no")],
-    ["Free trial ends", project.freeTrialEndsAt ?? paint("dim", "no")],
-  ];
-  if (project.masterKey !== undefined) rows.push(["Master key", project.masterKey]);
+/** What a project is, above its fields: its name and status, its team and version, its plan. */
+export function projectSummary(project: Project): string[] {
   return [
     `${paint("bold", project.name)}  ${projectStatus(project.status)}`,
-    [`Project ${project.id} of team ${project.teamId}`, `Meilisearch ${project.msVersion}`].join(
-      dot,
+    summaryLine(
+      `Project ${project.id} of team ${project.teamId}`,
+      `Meilisearch ${project.msVersion}`,
     ),
     `Plan ${project.resource.displayName ?? project.resource.plan} on resource ${project.resourceId}, region ${project.resource.regionId}`,
-    "",
-    fields(rows),
-    `  ${paint("dim", "Resource")}`,
-    ...objectLines(project.resource, 4),
-  ].join("\n");
-}
-
-/** A task, as enqueued or as it ended: what it is, what it did, and when. */
-export function taskView(task: EnqueuedTask | Task): string {
-  const head: [string, string][] = [
-    ["Task", String("uid" in task ? task.uid : task.taskUid)],
-    ["Status", status(task.status)],
-    ["Type", task.type],
-    ["Index", task.indexUid ?? paint("dim", "none")],
   ];
-  if (!("uid" in task)) return fields([...head, ["Enqueued", task.enqueuedAt]]);
-  const documents = (count: number | undefined) =>
-    count === undefined ? undefined : `${count} documents`;
-  const rows: [string, string | null | undefined][] = [
-    ...head,
-    ["Received", documents(task.details?.receivedDocuments)],
-    ["Indexed", documents(task.details?.indexedDocuments)],
-    ["Deleted", documents(task.details?.deletedDocuments)],
-    ["Duration", task.duration],
-    ["Enqueued", task.enqueuedAt],
-    ["Started", task.startedAt],
-    ["Finished", task.finishedAt],
-  ];
-  return fields(rows.filter((row): row is [string, string] => typeof row[1] === "string"));
 }
 
 /** The status sentence of a task that ended: ✓ and what it did, or ✗ and its error. */

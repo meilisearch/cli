@@ -22,7 +22,7 @@ import {
   resolveProjectConnection,
 } from "./config.js";
 import { MeiliCliError, toRenderedError, writeError, writeNotice, writeWarning } from "./errors.js";
-import { defaultView, taskOutcome, taskView } from "./human.js";
+import { defaultView, itemView, taskOutcome } from "./human.js";
 import { readStdin } from "./input.js";
 import {
   type HumanView,
@@ -446,8 +446,7 @@ export abstract class BaseCommand extends Command {
   ): Promise<void> {
     if (flags.wait !== true) {
       await this.output(task, () => ({
-        status: [`${paint("yellow", "◐")} ${sentences.enqueued(task.taskUid)}`],
-        data: taskView(task),
+        ...itemView([`${paint("yellow", "◐")} ${sentences.enqueued(task.taskUid)}`], task),
         next: [
           `${paint("dim", sentences.pending)} meili task view --id ${task.taskUid}`,
           `${paint("dim", "Next time, wait for the end with")} --wait${paint("dim", ".")}`,
@@ -461,10 +460,9 @@ export abstract class BaseCommand extends Command {
       onProgress: (current) => progress.update(current.status),
     });
     progress.end();
-    await this.output(finalTask, () => ({
-      status: taskOutcome(finalTask, sentences.succeeded),
-      data: taskView(finalTask),
-    }));
+    await this.output(finalTask, () =>
+      itemView(taskOutcome(finalTask, sentences.succeeded), finalTask),
+    );
     if (isTaskFailure(finalTask)) {
       const error = new MeiliCliError(
         "cli_task_failed",

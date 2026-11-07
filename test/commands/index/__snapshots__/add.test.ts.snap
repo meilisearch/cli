@@ -74,11 +74,11 @@ exports[`meili index add > tells a human in a terminal that the task is enqueued
 The index does not exist yet. Follow the task: meili task view --id 11
 Next time, wait for the end with --wait.
 ",
-  "stdout": "  Task      11
-  Status    enqueued
-  Type      indexCreation
-  Index     movies
-  Enqueued  2026-09-24T10:00:00Z
+  "stdout": "  taskUid     11
+  indexUid    movies
+  status      enqueued
+  type        indexCreation
+  enqueuedAt  2026-09-24T10:00:00Z
 ",
 }
 `;

@@ -99,11 +99,11 @@ exports[`meili export > tells a human in a terminal what it did 1`] = `
 The destination does not have the data yet. Follow the task: meili task view --id 7
 Next time, wait for the end with --wait.
 ",
-  "stdout": "  Task      7
-  Status    enqueued
-  Type      export
-  Index     none
-  Enqueued  2026-09-24T10:00:00Z
+  "stdout": "  taskUid     7
+  indexUid    null
+  status      enqueued
+  type        export
+  enqueuedAt  2026-09-24T10:00:00Z
 ",
 }
 `;

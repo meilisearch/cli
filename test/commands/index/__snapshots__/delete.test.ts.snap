@@ -69,11 +69,11 @@ exports[`meili index delete > tells a human in a terminal what it did 1`] = `
 The index is still there until the task succeeds. Follow it: meili task view --id 13
 Next time, wait for the end with --wait.
 ",
-  "stdout": "  Task      13
-  Status    enqueued
-  Type      indexDeletion
-  Index     movies
-  Enqueued  2026-09-24T10:00:00Z
+  "stdout": "  taskUid     13
+  indexUid    movies
+  status      enqueued
+  type        indexDeletion
+  enqueuedAt  2026-09-24T10:00:00Z
 ",
 }
 `;

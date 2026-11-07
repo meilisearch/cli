@@ -115,11 +115,11 @@ exports[`meili task delete > tells a human in a terminal what it did 1`] = `
 They are still listed until the task succeeds. Follow it: meili task view --id 8
 Next time, wait for the end with --wait.
 ",
-  "stdout": "  Task      8
-  Status    enqueued
-  Type      taskDeletion
-  Index     none
-  Enqueued  2026-09-24T10:00:00Z
+  "stdout": "  taskUid     8
+  indexUid    null
+  status      enqueued
+  type        taskDeletion
+  enqueuedAt  2026-09-24T10:00:00Z
 ",
 }
 `;

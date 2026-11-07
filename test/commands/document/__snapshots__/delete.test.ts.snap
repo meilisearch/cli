@@ -9,11 +9,11 @@ exports[`meili document delete > names the selector for a human in a terminal 1`
 They are still there until the task succeeds. Follow it: meili task view --id 43
 Next time, wait for the end with --wait.
 ",
-  "stdout": "  Task      43
-  Status    enqueued
-  Type      documentDeletion
-  Index     movies
-  Enqueued  2026-09-24T10:00:00Z
+  "stdout": "  taskUid     43
+  indexUid    movies
+  status      enqueued
+  type        documentDeletion
+  enqueuedAt  2026-09-24T10:00:00Z
 ",
 }
 `;

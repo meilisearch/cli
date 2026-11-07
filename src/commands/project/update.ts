@@ -10,7 +10,7 @@ import {
   writeConfigFile,
 } from "../../lib/config.js";
 import { MeiliCliError } from "../../lib/errors.js";
-import { projectView } from "../../lib/human.js";
+import { done, itemView } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
 import { paint } from "../../lib/output.js";
 
@@ -69,10 +69,9 @@ export default class ProjectUpdate extends BaseCommand {
       path: { id },
       body,
     });
-    await this.output(project, () => ({
-      status: [`${paint("green", "✓")} Project ${project.id} is renamed to ${project.name}.`],
-      data: projectView(project),
-    }));
+    await this.output(project, () =>
+      itemView([done(`Project ${project.id} is renamed to ${project.name}.`)], project),
+    );
     if (sync === undefined) return;
     const cloud = cloudOf(project, await readTeamNames(this.managementClient));
     writeConfigFile({

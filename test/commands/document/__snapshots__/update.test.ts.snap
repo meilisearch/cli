@@ -84,11 +84,11 @@ exports[`meili document update > tells a human in a terminal that the documents 
 The documents keep their old values until the task succeeds. Follow it: meili task view --id 42
 Next time, wait for the end with --wait.
 ",
-  "stdout": "  Task      42
-  Status    enqueued
-  Type      documentAdditionOrUpdate
-  Index     movies
-  Enqueued  2026-09-24T10:00:00Z
+  "stdout": "  taskUid     42
+  indexUid    movies
+  status      enqueued
+  type        documentAdditionOrUpdate
+  enqueuedAt  2026-09-24T10:00:00Z
 ",
 }
 `;

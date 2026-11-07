@@ -90,19 +90,20 @@ Check when it is ready: meili project view --id 343
 Once it is Running, save its URL and master key in the config file:
   meili config sync-with-cloud --project-name demo
 ",
-  "stdout": "demo  Creating
-Project 343 of team 12 • Meilisearch v1.54.0
-Plan Build on resource 3, region 1
-
-  URL              none yet
-  Project UID      ms-abc
-  Read only        no
-  Paused           no
-  Created          2026-10-14T10:00:00Z
-  Terminated       no
-  Free trial ends  no
-  Master key       ****9z8y
-  Resource
+  "stdout": "  id            343
+  name          demo
+  projectUid    ms-abc
+  url           null
+  masterKey     ****9z8y
+  teamId        12
+  resourceId    3
+  msVersion     v1.54.0
+  workloadType  production
+  readOnly      false
+  status        creating
+  paused        false
+  createdAt     2026-10-14T10:00:00Z
+  resource
     id           3
     name         build
     displayName  Build
@@ -113,18 +114,19 @@ Plan Build on resource 3, region 1
 `;
 
 exports[`meili project add > tells a human in a terminal that the project runs and is in the config file, with --wait --sync-config 1`] = `
-"demo  Running
-Project 343 of team 12 • Meilisearch v1.54.0
-Plan Build on resource 3, region 1
-
-  URL              https://ms-abc.sfo.meilisearch.io
-  Project UID      ms-abc
-  Read only        no
-  Paused           no
-  Created          2026-10-14T10:00:00Z
-  Terminated       no
-  Free trial ends  no
-  Resource
+"  id            343
+  name          demo
+  projectUid    ms-abc
+  url           https://ms-abc.sfo.meilisearch.io
+  teamId        12
+  resourceId    3
+  msVersion     v1.54.0
+  workloadType  production
+  readOnly      false
+  status        running
+  paused        false
+  createdAt     2026-10-14T10:00:00Z
+  resource
     id           3
     name         build
     displayName  Build
