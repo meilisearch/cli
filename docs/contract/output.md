@@ -128,7 +128,7 @@ A Cloud project is not ready when `POST /api/v2/projects` answers. Its `status` 
 - The final project is printed as `GET /api/v2/projects/{id}` returns it, without `masterKey`: only the creation returns it. `--sync-config` writes the key from the creation to the config file.
 - On timeout, the CLI returns `cli_timeout` and exits 5. The creation continues on the server, and nothing is written to the config file.
 - Progress goes to stderr, and only when stderr is a TTY: one line each time the status changes, such as "◐ Project 343 is health checking (95s)".
-- Ctrl-C stops the wait and exits 130, like a timeout: the creation continues, and nothing is written to the config file. A human reads the command to follow it: `meili project view --id <id>`.
+- Ctrl-C stops the wait and exits 130, like a timeout: the creation continues, and nothing is written to the config file. A human reads the command to follow it: `meili project view --id <id>`. With `--sync-config`, the human also reads that the project is not in the config file, and the command that adds it later: `meili config sync-with-cloud`.
 
 ## Destructive commands
 

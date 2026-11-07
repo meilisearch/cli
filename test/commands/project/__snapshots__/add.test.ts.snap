@@ -5,8 +5,11 @@ exports[`meili project add > exits 130 on Ctrl-C during --wait, tells a human ho
   "code": 130,
   "stderr": "
 ◐ Project 343 is still in progress. meili CLI stopped watching it.
+It was not added to the config file.
 
 Follow it: meili project view --id 343
+Once it is Running, add it to the config file:
+  meili config sync-with-cloud --project-name demo
 ",
 }
 `;

@@ -79,7 +79,18 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
         ? created
         : await this.watch(
             `Project ${created.id}`,
-            `meili project view --id ${created.id}`,
+            {
+              status: sync === undefined ? [] : ["It was not added to the config file."],
+              next: [
+                `${paint("dim", "Follow it:")} meili project view --id ${created.id}`,
+                ...(sync === undefined
+                  ? []
+                  : [
+                      paint("dim", "Once it is Running, add it to the config file:"),
+                      `  meili config sync-with-cloud --project-name ${sync.entry}`,
+                    ]),
+              ],
+            },
             (onProgress) =>
               waitForProject(this.managementClient, created.id, { timeoutMs, onProgress }),
           );

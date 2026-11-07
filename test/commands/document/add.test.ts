@@ -152,6 +152,26 @@ describe("meili document add", () => {
     expect(exit).toMatchSnapshot();
   });
 
+  it("exits 130 without an error when the last poll fails after Ctrl-C", async () => {
+    vi.spyOn(process, "exit").mockImplementationOnce(() => undefined as never);
+    server.use(
+      meilisearchHandlers.documentsAdd(makeEnqueuedTask()),
+      http.get(`${MEILISEARCH_URL}/tasks/42`, () => {
+        process.emit("SIGINT");
+        return HttpResponse.error();
+      }),
+    );
+    const result = await runCommand(DocumentAdd, [
+      "--index",
+      "movies",
+      "--data",
+      documents,
+      "--wait",
+      ...project,
+    ]);
+    expect(result).toEqual({ stdout: "", stderr: "", exitCode: 130 });
+  });
+
   it("prints the final task and exits 7 when the task failed", async () => {
     server.use(
       meilisearchHandlers.documentsAdd(makeEnqueuedTask()),

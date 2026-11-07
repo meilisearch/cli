@@ -423,11 +423,11 @@ export abstract class BaseCommand extends Command {
    * The `--wait` of `what`: `poll` polls it until its final status. On stderr,
    * one line each time the status changes, with the time spent, and a blank
    * line once it is over. Ctrl-C exits 130, and tells a human that `what` goes
-   * on and how to follow it.
+   * on, then `interrupted`: what the command did not do, and how to follow it.
    */
   protected async watch<T>(
     what: string,
-    follow: string,
+    interrupted: { status?: string[]; next: string[] },
     poll: (onProgress: (current: { status: string }) => void) => Promise<T>,
   ): Promise<T> {
     const startedAt = performance.now();
@@ -439,15 +439,17 @@ export abstract class BaseCommand extends Command {
           status: [
             "",
             `${paint("yellow", "◐")} ${what} is still in progress. meili CLI stopped watching it.`,
+            ...(interrupted.status ?? []),
           ],
-          next: [`${paint("dim", "Follow it:")} ${follow}`],
+          next: interrupted.next,
         });
       }
       exiting = this.exitNow(EXIT_CODES.interrupted);
     };
     process.once("SIGINT", onInterrupt);
+    let final: T;
     try {
-      const final = await poll(({ status }) => {
+      final = await poll(({ status }) => {
         if (status === last) return;
         last = status;
         const seconds = Math.round((performance.now() - startedAt) / 1000);
@@ -455,16 +457,16 @@ export abstract class BaseCommand extends Command {
           `${paint("yellow", "◐")} ${what} is ${status.replaceAll("_", " ")} (${seconds}s)`,
         );
       });
-      // Ctrl-C during the last poll: the command never goes on with its result.
+    } finally {
+      process.removeListener("SIGINT", onInterrupt);
+      // Ctrl-C during the last poll: the command never goes on with its result or its error.
       if (exiting !== undefined) {
         await exiting;
         this.exit(EXIT_CODES.interrupted);
       }
-      if (last !== undefined) writeNotice("");
-      return final;
-    } finally {
-      process.removeListener("SIGINT", onInterrupt);
     }
+    if (last !== undefined) writeNotice("");
+    return final;
   }
 
   /** The `--timeout` of `--wait`, or `MEILI_TIMEOUT`, or the default, in milliseconds. */
@@ -496,7 +498,7 @@ export abstract class BaseCommand extends Command {
     const timeoutMs = this.waitTimeoutMs(flags);
     const finalTask = await this.watch(
       `Task ${task.taskUid}`,
-      `meili task view --id ${task.taskUid}`,
+      { next: [`${paint("dim", "Follow it:")} meili task view --id ${task.taskUid}`] },
       (onProgress) => waitForTask(this.meilisearch, task.taskUid, { timeoutMs, onProgress }),
     );
     await this.output(finalTask, () =>
