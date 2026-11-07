@@ -1,5 +1,25 @@
 # @meilisearch/cli
 
+## 0.3.0
+
+### Minor Changes
+
+- Add `--rename` to `meili config update`: gives a project of the config file a new name. ([#83](https://github.com/meilisearch/cli/pull/83))
+- **Breaking:** Remove `--all` from `meili document list`: an index can hold millions of documents. Page with `--limit` and `--offset` instead. ([#81](https://github.com/meilisearch/cli/pull/81))
+- Add usage analytics for each help shown. ([#75](https://github.com/meilisearch/cli/pull/75))
+- **Breaking:** Change the output in a terminal: text for humans, and compact JSON with `--json` or `MEILI_JSON=1`. Piped output stays compact JSON. An agent that runs in a terminal sets `MEILI_JSON=1`. ([#82](https://github.com/meilisearch/cli/pull/82))
+- Add `-p` and `-i`, the short forms of `--project` and `--index`. ([#80](https://github.com/meilisearch/cli/pull/80))
+- Add usage analytics for unknown commands, and link `meili auth status` sessions to their Cloud user. ([#72](https://github.com/meilisearch/cli/pull/72))
+- Change `meili --version`: prints the same JSON as `meili version`. ([#77](https://github.com/meilisearch/cli/pull/77))
+- Change `--wait`: Ctrl-C exits 130 and says how to follow the task or project. ([#86](https://github.com/meilisearch/cli/pull/86))
+
+### Patch Changes
+
+- Fix `meili auth login --help`: says that the command also creates an account. ([#74](https://github.com/meilisearch/cli/pull/74))
+- Fix the config file: a project can be named `toString` or `constructor`. ([#84](https://github.com/meilisearch/cli/pull/84))
+- `meili teleport` shows a tip on how to rename the new project.
+- Fix `meili teleport --help`: says that the command moves a self-hosted project and is interactive. ([#71](https://github.com/meilisearch/cli/pull/71))
+
 ## 0.2.0
 
 ### Minor Changes
