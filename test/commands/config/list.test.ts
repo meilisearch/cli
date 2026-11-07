@@ -51,6 +51,27 @@ describe("meili config list", () => {
     expect(result.stdout).not.toContain("supersecretkey");
   });
 
+  it("prints the projects for a human in a terminal, their names in color", async () => {
+    const path = join(scrubbedHome, "projects.json");
+    writeConfigFile({
+      path,
+      projects: {
+        local: { url: "http://localhost:7700" },
+        prod: { url: "https://prod.example.com", apiKey: "supersecretkey1a2b" },
+      },
+    });
+    const result = await runCommand(ConfigList, [], { env: { MEILI_CONFIG: path }, tty: true });
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toBe(`Config file: ${path}\n\n`);
+    expect(result.stdout).toMatchSnapshot();
+
+    const colored = await runCommand(ConfigList, [], {
+      env: { MEILI_CONFIG: path, NO_COLOR: undefined },
+      tty: true,
+    });
+    expect(colored.stdout).toContain("\x1b[1m\x1b[36mlocal");
+  });
+
   it.skipIf(process.platform === "win32")(
     "warns on stderr about a file readable by others, and goes on",
     async () => {

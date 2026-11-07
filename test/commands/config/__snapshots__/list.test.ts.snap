@@ -25,3 +25,13 @@ EXAMPLES
 
 "
 `;
+
+exports[`meili config list > prints the projects for a human in a terminal, their names in color 1`] = `
+"local
+  url  http://localhost:7700
+
+prod
+  url     https://prod.example.com
+  apiKey  ****1a2b
+"
+`;
