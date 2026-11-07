@@ -24,6 +24,12 @@ describe("meili team view", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints a summary, then every attribute, for a human in a terminal", async () => {
+    server.use(managementHandlers.getTeam());
+    const result = await runCommand(TeamView, ["--id", "13"], { env, tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes the API's error body through on an unknown id, with exit 4", async () => {
     server.use(managementHandlers.apiError("/api/v2/teams/999", 404, teamNotFound));
     const result = await runCommand(TeamView, ["--id", "999"], { env });

@@ -18,6 +18,26 @@ exports[`meili key view > passes the 404 of an unknown key through and exits 4 1
 }
 `;
 
+exports[`meili key view > prints a summary, then every attribute, for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Key Default Search API Key
+Actions search • Indexes * • Expires never
+
+",
+  "stdout": "  name         Default Search API Key
+  description  Use it to search from the frontend
+  key          115f7b0806e6eb3409870fbfef319371dff43dd036746816358c1d71ad4e2221
+  actions      search
+  indexes      *
+  expiresAt    null
+  createdAt    2026-09-24T10:00:00.000000Z
+  updatedAt    2026-09-24T10:00:00.000000Z
+  uid          52787ccd-48ff-48e5-9c4b-03cd76978a60
+",
+}
+`;
+
 exports[`meili key view > prints its help without any network call 1`] = `
 "Get one API key.
 

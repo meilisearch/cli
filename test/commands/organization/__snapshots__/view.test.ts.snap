@@ -18,6 +18,24 @@ exports[`meili organization view > passes the API's error body through on an org
 }
 `;
 
+exports[`meili organization view > prints a summary, then every attribute, for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Beta
+Organization 2 (beta) • Default team 12
+
+",
+  "stdout": "  id             2
+  name           Beta
+  identifier     beta
+  ownerId        user-1
+  isAdmin        false
+  defaultTeamId  12
+  customerTier   null
+",
+}
+`;
+
 exports[`meili organization view > prints its help without any network call 1`] = `
 "Get one Meilisearch Cloud organization.
 

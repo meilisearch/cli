@@ -9,6 +9,27 @@ exports[`meili task view > passes the 404 of an unknown task through and exits 4
 }
 `;
 
+exports[`meili task view > prints a summary, then every attribute, for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Task 42  failed
+indexCreation on index movies
+
+",
+  "stdout": "  indexUid    movies
+  type        indexCreation
+  enqueuedAt  2026-09-24T10:00:00Z
+  startedAt   null
+  finishedAt  null
+  duration    null
+  batchUid    null
+  canceledBy  null
+  uid         42
+  status      failed
+",
+}
+`;
+
 exports[`meili task view > prints its help without any network call 1`] = `
 "Get one task.
 

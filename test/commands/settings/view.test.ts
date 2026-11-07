@@ -40,6 +40,12 @@ describe("meili settings view", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints a summary, then every attribute, for a human in a terminal", async () => {
+    server.use(meilisearchHandlers.settings(settings));
+    const result = await runCommand(SettingsView, ["--index", "movies", ...project], { tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("names the index in the path", async () => {
     server.use(meilisearchHandlers.settings(settings));
     const requests = await recordRequests(async () => {

@@ -18,6 +18,21 @@ exports[`meili index view > passes the 404 of an unknown --id through and exits 
 }
 `;
 
+exports[`meili index view > prints a summary, then every attribute, for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Index books
+Primary key isbn • Updated 2026-09-24T10:00:00.000000Z
+
+",
+  "stdout": "  uid         books
+  primaryKey  isbn
+  createdAt   2026-09-24T10:00:00.000000Z
+  updatedAt   2026-09-24T10:00:00.000000Z
+",
+}
+`;
+
 exports[`meili index view > prints its help without any network call 1`] = `
 "Get one index.
 

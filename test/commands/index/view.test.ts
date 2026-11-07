@@ -27,6 +27,12 @@ describe("meili index view", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints a summary, then every attribute, for a human in a terminal", async () => {
+    server.use(meilisearchHandlers.index(three));
+    const result = await runCommand(IndexView, ["--id", "books", ...project], { tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes the 404 of an unknown --id through and exits 4", async () => {
     server.use(meilisearchHandlers.index(three));
     const result = await runCommand(IndexView, ["--id", "nope", ...project]);

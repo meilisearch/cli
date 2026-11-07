@@ -9,6 +9,35 @@ exports[`meili settings view > passes the API error of a missing index through a
 }
 `;
 
+exports[`meili settings view > prints a summary, then every attribute, for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Settings of index movies
+
+",
+  "stdout": "  displayedAttributes   *
+  searchableAttributes  title, overview
+  filterableAttributes  genres
+  sortableAttributes    empty
+  rankingRules          words, typo, proximity, attribute, sort, exactness
+  stopWords             the
+  synonyms
+    phone  iPhone
+  distinctAttribute     null
+  typoTolerance
+    enabled              true
+    minWordSizeForTypos
+      oneTypo   5
+      twoTypos  9
+  pagination
+    maxTotalHits  1000
+  searchCutoffMs        null
+  facetSearch           true
+  prefixSearch          indexingTime
+",
+}
+`;
+
 exports[`meili settings view > prints its help without any network call 1`] = `
 "Get the settings of an index.
 

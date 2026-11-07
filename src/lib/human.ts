@@ -264,3 +264,11 @@ function listView(rows: Record<string, unknown>[], envelope: Record<string, unkn
     next,
   };
 }
+
+/** One item: a summary of it on the status line, then every attribute. */
+export function itemView(summary: string[], item: object): HumanView {
+  return { status: summary, data: objectLines(item as Record<string, unknown>).join("\n") };
+}
+
+/** Parts of a summary line, grey dots between them. */
+export const summaryLine = (...parts: string[]): string => parts.join(paint("dim", " • "));

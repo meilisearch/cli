@@ -1,5 +1,7 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
+import { itemView, summaryLine } from "../../lib/human.js";
+import { paint } from "../../lib/output.js";
 
 export default class KeyView extends BaseCommand {
   static api: Api = "meilisearch";
@@ -27,6 +29,18 @@ The answer is the API body as it is, so it carries the \`key\` field: a credenti
 
   async run(): Promise<void> {
     const { flags } = await this.parse(KeyView);
-    await this.output(await this.meilisearch.getKey(flags.id));
+    await this.output(await this.meilisearch.getKey(flags.id), (key) =>
+      itemView(
+        [
+          paint("bold", `Key ${key.name ?? key.uid}`),
+          summaryLine(
+            `Actions ${key.actions.join(", ")}`,
+            `Indexes ${key.indexes.join(", ")}`,
+            `Expires ${key.expiresAt ?? "never"}`,
+          ),
+        ],
+        key,
+      ),
+    );
   }
 }

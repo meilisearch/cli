@@ -18,6 +18,22 @@ exports[`meili team view > passes the API's error body through on an unknown id,
 }
 `;
 
+exports[`meili team view > prints a summary, then every attribute, for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Search
+Team 13 of organization 1
+
+",
+  "stdout": "  id              13
+  name            Search
+  organizationId  1
+  ownerId         user-1
+  isAdmin         true
+",
+}
+`;
+
 exports[`meili team view > prints its help without any network call 1`] = `
 "Get one Meilisearch Cloud team.
 

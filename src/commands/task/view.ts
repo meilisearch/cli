@@ -1,5 +1,7 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
+import { itemView, status, summaryLine } from "../../lib/human.js";
+import { paint } from "../../lib/output.js";
 
 export default class TaskView extends BaseCommand {
   static api: Api = "meilisearch";
@@ -21,6 +23,17 @@ Prints its status and its error.`;
 
   async run(): Promise<void> {
     const { flags } = await this.parse(TaskView);
-    await this.output(await this.meilisearch.tasks.getTask(flags.id));
+    await this.output(await this.meilisearch.tasks.getTask(flags.id), (task) =>
+      itemView(
+        [
+          `${paint("bold", `Task ${task.uid}`)}  ${status(task.status)}`,
+          summaryLine(
+            `${task.type} on index ${task.indexUid ?? paint("dim", "none")}`,
+            ...(task.duration === null ? [] : [`Duration ${task.duration}`]),
+          ),
+        ],
+        task,
+      ),
+    );
   }
 }
