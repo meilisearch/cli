@@ -75,7 +75,7 @@ exports[`meili project add > sends the flags as the project body with the token,
 {
   "exitCode": 0,
   "stderr": "",
-  "stdout": "{"id":343,"name":"demo","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","masterKey":"****9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","displayName":"Build","plan":"build","regionId":1}}
+  "stdout": "{"id":343,"name":"demo","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","masterKey":"****9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","displayName":"Build","plan":"build","regionId":1}}
 ",
 }
 `;

@@ -31,6 +31,7 @@ export const project: Project = {
   teamId: 12,
   resourceId: 3,
   msVersion: "v1.54.0",
+  workloadType: "production",
   readOnly: false,
   status: "running",
   paused: false,
