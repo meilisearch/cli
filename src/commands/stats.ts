@@ -1,6 +1,8 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../lib/base-command.js";
 import { fetchStats } from "../lib/clients/meilisearch.js";
+import { itemView, summaryLine } from "../lib/human.js";
+import { paint } from "../lib/output.js";
 
 export default class Stats extends BaseCommand {
   static api: Api = "meilisearch";
@@ -43,6 +45,30 @@ export default class Stats extends BaseCommand {
         showInternalDatabaseSizes: flags["show-internal-database-sizes"] ? true : undefined,
         sizeFormat: flags["size-format"],
       }),
+      (stats) => {
+        // The fields the summary reads, in both routes' responses.
+        const { indexes, databaseSize, lastUpdate, numberOfDocuments, isIndexing } =
+          stats as Record<string, unknown>;
+        const count = Object.keys(indexes ?? {}).length;
+        const summary =
+          flags.index === undefined
+            ? [
+                paint("bold", "Statistics of the instance"),
+                summaryLine(
+                  `${count} ${count === 1 ? "index" : "indexes"}`,
+                  `Database size ${databaseSize}`,
+                  `Last update ${lastUpdate ?? paint("dim", "never")}`,
+                ),
+              ]
+            : [
+                paint("bold", `Statistics of index ${flags.index}`),
+                summaryLine(
+                  `${numberOfDocuments} documents`,
+                  isIndexing === true ? "Indexing" : "Not indexing",
+                ),
+              ];
+        return itemView(summary, stats as object);
+      },
     );
   }
 }
