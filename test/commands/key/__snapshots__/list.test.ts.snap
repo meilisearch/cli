@@ -9,6 +9,23 @@ exports[`meili key list > passes an authentication error through with a hint and
 }
 `;
 
+exports[`meili key list > prints a table for a human in a terminal, a long description cut, and says so 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Showing 2 of 2
+offset 0 • limit 20
+
+
+Simplified view: 6 of 9 attributes. See every field: --json.
+Descriptions are cut. See one in full: meili key view --id <key>
+",
+  "stdout": "NAME                    DESCRIPTION                     KEY                                                               ACTIONS  INDEXES  EXPIRES_AT
+Default Search API Key  Use it to search from the fro…  115f7b0806e6eb3409870fbfef319371dff43dd036746816358c1d71ad4e2221  search   *        null
+Default Admin API Key   Use it for anything that is n…  5dad55f9b953543783f152231fae2213ecc10c218498369b50e6925b1163c657  *        *        null
+",
+}
+`;
+
 exports[`meili key list > prints its help without any network call 1`] = `
 "List the API keys of the instance.
 

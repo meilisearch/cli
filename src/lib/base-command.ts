@@ -388,21 +388,22 @@ export abstract class BaseCommand extends Command {
   /**
    * Writes one page as the API sent it, or every page with `--all`, merged into
    * one envelope. List routes end with this call. `fetchPage` is one API call,
-   * returning the API body as it is.
+   * returning the API body as it is. `view` is the text for a human, as in `output`.
    */
   protected async outputList<Q>(
     fetchPage: (query: Q) => Promise<ListPage>,
     query: Q,
     all: boolean,
     nextQuery: (query: Q, page: ListPage) => Q | undefined,
+    view?: (page: ListPage) => HumanView,
   ): Promise<void> {
     if (!all) {
-      await this.output(await fetchPage(query));
+      await this.output(await fetchPage(query), view);
       return;
     }
     const pages: ListPage[] = [];
     for await (const page of iteratePages(fetchPage, query, nextQuery)) pages.push(page);
-    await this.output(mergePages(pages));
+    await this.output(mergePages(pages), view);
   }
 
   /**
