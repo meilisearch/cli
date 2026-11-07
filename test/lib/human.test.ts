@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { defaultView } from "../../src/lib/human.js";
+import { defaultView, objectLines } from "../../src/lib/human.js";
 import { setOutputMode } from "../../src/lib/output.js";
 
 describe("defaultView", () => {
@@ -39,5 +39,9 @@ describe("defaultView", () => {
     expect(
       defaultView({ uid: "movies", status: "available", settings: { rankingRules: ["words"] } }),
     ).toMatchSnapshot();
+  });
+
+  it("keeps the leading spaces of a value", () => {
+    expect(objectLines({ title: "  indented" }, 0)).toEqual(["title    indented"]);
   });
 });

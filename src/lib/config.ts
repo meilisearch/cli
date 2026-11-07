@@ -90,7 +90,7 @@ export const ENV_VARS: ReadonlyArray<{
   },
   {
     name: ENV.NO_COLOR,
-    description: "Any value prints without colors, like --no-color.",
+    description: "Any nonempty value prints without colors, like --no-color.",
   },
 ];
 

@@ -1263,7 +1263,7 @@
     "config:list": {
       "aliases": [],
       "args": {},
-      "description": "List the projects of the config file.\n\nPrints the path of the file and its projects as JSON, keys masked.",
+      "description": "List the projects of the config file.\n\nPrints the path of the file and its projects, keys masked.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
         "MEILI_CONFIG=./meili.json <%= config.bin %> <%= command.id %>"

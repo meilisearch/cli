@@ -45,16 +45,17 @@ export function simpleValue(value: unknown): string | undefined {
 /** The words of `text` in lines of at most `size` characters. A longer word gets its own line. */
 function wrap(text: string, size: number): string[] {
   const lines: string[] = [];
-  let line = "";
+  // Undefined until the first word: an empty word, from a leading space, is kept.
+  let line: string | undefined;
   for (const word of text.split(" ")) {
-    if (line !== "" && line.length + 1 + word.length > size) {
+    if (line !== undefined && line.length + 1 + word.length > size) {
       lines.push(line);
       line = word;
     } else {
-      line = line === "" ? word : `${line} ${word}`;
+      line = line === undefined ? word : `${line} ${word}`;
     }
   }
-  return [...lines, line];
+  return [...lines, line ?? ""];
 }
 
 /**

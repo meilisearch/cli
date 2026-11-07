@@ -66,8 +66,11 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
     const sentences = (what: string): TaskSentences => ({
       enqueued: (uid) => `Task ${uid} will delete ${what} in index ${flags.index}.`,
       pending: "They are still there until the task succeeds. Follow it:",
+      // The count is null when a later task of the same batch deleted the index.
       succeeded: ({ details }) =>
-        `${details?.deletedDocuments} documents deleted from index ${flags.index}.`,
+        details?.deletedDocuments == null
+          ? `documents deleted from index ${flags.index}.`
+          : `${details.deletedDocuments} documents deleted from index ${flags.index}.`,
     });
 
     if (flags.all) {

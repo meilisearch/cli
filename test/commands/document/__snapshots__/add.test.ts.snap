@@ -79,7 +79,7 @@ exports[`meili document add > tells a human in a terminal what the task will do,
   "stderr": "◐ Meilisearch received the documents. Task 42 will add them to index movies.
 
 
-The documents are not searchable yet. Follow the task: meili task view --id 42
+The new documents are not searchable yet. Follow the task: meili task view --id 42
 Next time, wait for the end with --wait.
 ",
   "stdout": "  taskUid     42

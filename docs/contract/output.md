@@ -31,7 +31,7 @@ The text holds the same data as the JSON, with these rules:
 
 - No value is cut, except a long description in the table of `key list`, which says so. Dates and durations stay as the API writes them. No relative date, pager, spinner or emoji.
 - A list that shows only some fields says "Simplified view", and how to see everything.
-- A list is a table. Its headers are the attribute names in upper snake case, `TEAM_ID` for `teamId`. It shows the attributes with a simple value (text, number, boolean, null, or a list of those), at most 6. Its other envelope fields, such as `limit`, go on the status line.
+- A list is a table. By default, its headers are the attribute names in upper snake case, `TEAM_ID` for `teamId`. It shows the attributes with a simple value (text, number, boolean, null, or a list of those), at most 6. Its other envelope fields, such as `limit`, go on the status line. A command may choose its own columns, such as `project list`.
 - One item shows every attribute, one per line, nested ones indented. A `view` command, and `stats`, first give a summary of the item on stderr: its name, its status, and its main fields.
 - A write prints its task: `◐`, what the task will do and the command to follow it, or with `--wait`, `✓` or `✗` and the final task.
 - A command that adds, updates or deletes without a task first says what it did, with `✓`, then shows the item.

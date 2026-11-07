@@ -61,9 +61,12 @@ A document replaces the one that has the same primary key.`;
     await this.outputTask(task, flags, {
       enqueued: (uid) =>
         `Meilisearch received the documents. Task ${uid} will add them to index ${flags.index}.`,
-      pending: "The documents are not searchable yet. Follow the task:",
+      pending: "The new documents are not searchable yet. Follow the task:",
+      // A count is null when a later task of the same batch cleared the documents.
       succeeded: ({ details }) =>
-        `${details?.indexedDocuments} of ${details?.receivedDocuments} documents added to index ${flags.index}.`,
+        details?.indexedDocuments == null
+          ? `documents added to index ${flags.index}.`
+          : `${details.indexedDocuments} of ${details.receivedDocuments} documents added to index ${flags.index}.`,
     });
   }
 }

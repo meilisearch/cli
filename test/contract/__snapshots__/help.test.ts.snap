@@ -70,7 +70,7 @@ ENVIRONMENT VARIABLES
   MEILI_NO_ANALYTICS  \`true\` or \`1\` turns off the anonymous usage data the CLI
                       sends. \`DO_NOT_TRACK=1\` and \`CI\` turn it off too.
   MEILI_JSON          \`true\` or \`1\` prints compact JSON, like --json.
-  NO_COLOR            Any value prints without colors, like --no-color.
+  NO_COLOR            Any nonempty value prints without colors, like --no-color.
 
 "
 `;

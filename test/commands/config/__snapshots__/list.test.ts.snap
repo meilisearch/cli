@@ -16,7 +16,7 @@ FLAGS
 DESCRIPTION
   List the projects of the config file.
 
-  Prints the path of the file and its projects as JSON, keys masked.
+  Prints the path of the file and its projects, keys masked.
 
 EXAMPLES
   $ meili config list

@@ -172,7 +172,7 @@ A command cannot build a client by itself. Commands with `api = "none"` (`schema
 | `MEILI_TIMEOUT` | Default `--timeout` for `--wait`. |
 | `MEILI_NO_ANALYTICS` | `true` or `1` turns off the anonymous usage data the CLI sends, see "Analytics". |
 | `MEILI_JSON` | `true` or `1` prints compact JSON, like `--json`. |
-| `NO_COLOR` | Any value prints without colors, like `--no-color`. |
+| `NO_COLOR` | Any nonempty value prints without colors, like `--no-color`. |
 
 `meili --help` documents every variable except the `MEILI_MANAGEMENT_*` ones, which are for development and tests: `CONTRIBUTING.md` documents them. Adding a variable is a contract change.
 

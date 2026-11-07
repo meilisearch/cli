@@ -8,7 +8,7 @@ export default class ConfigList extends BaseCommand {
 
   static override description = `List the projects of the config file.
 
-Prints the path of the file and its projects as JSON, keys masked.`;
+Prints the path of the file and its projects, keys masked.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",

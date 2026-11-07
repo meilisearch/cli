@@ -111,7 +111,8 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
                   "dim",
                   `${running ? "Save" : "Once it is Running, save"} its URL and master key in the config file:`,
                 ),
-                `  meili config sync-with-cloud --project-name ${project.name}`,
+                // The URL names this project alone; two teams may have a project of this name.
+                `  meili config sync-with-cloud ${project.url == null ? `--project-name ${project.name}` : `--project-url ${project.url}`}`,
               ],
       }),
     );

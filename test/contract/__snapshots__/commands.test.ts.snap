@@ -234,7 +234,7 @@ Says whether a session of \`auth login\` exists, whether the authorization serve
       "api": "none",
       "description": "List the projects of the config file.
 
-Prints the path of the file and its projects as JSON, keys masked.",
+Prints the path of the file and its projects, keys masked.",
       "examples": [
         "meili config list",
         "MEILI_CONFIG=./meili.json meili config list",
