@@ -146,7 +146,9 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
         [sync.entry]: { url: project.url, apiKey: created.masterKey, cloud },
       },
     });
+    // A blank line after the project, which is printed above.
     this.say(
+      "",
       `${paint("green", "✓")} Added to the config file as ${sync.entry}. Use it with -p ${sync.entry}.`,
     );
   }

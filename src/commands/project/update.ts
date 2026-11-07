@@ -83,6 +83,7 @@ export default class ProjectUpdate extends BaseCommand {
         ),
       ),
     });
-    this.say(`${paint("green", "✓")} Config entry ${sync.entry} is renamed to ${sync.name}.`);
+    // A blank line after the project, which is printed above.
+    this.say("", `${paint("green", "✓")} Config entry ${sync.entry} is renamed to ${sync.name}.`);
   }
 }

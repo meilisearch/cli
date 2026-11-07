@@ -63,6 +63,7 @@ exports[`meili project update > tells a human in a terminal the new name, then t
   "exitCode": 0,
   "stderr": "✓ Project 343 is renamed to demo-2.
 
+
 ✓ Config entry demo is renamed to demo-2.
 ",
   "stdout": "demo-2  Running
