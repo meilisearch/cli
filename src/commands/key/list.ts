@@ -40,15 +40,26 @@ The answer is the API body as it is, so it carries the \`key\` field of every ke
   }
 }
 
-/** The default table, each description cut to its first characters, and a line that says so. */
+/**
+ * The default table, without the uid, the indexes and actions right after the
+ * description, each description cut to its first characters, and a line that
+ * says so.
+ */
 function view(page: ListPage): HumanView {
   let cut = false;
-  const results = (page.results as Record<string, unknown>[]).map((key) => {
-    const { description } = key;
-    if (typeof description !== "string" || description.length <= DESCRIPTION_LENGTH) return key;
-    cut = true;
-    return { ...key, description: `${description.slice(0, DESCRIPTION_LENGTH - 1)}…` };
-  });
+  const results = (page.results as Record<string, unknown>[]).map(
+    ({ uid: _uid, name, description, indexes, actions, ...rest }) => {
+      const long = typeof description === "string" && description.length > DESCRIPTION_LENGTH;
+      if (long) cut = true;
+      return {
+        name,
+        description: long ? `${description.slice(0, DESCRIPTION_LENGTH - 1)}…` : description,
+        indexes,
+        actions,
+        ...rest,
+      };
+    },
+  );
   const shown = defaultView({ ...page, results });
   if (!cut) return shown;
   return {
