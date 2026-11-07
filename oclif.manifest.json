@@ -2651,7 +2651,7 @@
     "document:list": {
       "aliases": [],
       "args": {},
-      "description": "List the documents of an index.\n\n--ids or --filter narrow the list. --limit and --offset page through it. There is no --all: an index can hold millions of documents.",
+      "description": "List the documents of an index.\n\n--ids or --filter narrow the list.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --project prod --index movies",
         "<%= config.bin %> <%= command.id %> -p prod -i movies --ids 42,1344 --fields id,title",

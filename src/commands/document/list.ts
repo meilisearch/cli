@@ -14,7 +14,7 @@ export default class DocumentList extends BaseCommand {
 
   static override description = `List the documents of an index.
 
---ids or --filter narrow the list. --limit and --offset page through it. There is no --all: an index can hold millions of documents.`;
+--ids or --filter narrow the list.`;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %> --project prod --index movies",
