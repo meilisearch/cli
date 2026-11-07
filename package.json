@@ -1,6 +1,6 @@
 {
   "name": "@meilisearch/cli",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "The Meilisearch command line tool.",
   "license": "MIT",
   "type": "module",
