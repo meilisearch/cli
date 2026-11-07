@@ -3,6 +3,7 @@ import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { getApiV2ProjectsById } from "../../lib/clients/management/generated/sdk.gen.js";
 import { cloudEntry, findProjectByUrl, warnUrlAnomaly } from "../../lib/cloud-sync.js";
 import {
+  assertNoProject,
   assertProjectUrl,
   type ProjectEntry,
   projectOf,
@@ -22,6 +23,7 @@ Changes the fields given, and refuses a name that does not exist. Talks to the M
     "<%= config.bin %> <%= command.id %> --project prod --sync-with-cloud",
     "<%= config.bin %> <%= command.id %> -p prod --project-api-key - < key.txt",
     "<%= config.bin %> <%= command.id %> -p local --project-url http://localhost:7701",
+    "<%= config.bin %> <%= command.id %> -p local --rename local-dev",
   ];
 
   static override flags = {
@@ -31,6 +33,7 @@ Changes the fields given, and refuses a name that does not exist. Talks to the M
       description: "Name of the project to change.",
       helpValue: "<name>",
     }),
+    rename: Flags.string({ description: "New name of the project.", helpValue: "<name>" }),
     "project-url": Flags.string({ description: "New URL of the project.", helpValue: "<url>" }),
     "project-api-key": Flags.string({
       description: "New API key of the project. `-` reads it from stdin, out of the shell history.",
@@ -45,6 +48,8 @@ Changes the fields given, and refuses a name that does not exist. Talks to the M
     if (flags["project-url"] !== undefined) assertProjectUrl(flags["project-url"]);
     const file = this.configFile();
     const before = projectOf(file, flags.project);
+    const name = flags.rename ?? flags.project;
+    if (name !== flags.project) assertNoProject(file, name, ": nothing was renamed.");
     const url = flags["project-url"] ?? before.url;
     const apiKey = flags["project-api-key"] ?? before.apiKey;
     let entry: ProjectEntry = { url, apiKey, cloud: before.cloud };
@@ -56,10 +61,17 @@ Changes the fields given, and refuses a name that does not exist. Talks to the M
               client: this.managementClient,
               path: { id: before.cloud.id },
             });
-      warnUrlAnomaly(flags.project, url, project);
-      entry = await cloudEntry(this.managementClient, project, flags.project, url, apiKey);
+      warnUrlAnomaly(name, url, project);
+      entry = await cloudEntry(this.managementClient, project, name, url, apiKey);
     }
-    writeConfigFile({ path: file.path, projects: { ...file.projects, [flags.project]: entry } });
-    this.say(done(`Project ${flags.project} is updated in ${file.path}.`));
+    writeConfigFile({
+      path: file.path,
+      projects: Object.fromEntries(
+        Object.entries(file.projects).map(([each, old]) =>
+          each === flags.project ? [name, entry] : [each, old],
+        ),
+      ),
+    });
+    this.say(done(`Project ${name} is updated in ${file.path}.`));
   }
 }

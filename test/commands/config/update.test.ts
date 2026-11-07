@@ -40,6 +40,20 @@ describe("meili config update", () => {
     });
   });
 
+  it("renames the entry in place and keeps its fields", async () => {
+    const { path, env } = tempConfig("update-rename.json", {
+      prod: { url: "https://p", apiKey: "old" },
+      local: { url: "http://localhost:7700" },
+    });
+    const result = await runCommand(ConfigUpdate, ["--project", "prod", "--rename", "live"], {
+      env,
+    });
+    expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
+    const file = readJson(path) as { projects: Record<string, unknown> };
+    expect(Object.keys(file.projects)).toEqual(["live", "local"]);
+    expect(file.projects.live).toEqual({ url: "https://p", apiKey: "old" });
+  });
+
   it("syncs an entry without cloud identifiers with the Cloud project of its URL, master key included", async () => {
     server.use(
       managementHandlers.listProjects([project]),
@@ -116,8 +130,11 @@ describe("meili config update", () => {
     expect(readJson(path)).toEqual({ projects: { local: { url: "http://localhost:7700" } } });
   });
 
-  it("refuses a name the file does not have, and a URL that is not HTTP(S)", async () => {
-    const { path, env } = tempConfig("update-refused.json", { prod: { url: "https://p" } });
+  it("refuses a name the file does not have, a new name it has, and a URL that is not HTTP(S)", async () => {
+    const { path, env } = tempConfig("update-refused.json", {
+      prod: { url: "https://p" },
+      local: { url: "http://localhost:7700" },
+    });
     const unknown = await runCommand(
       ConfigUpdate,
       ["--project", "nope", "--project-url", "https://n"],
@@ -128,7 +145,16 @@ describe("meili config update", () => {
     expect(unknown.exitCode).toBe(2);
     expect(JSON.parse(unknown.stderr).error).toMatchObject({
       code: "cli_config",
-      message: `No project \`nope\` in ${path}. Projects: prod.`,
+      message: `No project \`nope\` in ${path}. Projects: prod, local.`,
+    });
+
+    const taken = await runCommand(ConfigUpdate, ["--project", "prod", "--rename", "local"], {
+      env,
+    });
+    expect(taken.exitCode).toBe(2);
+    expect(JSON.parse(taken.stderr).error).toMatchObject({
+      code: "cli_config",
+      message: `Project \`local\` already exists in ${path}: nothing was renamed.`,
     });
 
     const badUrl = await runCommand(
@@ -140,6 +166,8 @@ describe("meili config update", () => {
     );
     expect(badUrl.exitCode).toBe(2);
     expect(JSON.parse(badUrl.stderr).error.code).toBe("cli_usage");
-    expect(readJson(path)).toEqual({ projects: { prod: { url: "https://p" } } });
+    expect(readJson(path)).toEqual({
+      projects: { prod: { url: "https://p" }, local: { url: "http://localhost:7700" } },
+    });
   });
 });
