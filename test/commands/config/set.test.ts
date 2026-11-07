@@ -35,6 +35,20 @@ describe("meili config set", () => {
     expect(read(path)).toEqual({ projects: { local: { url: "http://localhost:7700" } } });
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    const path = join(scrubbedHome, "human", "config.json");
+    const result = await runCommand(
+      ConfigSet,
+      ["--project", "local", "--project-url", "http://localhost:7700"],
+      { env: { MEILI_CONFIG: path }, tty: true },
+    );
+    expect(result).toEqual({
+      stdout: "",
+      stderr: `✓ Project local is added to ${path}. Use it with -p local.\n`,
+      exitCode: 0,
+    });
+  });
+
   it("writes the cloud identifiers and the master key of the Cloud project with that URL, with --sync-with-cloud", async () => {
     const received: ReceivedRequest[] = [];
     server.use(

@@ -32,6 +32,11 @@ Every setting goes back to its default value, which reindexes the documents.`;
 
   async run(): Promise<void> {
     const { flags } = await this.parse(SettingsDelete);
-    await this.outputTask(await this.meilisearch.index(flags.index).resetSettings(), flags);
+    await this.outputTask(await this.meilisearch.index(flags.index).resetSettings(), flags, {
+      enqueued: (uid) =>
+        `Meilisearch received the request. Task ${uid} will reset every setting of index ${flags.index} to its default.`,
+      pending: "The index keeps its settings until the task succeeds. Follow it:",
+      succeeded: () => `settings of index ${flags.index} reset to their defaults.`,
+    });
   }
 }

@@ -7,6 +7,7 @@ import {
   type ProjectEntry,
   writeConfigFile,
 } from "../../lib/config.js";
+import { done } from "../../lib/human.js";
 import { readStdin } from "../../lib/input.js";
 
 export default class ConfigSet extends BaseCommand {
@@ -59,5 +60,8 @@ Creates the file, owner-only, and refuses a name that exists. Talks to the Manag
         )
       : { url, apiKey };
     writeConfigFile({ path: file.path, projects: { ...file.projects, [flags.project]: entry } });
+    this.say(
+      done(`Project ${flags.project} is added to ${file.path}. Use it with -p ${flags.project}.`),
+    );
   }
 }

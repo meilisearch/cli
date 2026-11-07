@@ -1,5 +1,6 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
+import { done } from "../../lib/human.js";
 
 export default class KeyDelete extends BaseCommand {
   static api: Api = "meilisearch";
@@ -31,5 +32,6 @@ Every request that carries the key fails afterwards.`;
     // The route answers 204 with no body, so nothing goes to stdout
     // (docs/contract/output.md, Streams).
     await this.meilisearch.deleteKey(flags.id);
+    this.say(done(`Key ${flags.id} is deleted. A request with it now fails.`));
   }
 }

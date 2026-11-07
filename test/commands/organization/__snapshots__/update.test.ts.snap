@@ -47,3 +47,21 @@ exports[`meili organization update > sends the new name for the organization of 
 ",
 }
 `;
+
+exports[`meili organization update > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "✓ Organization Renamed is updated.
+Organization 1 (acme)
+
+",
+  "stdout": "  id             1
+  name           Renamed
+  identifier     acme
+  ownerId        user-1
+  isAdmin        true
+  defaultTeamId  12
+  customerTier   null
+",
+}
+`;

@@ -59,3 +59,21 @@ exports[`meili index delete > prints the enqueued task as the API returned it, w
 ",
 }
 `;
+
+exports[`meili index delete > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Meilisearch received the request. Task 13 will delete index movies, with its documents.
+
+
+The index is still there until the task succeeds. Follow it: meili task view --id 13
+Next time, wait for the end with --wait.
+",
+  "stdout": "  Task      13
+  Status    enqueued
+  Type      indexDeletion
+  Index     movies
+  Enqueued  2026-09-24T10:00:00Z
+",
+}
+`;

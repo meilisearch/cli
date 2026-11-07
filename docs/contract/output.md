@@ -33,7 +33,8 @@ The text holds the same data as the JSON, with these rules:
 - A list that shows only some fields says "Simplified view", and how to see everything.
 - A list is a table. Its headers are the attribute names in upper snake case, `TEAM_ID` for `teamId`. It shows the attributes with a simple value (text, number, boolean, null, or a list of those), at most 6. Its other envelope fields, such as `limit`, go on the status line.
 - One item shows every attribute, one per line, nested ones indented. A `view` command, and `stats`, first give a summary of the item on stderr: its name, its status, and its main fields.
-- A write prints its task: `◐` and the command to follow it, or with `--wait`, `✓` or `✗` and the final task.
+- A write prints its task: `◐`, what the task will do and the command to follow it, or with `--wait`, `✓` or `✗` and the final task.
+- A command that adds, updates or deletes without a task first says what it did, with `✓`, then shows the item.
 - The headers of a document list keep the exact attribute names, which `--fields` takes. A document list shows the attributes that `--fields` chose, or else the first ones with a simple value, at most 4.
 - Colors only carry meaning: the status, the symbols, and grey for the labels and the absent values. `--no-color` or `NO_COLOR` removes them.
 - The `masterKey` of `project add` stays masked, like in the JSON.

@@ -49,3 +49,19 @@ exports[`meili team add > sends the flags as a flat body with the token, and pri
 ",
 }
 `;
+
+exports[`meili team add > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "✓ Team Docs is created.
+Team 12 of organization 1
+
+",
+  "stdout": "  id              12
+  name            Docs
+  organizationId  1
+  ownerId         user-1
+  isAdmin         true
+",
+}
+`;

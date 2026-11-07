@@ -43,6 +43,11 @@ export default class IndexAdd extends BaseCommand {
     // reaches the API, which refuses it rather than the CLI dropping it.
     const options = { ...readJsonObjectBody(flags) } as IndexOptions;
     if (flags["primary-key"] !== undefined) options.primaryKey = flags["primary-key"];
-    await this.outputTask(await this.meilisearch.createIndex(flags.id, options), flags);
+    await this.outputTask(await this.meilisearch.createIndex(flags.id, options), flags, {
+      enqueued: (uid) =>
+        `Meilisearch received the request. Task ${uid} will create index ${flags.id}.`,
+      pending: "The index does not exist yet. Follow the task:",
+      succeeded: () => `index ${flags.id} created.`,
+    });
   }
 }

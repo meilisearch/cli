@@ -28,6 +28,14 @@ describe("meili settings delete", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(meilisearchHandlers.settingsDelete(reset));
+    const result = await runCommand(SettingsDelete, ["--index", "movies", "--yes", ...project], {
+      tty: true,
+    });
+    expect(result).toMatchSnapshot();
+  });
+
   it("names the index in the path", async () => {
     server.use(meilisearchHandlers.settingsDelete(reset));
     const requests = await recordRequests(async () => {

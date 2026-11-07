@@ -61,3 +61,21 @@ exports[`meili settings delete > prints the enqueued task as the API returned it
 ",
 }
 `;
+
+exports[`meili settings delete > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Meilisearch received the request. Task 15 will reset every setting of index movies to its default.
+
+
+The index keeps its settings until the task succeeds. Follow it: meili task view --id 15
+Next time, wait for the end with --wait.
+",
+  "stdout": "  Task      15
+  Status    enqueued
+  Type      settingsUpdate
+  Index     movies
+  Enqueued  2026-09-24T10:00:00Z
+",
+}
+`;

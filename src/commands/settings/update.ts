@@ -165,6 +165,12 @@ Changes the settings given and leaves the others. The value null resets one.`;
     await this.outputTask(
       await this.meilisearch.index(flags.index).updateSettings(settings),
       flags,
+      {
+        enqueued: (uid) =>
+          `Meilisearch received the settings. Task ${uid} will update them in index ${flags.index}.`,
+        pending: "The index keeps its old settings until the task succeeds. Follow it:",
+        succeeded: () => `settings of index ${flags.index} updated.`,
+      },
     );
   }
 }

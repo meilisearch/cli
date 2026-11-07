@@ -94,3 +94,21 @@ exports[`meili task cancel > prints the enqueued task as the API returned it, wi
 ",
 }
 `;
+
+exports[`meili task cancel > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Meilisearch received the request. Task 7 will cancel the matching tasks.
+
+
+They go on until the task succeeds. Follow it: meili task view --id 7
+Next time, wait for the end with --wait.
+",
+  "stdout": "  Task      7
+  Status    enqueued
+  Type      taskCancelation
+  Index     none
+  Enqueued  2026-09-24T10:00:00Z
+",
+}
+`;

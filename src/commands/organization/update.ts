@@ -2,6 +2,7 @@ import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { patchApiV2OrganizationsById } from "../../lib/clients/management/generated/sdk.gen.js";
 import type { PatchApiV2OrganizationsByIdData } from "../../lib/clients/management/generated/types.gen.js";
+import { done, itemView } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
 
 export default class OrganizationUpdate extends BaseCommand {
@@ -37,6 +38,14 @@ export default class OrganizationUpdate extends BaseCommand {
         path: { id: flags.id },
         body,
       }),
+      (organization) =>
+        itemView(
+          [
+            done(`Organization ${organization.name} is updated.`),
+            `Organization ${organization.id} (${organization.identifier})`,
+          ],
+          organization,
+        ),
     );
   }
 }

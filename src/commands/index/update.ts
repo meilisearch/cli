@@ -45,6 +45,11 @@ export default class IndexUpdate extends BaseCommand {
     const options = { ...readJsonObjectBody(flags) } as IndexOptions;
     if (flags["primary-key"] !== undefined) options.primaryKey = flags["primary-key"];
     if (flags["new-id"] !== undefined) options.uid = flags["new-id"];
-    await this.outputTask(await this.meilisearch.updateIndex(flags.id, options), flags);
+    await this.outputTask(await this.meilisearch.updateIndex(flags.id, options), flags, {
+      enqueued: (uid) =>
+        `Meilisearch received the changes. Task ${uid} will update index ${flags.id}.`,
+      pending: "The index keeps its old values until the task succeeds. Follow it:",
+      succeeded: () => `index ${flags.id} updated.`,
+    });
   }
 }

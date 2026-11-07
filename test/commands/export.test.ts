@@ -43,6 +43,12 @@ describe("meili export", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(meilisearchHandlers.export(exporting));
+    const result = await runCommand(Export, ["--url", remote, ...project], { tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("sends the four body fields as the JSON they spell", async () => {
     server.use(meilisearchHandlers.export(exporting));
     expect(

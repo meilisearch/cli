@@ -38,6 +38,16 @@ describe("meili team add", () => {
     ]);
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    const received: ReceivedRequest[] = [];
+    server.use(managementHandlers.createTeam(received));
+    const result = await runCommand(TeamAdd, ["--name", "Docs", "--organization-id", "1"], {
+      env,
+      tty: true,
+    });
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes the API's 403 through on a body it cannot read, with exit 3", async () => {
     server.use(managementHandlers.apiError("/api/v2/teams", 403, unreadableBody));
     const result = await runCommand(TeamAdd, ["--name", "Docs"], { env });

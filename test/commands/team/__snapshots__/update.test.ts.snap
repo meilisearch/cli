@@ -51,3 +51,19 @@ exports[`meili team update > sends the new name and owner for the team of --id, 
 ",
 }
 `;
+
+exports[`meili team update > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "✓ Team renamed is updated.
+Team 12 of organization 1
+
+",
+  "stdout": "  id              12
+  name            renamed
+  organizationId  1
+  ownerId         user-2
+  isAdmin         true
+",
+}
+`;

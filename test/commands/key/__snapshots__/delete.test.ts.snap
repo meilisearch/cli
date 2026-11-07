@@ -45,6 +45,15 @@ EXAMPLES
 "
 `;
 
+exports[`meili key delete > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "✓ Key 52787ccd-48ff-48e5-9c4b-03cd76978a60 is deleted. A request with it now fails.
+",
+  "stdout": "",
+}
+`;
+
 exports[`meili key delete > writes nothing on stdout and exits 0, the route answering 204 1`] = `
 {
   "exitCode": 0,

@@ -8,6 +8,7 @@ import {
   projectOf,
   writeConfigFile,
 } from "../../lib/config.js";
+import { done } from "../../lib/human.js";
 import { readStdin } from "../../lib/input.js";
 
 export default class ConfigUpdate extends BaseCommand {
@@ -59,5 +60,6 @@ Changes the fields given, and refuses a name that does not exist. Talks to the M
       entry = await cloudEntry(this.managementClient, project, flags.project, url, apiKey);
     }
     writeConfigFile({ path: file.path, projects: { ...file.projects, [flags.project]: entry } });
+    this.say(done(`Project ${flags.project} is updated in ${file.path}.`));
   }
 }

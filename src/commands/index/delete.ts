@@ -30,6 +30,11 @@ Deletes its documents, its settings and its task history too.`;
 
   async run(): Promise<void> {
     const { flags } = await this.parse(IndexDelete);
-    await this.outputTask(await this.meilisearch.deleteIndex(flags.id), flags);
+    await this.outputTask(await this.meilisearch.deleteIndex(flags.id), flags, {
+      enqueued: (uid) =>
+        `Meilisearch received the request. Task ${uid} will delete index ${flags.id}, with its documents.`,
+      pending: "The index is still there until the task succeeds. Follow it:",
+      succeeded: () => `index ${flags.id} deleted, with its documents.`,
+    });
   }
 }

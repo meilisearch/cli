@@ -74,3 +74,23 @@ exports[`meili key add > prints the key the API created, its key value included 
 ",
 }
 `;
+
+exports[`meili key add > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "✓ Key CI indexer is created.
+Actions documents.add • Indexes movies • Expires never
+
+",
+  "stdout": "  name         CI indexer
+  description  null
+  key          115f7b0806e6eb3409870fbfef319371dff43dd036746816358c1d71ad4e2221
+  actions      documents.add
+  indexes      movies
+  expiresAt    null
+  createdAt    2026-09-24T10:00:00.000000Z
+  updatedAt    2026-09-24T10:00:00.000000Z
+  uid          52787ccd-48ff-48e5-9c4b-03cd76978a60
+",
+}
+`;

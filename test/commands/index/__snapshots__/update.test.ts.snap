@@ -65,3 +65,21 @@ exports[`meili index update > prints the enqueued task as the API returned it, w
 ",
 }
 `;
+
+exports[`meili index update > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Meilisearch received the changes. Task 12 will update index movies.
+
+
+The index keeps its old values until the task succeeds. Follow it: meili task view --id 12
+Next time, wait for the end with --wait.
+",
+  "stdout": "  Task      12
+  Status    enqueued
+  Type      indexUpdate
+  Index     movies
+  Enqueued  2026-09-24T10:00:00Z
+",
+}
+`;

@@ -60,3 +60,12 @@ EXAMPLES
 
 "
 `;
+
+exports[`meili config sync-with-cloud > tells a human in a terminal what it did 1`] = `
+"PROJECT     ACTION     API_KEY
+prod        updated    written
+docs        unchanged  kept
+search-351  added      missing
+search-352  added      missing
+"
+`;

@@ -28,6 +28,19 @@ describe("meili organization delete", () => {
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(managementHandlers.deleteOrganization());
+    const result = await runCommand(OrganizationDelete, ["--id", "1", "--yes"], {
+      env,
+      tty: true,
+    });
+    expect(result).toEqual({
+      stdout: "",
+      stderr: "✓ Organization 1 is deleted.\n",
+      exitCode: 0,
+    });
+  });
+
   it("passes the API's error body through when the organization has projects, with exit 1", async () => {
     server.use(managementHandlers.apiError("/api/v2/organizations/1", 422, hasProjects));
     const result = await runCommand(OrganizationDelete, ["--id", "1", "--yes"], { env });

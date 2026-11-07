@@ -31,6 +31,16 @@ describe("meili organization update", () => {
     expect(received[0]?.body).toEqual({ name: "Renamed" });
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    const received: ReceivedRequest[] = [];
+    server.use(managementHandlers.updateOrganization(received));
+    const result = await runCommand(OrganizationUpdate, ["--id", "1", "--name", "Renamed"], {
+      env,
+      tty: true,
+    });
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes the API's error body through on a 403, with exit 3", async () => {
     server.use(managementHandlers.apiError("/api/v2/organizations/1", 403, forbidden));
     const result = await runCommand(OrganizationUpdate, ["--id", "1", "--name", "x"], { env });

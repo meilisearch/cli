@@ -48,6 +48,16 @@ describe("meili index update", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(meilisearchHandlers.indexUpdate(updated));
+    const result = await runCommand(
+      IndexUpdate,
+      ["--id", "movies", "--primary-key", "movie_id", ...project],
+      { tty: true },
+    );
+    expect(result).toMatchSnapshot();
+  });
+
   it("names the index in the path and sends the new primary key in the body", async () => {
     expect(await sent(["--id", "movies", "--primary-key", "movie_id"])).toEqual({
       pathname: "/indexes/movies",
