@@ -39,13 +39,7 @@ export default class OrganizationUpdate extends BaseCommand {
         body,
       }),
       (organization) =>
-        itemView(
-          [
-            done(`Organization ${organization.name} is updated.`),
-            `Organization ${organization.id} (${organization.identifier})`,
-          ],
-          organization,
-        ),
+        itemView([done(`Organization ${organization.name} is updated.`)], organization),
     );
   }
 }

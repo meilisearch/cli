@@ -4,8 +4,8 @@
  * cut, and a date or a duration stays as the API writes it.
  */
 import { stripVTControlCharacters } from "node:util";
-import type { EnqueuedTask, Key, Task } from "meilisearch";
-import type { Project, Team } from "./clients/management/generated/types.gen.js";
+import type { EnqueuedTask, Task } from "meilisearch";
+import type { Project } from "./clients/management/generated/types.gen.js";
 import { describeError, isRecord } from "./errors.js";
 import { type HumanView, paint } from "./output.js";
 
@@ -275,15 +275,3 @@ export const summaryLine = (...parts: string[]): string => parts.join(paint("dim
 
 /** A sentence about what a command did: a green ✓ before it. */
 export const done = (sentence: string): string => `${paint("green", "✓")} ${sentence}`;
-
-/** What a key may do, on which indexes, until when. */
-export const keySummary = (key: Key): string =>
-  summaryLine(
-    `Actions ${key.actions.join(", ")}`,
-    `Indexes ${key.indexes.join(", ")}`,
-    `Expires ${key.expiresAt ?? "never"}`,
-  );
-
-/** Where a team belongs. */
-export const teamSummary = (team: Team): string =>
-  `Team ${team.id} of organization ${team.organizationId}`;

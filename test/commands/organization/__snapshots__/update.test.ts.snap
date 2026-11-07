@@ -52,7 +52,6 @@ exports[`meili organization update > tells a human in a terminal what it did 1`]
 {
   "exitCode": 0,
   "stderr": "✓ Organization Renamed is updated.
-Organization 1 (acme)
 
 ",
   "stdout": "  id             1

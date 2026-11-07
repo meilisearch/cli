@@ -2,7 +2,7 @@ import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { postApiV2Teams } from "../../lib/clients/management/generated/sdk.gen.js";
 import type { PostApiV2TeamsData } from "../../lib/clients/management/generated/types.gen.js";
-import { done, itemView, teamSummary } from "../../lib/human.js";
+import { done, itemView } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
 
 export default class TeamAdd extends BaseCommand {
@@ -35,7 +35,7 @@ Creates it in an organization.`;
       organizationId: flags["organization-id"],
     }) as PostApiV2TeamsData["body"];
     await this.output(await postApiV2Teams({ client: this.managementClient, body }), (team) =>
-      itemView([done(`Team ${team.name} is created.`), teamSummary(team)], team),
+      itemView([done(`Team ${team.name} is created.`)], team),
     );
   }
 }

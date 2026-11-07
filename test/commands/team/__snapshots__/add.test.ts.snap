@@ -54,7 +54,6 @@ exports[`meili team add > tells a human in a terminal what it did 1`] = `
 {
   "exitCode": 0,
   "stderr": "✓ Team Docs is created.
-Team 12 of organization 1
 
 ",
   "stdout": "  id              12

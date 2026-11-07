@@ -79,7 +79,6 @@ exports[`meili key add > tells a human in a terminal what it did 1`] = `
 {
   "exitCode": 0,
   "stderr": "✓ Key CI indexer is created.
-Actions documents.add • Indexes movies • Expires never
 
 ",
   "stdout": "  name         CI indexer

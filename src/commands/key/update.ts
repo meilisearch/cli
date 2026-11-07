@@ -1,7 +1,7 @@
 import { Flags } from "@oclif/core";
 import type { KeyUpdate as KeyUpdateBody } from "meilisearch";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { done, itemView, keySummary } from "../../lib/human.js";
+import { done, itemView } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
 import { asText } from "../../lib/values.js";
 
@@ -48,10 +48,7 @@ These are the two fields the route takes. The value null resets one.`;
     };
     const update = readBodyWithFields(flags, fromFlags) as KeyUpdateBody;
     await this.output(await this.meilisearch.updateKey(flags.id, update), (updated) =>
-      itemView(
-        [done(`Key ${updated.name ?? updated.uid} is updated.`), keySummary(updated)],
-        updated,
-      ),
+      itemView([done(`Key ${updated.name ?? updated.uid} is updated.`)], updated),
     );
   }
 }

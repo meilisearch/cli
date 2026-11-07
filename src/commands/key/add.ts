@@ -1,7 +1,7 @@
 import { Flags } from "@oclif/core";
 import type { KeyCreation } from "meilisearch";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { done, itemView, keySummary } from "../../lib/human.js";
+import { done, itemView } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
 import { asList, asText } from "../../lib/values.js";
 
@@ -72,10 +72,7 @@ The answer carries the \`key\` field, the credential itself, on stdout like any 
     // code: the CLI judges no value it can send.
     const key = readBodyWithFields(flags, fromFlags) as KeyCreation;
     await this.output(await this.meilisearch.createKey(key), (created) =>
-      itemView(
-        [done(`Key ${created.name ?? created.uid} is created.`), keySummary(created)],
-        created,
-      ),
+      itemView([done(`Key ${created.name ?? created.uid} is created.`)], created),
     );
   }
 }

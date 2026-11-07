@@ -2,7 +2,7 @@ import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { patchApiV2TeamsById } from "../../lib/clients/management/generated/sdk.gen.js";
 import type { PatchApiV2TeamsByIdData } from "../../lib/clients/management/generated/types.gen.js";
-import { done, itemView, teamSummary } from "../../lib/human.js";
+import { done, itemView } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
 
 export default class TeamUpdate extends BaseCommand {
@@ -36,7 +36,7 @@ export default class TeamUpdate extends BaseCommand {
     }) as PatchApiV2TeamsByIdData["body"];
     await this.output(
       await patchApiV2TeamsById({ client: this.managementClient, path: { id: flags.id }, body }),
-      (team) => itemView([done(`Team ${team.name} is updated.`), teamSummary(team)], team),
+      (team) => itemView([done(`Team ${team.name} is updated.`)], team),
     );
   }
 }

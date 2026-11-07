@@ -76,7 +76,6 @@ exports[`meili key update > tells a human in a terminal what it did 1`] = `
 {
   "exitCode": 0,
   "stderr": "✓ Key CI indexer is updated.
-Actions search • Indexes * • Expires never
 
 ",
   "stdout": "  name         CI indexer
