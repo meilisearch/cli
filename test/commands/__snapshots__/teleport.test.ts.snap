@@ -155,7 +155,11 @@ exports[`meili teleport > prints its help without any network call 1`] = `
 "Move a self-hosted project to Meilisearch Cloud. Interactive command.
 
 USAGE
-  $ meili teleport [--debug] [-p <name>]
+  $ meili teleport [--json] [--no-color] [--debug] [-p <name>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>  A project of the config file, the one whose data moves

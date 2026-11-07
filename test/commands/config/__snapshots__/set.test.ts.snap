@@ -13,8 +13,12 @@ exports[`meili config set > prints its help without any network call 1`] = `
 "Add a project to the config file.
 
 USAGE
-  $ meili config set -p <name> --project-url <url> [--debug]
-    [--project-api-key <key>] [--sync-with-cloud]
+  $ meili config set -p <name> --project-url <url> [--json] [--no-color]
+    [--debug] [--project-api-key <key>] [--sync-with-cloud]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         (required) Name of the project to set.

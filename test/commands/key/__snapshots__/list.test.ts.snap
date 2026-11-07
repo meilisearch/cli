@@ -9,12 +9,34 @@ exports[`meili key list > passes an authentication error through with a hint and
 }
 `;
 
+exports[`meili key list > prints a table for a human in a terminal, a long description cut, and says so 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Showing 2 of 2
+offset 0 • limit 20
+
+
+Simplified view: 6 of 8 attributes. See every field: --json.
+Descriptions are cut. See one in full: meili key view --id <key>
+",
+  "stdout": "NAME                    DESCRIPTION                     INDEXES  ACTIONS  KEY                                                               EXPIRES_AT
+Default Search API Key  Use it to search from the fro…  *        search   115f7b0806e6eb3409870fbfef319371dff43dd036746816358c1d71ad4e2221  null
+Default Admin API Key   Use it for anything that is n…  *        *        5dad55f9b953543783f152231fae2213ecc10c218498369b50e6925b1163c657  null
+",
+}
+`;
+
 exports[`meili key list > prints its help without any network call 1`] = `
 "List the API keys of the instance.
 
 USAGE
-  $ meili key list [--debug] [--project-url <url>] [--project-api-key
-    <key>] [-p <name>] [--limit <n>] [--offset <n>] [--all]
+  $ meili key list [--json] [--no-color] [--debug] [--project-url
+    <url>] [--project-api-key <key>] [-p <name>] [--limit <n>] [--offset <n>]
+    [--all]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         A project of the config file. Cannot be combined

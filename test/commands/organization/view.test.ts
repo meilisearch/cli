@@ -26,6 +26,12 @@ describe("meili organization view", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints a summary, then every attribute, for a human in a terminal", async () => {
+    server.use(managementHandlers.getOrganization([organization, other]));
+    const result = await runCommand(OrganizationView, ["--id", "2"], { env, tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes the API's error body through on an organization it does not show, with exit 3", async () => {
     server.use(managementHandlers.getOrganization([organization]));
     const result = await runCommand(OrganizationView, ["--id", "999"], {

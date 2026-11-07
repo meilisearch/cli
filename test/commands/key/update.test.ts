@@ -42,6 +42,14 @@ describe("meili key update", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(meilisearchHandlers.keyUpdate(updated));
+    const result = await runCommand(KeyUpdate, ["--id", uid, "--name", "CI indexer", ...project], {
+      tty: true,
+    });
+    expect(result).toMatchSnapshot();
+  });
+
   it("sends the two fields the route takes", async () => {
     expect(
       await sentBody(["--id", uid, "--name", "CI indexer", "--description", "Nightly"]),

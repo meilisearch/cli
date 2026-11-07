@@ -171,6 +171,8 @@ A command cannot build a client by itself. Commands with `api = "none"` (`schema
 | `MEILI_MANAGEMENT_DASHBOARD_URL` | Dashboard URL, which hosts the consent page of `auth login`. Default `https://cloud.meilisearch.com`. For development and tests. |
 | `MEILI_TIMEOUT` | Default `--timeout` for `--wait`. |
 | `MEILI_NO_ANALYTICS` | `true` or `1` turns off the anonymous usage data the CLI sends, see "Analytics". |
+| `MEILI_JSON` | `true` or `1` prints compact JSON, like `--json`. |
+| `NO_COLOR` | Any nonempty value prints without colors, like `--no-color`. |
 
 `meili --help` documents every variable except the `MEILI_MANAGEMENT_*` ones, which are for development and tests: `CONTRIBUTING.md` documents them. Adding a variable is a contract change.
 
@@ -178,6 +180,7 @@ A variable that has the same role as a flag takes its name from the flag: `MEILI
 
 - `MEILI_CONFIG` has no flag, because the file is chosen per process.
 - `MEILI_NO_ANALYTICS` has no flag, because it is set once, for every process. Meilisearch uses the same name for the same purpose.
+- `--no-color` has no `MEILI_` variable: its variable is `NO_COLOR`, which many CLIs read for the same purpose.
 - The `MEILI_MANAGEMENT_*` variables have no flag. They are for development and tests, against another Cloud or with a token instead of the session.
 - The project flags, `--project`, `--project-url` and `--project-api-key`, have no variable, because a project is chosen per command.
 

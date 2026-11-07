@@ -73,6 +73,11 @@ The source is the project this command connects to, named by --project, --projec
       payloadSize: asText(flags["payload-size"]),
       indexes: asJson(flags.indexes),
     });
-    await this.outputTask(await triggerExport(this.meilisearch, body), flags);
+    await this.outputTask(await triggerExport(this.meilisearch, body), flags, {
+      enqueued: (uid) =>
+        `Meilisearch received the request. Task ${uid} will export to ${body.url}.`,
+      pending: "The destination does not have the data yet. Follow the task:",
+      succeeded: () => `data exported to ${body.url}.`,
+    });
   }
 }

@@ -13,9 +13,14 @@ exports[`meili index update > prints its help without any network call 1`] = `
 "Change the primary key or the name of an index.
 
 USAGE
-  $ meili index update --id <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--new-id <index>] [--primary-key
-    <field>] [--file <path> | --data <json>] [--timeout <duration> --wait]
+  $ meili index update --id <index> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--new-id
+    <index>] [--primary-key <field>] [--file <path> | --data <json>] [--timeout
+    <duration> --wait]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         A project of the config file. Cannot be combined
@@ -57,6 +62,24 @@ exports[`meili index update > prints the enqueued task as the API returned it, w
   "exitCode": 0,
   "stderr": "",
   "stdout": "{"taskUid":12,"indexUid":"movies","status":"enqueued","type":"indexUpdate","enqueuedAt":"2026-09-24T10:00:00Z"}
+",
+}
+`;
+
+exports[`meili index update > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Meilisearch received the changes. Task 12 will update index movies.
+
+
+The index keeps its old values until the task succeeds. Follow it: meili task view --id 12
+Next time, wait for the end with --wait.
+",
+  "stdout": "  taskUid     12
+  indexUid    movies
+  status      enqueued
+  type        indexUpdate
+  enqueuedAt  2026-09-24T10:00:00Z
 ",
 }
 `;

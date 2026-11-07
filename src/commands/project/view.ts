@@ -1,6 +1,7 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { getApiV2ProjectsById } from "../../lib/clients/management/generated/sdk.gen.js";
+import { itemView, projectSummary } from "../../lib/human.js";
 
 export default class ProjectView extends BaseCommand {
   static api: Api = "management";
@@ -32,6 +33,7 @@ export default class ProjectView extends BaseCommand {
         client: this.managementClient,
         path: { id: this.cloudProjectId(flags.id) },
       }),
+      (project) => itemView(projectSummary(project), project),
     );
   }
 }

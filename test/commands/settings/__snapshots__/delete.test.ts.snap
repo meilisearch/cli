@@ -13,8 +13,13 @@ exports[`meili settings delete > prints its help without any network call 1`] = 
 "Reset the settings of an index.
 
 USAGE
-  $ meili settings delete -i <index> --yes [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--timeout <duration> --wait]
+  $ meili settings delete -i <index> --yes [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--timeout
+    <duration> --wait]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>          (required) The index to reset the settings of.
@@ -53,6 +58,24 @@ exports[`meili settings delete > prints the enqueued task as the API returned it
   "exitCode": 0,
   "stderr": "",
   "stdout": "{"taskUid":15,"indexUid":"movies","status":"enqueued","type":"settingsUpdate","enqueuedAt":"2026-09-24T10:00:00Z"}
+",
+}
+`;
+
+exports[`meili settings delete > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Meilisearch received the request. Task 15 will reset every setting of index movies to its default.
+
+
+The index keeps its settings until the task succeeds. Follow it: meili task view --id 15
+Next time, wait for the end with --wait.
+",
+  "stdout": "  taskUid     15
+  indexUid    movies
+  status      enqueued
+  type        settingsUpdate
+  enqueuedAt  2026-09-24T10:00:00Z
 ",
 }
 `;

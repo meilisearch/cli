@@ -5,7 +5,7 @@
  * docs/contract/config.md, so that `meili --help` alone shows what exists and
  * how to configure it.
  */
-import { type Command, Help, type Interfaces } from "@oclif/core";
+import { type Command, CommandHelp, Help, type HelpSection, type Interfaces } from "@oclif/core";
 import { track } from "./analytics.js";
 import { type Api, BaseCommand, type LoadableCommand } from "./base-command.js";
 import { ENV_VARS } from "./config.js";
@@ -20,7 +20,30 @@ const SECTIONS: [string, Api][] = [
 /** The verbs of a resource in this order, then the others. */
 const VERB_ORDER = ["list", "view", "add", "update", "delete"];
 
+/** The help of one command: its output flags first, right after the usage. */
+class MeiliCommandHelp extends CommandHelp {
+  protected override sections(): ReturnType<CommandHelp["sections"]> {
+    return super.sections().map((section) =>
+      section.header !== "FLAGS"
+        ? section
+        : {
+            ...section,
+            generate: (input, header) => {
+              const groups = section.generate(input, header) as HelpSection[];
+              const output = `OUTPUT ${header}`;
+              return [
+                ...groups.filter((group) => group?.header === output),
+                ...groups.filter((group) => group?.header !== output),
+              ];
+            },
+          },
+    );
+  }
+}
+
 export default class MeiliHelp extends Help {
+  protected override CommandHelpClass = MeiliCommandHelp;
+
   /** `bin/run.js` sends the `cli_help_shown` of each help (ADR 0020): its command, its topic, or neither at the root. */
   protected override async showRootHelp(): Promise<void> {
     track("cli_help_shown", {});

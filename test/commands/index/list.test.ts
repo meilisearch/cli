@@ -29,6 +29,12 @@ describe("meili index list", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints a table for a human in a terminal", async () => {
+    server.use(meilisearchHandlers.indexes(three));
+    const result = await runCommand(IndexList, [...project], { tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes --limit and --offset to the API", async () => {
     server.use(meilisearchHandlers.indexes(five));
     const result = await runCommand(IndexList, ["--limit", "2", "--offset", "1", ...project]);

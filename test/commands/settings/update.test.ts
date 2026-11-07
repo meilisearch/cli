@@ -48,6 +48,16 @@ describe("meili settings update", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(meilisearchHandlers.settingsUpdate(updated));
+    const result = await runCommand(
+      SettingsUpdate,
+      ["--index", "movies", "--searchable-attributes", "title,overview", ...project],
+      { tty: true },
+    );
+    expect(result).toMatchSnapshot();
+  });
+
   it("names the index in the path and sends only the settings given", async () => {
     expect(await sent(["--searchable-attributes", "title,overview"])).toEqual({
       pathname: "/indexes/movies/settings",

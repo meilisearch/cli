@@ -15,6 +15,17 @@ describe("meili schema", () => {
     expect(result.stdout).toMatchSnapshot();
   });
 
+  it("prints compact JSON in a terminal too, and says how to get one command in full", async () => {
+    const result = await runCommand(Schema, [], { tty: true });
+    expect(result.stderr).toBe("");
+    expect(result.stdout.split("\n")).toHaveLength(2);
+    const schema = JSON.parse(result.stdout) as { commandDetail: string };
+    expect(schema.commandDetail).toBe('meili schema --command "<id>"');
+
+    const detail = await runCommand(Schema, ["--command", "index list"], { tty: true });
+    expect(() => JSON.parse(detail.stdout)).not.toThrow();
+  });
+
   it("indexes every command of the manifest, without their flags, offline", async () => {
     const manifest = JSON.parse(
       readFileSync(join(PROJECT_ROOT, "oclif.manifest.json"), "utf8"),

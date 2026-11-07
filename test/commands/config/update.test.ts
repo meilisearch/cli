@@ -87,6 +87,22 @@ describe("meili config update", () => {
     });
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(
+      managementHandlers.getProject([project]),
+      managementHandlers.listTeams([{ ...team, name: "Renamed" }]),
+    );
+    const { env } = tempConfig("update-sync-id.json", {
+      prod: { url: "https://elsewhere.example.com", apiKey: "mine", cloud: { id: 343 } },
+    });
+    const result = await runCommand(ConfigUpdate, ["--project", "prod", "--sync-with-cloud"], {
+      env: { ...managementEnv, ...env },
+      tty: true,
+    });
+    expect(result.stdout).toBe("");
+    expect(result.stderr).toContain("✓ Project prod is updated in ");
+  });
+
   it("writes nothing when the Cloud has no project at the entry's URL", async () => {
     server.use(managementHandlers.listProjects([project]));
     const { path, env } = tempConfig("update-sync-none.json", {

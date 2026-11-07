@@ -37,6 +37,14 @@ describe("meili key list", () => {
     expect(result.stdout).toContain(search.key);
   });
 
+  it("prints a table for a human in a terminal, a long description cut, and says so", async () => {
+    server.use(meilisearchHandlers.keys(both));
+    const result = await runCommand(KeyList, [...project], { tty: true });
+    expect(result).toMatchSnapshot();
+    expect(result.stdout).not.toContain(admin.description);
+    expect(result.stderr).toContain("Descriptions are cut.");
+  });
+
   it("follows the pagination with --all and merges every page into one envelope", async () => {
     server.use(meilisearchHandlers.keys(both));
     let result: Awaited<ReturnType<typeof runCommand>> | undefined;

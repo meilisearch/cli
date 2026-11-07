@@ -1,6 +1,6 @@
 # ADR 0007: Delete commands require `--yes`
 
-Status: accepted. Date: 2026-10-15. One point is superseded by ADR 0013: the `masterKey` that `add projects` prints is masked, no longer passed through unchanged. ADR 0018 moves the delete commands to files named `delete.ts`, and the contract test checks these files.
+Status: accepted. Date: 2026-10-15. One point is superseded by ADR 0013: the `masterKey` that `add projects` prints is masked, no longer passed through unchanged. ADR 0018 moves the delete commands to files named `delete.ts`, and the contract test checks these files. One rule is superseded by ADR 0023: in a terminal, a command prints text for a human, and JSON only with `--json`.
 
 Supersedes ADR 0002, whose rules it keeps except the one about confirmation.
 

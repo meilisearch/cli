@@ -1,10 +1,15 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`meili schema > prints its help without any network call 1`] = `
-"Describe the commands as JSON.
+"Describe the commands as JSON. --command <name> describes one in full.
 
 USAGE
-  $ meili schema [--debug] [--command <command>]
+  $ meili schema [--json] [--no-color] [--debug] [--command
+    <command>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --command=<command>  Print this command in full instead of the index: its API,
@@ -14,10 +19,11 @@ FLAGS
                        redacted.
 
 DESCRIPTION
-  Describe the commands as JSON.
+  Describe the commands as JSON. --command <name> describes one in full.
 
   Prints one line per command, or one command in full with --command, from the
-  oclif manifest.
+  oclif manifest. Always compact JSON, in a terminal too, whatever --json and
+  MEILI_JSON say.
 
 EXAMPLES
   $ meili schema

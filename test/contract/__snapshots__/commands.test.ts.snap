@@ -234,7 +234,7 @@ Says whether a session of \`auth login\` exists, whether the authorization serve
       "api": "none",
       "description": "List the projects of the config file.
 
-Prints the path of the file and its projects as JSON, keys masked.",
+Prints the path of the file and its projects, keys masked.",
       "examples": [
         "meili config list",
         "MEILI_CONFIG=./meili.json meili config list",
@@ -2063,7 +2063,7 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
       "api": "management",
       "description": "Delete a Meilisearch Cloud project and its data.
 
-Prints nothing on success.",
+Prints nothing on stdout on success.",
       "examples": [
         "meili project delete --id 343 --yes",
         "meili project delete --project staging --yes",
@@ -2244,9 +2244,9 @@ The active plans a project runs on, with their pricing.",
     },
     {
       "api": "none",
-      "description": "Describe the commands as JSON.
+      "description": "Describe the commands as JSON. --command <name> describes one in full.
 
-Prints one line per command, or one command in full with --command, from the oclif manifest.",
+Prints one line per command, or one command in full with --command, from the oclif manifest. Always compact JSON, in a terminal too, whatever --json and MEILI_JSON say.",
       "examples": [
         "meili schema",
         "meili schema --command "index list"",
@@ -3621,6 +3621,7 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
     },
   ],
   "index": {
+    "commandDetail": "meili schema --command "<id>"",
     "commands": [
       {
         "description": "Log in to Meilisearch Cloud, or create an account, in a browser.",
@@ -3892,7 +3893,7 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
         ],
       },
       {
-        "description": "Describe the commands as JSON.",
+        "description": "Describe the commands as JSON. --command <name> describes one in full.",
         "id": "schema",
       },
       {
@@ -4011,6 +4012,16 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
       },
     ],
     "globalFlags": [
+      {
+        "description": "Print compact JSON. The default when stdout is not a terminal.",
+        "name": "json",
+        "type": "boolean",
+      },
+      {
+        "description": "Print without colors. NO_COLOR does the same.",
+        "name": "no-color",
+        "type": "boolean",
+      },
       {
         "description": "Print every HTTP request and response on stderr, secrets redacted.",
         "name": "debug",

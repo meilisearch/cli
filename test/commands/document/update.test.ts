@@ -68,6 +68,16 @@ describe("meili document update", () => {
     expect(JSON.parse(result?.stderr ?? "").error.code).toBe("cli_usage");
   });
 
+  it("tells a human in a terminal that the documents keep their old values until the task succeeds", async () => {
+    server.use(meilisearchHandlers.documentsUpdate(makeEnqueuedTask()));
+    const result = await runCommand(
+      DocumentUpdate,
+      ["--index", "movies", "--data", '[{"id":1,"rating":4}]', ...project],
+      { tty: true },
+    );
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes the 404 of an unknown index through and exits 4", async () => {
     server.use(
       meilisearchHandlers.apiError("/indexes/nope/documents", 404, {

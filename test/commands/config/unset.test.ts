@@ -27,6 +27,20 @@ describe("meili config unset", () => {
     });
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    const path = join(scrubbedHome, "human.json");
+    writeConfigFile({ path, projects: { a: { url: "http://a" } } });
+    const result = await runCommand(ConfigUnset, ["--project", "a"], {
+      env: { MEILI_CONFIG: path },
+      tty: true,
+    });
+    expect(result).toEqual({
+      stdout: "",
+      stderr: `✓ Project a is removed from ${path}.\n`,
+      exitCode: 0,
+    });
+  });
+
   it("fails with cli_config when the project or the file does not exist", async () => {
     const path = join(scrubbedHome, "unknown.json");
     writeConfigFile({ path, projects: { b: { url: "http://b" } } });

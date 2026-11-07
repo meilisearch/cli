@@ -27,6 +27,12 @@ describe("meili key delete", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(meilisearchHandlers.keyDelete());
+    const result = await runCommand(KeyDelete, ["--id", uid, "--yes", ...project], { tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("names the key in the path", async () => {
     server.use(meilisearchHandlers.keyDelete());
     const requests = await recordRequests(async () => {

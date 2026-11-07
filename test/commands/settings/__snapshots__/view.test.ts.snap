@@ -9,12 +9,45 @@ exports[`meili settings view > passes the API error of a missing index through a
 }
 `;
 
+exports[`meili settings view > prints a summary, then every attribute, for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Settings of index movies
+
+",
+  "stdout": "  displayedAttributes   *
+  searchableAttributes  title, overview
+  filterableAttributes  genres
+  sortableAttributes    empty
+  rankingRules          words, typo, proximity, attribute, sort, exactness
+  stopWords             the
+  synonyms
+    phone  iPhone
+  distinctAttribute     null
+  typoTolerance
+    enabled              true
+    minWordSizeForTypos
+      oneTypo   5
+      twoTypos  9
+  pagination
+    maxTotalHits  1000
+  searchCutoffMs        null
+  facetSearch           true
+  prefixSearch          indexingTime
+",
+}
+`;
+
 exports[`meili settings view > prints its help without any network call 1`] = `
 "Get the settings of an index.
 
 USAGE
-  $ meili settings view -i <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>]
+  $ meili settings view -i <index> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>          (required) The index to read the settings of.

@@ -9,12 +9,44 @@ exports[`meili batch view > passes the 404 of an unknown batch through and exits
 }
 `;
 
+exports[`meili batch view > prints a summary, then every attribute, for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Batch 7
+1 task: 1 succeeded • Duration PT0.001S
+
+",
+  "stdout": "  progress       null
+  details
+    receivedDocuments  1
+    indexedDocuments   1
+  stats
+    totalNbTasks  1
+    status
+      succeeded  1
+    types
+      documentAdditionOrUpdate  1
+    indexUids
+      movies  1
+  duration       PT0.001S
+  startedAt      2026-09-24T10:00:00.000000Z
+  finishedAt     2026-09-24T10:00:00.001000Z
+  batchStrategy  batched all enqueued tasks
+  uid            7
+",
+}
+`;
+
 exports[`meili batch view > prints its help without any network call 1`] = `
 "Get one batch of tasks.
 
 USAGE
-  $ meili batch view --id <uid> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>]
+  $ meili batch view --id <uid> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         A project of the config file. Cannot be combined

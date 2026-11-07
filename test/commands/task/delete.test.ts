@@ -28,6 +28,14 @@ describe("meili task delete", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(meilisearchHandlers.tasksDelete(deleting));
+    const result = await runCommand(TaskDelete, ["--ids", "42,1344", "--yes", ...project], {
+      tty: true,
+    });
+    expect(result).toMatchSnapshot();
+  });
+
   it("sends the filters as the query parameters of the route", async () => {
     server.use(meilisearchHandlers.tasksDelete(deleting));
     const requests = await recordRequests(async () => {

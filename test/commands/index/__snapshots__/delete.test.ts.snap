@@ -13,8 +13,13 @@ exports[`meili index delete > prints its help without any network call 1`] = `
 "Delete an index.
 
 USAGE
-  $ meili index delete --id <index> --yes [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--timeout <duration> --wait]
+  $ meili index delete --id <index> --yes [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--timeout
+    <duration> --wait]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         A project of the config file. Cannot be combined
@@ -51,6 +56,24 @@ exports[`meili index delete > prints the enqueued task as the API returned it, w
   "exitCode": 0,
   "stderr": "",
   "stdout": "{"taskUid":13,"indexUid":"movies","status":"enqueued","type":"indexDeletion","enqueuedAt":"2026-09-24T10:00:00Z"}
+",
+}
+`;
+
+exports[`meili index delete > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Meilisearch received the request. Task 13 will delete index movies, with its documents.
+
+
+The index is still there until the task succeeds. Follow it: meili task view --id 13
+Next time, wait for the end with --wait.
+",
+  "stdout": "  taskUid     13
+  indexUid    movies
+  status      enqueued
+  type        indexDeletion
+  enqueuedAt  2026-09-24T10:00:00Z
 ",
 }
 `;

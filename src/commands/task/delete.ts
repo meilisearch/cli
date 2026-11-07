@@ -37,6 +37,12 @@ Deletes the finished tasks matched by --ids, --statuses, --types and the other f
         hint: "Name them with `--ids <uids>`, or match them with `--statuses <statuses>`, `--types <types>`, `--index-ids <indexes>` or a date filter such as `--before-enqueued-at <date>`.",
       });
     }
-    await this.outputTask(await this.meilisearch.tasks.deleteTasks(query), flags);
+    await this.outputTask(await this.meilisearch.tasks.deleteTasks(query), flags, {
+      enqueued: (uid) =>
+        `Meilisearch received the request. Task ${uid} will delete the matching tasks.`,
+      pending: "They are still listed until the task succeeds. Follow it:",
+      succeeded: (task) =>
+        `${task.details?.deletedTasks ?? 0} of ${task.details?.matchedTasks ?? 0} matching tasks deleted.`,
+    });
   }
 }

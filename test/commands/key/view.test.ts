@@ -35,6 +35,12 @@ describe("meili key view", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints a summary, then every attribute, for a human in a terminal", async () => {
+    server.use(meilisearchHandlers.key(both));
+    const result = await runCommand(KeyView, ["--id", search.uid, ...project], { tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("gets one key by its key value, which the route takes too", async () => {
     server.use(meilisearchHandlers.key(both));
     const requests = await recordRequests(async () => {

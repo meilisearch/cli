@@ -13,8 +13,12 @@ exports[`meili team update > prints its help without any network call 1`] = `
 "Rename a Meilisearch Cloud team, or change its owner.
 
 USAGE
-  $ meili team update --id <id> [--debug] [--name <name>] [--owner-id
-    <uuid>] [--file <path> | --data <json>]
+  $ meili team update --id <id> [--json] [--no-color] [--debug] [--name
+    <name>] [--owner-id <uuid>] [--file <path> | --data <json>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --data=<json>      Inline JSON body.
@@ -44,6 +48,21 @@ exports[`meili team update > sends the new name and owner for the team of --id, 
   "exitCode": 0,
   "stderr": "",
   "stdout": "{"id":12,"name":"renamed","organizationId":1,"ownerId":"user-2","isAdmin":true}
+",
+}
+`;
+
+exports[`meili team update > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "✓ Team renamed is updated.
+
+",
+  "stdout": "  id              12
+  name            renamed
+  organizationId  1
+  ownerId         user-2
+  isAdmin         true
 ",
 }
 `;

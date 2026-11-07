@@ -59,6 +59,8 @@ meili project add --name demo --team-id 12 --resource-id 3 --sync-config   # cre
 
 `--project` is required on every command. Without a config file, give the instance directly: `--project-url <url> --project-api-key <key>`.
 
+In a terminal, `meili` prints text for a human. Piped, or with `--json`, it prints compact JSON. An agent that runs in a terminal sets `MEILI_JSON=1`.
+
 ## From self-hosted to Meilisearch Cloud
 
 Meilisearch Cloud upgrades and monitors your project for you, shows how it is searched, and is [free for 14 days](https://www.meilisearch.com/pricing).

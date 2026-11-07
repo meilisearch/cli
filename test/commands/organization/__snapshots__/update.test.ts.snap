@@ -13,8 +13,12 @@ exports[`meili organization update > prints its help without any network call 1`
 "Rename a Meilisearch Cloud organization.
 
 USAGE
-  $ meili organization update --id <id> [--debug] [--name <name>] [--file <path>
-    | --data <json>]
+  $ meili organization update --id <id> [--json] [--no-color] [--debug] [--name
+    <name>] [--file <path> | --data <json>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --data=<json>  Inline JSON body.
@@ -40,6 +44,23 @@ exports[`meili organization update > sends the new name for the organization of 
   "exitCode": 0,
   "stderr": "",
   "stdout": "{"id":1,"name":"Renamed","identifier":"acme","ownerId":"user-1","isAdmin":true,"defaultTeamId":12,"customerTier":null}
+",
+}
+`;
+
+exports[`meili organization update > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "✓ Organization Renamed is updated.
+
+",
+  "stdout": "  id             1
+  name           Renamed
+  identifier     acme
+  ownerId        user-1
+  isAdmin        true
+  defaultTeamId  12
+  customerTier   null
 ",
 }
 `;

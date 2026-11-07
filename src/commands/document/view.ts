@@ -1,6 +1,8 @@
 import { Flags } from "@oclif/core";
 import type { DocumentQuery } from "meilisearch";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
+import { objectLines } from "../../lib/human.js";
+import { paint } from "../../lib/output.js";
 
 export default class DocumentView extends BaseCommand {
   static api: Api = "meilisearch";
@@ -45,6 +47,12 @@ export default class DocumentView extends BaseCommand {
       fields: flags.fields?.split(","),
       retrieveVectors: flags["retrieve-vectors"] ? true : undefined,
     } as DocumentQuery;
-    await this.output(await this.meilisearch.index(flags.index).getDocument(flags.id, query));
+    await this.output(
+      await this.meilisearch.index(flags.index).getDocument(flags.id, query),
+      (document) => ({
+        status: [paint("bold", `Document ${flags.id} in index ${flags.index}`)],
+        data: objectLines(document).join("\n"),
+      }),
+    );
   }
 }

@@ -18,11 +18,29 @@ exports[`meili organization list > lists the organizations in the envelope the A
 }
 `;
 
+exports[`meili organization list > prints a table for a human in a terminal, isAdmin in place of ownerId, no customerTier 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Showing 2 of 2
+page 1 • limit 20 • totalPages 1
+
+",
+  "stdout": "ID  NAME  IDENTIFIER  IS_ADMIN  DEFAULT_TEAM_ID
+1   Acme  acme        true      12
+2   Beta  beta        false     12
+",
+}
+`;
+
 exports[`meili organization list > prints its help without any network call 1`] = `
 "List the Meilisearch Cloud organizations.
 
 USAGE
-  $ meili organization list [--debug]
+  $ meili organization list [--json] [--no-color] [--debug]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   --debug  Print every HTTP request and response on stderr, secrets redacted.

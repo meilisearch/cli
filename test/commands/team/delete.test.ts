@@ -26,6 +26,12 @@ describe("meili team delete", () => {
     expect(result).toEqual({ stdout: "", stderr: "", exitCode: 0 });
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(managementHandlers.apiError("/api/v2/teams/12", 204));
+    const result = await runCommand(TeamDelete, ["--id", "12", "--yes"], { env, tty: true });
+    expect(result).toEqual({ stdout: "", stderr: "✓ Team 12 is deleted.\n", exitCode: 0 });
+  });
+
   it("passes the API's error body through on an unknown id, with exit 4", async () => {
     server.use(managementHandlers.apiError("/api/v2/teams/999", 404, teamNotFound));
     const result = await runCommand(TeamDelete, ["--id", "999", "--yes"], {

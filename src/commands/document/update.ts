@@ -60,6 +60,15 @@ The fields of a document are merged into the one that has the same primary key.`
         customMetadata: flags["custom-metadata"],
         skipCreation: flags["skip-creation"] ? true : undefined,
       });
-    await this.outputTask(task, flags);
+    await this.outputTask(task, flags, {
+      enqueued: (uid) =>
+        `Meilisearch received the changes. Task ${uid} will update documents in index ${flags.index}.`,
+      pending: "The documents keep their old values until the task succeeds. Follow it:",
+      // A count is null when a later task of the same batch cleared the documents.
+      succeeded: ({ details }) =>
+        details?.indexedDocuments == null
+          ? `documents updated in index ${flags.index}.`
+          : `${details.indexedDocuments} of ${details.receivedDocuments} documents updated in index ${flags.index}.`,
+    });
   }
 }

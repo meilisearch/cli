@@ -39,6 +39,46 @@ describe("meili document list", () => {
     expect(result).toMatchSnapshot();
   });
 
+  describe("for a human in a terminal", () => {
+    const human = { tty: true };
+    const wide = Array.from({ length: 3 }, (_, index) => ({
+      id: index + 1,
+      title: `Movie ${index + 1}`,
+      genres: ["Drama", "Comedy"],
+      release_date: "1988-10-21",
+      rating: 4,
+      poster: "https://example.com/poster.jpg",
+      cast: [{ name: "Someone" }],
+    }));
+
+    it("shows the first 4 simple attributes, and the next page with the command line typed", async () => {
+      server.use(meilisearchHandlers.documentsFetch(wide));
+      const result = await runCommand(
+        DocumentList,
+        ["-i", "movies", "--limit", "2", ...project, "--project-api-key", "secret-key"],
+        human,
+      );
+      expect(result).toMatchSnapshot();
+      expect(result.stderr).not.toContain("secret-key");
+    });
+
+    it("shows the attributes of --fields, arrays on one line, and says the last page is the last", async () => {
+      server.use(meilisearchHandlers.documentsFetch(wide));
+      const result = await runCommand(
+        DocumentList,
+        ["-i", "movies", "--fields", "id,genres", "--offset", "2", ...project],
+        human,
+      );
+      expect(result).toMatchSnapshot();
+    });
+
+    it("says what to do when the index has no documents", async () => {
+      server.use(meilisearchHandlers.documentsFetch([]));
+      const empty = await runCommand(DocumentList, ["-i", "movies", ...project], human);
+      expect(empty).toMatchSnapshot();
+    });
+  });
+
   it("narrows the list with --ids", async () => {
     server.use(meilisearchHandlers.documentsFetch(documents));
     const result = await runCommand(DocumentList, [

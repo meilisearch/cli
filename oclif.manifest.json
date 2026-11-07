@@ -9,6 +9,20 @@
         "<%= config.bin %> <%= command.id %> --no-browser"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -33,6 +47,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -176,6 +191,20 @@
         "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -194,6 +223,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -337,6 +367,20 @@
         "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -355,6 +399,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -498,6 +543,20 @@
         "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -516,6 +575,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -662,6 +722,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --statuses failed --index-ids movies --limit 5"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -842,6 +916,7 @@
       "keyActions": [
         "tasks.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -985,6 +1060,20 @@
         "<%= config.bin %> <%= command.id %> --project prod --id 7"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -1041,6 +1130,7 @@
       "keyActions": [
         "tasks.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -1179,12 +1269,26 @@
     "config:list": {
       "aliases": [],
       "args": {},
-      "description": "List the projects of the config file.\n\nPrints the path of the file and its projects as JSON, keys masked.",
+      "description": "List the projects of the config file.\n\nPrints the path of the file and its projects, keys masked.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
         "MEILI_CONFIG=./meili.json <%= config.bin %> <%= command.id %>"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -1203,6 +1307,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -1348,6 +1453,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --project-url https://ms-abc.sfo.meilisearch.io --sync-with-cloud"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -1399,6 +1518,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -1545,6 +1665,20 @@
         "<%= config.bin %> <%= command.id %> --project-url https://ms-abc.sfo.meilisearch.io"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -1593,6 +1727,7 @@
       "api": "management",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -1736,6 +1871,20 @@
         "<%= config.bin %> <%= command.id %> --project prod"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -1764,6 +1913,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -1909,6 +2059,20 @@
         "<%= config.bin %> <%= command.id %> -p local --project-url http://localhost:7701"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -1959,6 +2123,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -2105,6 +2270,20 @@
         "<%= config.bin %> <%= command.id %> -p prod -i movies --file movies.json --wait"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -2220,6 +2399,7 @@
       "keyActions": [
         "documents.add"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -2367,6 +2547,20 @@
         "<%= config.bin %> <%= command.id %> -p prod -i movies --all --yes --wait"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -2513,6 +2707,7 @@
       "keyActions": [
         "documents.delete"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -2658,6 +2853,20 @@
         "<%= config.bin %> <%= command.id %> -p prod -i movies --filter 'rating > 4' --sort rating:desc"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -2788,6 +2997,7 @@
       "keyActions": [
         "documents.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -2934,6 +3144,20 @@
         "<%= config.bin %> <%= command.id %> -p prod -i movies --file changes.json --wait"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -3049,6 +3273,7 @@
       "keyActions": [
         "documents.add"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -3193,6 +3418,20 @@
         "<%= config.bin %> <%= command.id %> -p prod -i movies --id 42 --fields id,title"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -3273,6 +3512,7 @@
       "keyActions": [
         "documents.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -3420,6 +3660,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --data '{\"url\":\"http://localhost:7701\",\"indexes\":{\"*\":{\"overrideSettings\":true}}}'"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -3550,6 +3804,7 @@
       "keyActions": [
         "export"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -3694,6 +3949,20 @@
         "<%= config.bin %> <%= command.id %> -p prod -i movies --data '{\"facetName\":\"genres\",\"facetQuery\":\"ac\"}'"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -3860,6 +4129,7 @@
       "keyActions": [
         "search"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -4003,6 +4273,20 @@
         "<%= config.bin %> <%= command.id %> --project-url http://localhost:7700"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -4048,6 +4332,7 @@
         "GET /health"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -4192,6 +4477,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --id movies --wait"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -4295,6 +4594,7 @@
       "keyActions": [
         "indexes.create"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -4439,6 +4739,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --id movies --yes --wait"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -4519,6 +4833,7 @@
       "keyActions": [
         "indexes.delete"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -4663,6 +4978,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --limit 5 --offset 10"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -4732,6 +5061,7 @@
       "keyActions": [
         "indexes.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -4877,6 +5207,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --id movies --new-id films --wait"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -4988,6 +5332,7 @@
       "keyActions": [
         "indexes.update"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -5131,6 +5476,20 @@
         "<%= config.bin %> <%= command.id %> --project prod --id movies"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -5187,6 +5546,7 @@
       "keyActions": [
         "indexes.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -5330,6 +5690,20 @@
         "<%= config.bin %> <%= command.id %> --project prod"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -5377,6 +5751,7 @@
       "keyActions": [
         "version"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -5522,6 +5897,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --data '{\"actions\":[\"search\"],\"indexes\":[\"movies\"],\"expiresAt\":null}'"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -5639,6 +6028,7 @@
       "keyActions": [
         "keys.create"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -5782,6 +6172,20 @@
         "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -5845,6 +6249,7 @@
       "keyActions": [
         "keys.delete"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -5989,6 +6394,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --limit 5 --offset 10"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -6058,6 +6477,7 @@
       "keyActions": [
         "keys.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -6203,6 +6623,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --description null"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -6294,6 +6728,7 @@
       "keyActions": [
         "keys.update"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -6437,6 +6872,20 @@
         "<%= config.bin %> <%= command.id %> --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -6493,6 +6942,7 @@
       "keyActions": [
         "keys.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -6639,6 +7089,20 @@
         "cat queries.json | <%= config.bin %> <%= command.id %> -p prod --file -"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -6721,6 +7185,7 @@
       "keyActions": [
         "search"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -6863,6 +7328,20 @@
         "<%= config.bin %> <%= command.id %> --id 7 --yes"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -6899,6 +7378,7 @@
         "DELETE /api/v2/organizations/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -7042,6 +7522,20 @@
         "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -7062,6 +7556,7 @@
         "GET /api/v2/organizations"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -7206,6 +7701,20 @@
         "<%= config.bin %> <%= command.id %> --id 7 --data '{\"name\":\"Acme\"}'"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -7262,6 +7771,7 @@
         "PATCH /api/v2/organizations/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -7405,6 +7915,20 @@
         "<%= config.bin %> <%= command.id %> --id 7"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -7434,6 +7958,7 @@
         "GET /api/v2/organizations/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -7582,6 +8107,20 @@
         "<%= config.bin %> <%= command.id %> --file project.json --name other-name"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -7676,6 +8215,7 @@
         "POST /api/v2/projects"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -7814,13 +8354,27 @@
     "project:delete": {
       "aliases": [],
       "args": {},
-      "description": "Delete a Meilisearch Cloud project and its data.\n\nPrints nothing on success.",
+      "description": "Delete a Meilisearch Cloud project and its data.\n\nPrints nothing on stdout on success.",
       "examples": [
         "<%= config.bin %> <%= command.id %> --id 343 --yes",
         "<%= config.bin %> <%= command.id %> --project staging --yes",
         "<%= config.bin %> <%= command.id %> -p staging --yes --sync-config"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -7871,6 +8425,7 @@
         "DELETE /api/v2/projects/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -8015,6 +8570,20 @@
         "<%= config.bin %> <%= command.id %> --team-id 12"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -8043,6 +8612,7 @@
         "GET /api/v2/projects"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -8189,6 +8759,20 @@
         "<%= config.bin %> <%= command.id %> --id 343 --data '{\"name\":\"renamed\"}'"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -8259,6 +8843,7 @@
         "PATCH /api/v2/projects/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -8403,6 +8988,20 @@
         "<%= config.bin %> <%= command.id %> --project prod"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -8440,6 +9039,7 @@
         "GET /api/v2/projects/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -8583,6 +9183,20 @@
         "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -8603,6 +9217,7 @@
         "GET /api/v2/regions"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -8747,6 +9362,20 @@
         "<%= config.bin %> <%= command.id %> --region-id 1"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -8775,6 +9404,7 @@
         "GET /api/v2/resources"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -8913,13 +9543,27 @@
     "schema": {
       "aliases": [],
       "args": {},
-      "description": "Describe the commands as JSON.\n\nPrints one line per command, or one command in full with --command, from the oclif manifest.",
+      "description": "Describe the commands as JSON. --command <name> describes one in full.\n\nPrints one line per command, or one command in full with --command, from the oclif manifest. Always compact JSON, in a terminal too, whatever --json and MEILI_JSON say.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
         "<%= config.bin %> <%= command.id %> --command \"index list\"",
         "<%= config.bin %> <%= command.id %> | jq '.commands[].id'"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -8946,6 +9590,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": true,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -9091,6 +9736,20 @@
         "<%= config.bin %> <%= command.id %> -p prod -i movies --data '{\"q\":\"nosferatu\",\"hybrid\":{\"embedder\":\"default\",\"semanticRatio\":0.5}}'"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -9377,6 +10036,7 @@
       "keyActions": [
         "search"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -9520,6 +10180,20 @@
         "<%= config.bin %> <%= command.id %> -p prod -i movies --yes --wait"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -9601,6 +10275,7 @@
       "keyActions": [
         "settings.update"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -9748,6 +10423,20 @@
         "<%= config.bin %> <%= command.id %> -p prod -i movies --file settings.json"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -10017,6 +10706,7 @@
       "keyActions": [
         "settings.update"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -10160,6 +10850,20 @@
         "<%= config.bin %> <%= command.id %> --project prod --index movies"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -10217,6 +10921,7 @@
       "keyActions": [
         "settings.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -10362,6 +11067,20 @@
         "<%= config.bin %> <%= command.id %> -p prod -i movies --data '{\"id\":143,\"embedder\":\"default\",\"retrieveVectors\":true}'"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -10518,6 +11237,7 @@
       "keyActions": [
         "search"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -10662,6 +11382,20 @@
         "<%= config.bin %> <%= command.id %> -p prod -i movies --size-format human --show-internal-database-sizes"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -10736,6 +11470,7 @@
       "keyActions": [
         "stats.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -10881,6 +11616,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --statuses processing --wait"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -11050,6 +11799,7 @@
       "keyActions": [
         "tasks.cancel"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -11196,6 +11946,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --index-ids movies --yes --wait"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -11372,6 +12136,7 @@
       "keyActions": [
         "tasks.delete"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -11518,6 +12283,20 @@
         "<%= config.bin %> <%= command.id %> -p prod --index-ids movies --types documentAdditionOrUpdate"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -11698,6 +12477,7 @@
       "keyActions": [
         "tasks.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -11841,6 +12621,20 @@
         "<%= config.bin %> <%= command.id %> --project prod --id 42"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -11897,6 +12691,7 @@
       "keyActions": [
         "tasks.get"
       ],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -12041,6 +12836,20 @@
         "<%= config.bin %> <%= command.id %> --data '{\"name\":\"search\",\"organizationId\":1}'"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -12096,6 +12905,7 @@
         "POST /api/v2/teams"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -12239,6 +13049,20 @@
         "<%= config.bin %> <%= command.id %> --id 12 --yes"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -12275,6 +13099,7 @@
         "DELETE /api/v2/teams/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -12418,6 +13243,20 @@
         "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -12438,6 +13277,7 @@
         "GET /api/v2/teams"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -12583,6 +13423,20 @@
         "<%= config.bin %> <%= command.id %> --id 12 --data '{\"name\":\"renamed\"}'"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -12647,6 +13501,7 @@
         "PATCH /api/v2/teams/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -12790,6 +13645,20 @@
         "<%= config.bin %> <%= command.id %> --id 12"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -12819,6 +13688,7 @@
         "GET /api/v2/teams/{id}"
       ],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -12963,6 +13833,20 @@
         "<%= config.bin %> <%= command.id %> --project local"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -12990,6 +13874,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
@@ -13132,6 +14017,20 @@
         "<%= config.bin %> <%= command.id %>"
       ],
       "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
@@ -13150,6 +14049,7 @@
       "api": "none",
       "routes": [],
       "keyActions": [],
+      "alwaysJson": false,
       "connectionFlags": {
         "project-url": {
           "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",

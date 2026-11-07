@@ -22,6 +22,8 @@ export const ENV = {
   MANAGEMENT_DASHBOARD_URL: "MEILI_MANAGEMENT_DASHBOARD_URL",
   TIMEOUT: "MEILI_TIMEOUT",
   NO_ANALYTICS: "MEILI_NO_ANALYTICS",
+  JSON: "MEILI_JSON",
+  NO_COLOR: "NO_COLOR",
 } as const;
 
 export const DEFAULT_MANAGEMENT_URL = "https://api.meilisearch.com";
@@ -81,7 +83,34 @@ export const ENV_VARS: ReadonlyArray<{
     description:
       "`true` or `1` turns off the anonymous usage data the CLI sends. `DO_NOT_TRACK=1` and `CI` turn it off too.",
   },
+  {
+    name: ENV.JSON,
+    description: "`true` or `1` prints compact JSON, like --json.",
+    flag: "json",
+  },
+  {
+    name: ENV.NO_COLOR,
+    description: "Any nonempty value prints without colors, like --no-color.",
+  },
 ];
+
+/** `true` or `1`, the values that turn on a variable such as `MEILI_JSON`. */
+export const isOn = (value: string | undefined): boolean =>
+  value === "1" || value?.toLowerCase() === "true";
+
+/**
+ * What the human output gives way to (docs/contract/output.md, "Format"):
+ * compact JSON with `--json` or `MEILI_JSON`, no colors with `--no-color` or `NO_COLOR`.
+ */
+export function outputOptions(
+  argv: readonly string[],
+  env: Env,
+): { json: boolean; color: boolean } {
+  return {
+    json: argv.includes("--json") || isOn(env[ENV.JSON]),
+    color: !argv.includes("--no-color") && nonEmpty(env[ENV.NO_COLOR]) === undefined,
+  };
+}
 
 // Config file
 

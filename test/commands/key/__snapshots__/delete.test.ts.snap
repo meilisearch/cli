@@ -13,8 +13,12 @@ exports[`meili key delete > prints its help without any network call 1`] = `
 "Delete an API key.
 
 USAGE
-  $ meili key delete --id <key> --yes [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>]
+  $ meili key delete --id <key> --yes [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         A project of the config file. Cannot be combined
@@ -39,6 +43,15 @@ EXAMPLES
   $ meili key delete --project prod --id 52787ccd-48ff-48e5-9c4b-03cd76978a60 --yes
 
 "
+`;
+
+exports[`meili key delete > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "✓ Key 52787ccd-48ff-48e5-9c4b-03cd76978a60 is deleted. A request with it now fails.
+",
+  "stdout": "",
+}
 `;
 
 exports[`meili key delete > writes nothing on stdout and exits 0, the route answering 204 1`] = `

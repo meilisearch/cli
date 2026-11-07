@@ -9,12 +9,25 @@ exports[`meili health > passes an API error through and exits 1 1`] = `
 }
 `;
 
+exports[`meili health > prints every attribute for a human in a terminal 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "",
+  "stdout": "status  available
+",
+}
+`;
+
 exports[`meili health > prints its help without any network call 1`] = `
 "Check that the instance is available.
 
 USAGE
-  $ meili health [--debug] [--project-url <url>] [--project-api-key
-    <key>] [-p <name>]
+  $ meili health [--json] [--no-color] [--debug] [--project-url
+    <url>] [--project-api-key <key>] [-p <name>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         A project of the config file. Cannot be combined

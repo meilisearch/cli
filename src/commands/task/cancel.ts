@@ -27,6 +27,12 @@ Cancels the enqueued and processing tasks matched by --ids, --statuses, --types 
 
   async run(): Promise<void> {
     const { flags } = await this.parse(TaskCancel);
-    await this.outputTask(await this.meilisearch.tasks.cancelTasks(taskFilterQuery(flags)), flags);
+    await this.outputTask(await this.meilisearch.tasks.cancelTasks(taskFilterQuery(flags)), flags, {
+      enqueued: (uid) =>
+        `Meilisearch received the request. Task ${uid} will cancel the matching tasks.`,
+      pending: "They go on until the task succeeds. Follow it:",
+      succeeded: (task) =>
+        `${task.details?.canceledTasks ?? 0} of ${task.details?.matchedTasks ?? 0} matching tasks canceled.`,
+    });
   }
 }

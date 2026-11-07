@@ -1,5 +1,7 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
+import { itemView } from "../../lib/human.js";
+import { paint } from "../../lib/output.js";
 
 export default class SettingsView extends BaseCommand {
   static api: Api = "meilisearch";
@@ -26,6 +28,8 @@ Each setting has its current value or its default.`;
 
   async run(): Promise<void> {
     const { flags } = await this.parse(SettingsView);
-    await this.output(await this.meilisearch.index(flags.index).getSettings());
+    await this.output(await this.meilisearch.index(flags.index).getSettings(), (settings) =>
+      itemView([paint("bold", `Settings of index ${flags.index}`)], settings),
+    );
   }
 }

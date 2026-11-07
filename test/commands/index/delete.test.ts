@@ -28,6 +28,14 @@ describe("meili index delete", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(meilisearchHandlers.indexDelete(deleted));
+    const result = await runCommand(IndexDelete, ["--id", "movies", "--yes", ...project], {
+      tty: true,
+    });
+    expect(result).toMatchSnapshot();
+  });
+
   it("names the index in the path", async () => {
     server.use(meilisearchHandlers.indexDelete(deleted));
     const requests = await recordRequests(async () => {

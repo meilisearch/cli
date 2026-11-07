@@ -1,5 +1,44 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`meili document list > for a human in a terminal > says what to do when the index has no documents 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Index movies has no documents. Add some: meili document add -i movies --file <path>
+",
+  "stdout": "",
+}
+`;
+
+exports[`meili document list > for a human in a terminal > shows the attributes of --fields, arrays on one line, and says the last page is the last 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Showing documents 3–3 of 3 in index movies
+
+
+This is the last page.
+",
+  "stdout": "id  genres
+3   Drama, Comedy
+",
+}
+`;
+
+exports[`meili document list > for a human in a terminal > shows the first 4 simple attributes, and the next page with the command line typed 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "Showing documents 1–2 of 3 in index movies
+
+
+Simplified view: 4 of 7 attributes. Choose them with --fields, or see them all with --json.
+Next page: meili document list -i movies --limit 2 --project-url http://meili.test:7700 --project-api-key '<key>' --offset 2
+",
+  "stdout": "id  title    genres         release_date
+1   Movie 1  Drama, Comedy  1988-10-21
+2   Movie 2  Drama, Comedy  1988-10-21
+",
+}
+`;
+
 exports[`meili document list > passes an authentication error through with a hint and exits 3 1`] = `
 {
   "exitCode": 3,
@@ -13,10 +52,14 @@ exports[`meili document list > prints its help without any network call 1`] = `
 "List the documents of an index.
 
 USAGE
-  $ meili document list -i <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--ids <ids>] [--filter <filter>]
-    [--fields <fields>] [--sort <sort>] [--retrieve-vectors] [--limit <n>]
-    [--offset <n>] [--file <path> | --data <json>]
+  $ meili document list -i <index> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--ids <ids>]
+    [--filter <filter>] [--fields <fields>] [--sort <sort>] [--retrieve-vectors]
+    [--limit <n>] [--offset <n>] [--file <path> | --data <json>]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -i, --index=<index>          (required) The index to read the documents from.

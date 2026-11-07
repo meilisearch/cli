@@ -13,9 +13,13 @@ exports[`meili index add > prints its help without any network call 1`] = `
 "Create an index.
 
 USAGE
-  $ meili index add --id <index> [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--primary-key <field>] [--file <path>
-    | --data <json>] [--timeout <duration> --wait]
+  $ meili index add --id <index> [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--primary-key
+    <field>] [--file <path> | --data <json>] [--timeout <duration> --wait]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>         A project of the config file. Cannot be combined
@@ -57,6 +61,24 @@ exports[`meili index add > prints the enqueued task as the API returned it, with
   "exitCode": 0,
   "stderr": "",
   "stdout": "{"taskUid":11,"indexUid":"movies","status":"enqueued","type":"indexCreation","enqueuedAt":"2026-09-24T10:00:00Z"}
+",
+}
+`;
+
+exports[`meili index add > tells a human in a terminal that the task is enqueued, and how to follow it 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Meilisearch received the request. Task 11 will create index movies.
+
+
+The index does not exist yet. Follow the task: meili task view --id 11
+Next time, wait for the end with --wait.
+",
+  "stdout": "  taskUid     11
+  indexUid    movies
+  status      enqueued
+  type        indexCreation
+  enqueuedAt  2026-09-24T10:00:00Z
 ",
 }
 `;

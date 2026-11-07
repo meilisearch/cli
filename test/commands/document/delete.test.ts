@@ -174,6 +174,29 @@ describe("meili document delete", () => {
     }
   });
 
+  it("names the selector for a human in a terminal", async () => {
+    useDeleteRoutes();
+    const human = { tty: true };
+    const byFilter = await runCommand(
+      DocumentDelete,
+      ["--index", "movies", "--filter", "rating < 2", "--yes", ...project],
+      human,
+    );
+    expect(byFilter).toMatchSnapshot();
+    const byIds = await runCommand(
+      DocumentDelete,
+      ["--index", "movies", "--ids", "42,1344", "--yes", ...project],
+      human,
+    );
+    expect(byIds.stderr).toContain("Task 42 will delete the documents 42, 1344 in index movies.");
+    const all = await runCommand(
+      DocumentDelete,
+      ["--index", "movies", "--all", "--yes", ...project],
+      human,
+    );
+    expect(all.stderr).toContain("Task 44 will delete every document in index movies.");
+  });
+
   it("passes an authentication error through with a hint and exits 3", async () => {
     server.use(
       meilisearchHandlers.apiError(

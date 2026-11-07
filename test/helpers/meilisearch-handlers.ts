@@ -92,19 +92,33 @@ export const meilisearchHandlers = {
 
   /**
    * `POST /indexes/{uid}/documents/fetch` paginating over `all` like the API
-   * does: `limit` defaults to 20, `offset` to 0, and `ids` narrows the list.
+   * does: `limit` defaults to 20, `offset` to 0, `ids` narrows the list, and `fields` the attributes.
    */
   documentsFetch: (all: RecordAny[]) =>
     http.post(`${MEILISEARCH_URL}/indexes/:uid/documents/fetch`, async ({ request }) => {
-      const query = (await request.json()) as { limit?: number; offset?: number; ids?: string[] };
+      const query = (await request.json()) as {
+        limit?: number;
+        offset?: number;
+        ids?: string[];
+        fields?: string[];
+      };
       const matching =
         query.ids === undefined
           ? all
           : all.filter((document) => query.ids?.includes(String(document.id)));
       const limit = query.limit ?? 20;
       const offset = query.offset ?? 0;
+      const { fields } = query;
       return HttpResponse.json({
-        results: matching.slice(offset, offset + limit),
+        results: matching
+          .slice(offset, offset + limit)
+          .map((document) =>
+            fields === undefined
+              ? document
+              : Object.fromEntries(
+                  Object.entries(document).filter(([key]) => fields.includes(key)),
+                ),
+          ),
         offset,
         limit,
         total: matching.length,

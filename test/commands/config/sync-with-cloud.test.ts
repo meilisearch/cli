@@ -80,6 +80,31 @@ describe("meili config sync-with-cloud", () => {
     });
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(
+      managementHandlers.listProjects([project, docs, searchA, searchB, creating]),
+      // The token owns team 12 only.
+      managementHandlers.masterKey([project, docs]),
+      managementHandlers.listTeams(teams),
+    );
+    const docsEntry = {
+      url: "https://ms-docs.sfo.meilisearch.io",
+      apiKey: "mine",
+      cloud: { id: 344, teamId: 12, teamName: "Search" },
+    };
+    const { env } = tempConfig("sync-all.json", {
+      local: { url: "http://localhost:7700" },
+      prod: { url: "https://ms-abc.sfo.meilisearch.io" },
+      docs: docsEntry,
+    });
+    const result = await runCommand(ConfigSyncWithCloud, ["--all"], {
+      env: { ...managementEnv, ...env },
+      tty: true,
+    });
+    expect(result.stdout).toMatchSnapshot();
+    expect(result.stderr).toContain("✓ 2 added, 1 updated, 1 unchanged in ");
+  });
+
   it("reads every page, and only the teams of --team-ids", async () => {
     const received: ReceivedRequest[] = [];
     server.use(

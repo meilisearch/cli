@@ -27,6 +27,12 @@ describe("meili task view", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints a summary, then every attribute, for a human in a terminal", async () => {
+    server.use(meilisearchHandlers.task(tasks));
+    const result = await runCommand(TaskView, ["--id", "42", ...project], { tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes the 404 of an unknown task through and exits 4", async () => {
     server.use(meilisearchHandlers.task(tasks));
     const result = await runCommand(TaskView, ["--id", "7", ...project]);

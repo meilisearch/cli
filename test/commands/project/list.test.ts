@@ -28,6 +28,17 @@ describe("meili project list", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints a table for a human in a terminal, and says what to do when there is no project", async () => {
+    const human = { env: env, tty: true };
+    server.use(
+      managementHandlers.listProjects([{ ...project, url: null, status: "creating" }, staging]),
+    );
+    expect(await runCommand(ProjectList, [], human)).toMatchSnapshot();
+
+    server.use(managementHandlers.listProjects([]));
+    expect(await runCommand(ProjectList, [], human)).toMatchSnapshot();
+  });
+
   it("passes --team-id to the list route", async () => {
     const received: ReceivedRequest[] = [];
     server.use(managementHandlers.listProjects([project, staging], received));

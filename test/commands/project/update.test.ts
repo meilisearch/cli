@@ -129,6 +129,22 @@ describe("meili project update", () => {
     });
   });
 
+  it("tells a human in a terminal the new name, then the entry renamed with --sync-config", async () => {
+    server.use(managementHandlers.updateProject(), managementHandlers.listTeams());
+    const { env: configEnv } = tempConfig("rename-human.json", {
+      demo: { url: "https://ms-abc.sfo.meilisearch.io", cloud: { id: 343 } },
+    });
+    const result = await runCommand(
+      ProjectUpdate,
+      ["-p", "demo", "--name", "demo-2", "--sync-config"],
+      {
+        env: { ...env, ...configEnv },
+        tty: true,
+      },
+    );
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes the API's error body through on a 403, with exit 3", async () => {
     server.use(managementHandlers.apiError("/api/v2/projects/343", 403, forbidden));
     const result = await runCommand(ProjectUpdate, ["--id", "343", "--name", "x"], {

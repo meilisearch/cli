@@ -19,6 +19,7 @@ import {
   writeConfigFile,
 } from "../../lib/config.js";
 import { MeiliCliError, writeWarning } from "../../lib/errors.js";
+import { defaultView, done } from "../../lib/human.js";
 
 const SCOPES = ["all", "team-ids", "project-name", "project-url"];
 
@@ -108,7 +109,7 @@ Gives every project of the scope an entry, with its cloud identifiers, and its m
     }));
 
     const entries: Record<string, ProjectEntry> = { ...file.projects };
-    const report = [];
+    const report: Record<string, unknown>[] = [];
     for (const { project, name } of planned) {
       const before = file.projects[name];
       if (before !== undefined) warnUrlAnomaly(name, before.url, project);
@@ -135,7 +136,18 @@ Gives every project of the scope an entry, with its cloud identifiers, and its m
     if (report.some((each) => each.action !== "unchanged")) {
       writeConfigFile({ path: file.path, projects: entries });
     }
-    await this.output(report);
+    await this.output(report, () => {
+      const count = (action: string) => report.filter((each) => each.action === action).length;
+      const view = defaultView(report.map(({ cloud: _cloud, ...each }) => each));
+      return {
+        ...view,
+        status: [
+          done(
+            `${count("added")} added, ${count("updated")} updated, ${count("unchanged")} unchanged in ${file.path}.`,
+          ),
+        ],
+      };
+    });
   }
 }
 

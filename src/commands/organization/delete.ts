@@ -1,6 +1,7 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
 import { deleteApiV2OrganizationsById } from "../../lib/clients/management/generated/sdk.gen.js";
+import { done } from "../../lib/human.js";
 
 export default class OrganizationDelete extends BaseCommand {
   static api: Api = "management";
@@ -25,5 +26,6 @@ Prints nothing on success.`;
   async run(): Promise<void> {
     const { flags } = await this.parse(OrganizationDelete);
     await deleteApiV2OrganizationsById({ client: this.managementClient, path: { id: flags.id } });
+    this.say(done(`Organization ${flags.id} is deleted.`));
   }
 }

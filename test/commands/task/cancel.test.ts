@@ -29,6 +29,12 @@ describe("meili task cancel", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(meilisearchHandlers.tasksCancel(canceling));
+    const result = await runCommand(TaskCancel, ["--ids", "42,1344", ...project], { tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("sends the filters as the query parameters of the route", async () => {
     server.use(meilisearchHandlers.tasksCancel(canceling));
     const requests = await recordRequests(async () => {

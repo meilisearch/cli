@@ -10,9 +10,12 @@ const GLOBAL_FLAGS = Object.entries(BaseCommand.baseFlags).map(([name, flag]) =>
 export default class Schema extends BaseCommand {
   static api: Api = "none";
 
-  static override description = `Describe the commands as JSON.
+  static override description =
+    `Describe the commands as JSON. --command <name> describes one in full.
 
-Prints one line per command, or one command in full with --command, from the oclif manifest.`;
+Prints one line per command, or one command in full with --command, from the oclif manifest. Always compact JSON, in a terminal too, whatever --json and MEILI_JSON say.`;
+
+  static alwaysJson = true;
 
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
@@ -38,6 +41,7 @@ Prints one line per command, or one command in full with --command, from the ocl
       await this.output({
         name: this.config.bin,
         version: this.config.version,
+        commandDetail: `${this.config.bin} schema --command "<id>"`,
         globalFlags: GLOBAL_FLAGS,
         commands: commands
           .map((command) => ({

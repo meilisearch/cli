@@ -243,6 +243,32 @@ describe("meili project add", () => {
     expect(readJson(path)).toEqual({ projects: {} });
   });
 
+  it("tells a human in a terminal that the project is starting, and how to save it once running", async () => {
+    server.use(...creation("running"));
+    const result = await runCommand(
+      ProjectAdd,
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3"],
+      {
+        env: env,
+        tty: true,
+      },
+    );
+    expect(result).toMatchSnapshot();
+  });
+
+  it("tells a human in a terminal that the project runs and is in the config file, with --wait --sync-config", async () => {
+    server.use(...creation("running"), managementHandlers.listTeams());
+    const { env: configEnv } = tempConfig("wait-sync-human.json", {});
+    const result = await runCommand(
+      ProjectAdd,
+      ["--name", "demo", "--team-id", "12", "--resource-id", "3", "--wait", "--sync-config"],
+      { env: { ...env, ...configEnv }, tty: true },
+    );
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toMatchSnapshot();
+    expect(result.stderr).toContain("✓ Added to the config file as demo. Use it with -p demo.");
+  });
+
   it("refuses an invalid --timeout before creating the project", async () => {
     const received: ReceivedRequest[] = [];
     server.use(managementHandlers.createProject(received));

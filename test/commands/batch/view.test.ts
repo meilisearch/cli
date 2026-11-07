@@ -27,6 +27,12 @@ describe("meili batch view", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints a summary, then every attribute, for a human in a terminal", async () => {
+    server.use(meilisearchHandlers.batch(batches));
+    const result = await runCommand(BatchView, ["--id", "7", ...project], { tty: true });
+    expect(result).toMatchSnapshot();
+  });
+
   it("passes the 404 of an unknown batch through and exits 4", async () => {
     server.use(meilisearchHandlers.batch(batches));
     const result = await runCommand(BatchView, ["--id", "99", ...project]);

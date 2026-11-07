@@ -43,6 +43,14 @@ describe("meili stats", () => {
     expect(result).toMatchSnapshot();
   });
 
+  it("prints a summary, then every attribute, for a human in a terminal", async () => {
+    server.use(meilisearchHandlers.stats(stats), meilisearchHandlers.indexStats(indexStats));
+    expect(await runCommand(Stats, [...project], { tty: true })).toMatchSnapshot();
+    expect(
+      await runCommand(Stats, ["--index", "movies", ...project], { tty: true }),
+    ).toMatchSnapshot();
+  });
+
   it("sends the two query parameters of the route, and nothing when they are not given", async () => {
     server.use(meilisearchHandlers.stats(stats), meilisearchHandlers.indexStats(indexStats));
     const requests = await recordRequests(async () => {

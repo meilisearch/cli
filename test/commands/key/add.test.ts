@@ -55,6 +55,16 @@ describe("meili key add", () => {
     expect(result.stdout).toContain(created.key);
   });
 
+  it("tells a human in a terminal what it did", async () => {
+    server.use(meilisearchHandlers.keyCreate(created));
+    const result = await runCommand(
+      KeyAdd,
+      ["--actions", "documents.add", "--indexes", "movies", "--expires-at", "null", ...project],
+      { tty: true },
+    );
+    expect(result).toMatchSnapshot();
+  });
+
   it("sends the actions and the indexes as arrays, and null as a JSON null", async () => {
     expect(
       await sentBody([

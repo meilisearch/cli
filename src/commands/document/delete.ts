@@ -1,6 +1,6 @@
 import { Flags } from "@oclif/core";
 import type { DocumentsIds, Filter } from "meilisearch";
-import { type Api, BaseCommand } from "../../lib/base-command.js";
+import { type Api, BaseCommand, type TaskSentences } from "../../lib/base-command.js";
 import { MeiliCliError } from "../../lib/errors.js";
 import { isJsonObject, readJsonBody } from "../../lib/input.js";
 
@@ -63,9 +63,22 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
     const { flags } = await this.parse(DocumentDelete);
     const index = this.meilisearch.index(flags.index);
     const options = { customMetadata: flags["custom-metadata"] };
+    const sentences = (what: string): TaskSentences => ({
+      enqueued: (uid) => `Task ${uid} will delete ${what} in index ${flags.index}.`,
+      pending: "They are still there until the task succeeds. Follow it:",
+      // The count is null when a later task of the same batch deleted the index.
+      succeeded: ({ details }) =>
+        details?.deletedDocuments == null
+          ? `documents deleted from index ${flags.index}.`
+          : `${details.deletedDocuments} documents deleted from index ${flags.index}.`,
+    });
 
     if (flags.all) {
-      await this.outputTask(await index.deleteAllDocuments(options), flags);
+      await this.outputTask(
+        await index.deleteAllDocuments(options),
+        flags,
+        sentences("every document"),
+      );
       return;
     }
 
@@ -85,11 +98,21 @@ Deletes the documents named by --ids, matched by --filter, or every one of them 
       );
     }
     if (ids !== undefined) {
-      await this.outputTask(await index.deleteDocuments(ids, options), flags);
+      await this.outputTask(
+        await index.deleteDocuments(ids, options),
+        flags,
+        sentences(`the documents ${ids.join(", ")}`),
+      );
       return;
     }
     if (filter !== undefined) {
-      await this.outputTask(await index.deleteDocuments({ filter }, options), flags);
+      await this.outputTask(
+        await index.deleteDocuments({ filter }, options),
+        flags,
+        sentences(
+          `the documents matching ${typeof filter === "string" ? filter : JSON.stringify(filter)}`,
+        ),
+      );
       return;
     }
     throw new MeiliCliError("cli_usage", "The documents to delete are missing.", {

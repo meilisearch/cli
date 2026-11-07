@@ -13,13 +13,17 @@ exports[`meili task delete > prints its help without any network call 1`] = `
 "Delete finished tasks.
 
 USAGE
-  $ meili task delete --yes [--debug] [--project-url <url>]
-    [--project-api-key <key>] [-p <name>] [--ids <uids>] [--batch-ids <uids>]
-    [--index-ids <indexes>] [--canceled-by <uids>] [--types <types>] [--statuses
-    <statuses>] [--after-enqueued-at <date>] [--before-enqueued-at <date>]
-    [--after-started-at <date>] [--before-started-at <date>]
-    [--after-finished-at <date>] [--before-finished-at <date>] [--timeout
-    <duration> --wait]
+  $ meili task delete --yes [--json] [--no-color] [--debug]
+    [--project-url <url>] [--project-api-key <key>] [-p <name>] [--ids <uids>]
+    [--batch-ids <uids>] [--index-ids <indexes>] [--canceled-by <uids>] [--types
+    <types>] [--statuses <statuses>] [--after-enqueued-at <date>]
+    [--before-enqueued-at <date>] [--after-started-at <date>]
+    [--before-started-at <date>] [--after-finished-at <date>]
+    [--before-finished-at <date>] [--timeout <duration> --wait]
+
+OUTPUT FLAGS
+  --json      Print compact JSON. The default when stdout is not a terminal.
+  --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
   -p, --project=<name>             A project of the config file. Cannot be
@@ -99,5 +103,23 @@ exports[`meili task delete > refuses to run without a filter, before any network
   "stderr": "{"error":{"code":"cli_usage","type":"cli","message":"The tasks to delete are missing.","hint":"Name them with \`--ids <uids>\`, or match them with \`--statuses <statuses>\`, \`--types <types>\`, \`--index-ids <indexes>\` or a date filter such as \`--before-enqueued-at <date>\`."}}
 ",
   "stdout": "",
+}
+`;
+
+exports[`meili task delete > tells a human in a terminal what it did 1`] = `
+{
+  "exitCode": 0,
+  "stderr": "◐ Meilisearch received the request. Task 8 will delete the matching tasks.
+
+
+They are still listed until the task succeeds. Follow it: meili task view --id 8
+Next time, wait for the end with --wait.
+",
+  "stdout": "  taskUid     8
+  indexUid    null
+  status      enqueued
+  type        taskDeletion
+  enqueuedAt  2026-09-24T10:00:00Z
+",
 }
 `;

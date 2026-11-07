@@ -4,7 +4,7 @@ import {
   MeilisearchRequestError,
   MeilisearchRequestTimeOutError,
 } from "meilisearch";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import {
   apiExitCode,
   CLI_ERROR_CODES,
@@ -15,6 +15,7 @@ import {
   toRenderedError,
   unknownCommand,
 } from "../../src/lib/errors.js";
+import { setOutputMode } from "../../src/lib/output.js";
 
 describe("ManagementApiError", () => {
   const forbidden = {
@@ -233,20 +234,24 @@ describe("formatError", () => {
     new MeiliCliError("cli_config", "No URL.", { hint: "Set `--project-url`." }),
   );
 
+  afterEach(() => setOutputMode({ json: true, color: false }));
+
   it("prints one compact JSON document", () => {
-    expect(formatError(rendered, { pretty: false, debug: false })).toBe(
+    expect(formatError(rendered, { debug: false })).toBe(
       '{"error":{"code":"cli_config","type":"cli","message":"No URL.","hint":"Set `--project-url`."}}\n',
     );
   });
 
-  it("indents the JSON when asked", () => {
-    const out = formatError(rendered, { pretty: true, debug: false });
-    expect(out).toBe(`${JSON.stringify({ error: rendered.body }, null, 2)}\n`);
+  it("prints text for a human: the message and its code, then the fix", () => {
+    setOutputMode({ json: false, color: false }, true);
+    expect(formatError(rendered, { debug: false })).toBe(
+      "✗ No URL. (cli_config)\n  Set `--project-url`.\n",
+    );
   });
 
   it("appends the stack only with debug", () => {
-    expect(formatError(rendered, { pretty: false, debug: false })).not.toContain("MeiliCliError");
-    expect(formatError(rendered, { pretty: false, debug: true })).toContain("at ");
+    expect(formatError(rendered, { debug: false })).not.toContain("MeiliCliError");
+    expect(formatError(rendered, { debug: true })).toContain("at ");
   });
 });
 
