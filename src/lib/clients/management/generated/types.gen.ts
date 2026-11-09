@@ -136,7 +136,6 @@ export type Project = {
     teamId: number;
     resourceId: number;
     msVersion: string;
-    workloadType: 'production' | 'dev';
     readOnly: boolean;
     status: string;
     paused: boolean;
