@@ -299,7 +299,7 @@ export const getApiV2Regions = <ThrowOnError extends boolean = true>(options?: O
 });
 
 /**
- * Lists the active resources and their plan pricing
+ * Lists the active resources of active regions and their plan pricing
  */
 export const getApiV2Resources = <ThrowOnError extends boolean = true>(options?: Options<GetApiV2ResourcesData, ThrowOnError>): RequestResult<GetApiV2ResourcesResponses, GetApiV2ResourcesErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<GetApiV2ResourcesResponses, GetApiV2ResourcesErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
