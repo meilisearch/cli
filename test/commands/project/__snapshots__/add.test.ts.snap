@@ -89,7 +89,7 @@ exports[`meili project add > sends the flags as the project body with the token,
 {
   "exitCode": 0,
   "stderr": "",
-  "stdout": "{"id":343,"name":"demo","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","masterKey":"****9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","workloadType":"production","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","displayName":"Build","plan":"build","regionId":1}}
+  "stdout": "{"id":343,"name":"demo","projectUid":"ms-abc","url":"https://ms-abc.sfo.meilisearch.io","masterKey":"****9z8y","teamId":12,"resourceId":3,"msVersion":"v1.54.0","readOnly":false,"status":"running","paused":false,"createdAt":"2026-10-14T10:00:00Z","resource":{"id":3,"name":"build","displayName":"Build","plan":"build","regionId":1}}
 ",
 }
 `;
@@ -105,37 +105,35 @@ Check when it is ready: meili project view --id 343
 Once it is Running, save its URL and master key in the config file:
   meili config sync-with-cloud --project-name demo
 ",
-  "stdout": "  id            343
-  name          demo
-  projectUid    ms-abc
-  url           null
-  masterKey     ****9z8y
-  teamId        12
-  resourceId    3
-  resource      Build
-  msVersion     v1.54.0
-  workloadType  production
-  readOnly      false
-  status        creating
-  paused        false
-  createdAt     2026-10-14T10:00:00Z
+  "stdout": "  id          343
+  name        demo
+  projectUid  ms-abc
+  url         null
+  masterKey   ****9z8y
+  teamId      12
+  resourceId  3
+  resource    Build
+  msVersion   v1.54.0
+  readOnly    false
+  status      creating
+  paused      false
+  createdAt   2026-10-14T10:00:00Z
 ",
 }
 `;
 
 exports[`meili project add > tells a human in a terminal that the project runs and is in the config file, with --wait --sync-config 1`] = `
-"  id            343
-  name          demo
-  projectUid    ms-abc
-  url           https://ms-abc.sfo.meilisearch.io
-  teamId        12
-  resourceId    3
-  resource      Build
-  msVersion     v1.54.0
-  workloadType  production
-  readOnly      false
-  status        running
-  paused        false
-  createdAt     2026-10-14T10:00:00Z
+"  id          343
+  name        demo
+  projectUid  ms-abc
+  url         https://ms-abc.sfo.meilisearch.io
+  teamId      12
+  resourceId  3
+  resource    Build
+  msVersion   v1.54.0
+  readOnly    false
+  status      running
+  paused      false
+  createdAt   2026-10-14T10:00:00Z
 "
 `;
