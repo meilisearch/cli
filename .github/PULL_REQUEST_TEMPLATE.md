@@ -29,6 +29,7 @@
 - [ ] The ADRs that touch this change were read; what they decide still holds, or a new ADR says what changed
 - [ ] No accepted ADR was edited. A new ADR was added if a decision changed.
 - [ ] New or changed prose follows the writing style of rule 17 of `CLAUDE.md`
+- [ ] `.code-samples.meilisearch.yaml` updated by rule 19 of `CLAUDE.md`: a new command has a sample for every cURL sample of the documentation it covers, and a renamed or removed command or flag is updated in every sample; or nothing to update
 
 ## Housekeeping
 

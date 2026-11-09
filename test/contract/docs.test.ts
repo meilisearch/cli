@@ -1,12 +1,15 @@
 /**
  * The paths, scripts, statics and commands that the guides cite exist. A
  * renamed file or helper that a doc still names fails here, not in a reader's
- * hands. Fenced code blocks are not checked, only inline code spans.
+ * hands. Fenced code blocks are not checked, only inline code spans. The
+ * code samples of the documentation are checked too: every command and flag
+ * they run exists.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { glob } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { parse } from "yaml";
 import { BaseCommand } from "../../src/lib/base-command.js";
 import { PROJECT_ROOT } from "../helpers/run-command.js";
 import { codeSpans, readDoc } from "./markdown.js";
@@ -24,7 +27,7 @@ const PLANNED_PATHS: string[] = [];
 
 /** A span that is a path of this repository: a known top-level file or folder. */
 const PATH_SPAN =
-  /^(?:src|test|docs|scripts|bin|\.claude|\.github|\.changeset)\/[\w./@-]*$|^(?:CLAUDE|README|CONTRIBUTING|CHANGELOG)\.md$|^(?:package\.json|oclif\.manifest\.json|docker-compose\.yml)$/;
+  /^(?:src|test|docs|scripts|bin|\.claude|\.github|\.changeset)\/[\w./@-]*$|^(?:CLAUDE|README|CONTRIBUTING|CHANGELOG)\.md$|^(?:package\.json|oclif\.manifest\.json|docker-compose\.yml|\.code-samples\.meilisearch\.yaml)$/;
 const PNPM_BUILTINS = new Set(["install", "link", "exec", "add", "remove", "dlx"]);
 
 const scripts = Object.keys(
@@ -34,13 +37,17 @@ const scripts = Object.keys(
     }
   ).scripts,
 );
-const manifestIds = Object.keys(
-  (
-    JSON.parse(readFileSync(join(PROJECT_ROOT, "oclif.manifest.json"), "utf8")) as {
-      commands: Record<string, unknown>;
-    }
-  ).commands,
-).map((id) => id.replaceAll(":", " "));
+/** The commands of the manifest, by their id with spaces, with the flags they accept. */
+const manifest = new Map(
+  Object.entries(
+    (
+      JSON.parse(readFileSync(join(PROJECT_ROOT, "oclif.manifest.json"), "utf8")) as {
+        commands: Record<string, { flags: Record<string, unknown> }>;
+      }
+    ).commands,
+  ).map(([id, command]) => [id.replaceAll(":", " "), Object.keys(command.flags)]),
+);
+const manifestIds = [...manifest.keys()];
 
 describe("the guides cite things that exist", () => {
   for (const guide of guides) {
@@ -87,4 +94,29 @@ describe("the guides cite things that exist", () => {
       }
     }
   });
+});
+
+describe("the code samples run commands and flags that exist (CLAUDE.md, rule 19)", () => {
+  const samples = parse(readDoc(".code-samples.meilisearch.yaml")) as Record<string, string>;
+
+  for (const [key, sample] of Object.entries(samples)) {
+    it(key, () => {
+      // One command per line: join the continued lines, then drop the quoted values.
+      const lines = sample
+        .replaceAll("\\\n", " ")
+        .replace(/'(?:[^']|'\\'')*'/g, "''")
+        .split("\n")
+        .filter((line) => line.startsWith("meili "));
+      expect(lines.length, "the sample runs no command").toBeGreaterThan(0);
+      for (const line of lines) {
+        const [first = "", second = ""] = line.split(/\s+/).slice(1);
+        const id = [`${first} ${second}`, first].find((candidate) => manifest.has(candidate));
+        expect(id, `\`${line}\` runs no command`).toBeDefined();
+        const flags = manifest.get(id as string) ?? [];
+        for (const [, flag] of line.matchAll(/ --([a-z][\w-]*)/g)) {
+          expect(flags, `\`meili ${id}\` has no flag --${flag}`).toContain(flag);
+        }
+      }
+    });
+  }
 });
