@@ -98,9 +98,10 @@ Run `pnpm test` once to write the snapshots, then read the `.snap` file: the JSO
 
 A Management API command has none: Meilisearch Cloud does not run locally (`docs/contract/testing.md`). For a Meilisearch command, copy `test/integration/meilisearch/health.test.ts` or `index-list.test.ts`. The file starts with `const meilisearchUp = await meilisearchAvailable()` and wraps everything in `describe.skipIf(!meilisearchUp)`. It runs the built binary with `runBinary([...])` against `MEILISEARCH_URL` and `MASTER_KEY` from `setup.ts`, with `--project-url` and `--project-api-key`, never a project of the developer's config file. Fixtures (an index, documents) are created with the SDK under a random suffix and deleted in `afterAll`, so the suite can run in parallel and never depends on existing data. A management command has no integration test (`docs/contract/testing.md`, section 2): its handlers in `test/helpers/management-handlers.ts` follow `openapi/management.json`, and what the document does not say is reported to the user as a documentation gap, never guessed.
 
-## 6. Manifest, changeset
+## 6. Manifest, code samples, changeset
 
 - `pnpm gen:manifest`: builds and rewrites `oclif.manifest.json`. The file is committed; CI fails if it differs from the code. The `meili schema` snapshot in `test/contract/__snapshots__/` changes with it: update it on purpose with `pnpm test -u`, and read the diff.
+- Code samples, by rule 19 of `CLAUDE.md`: find the cURL samples of the routes of the command in `.code-samples.meilisearch.yaml` of the `meilisearch/documentation` repository. Add one `meili` sample per cURL sample to `.code-samples.meilisearch.yaml` of this repository, under the same key. Copy the shape of the samples already there: the `meili config set` first, then the command with `--project PROJECT_NAME`. Run each new sample against the local Meilisearch before you commit it.
 - Changeset: a new command is visible to users of the package, so it needs a line. Write `.changeset/add-<command-with-dashes>.md` by hand, by the rules of `.changeset/README.md`: the interactive `pnpm changeset` cannot be answered by an agent. The line names the command, without its flags: they live in `--help`. It ends with the link to the pull request, added once the pull request is open.
 
   ```md
@@ -138,6 +139,7 @@ So that a red `pnpm test` reads as a message, not as flakiness:
 - every command has a description and an example; every flag has a description, and a flag with a value a `helpValue` or options
 - every command in `src/commands/` has its test file in `test/commands/`
 - every path, `pnpm` script and `BaseCommand` member the guides cite exists; a path cited before it exists is listed as planned in `test/contract/docs.test.ts`, and the test asks to remove it from the list once it exists
+- every sample of `.code-samples.meilisearch.yaml` runs a command that exists, with flags that the command declares
 - every command exposes the global flags of `commands.md`; a parent path parameter is a required flag when every route of the command takes it; no command has a positional argument
 - the `meili schema` index is a snapshot, and so is one command in full
 - a variable that doubles a flag is named `MEILI_` plus the flag name (rule 14)

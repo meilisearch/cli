@@ -40,6 +40,9 @@ Package: `@meilisearch/cli` on npm. Binary: `meili`.
     - **An answer.** Ask only with `choose`, `ask` and `askSecret` of `src/lib/terminal.ts`. They send `cli_prompt_answered` and `cli_prompt_aborted`. Give every new question a new, stable `prompt` id, and every option of `choose` a stable `id`. An option that is the user's own data, such as a team, has no `id`: the event then has no `choice`. A renamed id breaks the funnels in PostHog.
     - **Never a value.** No flag value, free text, name, URL, key or document. Only names and fixed ids.
     - **A new event or property is a contract change.** It goes in the "Analytics" section of `docs/contract/config.md`, with a new ADR.
+19. `.code-samples.meilisearch.yaml` holds the `meili` samples of the Meilisearch documentation. The documentation shows each sample next to the cURL sample of the same key, so keep the keys of the documentation. A sample does what its cURL sample does. It starts with the `meili config set` that adds the project, then runs the command with `--project PROJECT_NAME`. Only a command that the CLI implements has a sample.
+    - **A new command.** Add a sample for every cURL sample of the documentation that the command covers. The cURL samples are in `.code-samples.meilisearch.yaml` of the `meilisearch/documentation` repository.
+    - **A renamed or removed command or flag.** Update every sample that uses it, in the same pull request. `test/contract/docs.test.ts` fails when a sample uses a command or a flag that does not exist.
 
 ## Stack
 
@@ -74,8 +77,9 @@ Use the skill: `/add-command <command>`, for example `/add-command stats`. If th
 6. Create `test/commands/<same path>.test.ts` from the sibling test. It must snapshot the `--help` output and the JSON output for one success case and one error case, with `msw` mocks.
 7. For a Meilisearch command, add one integration test in `test/integration/meilisearch/`. Meilisearch runs locally from the `docker compose` file of this repository. A management command has no integration test. Meilisearch Cloud does not run locally. Its OpenAPI document is the source of truth, and the unit tests mock the API from that document (`docs/contract/testing.md`). If the document does not describe something, report the gap to the Cloud team. Do not guess.
 8. Run `pnpm gen:manifest` so `oclif.manifest.json` and `meili schema` know the command.
-9. Add a changeset of type `minor`, by the rules of `.changeset/README.md`.
-10. Run the "Before you finish" list.
+9. Add the code samples of the command to `.code-samples.meilisearch.yaml` (rule 19).
+10. Add a changeset of type `minor`, by the rules of `.changeset/README.md`.
+11. Run the "Before you finish" list.
 
 ## Changesets
 

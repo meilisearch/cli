@@ -1,0 +1,1519 @@
+# The `meili` samples of the Meilisearch documentation.
+# The documentation fetches this file on build. It shows each sample in a CLI tab,
+# next to the cURL sample of the same key. A key is the key of the documentation.
+# Only the commands that the CLI implements have a sample. See CLAUDE.md, rule 19.
+---
+get_one_index_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili index view --project PROJECT_NAME --id movies
+list_all_indexes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili index list --project PROJECT_NAME --limit 3
+create_an_index_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili index add --project PROJECT_NAME --id movies --primary-key id
+update_an_index_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili index update --project PROJECT_NAME --id movies --primary-key id
+delete_an_index_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili index delete --project PROJECT_NAME --id movies --yes
+get_one_document_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document view --project PROJECT_NAME --index movies --id 25684 \
+    --fields id,title,poster,release_date
+get_documents_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document list --project PROJECT_NAME --index movies \
+    --limit 2 --filter genres=action
+add_or_replace_documents_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document add --project PROJECT_NAME --index movies \
+    --data '[
+      {
+        "id": 287947,
+        "title": "Shazam",
+        "poster": "https://image.tmdb.org/t/p/w1280/xnopI5Xtky18MPhK40cZAGAOVeV.jpg",
+        "overview": "A boy is given the ability to become an adult superhero in times of need with a single magic word.",
+        "release_date": "2019-03-23"
+      }
+    ]'
+add_or_update_documents_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document update --project PROJECT_NAME --index movies \
+    --data '[{"id":287947,"title":"Shazam ⚡️","genres":"comedy"}]'
+delete_all_documents_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document delete --project PROJECT_NAME --index movies --all --yes
+delete_one_document_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document delete --project PROJECT_NAME --index movies --ids 25684 --yes
+delete_documents_by_batch_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document delete --project PROJECT_NAME --index movies \
+    --ids 23488,153738,437035,363869 --yes
+search_post_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index movies --q 'american ninja'
+search_get_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index movies --q 'american ninja'
+get_all_tasks_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili task list --project PROJECT_NAME
+get_task_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili task view --project PROJECT_NAME --id 1
+get_all_tasks_paginating_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili task list --project PROJECT_NAME --limit 2 --from 10
+get_all_tasks_paginating_2: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili task list --project PROJECT_NAME --limit 2 --from 8
+get_one_key_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key MASTER_KEY
+
+  meili key view --project PROJECT_NAME --id 6062abda-a5aa-4414-ac91-ecd7944c0f8d
+get_all_keys_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key MASTER_KEY
+
+  meili key list --project PROJECT_NAME --limit 3
+create_a_key_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key MASTER_KEY
+
+  meili key add --project PROJECT_NAME \
+    --description 'Add documents: Products API key' --actions documents.add \
+    --indexes products --expires-at 2042-04-02T00:42:42Z
+update_a_key_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key MASTER_KEY
+
+  meili key update --project PROJECT_NAME --id 6062abda-a5aa-4414-ac91-ecd7944c0f8d \
+    --name 'Products/Reviews API key' \
+    --description 'Manage documents: Products/Reviews API key'
+delete_a_key_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key MASTER_KEY
+
+  meili key delete --project PROJECT_NAME --id 6062abda-a5aa-4414-ac91-ecd7944c0f8d \
+    --yes
+get_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings view --project PROJECT_NAME --index movies
+update_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --ranking-rules words,typo,proximity,attributeRank,sort,wordPosition,exactness,release_date:desc,rank:desc \
+    --distinct-attribute movie_id --searchable-attributes title,overview,genres \
+    --displayed-attributes title,overview,genres,release_date \
+    --stop-words the,a,an --sortable-attributes title,release_date \
+    --synonyms '{"wolverine":["xmen","logan"],"logan":["wolverine"]}' \
+    --typo-tolerance '{
+      "minWordSizeForTypos": { "oneTypo": 8, "twoTypos": 10 },
+      "disableOnAttributes": ["title"]
+    }' \
+    --pagination '{"maxTotalHits":5000}' --faceting '{"maxValuesPerFacet":200}' \
+    --search-cutoff-ms 150
+reset_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings delete --project PROJECT_NAME --index movies --yes
+update_synonyms_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --synonyms '{
+      "wolverine": ["xmen", "logan"],
+      "logan": ["wolverine", "xmen"],
+      "wow": ["world of warcraft"]
+    }'
+reset_synonyms_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies --synonyms null
+update_stop_words_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --stop-words the,of,to
+reset_stop_words_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies --stop-words null
+update_ranking_rules_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --ranking-rules words,typo,proximity,attributeRank,sort,wordPosition,exactness,release_date:asc,rank:desc
+reset_ranking_rules_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies --ranking-rules null
+update_distinct_attribute_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index shoes \
+    --distinct-attribute skuid
+reset_distinct_attribute_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index shoes \
+    --distinct-attribute null
+update_filterable_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --data '{
+      "filterableAttributes": [
+        "genres",
+        "director",
+        {
+          "attributePatterns": ["*_ratings"],
+          "features": {
+            "facetSearch": false,
+            "filter": { "equality": true, "comparison": false }
+          }
+        }
+      ]
+    }'
+reset_filterable_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --filterable-attributes null
+update_searchable_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --searchable-attributes title,overview,genres
+reset_searchable_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --searchable-attributes null
+update_displayed_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --displayed-attributes title,overview,genres,release_date
+reset_displayed_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --displayed-attributes null
+update_sortable_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --sortable-attributes price,author
+reset_sortable_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --sortable-attributes null
+update_typo_tolerance_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --typo-tolerance '{
+      "minWordSizeForTypos": { "oneTypo": 4, "twoTypos": 10 },
+      "disableOnAttributes": ["title"]
+    }'
+reset_typo_tolerance_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books --typo-tolerance null
+update_pagination_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --pagination '{"maxTotalHits":100}'
+reset_pagination_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books --pagination null
+update_faceting_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --faceting '{
+      "maxValuesPerFacet": 2,
+      "sortFacetValuesBy": {
+        "*": "alpha",
+        "genres": "count",
+        "language": "sampledCount"
+      }
+    }'
+update_faceting_settings_max_values_per_facet_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --faceting '{"maxValuesPerFacet":20}'
+reset_faceting_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books --faceting null
+update_separator_tokens_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index articles \
+    --separator-tokens '|,&hellip;'
+reset_separator_tokens_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index articles \
+    --separator-tokens null
+update_non_separator_tokens_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index articles \
+    --non-separator-tokens '@,#'
+reset_non_separator_tokens_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index articles \
+    --non-separator-tokens null
+update_dictionary_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --dictionary 'J. R. R.,W. E. B.'
+reset_dictionary_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books --dictionary null
+update_proximity_precision_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --proximity-precision byAttribute
+reset_proximity_precision_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --proximity-precision null
+update_facet_search_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_UID \
+    --facet-search false
+reset_facet_search_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_UID \
+    --facet-search null
+update_prefix_search_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_UID \
+    --prefix-search disabled
+reset_prefix_search_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_UID \
+    --prefix-search null
+update_search_cutoff_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --search-cutoff-ms 150
+reset_search_cutoff_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --search-cutoff-ms null
+update_localized_attribute_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_NAME \
+    --localized-attributes '[{"locales":["jpn"],"attributePatterns":["*_ja"]}]'
+multilingual_dataset_guide_update_localized_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_NAME \
+    --localized-attributes '[
+      { "attributePatterns": ["*_en"], "locales": ["eng"] },
+      { "attributePatterns": ["*_de"], "locales": ["deu"] },
+      { "attributePatterns": ["*_fr"], "locales": ["fra"] }
+    ]'
+reset_localized_attribute_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_NAME \
+    --localized-attributes null
+update_embedders_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_NAME \
+    --embedders '{
+      "default": {
+        "source": "openAi",
+        "apiKey": "OPEN_AI_API_KEY",
+        "model": "text-embedding-3-small",
+        "documentTemplate": "A document titled '\''{{doc.title}}'\'' whose description starts with {{doc.overview|truncatewords: 20}}"
+      }
+    }'
+update_embedders_distribution_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key MEILISEARCH_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_NAME \
+    --embedders '{
+      "default": {
+        "source": "openAi",
+        "model": "text-embedding-3-small",
+        "distribution": { "mean": 0.7, "sigma": 0.3 }
+      }
+    }'
+reset_embedders_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_NAME --embedders null
+update_chat_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_NAME \
+    --chat '{
+      "description": "An index of movies.",
+      "documentTemplate": "A movie titled '\''{{doc.title}}'\'' released in {{ doc.release_date }}",
+      "documentTemplateMaxBytes": 400
+    }'
+reset_chat_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_NAME --chat null
+delete_tasks_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili task delete --project PROJECT_NAME --ids 1,2 --yes
+cancel_tasks_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili task cancel --project PROJECT_NAME --ids 1,2
+multi_search_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili multi-search --project PROJECT_NAME \
+    --queries '[
+      { "indexUid": "movies", "q": "pooh", "limit": 5 },
+      { "indexUid": "movies", "q": "nemo", "limit": 5 },
+      { "indexUid": "movie_ratings", "q": "us" }
+    ]'
+get_documents_post_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document list --project PROJECT_NAME --index books \
+    --filter '(rating > 3 AND (genres = Adventure OR genres = Fiction)) AND language = English' \
+    --fields title,genres,rating,language --limit 3
+get_documents_post_with_filter_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document list --project PROJECT_NAME --index movies \
+    --filter 'genres = Action AND rating > 8'
+delete_documents_by_filter_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document delete --project PROJECT_NAME --index movies \
+    --filter 'genres = action OR genres = adventure' --yes
+facet_search_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili facet-search --project PROJECT_NAME --index books \
+    --facet-query fiction --facet-name genres --filter 'rating > 3'
+get_all_batches_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili batch list --project PROJECT_NAME
+get_batch_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili batch view --project PROJECT_NAME --id 0
+get_similar_post_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key DEFAULT_SEARCH_API_KEY
+
+  meili similar --project PROJECT_NAME --index INDEX_NAME \
+    --id TARGET_DOCUMENT_ID --embedder EMBEDDER_NAME
+get_similar_get_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili similar --project PROJECT_NAME --index INDEX_NAME \
+    --id TARGET_DOCUMENT_ID --embedder EMBEDDER_NAME
+export_post_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili export --project PROJECT_NAME \
+    --url TARGET_INSTANCE_URL --indexes '{"*":{"overrideSettings":true}}'
+get_index_stats_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili stats --project PROJECT_NAME --index movies
+get_indexes_stats_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili stats --project PROJECT_NAME
+get_health_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili health --project PROJECT_NAME
+get_version_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili info --project PROJECT_NAME
+distinct_attribute_guide_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index jackets \
+    --distinct-attribute product_id
+field_properties_guide_displayed_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --displayed-attributes title,overview,genres,release_date
+filtering_guide_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index movie_ratings \
+    --q Avengers --filter 'release_date > 795484800'
+filtering_guide_2: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index movie_ratings \
+    --q Batman \
+    --filter 'release_date > 795484800 AND (director = "Tim Burton" OR director = "Christopher Nolan")'
+filtering_guide_3: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index movie_ratings \
+    --q 'Planet of the Apes' \
+    --filter 'release_date > 1577884550 AND (NOT director = "Tim Burton")'
+filtering_guide_nested_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index movie_ratings \
+    --q thriller --filter 'rating.users >= 90'
+add_movies_json_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document add --project PROJECT_NAME --index movies --file movies.json
+getting_started_add_documents: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key aSampleMasterKey
+
+  meili document add --project PROJECT_NAME --index movies \
+    --primary-key id --file movies.json
+getting_started_check_task_status: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key aSampleMasterKey
+
+  meili task view --project PROJECT_NAME --id 0
+getting_started_search: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key aSampleMasterKey
+
+  meili search --project PROJECT_NAME --index movies --q botman
+authorization_header_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key MASTER_KEY
+
+  meili key list --project PROJECT_NAME
+sorting_guide_update_sortable_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --sortable-attributes author,price
+sorting_guide_update_ranking_rules_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --ranking-rules words,sort,typo,proximity,attributeRank,wordPosition,exactness
+sorting_guide_sort_nested_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index books \
+    --q 'science fiction' --sort rating.users:asc
+sorting_guide_sort_parameter_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index books \
+    --q 'science fiction' --sort price:asc
+sorting_guide_sort_parameter_2: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index books --q butler --sort author:desc
+geosearch_guide_filter_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index restaurants \
+    --filterable-attributes _geo
+geosearch_guide_filter_settings_2: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index neighborhoods \
+    --filterable-attributes _geojson
+geosearch_guide_filter_usage_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index restaurants \
+    --filter '_geoRadius(45.472735, 9.184019, 2000)'
+geosearch_guide_filter_usage_2: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index restaurants \
+    --filter '_geoRadius(45.472735, 9.184019, 2000) AND type = pizza'
+geosearch_guide_filter_usage_3: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index restaurants \
+    --filter '_geoBoundingBox([45.494181, 9.214024], [45.449484, 9.179175])'
+geosearch_guide_sort_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index restaurants \
+    --sortable-attributes _geo
+geosearch_guide_sort_usage_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index restaurants \
+    --data '{"sort":["_geoPoint(48.8561446,2.2978204):asc"]}'
+geosearch_guide_sort_usage_2: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index restaurants \
+    --data '{
+      "sort": ["_geoPoint(48.8561446,2.2978204):asc", "rating:desc"]
+    }'
+basic_security_tutorial_admin_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key DEFAULT_ADMIN_API_KEY
+
+  meili index add --project PROJECT_NAME --id medical_records --primary-key id
+basic_security_tutorial_search_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key DEFAULT_SEARCH_API_KEY
+
+  meili search --project PROJECT_NAME --index medical_records --q appointments
+primary_field_guide_create_index_primary_key: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili index add --project PROJECT_NAME --id books --primary-key reference_number
+primary_field_guide_add_document_primary_key: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document add --project PROJECT_NAME --index books \
+    --primary-key reference_number \
+    --data '[
+      {
+        "reference_number": 287947,
+        "title": "Diary of a Wimpy Kid",
+        "author": "Jeff Kinney",
+        "genres": ["comedy", "humor"],
+        "price": 5
+      }
+    ]'
+primary_field_guide_update_document_primary_key: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili index update --project PROJECT_NAME --id books --primary-key title
+tenant_token_guide_search_no_sdk_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key TENANT_TOKEN
+
+  meili search --project PROJECT_NAME --index patient_medical_records
+typo_tolerance_guide_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --typo-tolerance '{"enabled":false}'
+typo_tolerance_guide_2: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --typo-tolerance '{"disableOnAttributes":["title"]}'
+typo_tolerance_guide_3: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --typo-tolerance '{"disableOnWords":["shrek"]}'
+typo_tolerance_guide_4: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --typo-tolerance '{"minWordSizeForTypos":{"oneTypo":4,"twoTypos":10}}'
+updating_guide_check_version_new_authorization_header: |-
+  meili config set --project PROJECT_NAME \
+    --project-url 'http://<your-domain-name>' \
+    --project-api-key API_KEY
+
+  meili info --project PROJECT_NAME
+synonyms_guide_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movies \
+    --synonyms '{"great":["fantastic"],"fantastic":["great"]}'
+date_guide_index_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document add --project PROJECT_NAME --index games --file games.json
+date_guide_filterable_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index games \
+    --filterable-attributes release_timestamp
+date_guide_filter_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index games \
+    --q '' \
+    --filter 'release_timestamp >= 1514761200 AND release_timestamp < 1672527600'
+date_guide_sortable_attributes_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index games \
+    --sortable-attributes release_timestamp
+date_guide_sort_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index games \
+    --q '' --sort release_timestamp:desc
+async_guide_filter_by_statuses_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili task list --project PROJECT_NAME --statuses failed
+async_guide_filter_by_statuses_2: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili task list --project PROJECT_NAME --statuses failed,canceled
+async_guide_multiple_filters_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili task list --project PROJECT_NAME \
+    --index-ids movies --types documentAdditionOrUpdate,documentDeletion \
+    --statuses processing
+faceted_search_update_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --filterable-attributes genres,rating,language
+faceted_search_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index books \
+    --q classic --facets genres,rating,language
+filtering_update_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index movie_ratings \
+    --filterable-attributes genres,director,release_date,ratings
+facet_search_2: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --faceting '{"sortFacetValuesBy":{"genres":"count"}}'
+facet_search_3: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili facet-search --project PROJECT_NAME --index books \
+    --facet-query c --facet-name genres
+facet_search_exhaustive_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili facet-search --project PROJECT_NAME --index books \
+    --facet-name genres --facet-query c --exhaustive-facet-count
+distinct_attribute_guide_filterable_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index products \
+    --filterable-attributes product_id,sku,url
+distinct_attribute_guide_distinct_parameter_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index products \
+    --q 'white shirt' --distinct sku
+search_parameter_guide_vector_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index INDEX_NAME \
+    --vector 0,1,2 --hybrid '{"embedder":"EMBEDDER_NAME"}'
+ai_search_user_embeddings_documents_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili document add --project PROJECT_NAME --index INDEX_NAME \
+    --data '[
+      {
+        "id": 0,
+        "_vectors": { "EMBEDDER_NAME": [0, 0.8, -0.2] },
+        "text": "frying pan"
+      },
+      {
+        "id": 1,
+        "_vectors": { "EMBEDDER_NAME": [1, -0.2, 0] },
+        "text": "baking dish"
+      }
+    ]'
+ai_search_user_embeddings_search_vector_filter_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index INDEX_NAME \
+    --vector 0,1,2 --filter 'price < 10' --sort price:asc \
+    --hybrid '{"embedder":"EMBEDDER_NAME"}'
+user_provided_embeddings_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_NAME \
+    --embedders '{
+      "EMBEDDER_NAME": {
+        "source": "userProvided",
+        "dimensions": MODEL_DIMENSIONS
+      }
+    }'
+image_search_user_embeddings_search_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index INDEX_NAME \
+    --vector VECTORIZED_QUERY --hybrid '{"embedder":"EMBEDDER_NAME"}'
+image_search_user_embeddings_search_q_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index INDEX_NAME \
+    --vector VECTORIZED_QUERY --hybrid '{"embedder":"EMBEDDER_NAME"}' --q QUERY
+federated_search_multi_search_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili multi-search --project PROJECT_NAME \
+    --federation '{}' \
+    --queries '[
+      { "indexUid": "chats", "q": "natasha" },
+      { "indexUid": "profiles", "q": "natasha" },
+      { "indexUid": "tickets", "q": "natasha" }
+    ]'
+federated_search_multi_search_weight_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili multi-search --project PROJECT_NAME \
+    --federation '{}' \
+    --queries '[
+      { "indexUid": "chats", "q": "rotondo" },
+      {
+        "indexUid": "profiles",
+        "q": "rotondo",
+        "federationOptions": { "weight": 1.2 }
+      },
+      { "indexUid": "tickets", "q": "rotondo" }
+    ]'
+search_rules_guide_search_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index support --q 'invoice settings'
+update_foreign_keys_setting_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books \
+    --foreign-keys '[
+      { "foreignIndexUid": "authors", "fieldName": "author" },
+      {
+        "foreignIndexUid": "authors",
+        "fieldName": "related_authors"
+      }
+    ]'
+reset_foreign_keys_setting_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index books --foreign-keys null
+chat_create_key_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key MEILISEARCH_KEY
+
+  meili key add --project PROJECT_NAME \
+    --name 'Chat API Key' --description 'API key for chat completions' \
+    --actions search,chatCompletions --indexes '*' --expires-at null
+image_search_multimodal_settings_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_NAME \
+    --embedders '{
+      "MULTIMODAL_EMBEDDER_NAME": {
+        "source": "rest",
+        "url": "https://api.voyageai.com/v1/multimodal-embeddings",
+        "apiKey": "VOYAGE_API_KEY",
+        "indexingFragments": {
+          "TEXTUAL_FRAGMENT_NAME": {
+            "value": {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "A document named {{doc.title}} described as {{doc.description}}"
+                }
+              ]
+            }
+          },
+          "IMAGE_FRAGMENT_NAME": {
+            "value": {
+              "content": [
+                {
+                  "type": "image_url",
+                  "image_url": "{{doc.poster_url}}"
+                }
+              ]
+            }
+          }
+        },
+        "searchFragments": {
+          "USER_TEXT_FRAGMENT": {
+            "value": { "content": [{ "type": "text", "text": "{{q}}" }] }
+          },
+          "USER_SUBMITTED_IMAGE_FRAGMENT": {
+            "value": {
+              "content": [
+                {
+                  "type": "image_base64",
+                  "image_base64": "data:{{media.image.mime}};base64,{{media.image.data}}"
+                }
+              ]
+            }
+          }
+        },
+        "request": {
+          "inputs": ["{{fragment}}", "{{..}}"],
+          "model": "voyage-multimodal-3"
+        },
+        "response": {
+          "data": [{ "embedding": "{{embedding}}" }, "{{..}}"]
+        }
+      }
+    }'
+image_search_multimodal_search_text_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index INDEX_NAME \
+    --q 'a mountain sunset with snow' \
+    --hybrid '{"embedder":"MULTIMODAL_EMBEDDER_NAME"}'
+ai_search_getting_started_embedders_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index kitchenware \
+    --embedders '{
+      "products-openai": {
+        "source": "openAi",
+        "apiKey": "OPEN_AI_API_KEY",
+        "model": "text-embedding-3-small",
+        "documentTemplate": "An object used in a kitchen named '\''{{doc.name}}'\''"
+      }
+    }'
+ai_search_getting_started_search_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index kitchenware \
+    --q 'kitchen utensils made of wood' \
+    --hybrid '{"embedder":"products-openai"}'
+configure_rest_embedder_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index INDEX_NAME \
+    --embedders '{
+      "EMBEDDER_NAME": {
+        "source": "rest",
+        "url": "PROVIDER_URL",
+        "request": { "model": "MODEL_NAME", "input": ["{{text}}", "{{..}}"] },
+        "response": {
+          "data": [{ "embedding": "{{embedding}}" }, "{{..}}"]
+        },
+        "apiKey": "PROVIDER_API_KEY",
+        "documentTemplate": "SHORT_AND_RELEVANT_DOCUMENT_TEMPLATE"
+      }
+    }'
+joins_define_relationship_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index deals \
+    --data '{
+      "foreignKeys": [
+        {
+          "fieldName": "company_id",
+          "foreignIndexUid": "companies"
+        }
+      ],
+      "filterableAttributes": [
+        {
+          "attributePatterns": ["company_id"],
+          "features": {
+            "facetSearch": false,
+            "filter": { "equality": true, "comparison": false }
+          }
+        }
+      ]
+    }'
+joins_one_to_one_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index users \
+    --data '{
+      "foreignKeys": [
+        { "fieldName": "profile_id", "foreignIndexUid": "profiles" }
+      ],
+      "filterableAttributes": [
+        {
+          "attributePatterns": ["profile_id"],
+          "features": {
+            "facetSearch": false,
+            "filter": { "equality": true, "comparison": false }
+          }
+        }
+      ]
+    }'
+joins_one_to_many_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index companies \
+    --data '{
+      "foreignKeys": [
+        {
+          "fieldName": "employee_ids",
+          "foreignIndexUid": "employees"
+        }
+      ],
+      "filterableAttributes": [
+        {
+          "attributePatterns": ["employee_ids"],
+          "features": {
+            "facetSearch": false,
+            "filter": { "equality": true, "comparison": false }
+          }
+        }
+      ]
+    }'
+joins_many_to_many_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index films \
+    --data '{
+      "foreignKeys": [
+        { "fieldName": "actor_ids", "foreignIndexUid": "actors" }
+      ],
+      "filterableAttributes": [
+        {
+          "attributePatterns": ["actor_ids"],
+          "features": {
+            "facetSearch": false,
+            "filter": { "equality": true, "comparison": false }
+          }
+        }
+      ]
+    }'
+joins_self_reference_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index products \
+    --data '{
+      "foreignKeys": [
+        {
+          "fieldName": "frequently_bought_with",
+          "foreignIndexUid": "products"
+        }
+      ],
+      "filterableAttributes": [
+        {
+          "attributePatterns": ["frequently_bought_with"],
+          "features": {
+            "facetSearch": false,
+            "filter": { "equality": true, "comparison": false }
+          }
+        }
+      ]
+    }'
+joins_multiple_relationships_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index deals \
+    --data '{
+      "foreignKeys": [
+        {
+          "fieldName": "company_id",
+          "foreignIndexUid": "companies"
+        },
+        { "fieldName": "owner_user_id", "foreignIndexUid": "users" }
+      ],
+      "filterableAttributes": [
+        {
+          "attributePatterns": ["company_id"],
+          "features": {
+            "facetSearch": false,
+            "filter": { "equality": true, "comparison": false }
+          }
+        },
+        {
+          "attributePatterns": ["owner_user_id"],
+          "features": {
+            "facetSearch": false,
+            "filter": { "equality": true, "comparison": false }
+          }
+        }
+      ]
+    }'
+joins_update_relationship_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index deals \
+    --data '{
+      "foreignKeys": [
+        {
+          "fieldName": "assigned_user_id",
+          "foreignIndexUid": "users"
+        }
+      ],
+      "filterableAttributes": [
+        {
+          "attributePatterns": ["assigned_user_id"],
+          "features": {
+            "facetSearch": false,
+            "filter": { "equality": true, "comparison": false }
+          }
+        }
+      ]
+    }'
+joins_remove_relationships_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili settings update --project PROJECT_NAME --index deals --foreign-keys '[]'
+foreign_filter_basic_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index deals \
+    --q contract \
+    --filter '_foreign(company, industry = "Technology" AND founded_year >= 2000)'
+foreign_filter_equality_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index deals \
+    --q contract --filter '_foreign(company, id = "company_42")'
+foreign_filter_multiple_equality_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index deals \
+    --q '' \
+    --filter '_foreign(company, industry = "Technology" OR industry = "Finance")'
+foreign_filter_range_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index deals \
+    --q enterprise \
+    --filter '_foreign(company, founded_year >= 2000 AND founded_year <= 2020)'
+foreign_filter_date_range_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index deals \
+    --q '' --filter '_foreign(company, last_funding_date >= "2023-01-01")'
+foreign_filter_multiple_conditions_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index deals \
+    --q contract \
+    --filter '_foreign(company, (industry = "Technology" AND founded_year >= 2010) OR revenue > 1000000)'
+foreign_filter_combined_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index deals \
+    --q contract \
+    --filter 'value >= 100000 AND _foreign(company, industry = "Technology")'
+foreign_filter_array_or_logic_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index films \
+    --filter 'actors.country = "France" OR actors.age > 35'
+foreign_filter_array_and_logic_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index films \
+    --filter '_foreign(actors, country = "France" AND age > 35)'
+foreign_filter_certifications_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index products \
+    --q motor \
+    --filter '_foreign(certifications, (standard = "ISO 9001" OR standard = "CE") AND issued_year >= 2020)'
+foreign_filter_tags_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index articles \
+    --q cryptography \
+    --filter '_foreign(tags, name = "security" AND name = "encryption")'
+foreign_filter_skills_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index employees \
+    --q fullstack \
+    --filter '_foreign(skills, (language = "Python" AND proficiency = "advanced") OR (language = "JavaScript" AND proficiency = "advanced"))'
+rbac_search_with_foreign_filter_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key TENANT_TOKEN
+
+  meili search --project PROJECT_NAME --index documents \
+    --q roadmap \
+    --filter '_foreign(access, user = "jeremy@meilisearch.com" OR teams IN ["product", "engineering"])'
+rbac_multi_level_1: |-
+  meili config set --project PROJECT_NAME \
+    --project-url MEILISEARCH_URL \
+    --project-api-key API_KEY
+
+  meili search --project PROJECT_NAME --index documents \
+    --q sensitive \
+    --filter '_foreign(access, (user = "jeremy@meilisearch.com" AND roles IN ["editor", "owner"]) OR (teams IN ["product", "engineering"] AND roles IN ["editor"]))'
