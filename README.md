@@ -71,6 +71,8 @@ Meilisearch Cloud upgrades and monitors your project for you, shows how it is se
 meili teleport
 ```
 
+[![Watch meili teleport move a self-hosted instance to Meilisearch Cloud](https://img.youtube.com/vi/oRMskfcYR2I/maxresdefault.jpg)](https://youtu.be/oRMskfcYR2I)
+
 It asks for the project to move, from the config file or by its URL and key. It checks that the key can export, logs you in to Meilisearch Cloud (and creates your account), creates the project on the free trial or on the plan you choose, adds it to the config file, and sends the data to it.
 
 `meili teleport` is interactive. The same steps without questions:
