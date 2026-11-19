@@ -1,5 +1,12 @@
 # @meilisearch/cli
 
+## 0.5.0
+
+### Minor Changes
+
+- Add `--include-terminated` to `meili project list`, `--plan` to `meili resource list` and `--organization-id` to `meili team list`. ([#95](https://github.com/meilisearch/cli/pull/95))
+- Add `--limit`, `--offset` and `--all` to the list commands of Meilisearch Cloud. ([#95](https://github.com/meilisearch/cli/pull/95))
+
 ## 0.4.0
 
 ### Minor Changes
