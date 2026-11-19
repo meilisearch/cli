@@ -83,7 +83,6 @@ Every API command declares its routes, `static routes = ["GET /stats", "GET /ind
 | `POST /api/v2/teams` | `meili team add --organization-id <id> [--name <name>]` |
 | `PATCH /api/v2/teams/{id}` | `meili team update --id <id> [--name <name>] [--owner-id <uuid>]` |
 | `DELETE /api/v2/teams/{id}` | `meili team delete --id <id> --yes` |
-| `GET /api/v2/teams/{teamId}/members` | `meili member list --team-id <id>` |
 | `GET /api/v2/resources` | `meili resource list [--region-id <id>] [--plan <plan>]` |
 
 ## Exceptions
