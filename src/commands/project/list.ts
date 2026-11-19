@@ -1,6 +1,6 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { getApiV2Projects } from "../../lib/clients/management/generated/sdk.gen.js";
+import { listProjects } from "../../lib/clients/management/generated/sdk.gen.js";
 import { projectStatus, table } from "../../lib/human.js";
 import { paint } from "../../lib/output.js";
 
@@ -16,6 +16,7 @@ Only the projects the token sees.`;
   static override examples = [
     "<%= config.bin %> <%= command.id %>",
     "<%= config.bin %> <%= command.id %> --team-id 12",
+    "<%= config.bin %> <%= command.id %> --include-terminated --all",
   ];
 
   static override flags = {
@@ -23,15 +24,23 @@ Only the projects the token sees.`;
       description: "Only the projects of this team.",
       helpValue: "<id>",
     }),
+    "include-terminated": Flags.boolean({
+      description: "Also list the terminated projects.",
+    }),
+    ...BaseCommand.paginationFlags,
   };
 
   async run(): Promise<void> {
     const { flags } = await this.parse(ProjectList);
-    await this.output(
-      await getApiV2Projects({
-        client: this.managementClient,
-        query: { teamId: flags["team-id"] },
-      }),
+    await this.outputList(
+      (query) => listProjects({ client: this.managementClient, query }),
+      {
+        teamId: flags["team-id"],
+        includeTerminated: flags["include-terminated"],
+        limit: flags.limit,
+        offset: flags.offset,
+      },
+      flags.all,
       ({ results, total }) =>
         results.length === 0
           ? {

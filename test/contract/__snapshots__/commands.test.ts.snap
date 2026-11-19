@@ -1914,7 +1914,25 @@ Only the organizations the token sees.",
       "examples": [
         "meili organization list",
       ],
-      "flags": [],
+      "flags": [
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "type": "boolean",
+        },
+      ],
       "id": "organization list",
       "routes": [
         "GET /api/v2/organizations",
@@ -2110,6 +2128,7 @@ Only the projects the token sees.",
       "examples": [
         "meili project list",
         "meili project list --team-id 12",
+        "meili project list --include-terminated --all",
       ],
       "flags": [
         {
@@ -2117,6 +2136,28 @@ Only the projects the token sees.",
           "helpValue": "<id>",
           "name": "team-id",
           "type": "option",
+        },
+        {
+          "description": "Also list the terminated projects.",
+          "name": "include-terminated",
+          "type": "boolean",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "type": "boolean",
         },
       ],
       "id": "project list",
@@ -2216,7 +2257,25 @@ The regions where a project can run.",
       "examples": [
         "meili region list",
       ],
-      "flags": [],
+      "flags": [
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "type": "boolean",
+        },
+      ],
       "id": "region list",
       "routes": [
         "GET /api/v2/regions",
@@ -2230,6 +2289,7 @@ The active plans a project runs on, with their pricing.",
       "examples": [
         "meili resource list",
         "meili resource list --region-id 1",
+        "meili resource list --plan resource_based_plan",
       ],
       "flags": [
         {
@@ -2237,6 +2297,38 @@ The active plans a project runs on, with their pricing.",
           "helpValue": "<id>",
           "name": "region-id",
           "type": "option",
+        },
+        {
+          "description": "Only the resources of this plan.",
+          "name": "plan",
+          "options": [
+            "legacy",
+            "build_plan",
+            "pro_plan",
+            "custom_plan",
+            "grow_plan",
+            "free_trial",
+            "enterprise_plan",
+            "resource_based_plan",
+          ],
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "type": "boolean",
         },
       ],
       "id": "resource list",
@@ -3507,8 +3599,33 @@ The team must have no project left. Prints nothing on success.",
 Only the teams the token sees.",
       "examples": [
         "meili team list",
+        "meili team list --organization-id 1",
       ],
-      "flags": [],
+      "flags": [
+        {
+          "description": "Only the teams of this organization.",
+          "helpValue": "<id>",
+          "name": "organization-id",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "limit",
+          "type": "option",
+        },
+        {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "name": "offset",
+          "type": "option",
+        },
+        {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "type": "boolean",
+        },
+      ],
       "id": "team list",
       "routes": [
         "GET /api/v2/teams",

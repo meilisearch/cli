@@ -123,8 +123,8 @@ describe("meili config sync-with-cloud", () => {
       { project: "docs", cloud: { id: 344, ...team12 }, action: "added", apiKey: "written" },
     ]);
     expect(received.map(({ url }) => new URL(url).search)).toEqual([
-      "?page=1&teamId=12",
-      "?page=2&teamId=12",
+      "?offset=0&teamId=12",
+      "?offset=1&teamId=12",
     ]);
     expect(Object.keys((readJson(path) as { projects: object }).projects)).toEqual([
       "demo",

@@ -67,7 +67,8 @@ const spec: OpenApiDocument = {
       post: body({ name: {}, teamId: {}, resourceId: {} }),
     },
     "/api/v2/projects/{id}": { get: {}, delete: {} },
-    "/api/v2/team-members": { get: query("teamId"), post: {}, delete: {} },
+    "/api/v2/teams/{teamId}/members": { get: {}, post: body({ email: {} }) },
+    "/api/v2/teams/{teamId}/members/{memberId}": { delete: {} },
   },
   components: {
     schemas: { IndexCreateRequest: { properties: { uid: {}, primaryKey: {} } } },
@@ -117,7 +118,8 @@ describe("deriveCommandId", () => {
     expect(derive("GET /tasks/{task_id}/documents")).toBe("document list");
     expect(derive("POST /dumps")).toBe("dump add");
     expect(derive("GET /api/v2/projects/{id}")).toBe("project view");
-    expect(derive("DELETE /api/v2/team-members")).toBe("team-member delete");
+    expect(derive("GET /api/v2/teams/{teamId}/members")).toBe("member list");
+    expect(derive("DELETE /api/v2/teams/{teamId}/members/{memberId}")).toBe("member delete");
   });
 
   it("views an object that is not a collection, and names it alone when view is its only command", () => {

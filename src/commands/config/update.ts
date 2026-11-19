@@ -1,6 +1,6 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { getApiV2ProjectsById } from "../../lib/clients/management/generated/sdk.gen.js";
+import { getProject } from "../../lib/clients/management/generated/sdk.gen.js";
 import { cloudEntry, findProjectByUrl, warnUrlAnomaly } from "../../lib/cloud-sync.js";
 import {
   assertNoProject,
@@ -57,7 +57,7 @@ Changes the fields given, and refuses a name that does not exist. Talks to the M
       const project =
         before.cloud === undefined
           ? await findProjectByUrl(this.managementClient, url)
-          : await getApiV2ProjectsById({
+          : await getProject({
               client: this.managementClient,
               path: { id: before.cloud.id },
             });

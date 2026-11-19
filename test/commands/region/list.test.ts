@@ -20,7 +20,7 @@ describe("meili region list", () => {
     expect(result.stdout).toMatchSnapshot();
   });
 
-  it("lists the regions in the envelope the API returns, with no paging flag yet", async () => {
+  it("lists the regions in the envelope the API returns", async () => {
     server.use(managementHandlers.listRegions([region, frankfurt]));
     const result = await runCommand(RegionList, [], { env });
     expect(result).toMatchSnapshot();

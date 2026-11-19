@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import TeamList from "../../../src/commands/team/list.js";
 import {
   managementEnv as env,
+  MANAGEMENT_URL,
   managementHandlers,
+  type ReceivedRequest,
   team,
 } from "../../helpers/management-handlers.js";
 import { server, useMockServer } from "../../helpers/msw.js";
@@ -20,10 +22,18 @@ describe("meili team list", () => {
     expect(result.stdout).toMatchSnapshot();
   });
 
-  it("lists the teams in the envelope the API returns, with no paging flag yet", async () => {
+  it("lists the teams in the envelope the API returns", async () => {
     server.use(managementHandlers.listTeams([team, docs]));
     const result = await runCommand(TeamList, [], { env });
     expect(result).toMatchSnapshot();
+  });
+
+  it("passes --organization-id to the route", async () => {
+    const received: ReceivedRequest[] = [];
+    server.use(managementHandlers.listTeams([team, docs], received));
+    const result = await runCommand(TeamList, ["--organization-id", "1"], { env });
+    expect(result.exitCode).toBe(0);
+    expect(received[0]?.url).toBe(`${MANAGEMENT_URL}/api/v2/teams?organizationId=1`);
   });
 
   it("exits 6 on a 401 without a body", async () => {

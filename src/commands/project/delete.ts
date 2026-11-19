@@ -1,6 +1,6 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { deleteApiV2ProjectsById } from "../../lib/clients/management/generated/sdk.gen.js";
+import { deleteProject } from "../../lib/clients/management/generated/sdk.gen.js";
 import { cloudProjectEntry, writeConfigFile } from "../../lib/config.js";
 import { paint } from "../../lib/output.js";
 
@@ -41,7 +41,7 @@ Prints nothing on stdout on success.`;
       file === undefined
         ? undefined
         : cloudProjectEntry(file, flags.project, id, ": nothing was deleted.");
-    await deleteApiV2ProjectsById({ client: this.managementClient, path: { id } });
+    await deleteProject({ client: this.managementClient, path: { id } });
     this.say(`${paint("green", "✓")} Project ${id} is deleted, with its data.`);
     if (file === undefined || entry === undefined) return;
     const { [entry]: _removed, ...projects } = file.projects;

@@ -1,7 +1,7 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { patchApiV2ProjectsById } from "../../lib/clients/management/generated/sdk.gen.js";
-import type { PatchApiV2ProjectsByIdData } from "../../lib/clients/management/generated/types.gen.js";
+import { updateProject } from "../../lib/clients/management/generated/sdk.gen.js";
+import type { UpdateProjectData } from "../../lib/clients/management/generated/types.gen.js";
 import { cloudOf, readTeamNames } from "../../lib/cloud-sync.js";
 import {
   assertNoProject,
@@ -47,7 +47,7 @@ export default class ProjectUpdate extends BaseCommand {
     const { flags } = await this.parse(ProjectUpdate);
     const id = this.cloudProjectId(flags.id);
     const body = readBodyWithFields(flags, { name: flags.name }) as NonNullable<
-      PatchApiV2ProjectsByIdData["body"]
+      UpdateProjectData["body"]
     >;
 
     // The entry takes the name checked here, whatever name the API answers.
@@ -64,7 +64,7 @@ export default class ProjectUpdate extends BaseCommand {
       if (body.name !== entry) assertNoProject(file, body.name, ": nothing was renamed.");
       sync = { file, entry, name: body.name };
     }
-    const project = await patchApiV2ProjectsById({
+    const project = await updateProject({
       client: this.managementClient,
       path: { id },
       body,

@@ -7384,6 +7384,28 @@
           "name": "debug",
           "allowNo": false,
           "type": "boolean"
+        },
+        "limit": {
+          "description": "Passed to the API.",
+          "name": "limit",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "name": "offset",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "allowNo": false,
+          "type": "boolean"
         }
       },
       "hasDynamicHelp": false,
@@ -8385,7 +8407,8 @@
       "description": "List the Meilisearch Cloud projects.\n\nOnly the projects the token sees.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --team-id 12"
+        "<%= config.bin %> <%= command.id %> --team-id 12",
+        "<%= config.bin %> <%= command.id %> --include-terminated --all"
       ],
       "flags": {
         "json": {
@@ -8415,6 +8438,34 @@
           "helpValue": "<id>",
           "multiple": false,
           "type": "option"
+        },
+        "include-terminated": {
+          "description": "Also list the terminated projects.",
+          "name": "include-terminated",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "limit": {
+          "description": "Passed to the API.",
+          "name": "limit",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "name": "offset",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "allowNo": false,
+          "type": "boolean"
         }
       },
       "hasDynamicHelp": false,
@@ -9005,6 +9056,28 @@
           "name": "debug",
           "allowNo": false,
           "type": "boolean"
+        },
+        "limit": {
+          "description": "Passed to the API.",
+          "name": "limit",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "name": "offset",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "allowNo": false,
+          "type": "boolean"
         }
       },
       "hasDynamicHelp": false,
@@ -9157,7 +9230,8 @@
       "description": "List the Meilisearch Cloud resources.\n\nThe active plans a project runs on, with their pricing.",
       "examples": [
         "<%= config.bin %> <%= command.id %>",
-        "<%= config.bin %> <%= command.id %> --region-id 1"
+        "<%= config.bin %> <%= command.id %> --region-id 1",
+        "<%= config.bin %> <%= command.id %> --plan resource_based_plan"
       ],
       "flags": {
         "json": {
@@ -9187,6 +9261,45 @@
           "helpValue": "<id>",
           "multiple": false,
           "type": "option"
+        },
+        "plan": {
+          "description": "Only the resources of this plan.",
+          "name": "plan",
+          "hasDynamicHelp": false,
+          "multiple": false,
+          "options": [
+            "legacy",
+            "build_plan",
+            "pro_plan",
+            "custom_plan",
+            "grow_plan",
+            "free_trial",
+            "enterprise_plan",
+            "resource_based_plan"
+          ],
+          "type": "option"
+        },
+        "limit": {
+          "description": "Passed to the API.",
+          "name": "limit",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "name": "offset",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
+          "allowNo": false,
+          "type": "boolean"
         }
       },
       "hasDynamicHelp": false,
@@ -12962,7 +13075,8 @@
       "args": {},
       "description": "List the Meilisearch Cloud teams.\n\nOnly the teams the token sees.",
       "examples": [
-        "<%= config.bin %> <%= command.id %>"
+        "<%= config.bin %> <%= command.id %>",
+        "<%= config.bin %> <%= command.id %> --organization-id 1"
       ],
       "flags": {
         "json": {
@@ -12982,6 +13096,36 @@
         "debug": {
           "description": "Print every HTTP request and response on stderr, secrets redacted.",
           "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "organization-id": {
+          "description": "Only the teams of this organization.",
+          "name": "organization-id",
+          "hasDynamicHelp": false,
+          "helpValue": "<id>",
+          "multiple": false,
+          "type": "option"
+        },
+        "limit": {
+          "description": "Passed to the API.",
+          "name": "limit",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "name": "offset",
+          "hasDynamicHelp": false,
+          "helpValue": "<n>",
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page, and print them as one list.",
+          "name": "all",
           "allowNo": false,
           "type": "boolean"
         }

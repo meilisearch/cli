@@ -20,22 +20,10 @@ function numberField(page: ListPage, name: string): number {
 }
 
 /** The query of the page after `page`, or undefined once `total` is reached. */
-export function nextOffsetQuery(query: OffsetQuery, page: ListPage): OffsetQuery | undefined {
+export function nextOffsetQuery<Q extends OffsetQuery>(query: Q, page: ListPage): Q | undefined {
   const offset = numberField(page, "offset") + page.results.length;
   const done = page.results.length === 0 || offset >= numberField(page, "total");
   return done ? undefined : { ...query, offset };
-}
-
-/** The query of a route that pages by number: the Management API's. */
-export interface PageQuery {
-  page?: number | undefined;
-}
-
-/** The query of the page after `page` on a numbered route, or undefined past `totalPages`. */
-export function nextPageQuery<Q extends PageQuery>(query: Q, page: ListPage): Q | undefined {
-  const current = numberField(page, "page");
-  const done = page.results.length === 0 || current >= numberField(page, "totalPages");
-  return done ? undefined : { ...query, page: current + 1 };
 }
 
 /** Fetches page after page until `nextQuery` says there is no page left. */

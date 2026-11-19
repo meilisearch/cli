@@ -9,11 +9,11 @@ exports[`meili region list > exits 6 on the 401 without a body that the document
 }
 `;
 
-exports[`meili region list > lists the regions in the envelope the API returns, with no paging flag yet 1`] = `
+exports[`meili region list > lists the regions in the envelope the API returns 1`] = `
 {
   "exitCode": 0,
   "stderr": "",
-  "stdout": "{"page":1,"limit":20,"total":2,"totalPages":1,"results":[{"id":1,"name":"San Francisco","awsRegion":"us-west-1","countryCode":"US","regionUrl":"sfo.meilisearch.io"},{"id":2,"name":"Frankfurt","awsRegion":"us-west-1","countryCode":"US","regionUrl":"sfo.meilisearch.io","greenLabel":true}]}
+  "stdout": "{"offset":0,"limit":20,"total":2,"results":[{"id":1,"name":"San Francisco","awsRegion":"us-west-1","countryCode":"US","greenLabel":false,"regionUrl":"sfo.meilisearch.io"},{"id":2,"name":"Frankfurt","awsRegion":"us-west-1","countryCode":"US","greenLabel":true,"regionUrl":"sfo.meilisearch.io"}]}
 ",
 }
 `;
@@ -22,14 +22,19 @@ exports[`meili region list > prints its help without any network call 1`] = `
 "List the Meilisearch Cloud regions.
 
 USAGE
-  $ meili region list [--json] [--no-color] [--debug]
+  $ meili region list [--json] [--no-color] [--debug] [--limit <n>]
+    [--offset <n>] [--all]
 
 OUTPUT FLAGS
   --json      Print compact JSON. The default when stdout is not a terminal.
   --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
-  --debug  Print every HTTP request and response on stderr, secrets redacted.
+  --all         Fetch every page, and print them as one list.
+  --debug       Print every HTTP request and response on stderr, secrets
+                redacted.
+  --limit=<n>   Passed to the API.
+  --offset=<n>  Passed to the API.
 
 DESCRIPTION
   List the Meilisearch Cloud regions.

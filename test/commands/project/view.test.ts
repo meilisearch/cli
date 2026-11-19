@@ -72,7 +72,7 @@ describe("meili project view", () => {
     expect(result).toMatchSnapshot();
   });
 
-  it("passes the API's error body through on an unknown id, with exit 3", async () => {
+  it("passes the API's error body through on an unknown id, with exit 4", async () => {
     server.use(managementHandlers.getProject([project]));
     const result = await runCommand(ProjectView, ["--id", "999"], { env });
     expect(result).toMatchSnapshot();

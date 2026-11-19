@@ -6,8 +6,8 @@ exports[`meili config sync-with-cloud > gives every project an entry: the one th
   "stderr": "{"warning":{"code":"cli_config","type":"cli","message":"Project 353 (creating) has no URL yet, it is still being created: it was skipped."}}
 {"warning":{"code":"cli_config","type":"cli","message":"The name \`search\` is taken: project 351 is the entry \`search-351\`."}}
 {"warning":{"code":"cli_config","type":"cli","message":"The name \`search\` is taken: project 352 is the entry \`search-352\`."}}
-{"warning":{"code":"not_an_owner","type":"auth","message":"No master key for project 351 (search): only an owner of its team or organization can read it.","link":"https://www.meilisearch.com/docs/reference/errors#not_an_owner","hint":"Ask an owner of the team for a key, then run \`meili config update --project search-351 --project-api-key -\`."}}
-{"warning":{"code":"not_an_owner","type":"auth","message":"No master key for project 352 (search): only an owner of its team or organization can read it.","link":"https://www.meilisearch.com/docs/reference/errors#not_an_owner","hint":"Ask an owner of the team for a key, then run \`meili config update --project search-352 --project-api-key -\`."}}
+{"warning":{"code":"forbidden","type":"invalid_request","message":"No master key for project 351 (search): only an owner of its team or organization can read it.","link":"https://www.meilisearch.com/docs/reference/errors#forbidden","hint":"Ask an owner of the team for a key, then run \`meili config update --project search-351 --project-api-key -\`."}}
+{"warning":{"code":"forbidden","type":"invalid_request","message":"No master key for project 352 (search): only an owner of its team or organization can read it.","link":"https://www.meilisearch.com/docs/reference/errors#forbidden","hint":"Ask an owner of the team for a key, then run \`meili config update --project search-352 --project-api-key -\`."}}
 ",
   "stdout": "[{"project":"prod","cloud":{"id":343,"teamId":12,"teamName":"Search"},"action":"updated","apiKey":"written"},{"project":"docs","cloud":{"id":344,"teamId":12,"teamName":"Search"},"action":"unchanged","apiKey":"kept"},{"project":"search-351","cloud":{"id":351,"teamId":13,"teamName":"Docs"},"action":"added","apiKey":"missing"},{"project":"search-352","cloud":{"id":352,"teamId":14,"teamName":"Labs"},"action":"added","apiKey":"missing"}]
 ",
@@ -17,7 +17,7 @@ exports[`meili config sync-with-cloud > gives every project an entry: the one th
 exports[`meili config sync-with-cloud > passes the API's error body through and writes nothing on a 403 of the list 1`] = `
 {
   "exitCode": 3,
-  "stderr": "{"error":{"code":"project_not_accessible","type":"auth","message":"You cannot access this project.","link":"https://www.meilisearch.com/docs/reference/errors#project_not_accessible"}}
+  "stderr": "{"error":{"code":"forbidden","type":"invalid_request","message":"You are not allowed to perform this action.","link":"https://www.meilisearch.com/docs/reference/errors#forbidden"}}
 ",
   "stdout": "",
 }

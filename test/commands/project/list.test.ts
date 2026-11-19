@@ -22,7 +22,7 @@ describe("meili project list", () => {
     expect(result.stdout).toMatchSnapshot();
   });
 
-  it("lists the projects in the envelope the API returns, with no paging flag yet", async () => {
+  it("lists the projects in the envelope the API returns", async () => {
     server.use(managementHandlers.listProjects([project, staging]));
     const result = await runCommand(ProjectList, [], { env });
     expect(result).toMatchSnapshot();
@@ -39,12 +39,25 @@ describe("meili project list", () => {
     expect(await runCommand(ProjectList, [], human)).toMatchSnapshot();
   });
 
-  it("passes --team-id to the list route", async () => {
+  it("passes --team-id and --include-terminated to the list route", async () => {
     const received: ReceivedRequest[] = [];
     server.use(managementHandlers.listProjects([project, staging], received));
-    const result = await runCommand(ProjectList, ["--team-id", "12"], { env });
+    const result = await runCommand(ProjectList, ["--team-id", "12", "--include-terminated"], {
+      env,
+    });
     expect(result.exitCode).toBe(0);
-    expect(received[0]?.url).toBe(`${MANAGEMENT_URL}/api/v2/projects?teamId=12`);
+    expect(received[0]?.url).toBe(
+      `${MANAGEMENT_URL}/api/v2/projects?teamId=12&includeTerminated=true`,
+    );
+  });
+
+  it("follows the offset to the last page with --all, and merges the pages", async () => {
+    const received: ReceivedRequest[] = [];
+    server.use(managementHandlers.listProjects([project, staging], received, 1));
+    const result = await runCommand(ProjectList, ["--all"], { env });
+    expect(result.exitCode).toBe(0);
+    expect(received.map(({ url }) => new URL(url).search)).toEqual(["", "?offset=1"]);
+    expect(JSON.parse(result.stdout)).toEqual({ total: 2, results: [project, staging] });
   });
 
   it("exits 6 on a 401 without a body", async () => {

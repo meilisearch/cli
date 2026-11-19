@@ -1,7 +1,7 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { patchApiV2TeamsById } from "../../lib/clients/management/generated/sdk.gen.js";
-import type { PatchApiV2TeamsByIdData } from "../../lib/clients/management/generated/types.gen.js";
+import { updateTeam } from "../../lib/clients/management/generated/sdk.gen.js";
+import type { UpdateTeamData } from "../../lib/clients/management/generated/types.gen.js";
 import { done, itemView } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
 
@@ -33,9 +33,9 @@ export default class TeamUpdate extends BaseCommand {
     const body = readBodyWithFields(flags, {
       name: flags.name,
       ownerId: flags["owner-id"],
-    }) as PatchApiV2TeamsByIdData["body"];
+    }) as UpdateTeamData["body"];
     await this.output(
-      await patchApiV2TeamsById({ client: this.managementClient, path: { id: flags.id }, body }),
+      await updateTeam({ client: this.managementClient, path: { id: flags.id }, body }),
       (team) => itemView([done(`Team ${team.name} is updated.`)], team),
     );
   }

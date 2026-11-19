@@ -60,12 +60,12 @@ const COLLECTIONS = new Map(
     fields: "field",
     indexes: "index",
     keys: "key",
+    members: "member",
     organizations: "organization",
     projects: "project",
     regions: "region",
     resources: "resource",
     snapshots: "snapshot",
-    "team-members": "team-member",
     teams: "team",
     tasks: "task",
     webhooks: "webhook",
@@ -89,10 +89,7 @@ const IDENTIFIERS: Record<string, { of: "own" | string; flag: "id" | "ids" }> = 
 
 // OpenAPI, the little the rules read from it
 
-interface OpenApiParameter {
-  name: string;
-  in: string;
-}
+type OpenApiParameter = { name: string; in: string } | { $ref: string };
 
 interface OpenApiSchema {
   $ref?: string;
@@ -112,7 +109,11 @@ type OpenApiPathItem = { parameters?: OpenApiParameter[] } & Partial<
 
 export interface OpenApiDocument {
   paths: Record<string, OpenApiPathItem>;
-  components?: { schemas?: Record<string, OpenApiSchema> };
+  components?: {
+    schemas?: Record<string, OpenApiSchema>;
+    parameters?: Record<string, { name: string; in: string }>;
+    securitySchemes?: Record<string, { type?: string }>;
+  };
 }
 
 /** `"GET /indexes"` into a route. */
@@ -144,14 +145,17 @@ export function hasRoute(spec: OpenApiDocument, route: Route): boolean {
  * lists them from the most specific to the widest wildcard, `["indexes.get",
  * "indexes.*", "*"]`, and a command declares the first one in `keyActions`.
  * Empty when the routes need no key action, as on `GET /health`, and on the
- * Management API, whose document declares no key action.
+ * Management API, whose document declares no key action: its `read` and
+ * `write` are OAuth2 scopes, and `meili auth login` asks for both.
  */
 export function keyActionsForRoutes(spec: OpenApiDocument, routes: readonly Route[]): string[] {
   const actions = new Set<string>();
   for (const route of routes) {
-    for (const scheme of findOperation(spec, route)?.security ?? []) {
-      const specific = Object.values(scheme)[0]?.[0];
-      if (specific !== undefined) actions.add(specific);
+    for (const requirement of findOperation(spec, route)?.security ?? []) {
+      for (const [scheme, [specific]] of Object.entries(requirement)) {
+        const isOauth2 = spec.components?.securitySchemes?.[scheme]?.type === "oauth2";
+        if (specific !== undefined && !isOauth2) actions.add(specific);
+      }
     }
   }
   return [...actions].sort();
@@ -499,9 +503,16 @@ export function flagsForRoute(spec: OpenApiDocument, route: Route, commandId: st
   const flags = new Set(
     exception === null || exception === undefined ? [] : parseCommand(exception).flags,
   );
-  const query = [...(spec.paths[route.path]?.parameters ?? []), ...(operation.parameters ?? [])]
-    .filter((parameter) => parameter.in === "query")
-    .map((parameter) => parameter.name);
+  const query = [
+    ...(spec.paths[route.path]?.parameters ?? []),
+    ...(operation.parameters ?? []),
+  ].flatMap((parameter) => {
+    const resolved =
+      "$ref" in parameter
+        ? spec.components?.parameters?.[parameter.$ref.split("/").at(-1) ?? ""]
+        : parameter;
+    return resolved?.in === "query" ? [resolved.name] : [];
+  });
 
   for (const name of [...query, ...bodyFields(spec, operation)]) {
     const identifier = IDENTIFIERS[name];

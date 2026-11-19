@@ -406,19 +406,20 @@ export abstract class BaseCommand extends Command {
    * one envelope. List routes end with this call. `fetchPage` is one API call,
    * returning the API body as it is. `view` is the text for a human, as in `output`.
    */
-  protected async outputList(
-    fetchPage: (query: OffsetQuery) => Promise<ListPage>,
-    query: OffsetQuery,
+  protected async outputList<Q extends OffsetQuery, P extends ListPage>(
+    fetchPage: (query: Q) => Promise<P>,
+    query: Q,
     all: boolean,
-    view?: (page: ListPage) => HumanView,
+    view?: (page: P) => HumanView,
   ): Promise<void> {
     if (!all) {
       await this.output(await fetchPage(query), view);
       return;
     }
-    const pages: ListPage[] = [];
+    const pages: P[] = [];
     for await (const page of iteratePages(fetchPage, query, nextOffsetQuery)) pages.push(page);
-    await this.output(mergePages(pages), view);
+    // Typed as one page, though `mergePages` drops its `limit` and `offset`.
+    await this.output(mergePages(pages) as P, view);
   }
 
   /**
