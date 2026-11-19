@@ -1,5 +1,6 @@
+import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { getApiV2Teams } from "../../lib/clients/management/generated/sdk.gen.js";
+import { listTeams } from "../../lib/clients/management/generated/sdk.gen.js";
 
 export default class TeamList extends BaseCommand {
   static api: Api = "management";
@@ -10,10 +11,25 @@ export default class TeamList extends BaseCommand {
 
 Only the teams the token sees.`;
 
-  static override examples = ["<%= config.bin %> <%= command.id %>"];
+  static override examples = [
+    "<%= config.bin %> <%= command.id %>",
+    "<%= config.bin %> <%= command.id %> --organization-id 1",
+  ];
+
+  static override flags = {
+    "organization-id": Flags.integer({
+      description: "Only the teams of this organization.",
+      helpValue: "<id>",
+    }),
+    ...BaseCommand.paginationFlags,
+  };
 
   async run(): Promise<void> {
-    await this.parse(TeamList);
-    await this.output(await getApiV2Teams({ client: this.managementClient }));
+    const { flags } = await this.parse(TeamList);
+    await this.outputList(
+      (query) => listTeams({ client: this.managementClient, query }),
+      { organizationId: flags["organization-id"], limit: flags.limit, offset: flags.offset },
+      flags.all,
+    );
   }
 }

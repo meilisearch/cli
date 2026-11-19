@@ -1,7 +1,7 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { patchApiV2OrganizationsById } from "../../lib/clients/management/generated/sdk.gen.js";
-import type { PatchApiV2OrganizationsByIdData } from "../../lib/clients/management/generated/types.gen.js";
+import { updateOrganization } from "../../lib/clients/management/generated/sdk.gen.js";
+import type { UpdateOrganizationData } from "../../lib/clients/management/generated/types.gen.js";
 import { done, itemView } from "../../lib/human.js";
 import { readBodyWithFields } from "../../lib/input.js";
 
@@ -30,10 +30,10 @@ export default class OrganizationUpdate extends BaseCommand {
   async run(): Promise<void> {
     const { flags } = await this.parse(OrganizationUpdate);
     const body = readBodyWithFields(flags, { name: flags.name }) as NonNullable<
-      PatchApiV2OrganizationsByIdData["body"]
+      UpdateOrganizationData["body"]
     >;
     await this.output(
-      await patchApiV2OrganizationsById({
+      await updateOrganization({
         client: this.managementClient,
         path: { id: flags.id },
         body,

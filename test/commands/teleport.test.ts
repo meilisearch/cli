@@ -1,7 +1,10 @@
 import { HttpResponse, http } from "msw";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import Teleport from "../../src/commands/teleport.js";
-import type { Resource } from "../../src/lib/clients/management/generated/types.gen.js";
+import type {
+  PlanFeature,
+  Resource,
+} from "../../src/lib/clients/management/generated/types.gen.js";
 import {
   MANAGEMENT_URL,
   managementEnv,
@@ -57,7 +60,12 @@ const DESTINATION_URL = project.url as string;
 
 const trial: Resource = { id: 6, name: "free_trial", plan: "free_trial", regionId: 2 };
 /** A resource of the region, and the plan the dashboard prices it with. */
-function resource(id: number, name: string, kind: string, estimation: number | null): Resource {
+function resource(
+  id: number,
+  name: string,
+  kind: PlanFeature["kind"],
+  estimation: number | null,
+): Resource {
   return {
     id,
     name,
@@ -71,8 +79,15 @@ function resource(id: number, name: string, kind: string, estimation: number | n
       name,
       code: name,
       features: [
-        { name: "Search", kind: "search", enabled: true, monthlyEstimation: 0 },
-        { name, kind, enabled: true, monthlyEstimation: estimation },
+        {
+          id: 1,
+          name: "Search",
+          kind: "search",
+          enabled: true,
+          stripePriceId: null,
+          monthlyEstimation: 0,
+        },
+        { id: 2, name, kind, enabled: true, stripePriceId: null, monthlyEstimation: estimation },
       ],
     },
   };
@@ -170,7 +185,7 @@ function cloud(
   create = managementHandlers.createProject(created),
 ) {
   const page = (results: unknown[]) =>
-    HttpResponse.json({ page: 1, limit: 20, total: results.length, totalPages: 1, results });
+    HttpResponse.json({ offset: 0, limit: 20, total: results.length, results });
   return [
     http.get(`${MANAGEMENT_URL}/api/v2/me`, () =>
       HttpResponse.json({ name: "Ada", email: "ada@example.com" }),

@@ -2,12 +2,12 @@ import { Errors, Flags } from "@oclif/core";
 import { type Meilisearch, MeilisearchApiError } from "meilisearch";
 import { type Api, BaseCommand } from "../lib/base-command.js";
 import {
-  getApiV2Me,
-  getApiV2Organizations,
-  getApiV2Regions,
-  getApiV2Resources,
-  getApiV2Teams,
-  postApiV2Projects,
+  createProject,
+  getMe,
+  listOrganizations,
+  listRegions,
+  listResources,
+  listTeams,
 } from "../lib/clients/management/generated/sdk.gen.js";
 import type {
   Organization,
@@ -175,9 +175,9 @@ The same steps, without questions: ${WITHOUT_TELEPORT}`;
 
     status(() => "Loading the regions, the organizations and the teams");
     const [regions, organizations, teams] = await Promise.all([
-      everyPage((query) => getApiV2Regions({ client, query }), { page: 1 }),
-      everyPage((query) => getApiV2Organizations({ client, query }), { page: 1 }),
-      everyPage((query) => getApiV2Teams({ client, query }), { page: 1 }),
+      everyPage((query) => listRegions({ client, query }), {}),
+      everyPage((query) => listOrganizations({ client, query }), {}),
+      everyPage((query) => listTeams({ client, query }), {}),
     ]);
     const region = await choose("region", "Region of the new project", await closestFirst(regions));
     step("Region", region.name);
@@ -300,7 +300,7 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
       say("Log in to Meilisearch Cloud in your browser. Without an account, you create one there.");
       await logInWithBrowser(this.env, true, this.userAgent, detail);
       await this.connectManagement();
-      me = await getApiV2Me({ client: this.managementClient });
+      me = await getMe({ client: this.managementClient });
     }
     step("Logged in", me.email);
   }
@@ -309,7 +309,7 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
   private async loggedInUser(): Promise<{ email: string } | undefined> {
     try {
       await this.connectManagement();
-      return await getApiV2Me({ client: this.managementClient });
+      return await getMe({ client: this.managementClient });
     } catch (error) {
       const refused =
         error instanceof MeiliCliError
@@ -333,15 +333,15 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
   ): Promise<Project> {
     const client = this.managementClient;
     const resources = await everyPage(
-      (query) => getApiV2Resources({ client, query: { ...query, regionId } }),
-      { page: 1 },
+      (query) => listResources({ client, query: { ...query, regionId } }),
+      {},
     );
     let name = firstName;
     const trialId = resources.find((resource) => resource.plan === "free_trial")?.id;
     let resourceId = trialId ?? (await choosePlan(resources, "This region has no free trial."));
     for (;;) {
       try {
-        const project = await postApiV2Projects({
+        const project = await createProject({
           client,
           body: { name, teamId: team.id, resourceId },
         });

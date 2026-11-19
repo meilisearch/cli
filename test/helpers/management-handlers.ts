@@ -35,7 +35,7 @@ export const project: Project = {
   status: "running",
   paused: false,
   createdAt: "2026-10-14T10:00:00Z",
-  resource: { id: 3, name: "build", displayName: "Build", plan: "build", regionId: 1 },
+  resource: { id: 3, name: "build", displayName: "Build", plan: "build_plan", regionId: 1 },
 };
 
 /** The resource of `project`, as `GET /api/v2/resources` returns it. */
@@ -43,7 +43,7 @@ export const resource: Resource = {
   id: 3,
   name: "build",
   displayName: "Build",
-  plan: "build",
+  plan: "build_plan",
   regionId: 1,
   storage: 10,
   memory: 1,
@@ -66,6 +66,7 @@ export const region: Region = {
   name: "San Francisco",
   awsRegion: "us-west-1",
   countryCode: "US",
+  greenLabel: false,
   regionUrl: "sfo.meilisearch.io",
 };
 
@@ -76,16 +77,14 @@ export const organization: Organization = {
   identifier: "acme",
   ownerId: "user-1",
   isAdmin: true,
-  defaultTeamId: 12,
-  customerTier: null,
 };
 
-/** An error body as the document describes it: the same shape as a Meilisearch one. */
+/** The 403 of a right the token lacks, such as reading a master key without owning the team. */
 export const forbidden: ApiError = {
-  message: "You cannot access this project.",
-  code: "project_not_accessible",
-  type: "auth",
-  link: "https://www.meilisearch.com/docs/reference/errors#project_not_accessible",
+  message: "You are not allowed to perform this action.",
+  code: "forbidden",
+  type: "invalid_request",
+  link: "https://www.meilisearch.com/docs/reference/errors#forbidden",
 };
 
 /** The 404 of a team route on an id the token does not see. */
@@ -96,23 +95,25 @@ export const teamNotFound: ApiError = {
   link: "https://www.meilisearch.com/docs/reference/errors#team_not_found",
 };
 
-/** The 403 of the master key route to a member who is not an owner. */
-export const notOwner: ApiError = {
-  message: "Only team and organization owners can read the master key.",
-  code: "not_an_owner",
-  type: "auth",
-  link: "https://www.meilisearch.com/docs/reference/errors#not_an_owner",
+/** The 404 of a project route on an id the token does not see. */
+export const projectNotFound: ApiError = {
+  message: "Project not found.",
+  code: "project_not_found",
+  type: "invalid_request",
+  link: "https://www.meilisearch.com/docs/reference/errors#project_not_found",
 };
 
-/** Page `page` of `items`, `limit` per page, in the envelope of the document. */
-function onePage<T>(items: T[], page: number, limit: number) {
-  return {
-    page,
-    limit,
-    total: items.length,
-    totalPages: Math.max(1, Math.ceil(items.length / limit)),
-    results: items.slice((page - 1) * limit, page * limit),
-  };
+/** The 404 of an organization route on an id the token does not see. */
+export const organizationNotFound: ApiError = {
+  message: "Organization not found.",
+  code: "organization_not_found",
+  type: "invalid_request",
+  link: "https://www.meilisearch.com/docs/reference/errors#organization_not_found",
+};
+
+/** `limit` items of `items` from `offset`, in the envelope of the document. */
+function onePage<T>(items: T[], offset: number, limit: number) {
+  return { offset, limit, total: items.length, results: items.slice(offset, offset + limit) };
 }
 
 /** What a handler saw: the URL, the `Authorization` header and the parsed body. */
@@ -140,7 +141,7 @@ export const managementHandlers = {
       const query = new URL(request.url).searchParams;
       const teamId = query.get("teamId");
       const matching = all.filter((each) => teamId === null || String(each.teamId) === teamId);
-      return HttpResponse.json(onePage(matching, Number(query.get("page") ?? "1"), limit));
+      return HttpResponse.json(onePage(matching, Number(query.get("offset") ?? "0"), limit));
     }),
 
   /** `GET /api/v2/resources` answering the resources of `all` in the `regionId` asked if any, on one page. */
@@ -151,12 +152,15 @@ export const managementHandlers = {
       const matching = all.filter(
         (each) => regionId === null || String(each.regionId) === regionId,
       );
-      return HttpResponse.json(onePage(matching, 1, 20));
+      return HttpResponse.json(onePage(matching, 0, 20));
     }),
 
   /** `GET /api/v2/teams` answering `all` on one page. */
-  listTeams: (all: Team[] = [team]) =>
-    http.get(`${MANAGEMENT_URL}/api/v2/teams`, () => HttpResponse.json(onePage(all, 1, 20))),
+  listTeams: (all: Team[] = [team], received: ReceivedRequest[] = []) =>
+    http.get(`${MANAGEMENT_URL}/api/v2/teams`, async ({ request }) => {
+      await record(received, request);
+      return HttpResponse.json(onePage(all, 0, 20));
+    }),
 
   /** `GET /api/v2/teams/{id}` answering `team` with the id asked. */
   getTeam: () =>
@@ -180,7 +184,7 @@ export const managementHandlers = {
 
   /** `GET /api/v2/regions` answering `all` on one page. */
   listRegions: (all: Region[]) =>
-    http.get(`${MANAGEMENT_URL}/api/v2/regions`, () => HttpResponse.json(onePage(all, 1, 20))),
+    http.get(`${MANAGEMENT_URL}/api/v2/regions`, () => HttpResponse.json(onePage(all, 0, 20))),
 
   /**
    * `GET /api/v2/projects/{projectId}/master-key` answering the project of
@@ -191,7 +195,7 @@ export const managementHandlers = {
       await record(received, request);
       const found = all.find((each) => String(each.id) === params.id);
       return found === undefined
-        ? HttpResponse.json(notOwner, { status: 403 })
+        ? HttpResponse.json(forbidden, { status: 403 })
         : HttpResponse.json({ ...found, masterKey: `masterKey-${found.id}` });
     }),
 
@@ -202,12 +206,12 @@ export const managementHandlers = {
       return HttpResponse.json({ ...project, ...attributes }, { status: 201 });
     }),
 
-  /** `GET /api/v2/projects/{id}` answering the project of `all` with that id, or the API's 403. */
+  /** `GET /api/v2/projects/{id}` answering the project of `all` with that id, or the API's 404. */
   getProject: (all: Project[]) =>
     http.get(`${MANAGEMENT_URL}/api/v2/projects/:id`, ({ params }) => {
       const found = all.find((project) => String(project.id) === params.id);
       return found === undefined
-        ? HttpResponse.json(forbidden, { status: 403 })
+        ? HttpResponse.json(projectNotFound, { status: 404 })
         : HttpResponse.json(found);
     }),
 
@@ -228,15 +232,15 @@ export const managementHandlers = {
   /** `GET /api/v2/organizations` answering `all` on one page. */
   listOrganizations: (all: Organization[]) =>
     http.get(`${MANAGEMENT_URL}/api/v2/organizations`, () =>
-      HttpResponse.json(onePage(all, 1, 20)),
+      HttpResponse.json(onePage(all, 0, 20)),
     ),
 
-  /** `GET /api/v2/organizations/{id}` answering the organization of `all` with that id, or the API's 403. */
+  /** `GET /api/v2/organizations/{id}` answering the organization of `all` with that id, or the API's 404. */
   getOrganization: (all: Organization[]) =>
     http.get(`${MANAGEMENT_URL}/api/v2/organizations/:id`, ({ params }) => {
       const found = all.find((each) => String(each.id) === params.id);
       return found === undefined
-        ? HttpResponse.json(forbidden, { status: 403 })
+        ? HttpResponse.json(organizationNotFound, { status: 404 })
         : HttpResponse.json(found);
     }),
 

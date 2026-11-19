@@ -7,7 +7,7 @@
  */
 import { rmSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { getApiV2Me } from "./clients/management/generated/sdk.gen.js";
+import { getMe } from "./clients/management/generated/sdk.gen.js";
 import { createManagementClient } from "./clients/management.js";
 import { type OauthClient, type OauthSession, refreshAccessToken } from "./clients/oauth.js";
 import {
@@ -213,5 +213,5 @@ export function sessionUser(session: OauthSession, userAgent: string) {
     token: session.accessToken,
     userAgent,
   });
-  return getApiV2Me({ client });
+  return getMe({ client });
 }

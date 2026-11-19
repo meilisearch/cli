@@ -9,11 +9,11 @@ exports[`meili team list > exits 6 on a 401 without a body 1`] = `
 }
 `;
 
-exports[`meili team list > lists the teams in the envelope the API returns, with no paging flag yet 1`] = `
+exports[`meili team list > lists the teams in the envelope the API returns 1`] = `
 {
   "exitCode": 0,
   "stderr": "",
-  "stdout": "{"page":1,"limit":20,"total":2,"totalPages":1,"results":[{"id":12,"name":"Search","organizationId":1,"ownerId":"user-1","isAdmin":true},{"id":13,"name":"Docs","organizationId":1,"ownerId":"user-1","isAdmin":true}]}
+  "stdout": "{"offset":0,"limit":20,"total":2,"results":[{"id":12,"name":"Search","organizationId":1,"ownerId":"user-1","isAdmin":true},{"id":13,"name":"Docs","organizationId":1,"ownerId":"user-1","isAdmin":true}]}
 ",
 }
 `;
@@ -22,14 +22,20 @@ exports[`meili team list > prints its help without any network call 1`] = `
 "List the Meilisearch Cloud teams.
 
 USAGE
-  $ meili team list [--json] [--no-color] [--debug]
+  $ meili team list [--json] [--no-color] [--debug] [--organization-id
+    <id>] [--limit <n>] [--offset <n>] [--all]
 
 OUTPUT FLAGS
   --json      Print compact JSON. The default when stdout is not a terminal.
   --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
-  --debug  Print every HTTP request and response on stderr, secrets redacted.
+  --all                   Fetch every page, and print them as one list.
+  --debug                 Print every HTTP request and response on stderr,
+                          secrets redacted.
+  --limit=<n>             Passed to the API.
+  --offset=<n>            Passed to the API.
+  --organization-id=<id>  Only the teams of this organization.
 
 DESCRIPTION
   List the Meilisearch Cloud teams.
@@ -38,6 +44,8 @@ DESCRIPTION
 
 EXAMPLES
   $ meili team list
+
+  $ meili team list --organization-id 1
 
 "
 `;

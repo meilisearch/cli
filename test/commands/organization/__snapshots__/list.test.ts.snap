@@ -9,25 +9,25 @@ exports[`meili organization list > exits 6 on a 401 without a body 1`] = `
 }
 `;
 
-exports[`meili organization list > lists the organizations in the envelope the API returns, with no paging flag yet 1`] = `
+exports[`meili organization list > lists the organizations in the envelope the API returns 1`] = `
 {
   "exitCode": 0,
   "stderr": "",
-  "stdout": "{"page":1,"limit":20,"total":2,"totalPages":1,"results":[{"id":1,"name":"Acme","identifier":"acme","ownerId":"user-1","isAdmin":true,"defaultTeamId":12,"customerTier":null},{"id":2,"name":"Beta","identifier":"beta","ownerId":"user-1","isAdmin":false,"defaultTeamId":12,"customerTier":null}]}
+  "stdout": "{"offset":0,"limit":20,"total":2,"results":[{"id":1,"name":"Acme","identifier":"acme","ownerId":"user-1","isAdmin":true},{"id":2,"name":"Beta","identifier":"beta","ownerId":"user-1","isAdmin":false}]}
 ",
 }
 `;
 
-exports[`meili organization list > prints a table for a human in a terminal, isAdmin in place of ownerId, no customerTier 1`] = `
+exports[`meili organization list > prints a table for a human in a terminal, isAdmin in place of ownerId 1`] = `
 {
   "exitCode": 0,
   "stderr": "Showing 2 of 2
-page 1 • limit 20 • totalPages 1
+offset 0 • limit 20
 
 ",
-  "stdout": "ID  NAME  IDENTIFIER  IS_ADMIN  DEFAULT_TEAM_ID
-1   Acme  acme        true      12
-2   Beta  beta        false     12
+  "stdout": "ID  NAME  IDENTIFIER  IS_ADMIN
+1   Acme  acme        true
+2   Beta  beta        false
 ",
 }
 `;
@@ -36,14 +36,19 @@ exports[`meili organization list > prints its help without any network call 1`] 
 "List the Meilisearch Cloud organizations.
 
 USAGE
-  $ meili organization list [--json] [--no-color] [--debug]
+  $ meili organization list [--json] [--no-color] [--debug] [--limit <n>]
+    [--offset <n>] [--all]
 
 OUTPUT FLAGS
   --json      Print compact JSON. The default when stdout is not a terminal.
   --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
-  --debug  Print every HTTP request and response on stderr, secrets redacted.
+  --all         Fetch every page, and print them as one list.
+  --debug       Print every HTTP request and response on stderr, secrets
+                redacted.
+  --limit=<n>   Passed to the API.
+  --offset=<n>  Passed to the API.
 
 DESCRIPTION
   List the Meilisearch Cloud organizations.

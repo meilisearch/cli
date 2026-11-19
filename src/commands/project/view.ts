@@ -1,6 +1,6 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { getApiV2ProjectsById } from "../../lib/clients/management/generated/sdk.gen.js";
+import { getProject } from "../../lib/clients/management/generated/sdk.gen.js";
 import { itemView, projectSummary } from "../../lib/human.js";
 
 export default class ProjectView extends BaseCommand {
@@ -29,7 +29,7 @@ export default class ProjectView extends BaseCommand {
   async run(): Promise<void> {
     const { flags } = await this.parse(ProjectView);
     await this.output(
-      await getApiV2ProjectsById({
+      await getProject({
         client: this.managementClient,
         path: { id: this.cloudProjectId(flags.id) },
       }),

@@ -1,7 +1,7 @@
 import { Flags } from "@oclif/core";
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { postApiV2Projects } from "../../lib/clients/management/generated/sdk.gen.js";
-import type { PostApiV2ProjectsData } from "../../lib/clients/management/generated/types.gen.js";
+import { createProject } from "../../lib/clients/management/generated/sdk.gen.js";
+import type { CreateProjectData } from "../../lib/clients/management/generated/types.gen.js";
 import { cloudOf, readTeamNames, waitForProject } from "../../lib/cloud-sync.js";
 import { assertNoProject, type ConfigFile, maskSecret, writeConfigFile } from "../../lib/config.js";
 import { MeiliCliError } from "../../lib/errors.js";
@@ -58,7 +58,7 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
       teamId: flags["team-id"],
       resourceId: flags["resource-id"],
       msVersion: flags["ms-version"],
-    }) as NonNullable<PostApiV2ProjectsData["body"]>;
+    }) as NonNullable<CreateProjectData["body"]>;
 
     // The entry takes the name checked here, whatever name the API answers.
     let sync: { file: ConfigFile; entry: string } | undefined;
@@ -73,7 +73,7 @@ Creates it in a team, on a resource. The master key is printed masked: give --sy
       assertNoProject(file, body.name, ": nothing was created.");
       sync = { file, entry: body.name };
     }
-    const created = await postApiV2Projects({ client: this.managementClient, body });
+    const created = await createProject({ client: this.managementClient, body });
     const project =
       timeoutMs === undefined
         ? created

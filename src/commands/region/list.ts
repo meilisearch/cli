@@ -1,5 +1,5 @@
 import { type Api, BaseCommand } from "../../lib/base-command.js";
-import { getApiV2Regions } from "../../lib/clients/management/generated/sdk.gen.js";
+import { listRegions } from "../../lib/clients/management/generated/sdk.gen.js";
 
 export default class RegionList extends BaseCommand {
   static api: Api = "management";
@@ -12,8 +12,16 @@ The regions where a project can run.`;
 
   static override examples = ["<%= config.bin %> <%= command.id %>"];
 
+  static override flags = {
+    ...BaseCommand.paginationFlags,
+  };
+
   async run(): Promise<void> {
-    await this.parse(RegionList);
-    await this.output(await getApiV2Regions({ client: this.managementClient }));
+    const { flags } = await this.parse(RegionList);
+    await this.outputList(
+      (query) => listRegions({ client: this.managementClient, query }),
+      { limit: flags.limit, offset: flags.offset },
+      flags.all,
+    );
   }
 }

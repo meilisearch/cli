@@ -106,9 +106,9 @@ describe("meili project add", () => {
     );
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(result.stderr).warning).toMatchObject({
-      code: "project_not_accessible",
+      code: "forbidden",
       message:
-        "The team names could not be read, the entries are written without teamName: You cannot access this project.",
+        "The team names could not be read, the entries are written without teamName: You are not allowed to perform this action.",
     });
     expect(readJson(path)).toEqual({
       projects: {

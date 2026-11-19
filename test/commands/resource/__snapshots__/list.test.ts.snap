@@ -9,11 +9,11 @@ exports[`meili resource list > fails with cli_auth_missing and exit 3 without a 
 }
 `;
 
-exports[`meili resource list > lists the resources in the envelope the API returns, with no paging flag yet 1`] = `
+exports[`meili resource list > lists the resources in the envelope the API returns 1`] = `
 {
   "exitCode": 0,
   "stderr": "",
-  "stdout": "{"page":1,"limit":20,"total":2,"totalPages":1,"results":[{"id":3,"name":"build","displayName":"Build","plan":"build","regionId":1,"storage":10,"memory":1,"vcpu":0.5,"fullPlan":null},{"id":7,"name":"build","displayName":"Build","plan":"build","regionId":2,"storage":10,"memory":1,"vcpu":0.5,"fullPlan":null}]}
+  "stdout": "{"offset":0,"limit":20,"total":2,"results":[{"id":3,"name":"build","displayName":"Build","plan":"build_plan","regionId":1,"storage":10,"memory":1,"vcpu":0.5,"fullPlan":null},{"id":7,"name":"build","displayName":"Build","plan":"build_plan","regionId":2,"storage":10,"memory":1,"vcpu":0.5,"fullPlan":null}]}
 ",
 }
 `;
@@ -23,14 +23,22 @@ exports[`meili resource list > prints its help without any network call 1`] = `
 
 USAGE
   $ meili resource list [--json] [--no-color] [--debug] [--region-id <id>]
+    [--plan legacy|build_plan|pro_plan|custom_plan|grow_plan|free_trial|enterpri
+    se_plan|resource_based_plan] [--limit <n>] [--offset <n>] [--all]
 
 OUTPUT FLAGS
   --json      Print compact JSON. The default when stdout is not a terminal.
   --no-color  Print without colors. NO_COLOR does the same.
 
 FLAGS
+  --all             Fetch every page, and print them as one list.
   --debug           Print every HTTP request and response on stderr, secrets
                     redacted.
+  --limit=<n>       Passed to the API.
+  --offset=<n>      Passed to the API.
+  --plan=<option>   Only the resources of this plan.
+                    <options: legacy|build_plan|pro_plan|custom_plan|grow_plan|f
+                    ree_trial|enterprise_plan|resource_based_plan>
   --region-id=<id>  Only the resources of this region.
 
 DESCRIPTION
@@ -42,6 +50,8 @@ EXAMPLES
   $ meili resource list
 
   $ meili resource list --region-id 1
+
+  $ meili resource list --plan resource_based_plan
 
 "
 `;

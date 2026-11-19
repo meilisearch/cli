@@ -3,7 +3,7 @@
 exports[`meili config set > keeps the key given, and writes the entry without a key, with a warning, when the master key is not readable 1`] = `
 {
   "exitCode": 0,
-  "stderr": "{"warning":{"code":"not_an_owner","type":"auth","message":"No master key for project 343 (demo): only an owner of its team or organization can read it.","link":"https://www.meilisearch.com/docs/reference/errors#not_an_owner","hint":"Ask an owner of the team for a key, then run \`meili config update --project member --project-api-key -\`."}}
+  "stderr": "{"warning":{"code":"forbidden","type":"invalid_request","message":"No master key for project 343 (demo): only an owner of its team or organization can read it.","link":"https://www.meilisearch.com/docs/reference/errors#forbidden","hint":"Ask an owner of the team for a key, then run \`meili config update --project member --project-api-key -\`."}}
 ",
   "stdout": "",
 }

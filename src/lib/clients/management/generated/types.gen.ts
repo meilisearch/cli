@@ -19,7 +19,7 @@ export type Error = {
      */
     link: string;
     /**
-     * Per-field details, only present on `validation_failed`.
+     * Request fields the error is about. Present whenever the error involves request fields.
      */
     details?: Array<{
         field: string;
@@ -32,13 +32,12 @@ export type Error = {
  * Envelope of every list response, the items being in `results`.
  */
 export type Pagination = {
-    page: number;
+    offset: number;
     limit: number;
     /**
-     * Number of items matching the request, all pages included.
+     * Number of items matching the request.
      */
     total: number;
-    totalPages: number;
 };
 
 export type Organization = {
@@ -47,8 +46,6 @@ export type Organization = {
     identifier: string;
     ownerId: string;
     isAdmin: boolean;
-    defaultTeamId: number | null;
-    customerTier: string | null;
 };
 
 export type Team = {
@@ -61,20 +58,30 @@ export type Team = {
 
 export type TeamMember = {
     /**
-     * User's uuid, null for pending invitations
+     * Identifies the member or the pending invitation, e.g. to remove it
      */
-    id?: string | null;
+    id: string;
     email: string;
-    name?: string | null;
-    isOwner?: boolean | null;
+    /**
+     * `null` for a pending invitation.
+     */
+    name: string | null;
+    /**
+     * Whether the member owns the team.
+     */
+    isOwner: boolean;
     status: 'accepted' | 'invited';
-    invitedAt?: string | null;
+    /**
+     * `null` for an accepted member.
+     */
+    invitedAt: string | null;
 };
 
 export type PlanFeature = {
-    id?: string | null;
+    id: number;
     name: string;
-    kind: string;
+    kind: 'base' | 'search' | 'document' | 'storage' | 'instance_runtime' | 'chat_token' | 'bandwidth' | 'backup';
+    stripePriceId: string | null;
     enabled: boolean;
     nickname?: string | null;
     description?: string | null;
@@ -90,23 +97,24 @@ export type PlanFeature = {
     } | null;
 };
 
-export type Plan = {
-    id: number;
-    name: string;
-    code: string;
-    features: Array<PlanFeature>;
-};
-
 export type Resource = {
     id: number;
     name: string;
     displayName?: string | null;
-    plan: string;
+    plan: 'legacy' | 'build_plan' | 'pro_plan' | 'custom_plan' | 'grow_plan' | 'free_trial' | 'enterprise_plan' | 'resource_based_plan';
     regionId: number;
     storage?: number | null;
     memory?: number | null;
     vcpu?: number | null;
-    fullPlan?: Plan | null;
+    /**
+     * Plan and pricing of the resource. `null` when the resource has no public plan.
+     */
+    fullPlan?: {
+        id: number;
+        name: string;
+        code: string;
+        features: Array<PlanFeature>;
+    } | null;
 };
 
 export type Region = {
@@ -114,7 +122,7 @@ export type Region = {
     name: string;
     awsRegion: string;
     countryCode: string;
-    greenLabel?: boolean;
+    greenLabel: boolean;
     regionUrl: string;
 };
 
@@ -137,7 +145,7 @@ export type Project = {
     resourceId: number;
     msVersion: string;
     readOnly: boolean;
-    status: string;
+    status: 'creating' | 'waiting_for_end_of_dns_ttl' | 'health_checking' | 'running' | 'changing_plan' | 'updating' | 'restoring' | 'failed' | 'update_failed' | 'paused';
     paused: boolean;
     createdAt: string;
     terminatedAt?: string | null;
@@ -187,7 +195,7 @@ export type ProjectCostItem = {
      */
     resourceId?: number;
     quantity: number;
-    unit: 'hour' | 'GB-month' | 'MiB' | 'document-month' | 'search' | 'token' | 'month';
+    unit: 'hour' | 'GB-month' | 'MB' | 'document-month' | 'search' | 'token' | 'month';
     unitPrice: number;
     /**
      * quantity × unitPrice
@@ -205,30 +213,36 @@ export type ProjectCost = {
 };
 
 /**
- * Page to return, starting at 1.
+ * Number of items to skip.
  */
-export type Page = number;
+export type Offset = number;
 
 /**
- * Number of items per page. Values above the maximum are capped to it.
+ * Maximum number of items to return. Values above the maximum are capped to it.
  */
 export type Limit = number;
 
-export type GetApiV2MeData = {
+export type GetMeData = {
     body?: never;
     path?: never;
     query?: never;
     url: '/api/v2/me';
 };
 
-export type GetApiV2MeErrors = {
+export type GetMeErrors = {
     /**
-     * unauthorized
+     * Unauthorized
      */
-    401: unknown;
+    401: Error;
+    /**
+     * Too Many Requests
+     */
+    429: Error;
 };
 
-export type GetApiV2MeResponses = {
+export type GetMeError = GetMeErrors[keyof GetMeErrors];
+
+export type GetMeResponses = {
     /**
      * current user identity
      */
@@ -239,32 +253,34 @@ export type GetApiV2MeResponses = {
     };
 };
 
-export type GetApiV2MeResponse = GetApiV2MeResponses[keyof GetApiV2MeResponses];
+export type GetMeResponse = GetMeResponses[keyof GetMeResponses];
 
-export type GetApiV2MeilisearchVersionsData = {
+export type ListMeilisearchVersionsData = {
     body?: never;
     path?: never;
     query?: {
         /**
-         * Page to return, starting at 1.
+         * Number of items to skip.
          */
-        page?: number;
+        offset?: number;
         /**
-         * Number of items per page. Values above the maximum are capped to it.
+         * Maximum number of items to return. Values above the maximum are capped to it.
          */
         limit?: number;
     };
     url: '/api/v2/meilisearch-versions';
 };
 
-export type GetApiV2MeilisearchVersionsErrors = {
+export type ListMeilisearchVersionsErrors = {
     /**
-     * unauthorized
+     * Unauthorized
      */
-    401: unknown;
+    401: Error;
 };
 
-export type GetApiV2MeilisearchVersionsResponses = {
+export type ListMeilisearchVersionsError = ListMeilisearchVersionsErrors[keyof ListMeilisearchVersionsErrors];
+
+export type ListMeilisearchVersionsResponses = {
     /**
      * meilisearch versions list
      */
@@ -273,32 +289,34 @@ export type GetApiV2MeilisearchVersionsResponses = {
     };
 };
 
-export type GetApiV2MeilisearchVersionsResponse = GetApiV2MeilisearchVersionsResponses[keyof GetApiV2MeilisearchVersionsResponses];
+export type ListMeilisearchVersionsResponse = ListMeilisearchVersionsResponses[keyof ListMeilisearchVersionsResponses];
 
-export type GetApiV2OrganizationsData = {
+export type ListOrganizationsData = {
     body?: never;
     path?: never;
     query?: {
         /**
-         * Page to return, starting at 1.
+         * Number of items to skip.
          */
-        page?: number;
+        offset?: number;
         /**
-         * Number of items per page. Values above the maximum are capped to it.
+         * Maximum number of items to return. Values above the maximum are capped to it.
          */
         limit?: number;
     };
     url: '/api/v2/organizations';
 };
 
-export type GetApiV2OrganizationsErrors = {
+export type ListOrganizationsErrors = {
     /**
-     * unauthorized
+     * Unauthorized
      */
-    401: unknown;
+    401: Error;
 };
 
-export type GetApiV2OrganizationsResponses = {
+export type ListOrganizationsError = ListOrganizationsErrors[keyof ListOrganizationsErrors];
+
+export type ListOrganizationsResponses = {
     /**
      * organizations list
      */
@@ -307,9 +325,9 @@ export type GetApiV2OrganizationsResponses = {
     };
 };
 
-export type GetApiV2OrganizationsResponse = GetApiV2OrganizationsResponses[keyof GetApiV2OrganizationsResponses];
+export type ListOrganizationsResponse = ListOrganizationsResponses[keyof ListOrganizationsResponses];
 
-export type DeleteApiV2OrganizationsByIdData = {
+export type DeleteOrganizationData = {
     body?: never;
     path: {
         id: number;
@@ -318,29 +336,37 @@ export type DeleteApiV2OrganizationsByIdData = {
     url: '/api/v2/organizations/{id}';
 };
 
-export type DeleteApiV2OrganizationsByIdErrors = {
+export type DeleteOrganizationErrors = {
     /**
-     * not the organization owner
+     * Unauthorized
      */
-    403: unknown;
+    401: Error;
     /**
-     * Organization deletion has project
+     * Forbidden
+     */
+    403: Error;
+    /**
+     * Not Found
+     */
+    404: Error;
+    /**
+     * Unprocessable Content
      */
     422: Error;
 };
 
-export type DeleteApiV2OrganizationsByIdError = DeleteApiV2OrganizationsByIdErrors[keyof DeleteApiV2OrganizationsByIdErrors];
+export type DeleteOrganizationError = DeleteOrganizationErrors[keyof DeleteOrganizationErrors];
 
-export type DeleteApiV2OrganizationsByIdResponses = {
+export type DeleteOrganizationResponses = {
     /**
      * organization deleted
      */
     204: void;
 };
 
-export type DeleteApiV2OrganizationsByIdResponse = DeleteApiV2OrganizationsByIdResponses[keyof DeleteApiV2OrganizationsByIdResponses];
+export type DeleteOrganizationResponse = DeleteOrganizationResponses[keyof DeleteOrganizationResponses];
 
-export type GetApiV2OrganizationsByIdData = {
+export type GetOrganizationData = {
     body?: never;
     path: {
         id: number;
@@ -349,23 +375,29 @@ export type GetApiV2OrganizationsByIdData = {
     url: '/api/v2/organizations/{id}';
 };
 
-export type GetApiV2OrganizationsByIdErrors = {
+export type GetOrganizationErrors = {
     /**
-     * organization not accessible
+     * Unauthorized
      */
-    403: unknown;
+    401: Error;
+    /**
+     * Not Found
+     */
+    404: Error;
 };
 
-export type GetApiV2OrganizationsByIdResponses = {
+export type GetOrganizationError = GetOrganizationErrors[keyof GetOrganizationErrors];
+
+export type GetOrganizationResponses = {
     /**
      * organization found
      */
     200: Organization;
 };
 
-export type GetApiV2OrganizationsByIdResponse = GetApiV2OrganizationsByIdResponses[keyof GetApiV2OrganizationsByIdResponses];
+export type GetOrganizationResponse = GetOrganizationResponses[keyof GetOrganizationResponses];
 
-export type PatchApiV2OrganizationsByIdData = {
+export type UpdateOrganizationData = {
     body?: {
         name?: string;
     };
@@ -376,29 +408,37 @@ export type PatchApiV2OrganizationsByIdData = {
     url: '/api/v2/organizations/{id}';
 };
 
-export type PatchApiV2OrganizationsByIdErrors = {
+export type UpdateOrganizationErrors = {
     /**
-     * not the organization owner
+     * Unauthorized
      */
-    403: unknown;
+    401: Error;
     /**
-     * Validation failed
+     * Forbidden
+     */
+    403: Error;
+    /**
+     * Not Found
+     */
+    404: Error;
+    /**
+     * Unprocessable Content
      */
     422: Error;
 };
 
-export type PatchApiV2OrganizationsByIdError = PatchApiV2OrganizationsByIdErrors[keyof PatchApiV2OrganizationsByIdErrors];
+export type UpdateOrganizationError = UpdateOrganizationErrors[keyof UpdateOrganizationErrors];
 
-export type PatchApiV2OrganizationsByIdResponses = {
+export type UpdateOrganizationResponses = {
     /**
      * organization updated
      */
     200: Organization;
 };
 
-export type PatchApiV2OrganizationsByIdResponse = PatchApiV2OrganizationsByIdResponses[keyof PatchApiV2OrganizationsByIdResponses];
+export type UpdateOrganizationResponse = UpdateOrganizationResponses[keyof UpdateOrganizationResponses];
 
-export type GetApiV2ProjectsByProjectIdCostData = {
+export type GetProjectCostData = {
     body?: never;
     path: {
         projectId: number;
@@ -416,31 +456,33 @@ export type GetApiV2ProjectsByProjectIdCostData = {
     url: '/api/v2/projects/{projectId}/cost';
 };
 
-export type GetApiV2ProjectsByProjectIdCostErrors = {
+export type GetProjectCostErrors = {
     /**
-     * unauthorized
+     * Unauthorized
      */
-    401: unknown;
+    401: Error;
     /**
-     * project not accessible
+     * Not Found
      */
-    403: unknown;
+    404: Error;
     /**
-     * invalid window: from after to, larger than 93 days or not an ISO 8601 date
+     * Unprocessable Content
      */
-    422: unknown;
+    422: Error;
 };
 
-export type GetApiV2ProjectsByProjectIdCostResponses = {
+export type GetProjectCostError = GetProjectCostErrors[keyof GetProjectCostErrors];
+
+export type GetProjectCostResponses = {
     /**
      * project estimated cost
      */
     200: ProjectCost;
 };
 
-export type GetApiV2ProjectsByProjectIdCostResponse = GetApiV2ProjectsByProjectIdCostResponses[keyof GetApiV2ProjectsByProjectIdCostResponses];
+export type GetProjectCostResponse = GetProjectCostResponses[keyof GetProjectCostResponses];
 
-export type GetApiV2ProjectsByProjectIdMasterKeyData = {
+export type GetProjectMasterKeyData = {
     body?: never;
     path: {
         projectId: number;
@@ -449,27 +491,33 @@ export type GetApiV2ProjectsByProjectIdMasterKeyData = {
     url: '/api/v2/projects/{projectId}/master-key';
 };
 
-export type GetApiV2ProjectsByProjectIdMasterKeyErrors = {
+export type GetProjectMasterKeyErrors = {
     /**
-     * unauthorized
+     * Unauthorized
      */
-    401: unknown;
+    401: Error;
     /**
-     * not a team or organization owner
+     * Forbidden
      */
-    403: unknown;
+    403: Error;
+    /**
+     * Not Found
+     */
+    404: Error;
 };
 
-export type GetApiV2ProjectsByProjectIdMasterKeyResponses = {
+export type GetProjectMasterKeyError = GetProjectMasterKeyErrors[keyof GetProjectMasterKeyErrors];
+
+export type GetProjectMasterKeyResponses = {
     /**
      * project with master key
      */
     200: Project;
 };
 
-export type GetApiV2ProjectsByProjectIdMasterKeyResponse = GetApiV2ProjectsByProjectIdMasterKeyResponses[keyof GetApiV2ProjectsByProjectIdMasterKeyResponses];
+export type GetProjectMasterKeyResponse = GetProjectMasterKeyResponses[keyof GetProjectMasterKeyResponses];
 
-export type PatchApiV2ProjectsByProjectIdMasterKeyData = {
+export type RotateProjectMasterKeyData = {
     body?: never;
     path: {
         projectId: number;
@@ -478,31 +526,37 @@ export type PatchApiV2ProjectsByProjectIdMasterKeyData = {
     url: '/api/v2/projects/{projectId}/master-key';
 };
 
-export type PatchApiV2ProjectsByProjectIdMasterKeyErrors = {
+export type RotateProjectMasterKeyErrors = {
     /**
-     * unauthorized
+     * Unauthorized
      */
-    401: unknown;
+    401: Error;
     /**
-     * not a team or organization owner
+     * Forbidden
      */
-    403: unknown;
+    403: Error;
     /**
-     * project not running
+     * Not Found
      */
-    423: unknown;
+    404: Error;
+    /**
+     * Locked
+     */
+    423: Error;
 };
 
-export type PatchApiV2ProjectsByProjectIdMasterKeyResponses = {
+export type RotateProjectMasterKeyError = RotateProjectMasterKeyErrors[keyof RotateProjectMasterKeyErrors];
+
+export type RotateProjectMasterKeyResponses = {
     /**
      * master key rotated, instance restarting
      */
     202: Project;
 };
 
-export type PatchApiV2ProjectsByProjectIdMasterKeyResponse = PatchApiV2ProjectsByProjectIdMasterKeyResponses[keyof PatchApiV2ProjectsByProjectIdMasterKeyResponses];
+export type RotateProjectMasterKeyResponse = RotateProjectMasterKeyResponses[keyof RotateProjectMasterKeyResponses];
 
-export type PatchApiV2ProjectsByProjectIdPlanData = {
+export type ChangeProjectPlanData = {
     body: {
         resourceId: number;
     };
@@ -513,31 +567,37 @@ export type PatchApiV2ProjectsByProjectIdPlanData = {
     url: '/api/v2/projects/{projectId}/plan';
 };
 
-export type PatchApiV2ProjectsByProjectIdPlanErrors = {
+export type ChangeProjectPlanErrors = {
     /**
-     * unauthorized
+     * Unauthorized
      */
-    401: unknown;
+    401: Error;
     /**
-     * organization not self-serve
+     * Forbidden
      */
-    403: unknown;
+    403: Error;
     /**
-     * project in failed state
+     * Not Found
      */
-    422: unknown;
+    404: Error;
+    /**
+     * Unprocessable Content
+     */
+    422: Error;
 };
 
-export type PatchApiV2ProjectsByProjectIdPlanResponses = {
+export type ChangeProjectPlanError = ChangeProjectPlanErrors[keyof ChangeProjectPlanErrors];
+
+export type ChangeProjectPlanResponses = {
     /**
      * plan change started
      */
     202: Project;
 };
 
-export type PatchApiV2ProjectsByProjectIdPlanResponse = PatchApiV2ProjectsByProjectIdPlanResponses[keyof PatchApiV2ProjectsByProjectIdPlanResponses];
+export type ChangeProjectPlanResponse = ChangeProjectPlanResponses[keyof ChangeProjectPlanResponses];
 
-export type GetApiV2ProjectsByProjectIdUsageData = {
+export type GetProjectUsageData = {
     body?: never;
     path: {
         projectId: number;
@@ -555,31 +615,33 @@ export type GetApiV2ProjectsByProjectIdUsageData = {
     url: '/api/v2/projects/{projectId}/usage';
 };
 
-export type GetApiV2ProjectsByProjectIdUsageErrors = {
+export type GetProjectUsageErrors = {
     /**
-     * unauthorized
+     * Unauthorized
      */
-    401: unknown;
+    401: Error;
     /**
-     * project not accessible
+     * Not Found
      */
-    403: unknown;
+    404: Error;
     /**
-     * invalid window: from after to, larger than 93 days or not an ISO 8601 date
+     * Unprocessable Content
      */
-    422: unknown;
+    422: Error;
 };
 
-export type GetApiV2ProjectsByProjectIdUsageResponses = {
+export type GetProjectUsageError = GetProjectUsageErrors[keyof GetProjectUsageErrors];
+
+export type GetProjectUsageResponses = {
     /**
      * project usage
      */
     200: ProjectUsage;
 };
 
-export type GetApiV2ProjectsByProjectIdUsageResponse = GetApiV2ProjectsByProjectIdUsageResponses[keyof GetApiV2ProjectsByProjectIdUsageResponses];
+export type GetProjectUsageResponse = GetProjectUsageResponses[keyof GetProjectUsageResponses];
 
-export type PatchApiV2ProjectsByProjectIdVersionData = {
+export type UpgradeProjectVersionData = {
     body: {
         version: string;
     };
@@ -590,59 +652,74 @@ export type PatchApiV2ProjectsByProjectIdVersionData = {
     url: '/api/v2/projects/{projectId}/version';
 };
 
-export type PatchApiV2ProjectsByProjectIdVersionErrors = {
+export type UpgradeProjectVersionErrors = {
     /**
-     * unauthorized
+     * Unauthorized
      */
-    401: unknown;
+    401: Error;
     /**
-     * project not accessible
+     * Not Found
      */
-    403: unknown;
+    404: Error;
     /**
-     * already running this version
+     * Unprocessable Content
      */
-    422: unknown;
+    422: Error;
     /**
-     * manual update disabled
+     * Locked
      */
-    423: unknown;
+    423: Error;
 };
 
-export type PatchApiV2ProjectsByProjectIdVersionResponses = {
+export type UpgradeProjectVersionError = UpgradeProjectVersionErrors[keyof UpgradeProjectVersionErrors];
+
+export type UpgradeProjectVersionResponses = {
     /**
      * version upgrade started
      */
     202: Project;
 };
 
-export type PatchApiV2ProjectsByProjectIdVersionResponse = PatchApiV2ProjectsByProjectIdVersionResponses[keyof PatchApiV2ProjectsByProjectIdVersionResponses];
+export type UpgradeProjectVersionResponse = UpgradeProjectVersionResponses[keyof UpgradeProjectVersionResponses];
 
-export type GetApiV2ProjectsData = {
+export type ListProjectsData = {
     body?: never;
     path?: never;
     query?: {
         /**
-         * Page to return, starting at 1.
+         * Number of items to skip.
          */
-        page?: number;
+        offset?: number;
         /**
-         * Number of items per page. Values above the maximum are capped to it.
+         * Maximum number of items to return. Values above the maximum are capped to it.
          */
         limit?: number;
+        /**
+         * Only returns the projects of this team.
+         */
         teamId?: number;
+        /**
+         * Also returns terminated projects, e.g. to read their usage until termination.
+         */
+        includeTerminated?: boolean;
     };
     url: '/api/v2/projects';
 };
 
-export type GetApiV2ProjectsErrors = {
+export type ListProjectsErrors = {
     /**
-     * unauthorized
+     * Bad Request
      */
-    401: unknown;
+    400: Error;
+    /**
+     * Unauthorized
+     */
+    401: Error;
 };
 
-export type GetApiV2ProjectsResponses = {
+export type ListProjectsError = ListProjectsErrors[keyof ListProjectsErrors];
+
+export type ListProjectsResponses = {
     /**
      * projects list
      */
@@ -651,13 +728,16 @@ export type GetApiV2ProjectsResponses = {
     };
 };
 
-export type GetApiV2ProjectsResponse = GetApiV2ProjectsResponses[keyof GetApiV2ProjectsResponses];
+export type ListProjectsResponse = ListProjectsResponses[keyof ListProjectsResponses];
 
-export type PostApiV2ProjectsData = {
+export type CreateProjectData = {
     body: {
         name: string;
         teamId: number;
         resourceId: number;
+        /**
+         * Name of an active Meilisearch version, as listed by `GET /meilisearch-versions`. Defaults to the latest version.
+         */
         msVersion?: string;
     };
     path?: never;
@@ -665,33 +745,37 @@ export type PostApiV2ProjectsData = {
     url: '/api/v2/projects';
 };
 
-export type PostApiV2ProjectsErrors = {
+export type CreateProjectErrors = {
     /**
-     * Missing parameter
+     * Bad Request
      */
     400: Error;
     /**
-     * project limit reached
+     * Unauthorized
      */
-    403: unknown;
+    401: Error;
     /**
-     * invalid project attributes
+     * Forbidden
      */
-    422: unknown;
+    403: Error;
+    /**
+     * Unprocessable Content
+     */
+    422: Error;
 };
 
-export type PostApiV2ProjectsError = PostApiV2ProjectsErrors[keyof PostApiV2ProjectsErrors];
+export type CreateProjectError = CreateProjectErrors[keyof CreateProjectErrors];
 
-export type PostApiV2ProjectsResponses = {
+export type CreateProjectResponses = {
     /**
      * project created
      */
     201: Project;
 };
 
-export type PostApiV2ProjectsResponse = PostApiV2ProjectsResponses[keyof PostApiV2ProjectsResponses];
+export type CreateProjectResponse = CreateProjectResponses[keyof CreateProjectResponses];
 
-export type DeleteApiV2ProjectsByIdData = {
+export type DeleteProjectData = {
     body?: never;
     path: {
         id: number;
@@ -700,23 +784,37 @@ export type DeleteApiV2ProjectsByIdData = {
     url: '/api/v2/projects/{id}';
 };
 
-export type DeleteApiV2ProjectsByIdErrors = {
+export type DeleteProjectErrors = {
     /**
-     * project not accessible
+     * Unauthorized
      */
-    403: unknown;
+    401: Error;
+    /**
+     * Forbidden
+     */
+    403: Error;
+    /**
+     * Not Found
+     */
+    404: Error;
+    /**
+     * Unprocessable Content
+     */
+    422: Error;
 };
 
-export type DeleteApiV2ProjectsByIdResponses = {
+export type DeleteProjectError = DeleteProjectErrors[keyof DeleteProjectErrors];
+
+export type DeleteProjectResponses = {
     /**
      * project deleted
      */
     204: void;
 };
 
-export type DeleteApiV2ProjectsByIdResponse = DeleteApiV2ProjectsByIdResponses[keyof DeleteApiV2ProjectsByIdResponses];
+export type DeleteProjectResponse = DeleteProjectResponses[keyof DeleteProjectResponses];
 
-export type GetApiV2ProjectsByIdData = {
+export type GetProjectData = {
     body?: never;
     path: {
         id: number;
@@ -725,23 +823,29 @@ export type GetApiV2ProjectsByIdData = {
     url: '/api/v2/projects/{id}';
 };
 
-export type GetApiV2ProjectsByIdErrors = {
+export type GetProjectErrors = {
     /**
-     * project not accessible
+     * Unauthorized
      */
-    403: unknown;
+    401: Error;
+    /**
+     * Not Found
+     */
+    404: Error;
 };
 
-export type GetApiV2ProjectsByIdResponses = {
+export type GetProjectError = GetProjectErrors[keyof GetProjectErrors];
+
+export type GetProjectResponses = {
     /**
      * project found
      */
     200: Project;
 };
 
-export type GetApiV2ProjectsByIdResponse = GetApiV2ProjectsByIdResponses[keyof GetApiV2ProjectsByIdResponses];
+export type GetProjectResponse = GetProjectResponses[keyof GetProjectResponses];
 
-export type PatchApiV2ProjectsByIdData = {
+export type UpdateProjectData = {
     body: {
         name: string;
     };
@@ -752,56 +856,66 @@ export type PatchApiV2ProjectsByIdData = {
     url: '/api/v2/projects/{id}';
 };
 
-export type PatchApiV2ProjectsByIdErrors = {
+export type UpdateProjectErrors = {
     /**
-     * project not accessible
+     * Bad Request
      */
-    403: unknown;
+    400: Error;
     /**
-     * invalid project attributes
+     * Unauthorized
      */
-    422: unknown;
+    401: Error;
+    /**
+     * Not Found
+     */
+    404: Error;
+    /**
+     * Unprocessable Content
+     */
+    422: Error;
 };
 
-export type PatchApiV2ProjectsByIdResponses = {
+export type UpdateProjectError = UpdateProjectErrors[keyof UpdateProjectErrors];
+
+export type UpdateProjectResponses = {
     /**
      * project updated
      */
     200: Project;
 };
 
-export type PatchApiV2ProjectsByIdResponse = PatchApiV2ProjectsByIdResponses[keyof PatchApiV2ProjectsByIdResponses];
+export type UpdateProjectResponse = UpdateProjectResponses[keyof UpdateProjectResponses];
 
-export type GetApiV2RegionsData = {
+export type ListRegionsData = {
     body?: never;
     path?: never;
     query?: {
         /**
-         * Page to return, starting at 1.
+         * Number of items to skip.
          */
-        page?: number;
+        offset?: number;
         /**
-         * Number of items per page. Values above the maximum are capped to it.
+         * Maximum number of items to return. Values above the maximum are capped to it.
          */
         limit?: number;
     };
     url: '/api/v2/regions';
 };
 
-export type GetApiV2RegionsErrors = {
+export type ListRegionsErrors = {
     /**
-     * Invalid limit
+     * Bad Request
      */
     400: Error;
     /**
-     * unauthorized
+     * Unauthorized
      */
-    401: unknown;
+    401: Error;
 };
 
-export type GetApiV2RegionsError = GetApiV2RegionsErrors[keyof GetApiV2RegionsErrors];
+export type ListRegionsError = ListRegionsErrors[keyof ListRegionsErrors];
 
-export type GetApiV2RegionsResponses = {
+export type ListRegionsResponses = {
     /**
      * regions list
      */
@@ -810,33 +924,39 @@ export type GetApiV2RegionsResponses = {
     };
 };
 
-export type GetApiV2RegionsResponse = GetApiV2RegionsResponses[keyof GetApiV2RegionsResponses];
+export type ListRegionsResponse = ListRegionsResponses[keyof ListRegionsResponses];
 
-export type GetApiV2ResourcesData = {
+export type ListResourcesData = {
     body?: never;
     path?: never;
     query?: {
         /**
-         * Page to return, starting at 1.
+         * Number of items to skip.
          */
-        page?: number;
+        offset?: number;
         /**
-         * Number of items per page. Values above the maximum are capped to it.
+         * Maximum number of items to return. Values above the maximum are capped to it.
          */
         limit?: number;
         regionId?: number;
+        /**
+         * Only returns the resources of this plan.
+         */
+        plan?: 'legacy' | 'build_plan' | 'pro_plan' | 'custom_plan' | 'grow_plan' | 'free_trial' | 'enterprise_plan' | 'resource_based_plan';
     };
     url: '/api/v2/resources';
 };
 
-export type GetApiV2ResourcesErrors = {
+export type ListResourcesErrors = {
     /**
-     * unauthorized
+     * Unauthorized
      */
-    401: unknown;
+    401: Error;
 };
 
-export type GetApiV2ResourcesResponses = {
+export type ListResourcesError = ListResourcesErrors[keyof ListResourcesErrors];
+
+export type ListResourcesResponses = {
     /**
      * resources list
      */
@@ -845,75 +965,40 @@ export type GetApiV2ResourcesResponses = {
     };
 };
 
-export type GetApiV2ResourcesResponse = GetApiV2ResourcesResponses[keyof GetApiV2ResourcesResponses];
+export type ListResourcesResponse = ListResourcesResponses[keyof ListResourcesResponses];
 
-export type DeleteApiV2TeamMembersData = {
-    body: {
-        teamId: number;
-        email: string;
-    };
-    path?: never;
-    query?: never;
-    url: '/api/v2/team-members';
-};
-
-export type DeleteApiV2TeamMembersErrors = {
-    /**
-     * Missing parameter
-     */
-    400: Error;
-    /**
-     * not the team or organization owner
-     */
-    403: unknown;
-    /**
-     * Team user is not member
-     */
-    422: Error;
-};
-
-export type DeleteApiV2TeamMembersError = DeleteApiV2TeamMembersErrors[keyof DeleteApiV2TeamMembersErrors];
-
-export type DeleteApiV2TeamMembersResponses = {
-    /**
-     * member removed
-     */
-    204: void;
-};
-
-export type DeleteApiV2TeamMembersResponse = DeleteApiV2TeamMembersResponses[keyof DeleteApiV2TeamMembersResponses];
-
-export type GetApiV2TeamMembersData = {
+export type ListTeamMembersData = {
     body?: never;
-    path?: never;
-    query: {
+    path: {
+        teamId: number;
+    };
+    query?: {
         /**
-         * Page to return, starting at 1.
+         * Number of items to skip.
          */
-        page?: number;
+        offset?: number;
         /**
-         * Number of items per page. Values above the maximum are capped to it.
+         * Maximum number of items to return. Values above the maximum are capped to it.
          */
         limit?: number;
-        teamId: number;
     };
-    url: '/api/v2/team-members';
+    url: '/api/v2/teams/{teamId}/members';
 };
 
-export type GetApiV2TeamMembersErrors = {
+export type ListTeamMembersErrors = {
     /**
-     * Missing parameter
+     * Unauthorized
      */
-    400: Error;
+    401: Error;
     /**
-     * team not accessible
+     * Not Found
      */
-    403: unknown;
+    404: Error;
 };
 
-export type GetApiV2TeamMembersError = GetApiV2TeamMembersErrors[keyof GetApiV2TeamMembersErrors];
+export type ListTeamMembersError = ListTeamMembersErrors[keyof ListTeamMembersErrors];
 
-export type GetApiV2TeamMembersResponses = {
+export type ListTeamMembersResponses = {
     /**
      * team members list
      */
@@ -922,70 +1007,127 @@ export type GetApiV2TeamMembersResponses = {
     };
 };
 
-export type GetApiV2TeamMembersResponse = GetApiV2TeamMembersResponses[keyof GetApiV2TeamMembersResponses];
+export type ListTeamMembersResponse = ListTeamMembersResponses[keyof ListTeamMembersResponses];
 
-export type PostApiV2TeamMembersData = {
+export type InviteTeamMemberData = {
     body: {
-        teamId: number;
         email: string;
     };
-    path?: never;
+    path: {
+        teamId: number;
+    };
     query?: never;
-    url: '/api/v2/team-members';
+    url: '/api/v2/teams/{teamId}/members';
 };
 
-export type PostApiV2TeamMembersErrors = {
+export type InviteTeamMemberErrors = {
     /**
-     * Missing parameter
+     * Bad Request
      */
     400: Error;
     /**
-     * not the team or organization owner
+     * Unauthorized
      */
-    403: unknown;
+    401: Error;
     /**
-     * Team user is member already
+     * Forbidden
+     */
+    403: Error;
+    /**
+     * Not Found
+     */
+    404: Error;
+    /**
+     * Unprocessable Content
      */
     422: Error;
 };
 
-export type PostApiV2TeamMembersError = PostApiV2TeamMembersErrors[keyof PostApiV2TeamMembersErrors];
+export type InviteTeamMemberError = InviteTeamMemberErrors[keyof InviteTeamMemberErrors];
 
-export type PostApiV2TeamMembersResponses = {
+export type InviteTeamMemberResponses = {
     /**
      * member invited
      */
     201: TeamMember;
 };
 
-export type PostApiV2TeamMembersResponse = PostApiV2TeamMembersResponses[keyof PostApiV2TeamMembersResponses];
+export type InviteTeamMemberResponse = InviteTeamMemberResponses[keyof InviteTeamMemberResponses];
 
-export type GetApiV2TeamsData = {
+export type RemoveTeamMemberData = {
+    body?: never;
+    path: {
+        teamId: number;
+        /**
+         * The `id` of the member, as returned by the members list.
+         */
+        memberId: string;
+    };
+    query?: never;
+    url: '/api/v2/teams/{teamId}/members/{memberId}';
+};
+
+export type RemoveTeamMemberErrors = {
+    /**
+     * Unauthorized
+     */
+    401: Error;
+    /**
+     * Forbidden
+     */
+    403: Error;
+    /**
+     * Not Found
+     */
+    404: Error;
+    /**
+     * Unprocessable Content
+     */
+    422: Error;
+};
+
+export type RemoveTeamMemberError = RemoveTeamMemberErrors[keyof RemoveTeamMemberErrors];
+
+export type RemoveTeamMemberResponses = {
+    /**
+     * member removed
+     */
+    204: void;
+};
+
+export type RemoveTeamMemberResponse = RemoveTeamMemberResponses[keyof RemoveTeamMemberResponses];
+
+export type ListTeamsData = {
     body?: never;
     path?: never;
     query?: {
         /**
-         * Page to return, starting at 1.
+         * Number of items to skip.
          */
-        page?: number;
+        offset?: number;
         /**
-         * Number of items per page. Values above the maximum are capped to it.
+         * Maximum number of items to return. Values above the maximum are capped to it.
          */
         limit?: number;
+        organizationId?: number;
     };
     url: '/api/v2/teams';
 };
 
-export type GetApiV2TeamsErrors = {
+export type ListTeamsErrors = {
     /**
-     * Missing authorization header
+     * Bad Request
+     */
+    400: Error;
+    /**
+     * Unauthorized
      */
     401: Error;
 };
 
-export type GetApiV2TeamsError = GetApiV2TeamsErrors[keyof GetApiV2TeamsErrors];
+export type ListTeamsError = ListTeamsErrors[keyof ListTeamsErrors];
 
-export type GetApiV2TeamsResponses = {
+export type ListTeamsResponses = {
     /**
      * teams list
      */
@@ -994,9 +1136,9 @@ export type GetApiV2TeamsResponses = {
     };
 };
 
-export type GetApiV2TeamsResponse = GetApiV2TeamsResponses[keyof GetApiV2TeamsResponses];
+export type ListTeamsResponse = ListTeamsResponses[keyof ListTeamsResponses];
 
-export type PostApiV2TeamsData = {
+export type CreateTeamData = {
     body: {
         name: string;
         organizationId: number;
@@ -1006,33 +1148,41 @@ export type PostApiV2TeamsData = {
     url: '/api/v2/teams';
 };
 
-export type PostApiV2TeamsErrors = {
+export type CreateTeamErrors = {
     /**
-     * Missing parameter
+     * Bad Request
      */
     400: Error;
+    /**
+     * Unauthorized
+     */
+    401: Error;
     /**
      * Forbidden
      */
     403: Error;
     /**
-     * Validation failed
+     * Not Found
+     */
+    404: Error;
+    /**
+     * Unprocessable Content
      */
     422: Error;
 };
 
-export type PostApiV2TeamsError = PostApiV2TeamsErrors[keyof PostApiV2TeamsErrors];
+export type CreateTeamError = CreateTeamErrors[keyof CreateTeamErrors];
 
-export type PostApiV2TeamsResponses = {
+export type CreateTeamResponses = {
     /**
      * team created
      */
     201: Team;
 };
 
-export type PostApiV2TeamsResponse = PostApiV2TeamsResponses[keyof PostApiV2TeamsResponses];
+export type CreateTeamResponse = CreateTeamResponses[keyof CreateTeamResponses];
 
-export type DeleteApiV2TeamsByIdData = {
+export type DeleteTeamData = {
     body?: never;
     path: {
         id: number;
@@ -1041,29 +1191,37 @@ export type DeleteApiV2TeamsByIdData = {
     url: '/api/v2/teams/{id}';
 };
 
-export type DeleteApiV2TeamsByIdErrors = {
+export type DeleteTeamErrors = {
     /**
-     * Team not found
+     * Unauthorized
+     */
+    401: Error;
+    /**
+     * Forbidden
+     */
+    403: Error;
+    /**
+     * Not Found
      */
     404: Error;
     /**
-     * Team deletion has project
+     * Unprocessable Content
      */
     422: Error;
 };
 
-export type DeleteApiV2TeamsByIdError = DeleteApiV2TeamsByIdErrors[keyof DeleteApiV2TeamsByIdErrors];
+export type DeleteTeamError = DeleteTeamErrors[keyof DeleteTeamErrors];
 
-export type DeleteApiV2TeamsByIdResponses = {
+export type DeleteTeamResponses = {
     /**
      * team deleted
      */
     204: void;
 };
 
-export type DeleteApiV2TeamsByIdResponse = DeleteApiV2TeamsByIdResponses[keyof DeleteApiV2TeamsByIdResponses];
+export type DeleteTeamResponse = DeleteTeamResponses[keyof DeleteTeamResponses];
 
-export type GetApiV2TeamsByIdData = {
+export type GetTeamData = {
     body?: never;
     path: {
         id: number;
@@ -1072,25 +1230,33 @@ export type GetApiV2TeamsByIdData = {
     url: '/api/v2/teams/{id}';
 };
 
-export type GetApiV2TeamsByIdErrors = {
+export type GetTeamErrors = {
     /**
-     * Team not found
+     * Bad Request
+     */
+    400: Error;
+    /**
+     * Unauthorized
+     */
+    401: Error;
+    /**
+     * Not Found
      */
     404: Error;
 };
 
-export type GetApiV2TeamsByIdError = GetApiV2TeamsByIdErrors[keyof GetApiV2TeamsByIdErrors];
+export type GetTeamError = GetTeamErrors[keyof GetTeamErrors];
 
-export type GetApiV2TeamsByIdResponses = {
+export type GetTeamResponses = {
     /**
      * team found
      */
     200: Team;
 };
 
-export type GetApiV2TeamsByIdResponse = GetApiV2TeamsByIdResponses[keyof GetApiV2TeamsByIdResponses];
+export type GetTeamResponse = GetTeamResponses[keyof GetTeamResponses];
 
-export type PatchApiV2TeamsByIdData = {
+export type UpdateTeamData = {
     body?: {
         name?: string;
         /**
@@ -1105,28 +1271,36 @@ export type PatchApiV2TeamsByIdData = {
     url: '/api/v2/teams/{id}';
 };
 
-export type PatchApiV2TeamsByIdErrors = {
+export type UpdateTeamErrors = {
     /**
-     * Invalid body
+     * Bad Request
      */
     400: Error;
     /**
-     * Team not found
+     * Unauthorized
+     */
+    401: Error;
+    /**
+     * Forbidden
+     */
+    403: Error;
+    /**
+     * Not Found
      */
     404: Error;
     /**
-     * Validation failed
+     * Unprocessable Content
      */
     422: Error;
 };
 
-export type PatchApiV2TeamsByIdError = PatchApiV2TeamsByIdErrors[keyof PatchApiV2TeamsByIdErrors];
+export type UpdateTeamError = UpdateTeamErrors[keyof UpdateTeamErrors];
 
-export type PatchApiV2TeamsByIdResponses = {
+export type UpdateTeamResponses = {
     /**
      * team updated
      */
     200: Team;
 };
 
-export type PatchApiV2TeamsByIdResponse = PatchApiV2TeamsByIdResponses[keyof PatchApiV2TeamsByIdResponses];
+export type UpdateTeamResponse = UpdateTeamResponses[keyof UpdateTeamResponses];

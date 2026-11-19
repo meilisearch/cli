@@ -32,7 +32,7 @@ describe("meili organization view", () => {
     expect(result).toMatchSnapshot();
   });
 
-  it("passes the API's error body through on an organization it does not show, with exit 3", async () => {
+  it("passes the API's error body through on an organization it does not show, with exit 4", async () => {
     server.use(managementHandlers.getOrganization([organization]));
     const result = await runCommand(OrganizationView, ["--id", "999"], {
       env,

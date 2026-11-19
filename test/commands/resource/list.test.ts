@@ -22,18 +22,20 @@ describe("meili resource list", () => {
     expect(result.stdout).toMatchSnapshot();
   });
 
-  it("lists the resources in the envelope the API returns, with no paging flag yet", async () => {
+  it("lists the resources in the envelope the API returns", async () => {
     server.use(managementHandlers.listResources([resource, otherRegion]));
     const result = await runCommand(ResourceList, [], { env });
     expect(result).toMatchSnapshot();
   });
 
-  it("passes --region-id to the route", async () => {
+  it("passes --region-id and --plan to the route", async () => {
     const received: ReceivedRequest[] = [];
     server.use(managementHandlers.listResources([resource, otherRegion], received));
-    const result = await runCommand(ResourceList, ["--region-id", "2"], { env });
+    const result = await runCommand(ResourceList, ["--region-id", "2", "--plan", "build_plan"], {
+      env,
+    });
     expect(result.exitCode).toBe(0);
-    expect(received[0]?.url).toBe(`${MANAGEMENT_URL}/api/v2/resources?regionId=2`);
+    expect(received[0]?.url).toBe(`${MANAGEMENT_URL}/api/v2/resources?regionId=2&plan=build_plan`);
     expect(JSON.parse(result.stdout).results).toEqual([otherRegion]);
   });
 
