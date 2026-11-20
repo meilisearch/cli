@@ -26,17 +26,16 @@ export function nextOffsetQuery<Q extends OffsetQuery>(query: Q, page: ListPage)
   return done ? undefined : { ...query, offset };
 }
 
-/** Fetches page after page until `nextQuery` says there is no page left. */
-export async function* iteratePages<Q, P extends ListPage>(
+/** Fetches page after page until `total` is reached. */
+export async function* iteratePages<Q extends OffsetQuery, P extends ListPage>(
   fetchPage: (query: Q) => Promise<P>,
   query: Q,
-  nextQuery: (query: Q, page: ListPage) => Q | undefined,
 ): AsyncGenerator<P, void, undefined> {
   let current: Q | undefined = query;
   while (current !== undefined) {
     const page: P = await fetchPage(current);
     yield page;
-    current = nextQuery(current, page);
+    current = nextOffsetQuery(current, page);
   }
 }
 

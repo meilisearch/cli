@@ -39,13 +39,7 @@ import {
   writeData,
   writeView,
 } from "./output.js";
-import {
-  iteratePages,
-  type ListPage,
-  mergePages,
-  nextOffsetQuery,
-  type OffsetQuery,
-} from "./pagination.js";
+import { iteratePages, type ListPage, mergePages, type OffsetQuery } from "./pagination.js";
 import {
   credentialsFilePath,
   readCredentialsFile,
@@ -417,7 +411,7 @@ export abstract class BaseCommand extends Command {
       return;
     }
     const pages: P[] = [];
-    for await (const page of iteratePages(fetchPage, query, nextOffsetQuery)) pages.push(page);
+    for await (const page of iteratePages(fetchPage, query)) pages.push(page);
     // Typed as one page, though `mergePages` drops its `limit` and `offset`.
     await this.output(mergePages(pages) as P, view);
   }

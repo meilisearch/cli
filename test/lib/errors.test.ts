@@ -16,15 +16,9 @@ import {
   unknownCommand,
 } from "../../src/lib/errors.js";
 import { setOutputMode } from "../../src/lib/output.js";
+import { forbidden } from "../helpers/management-handlers.js";
 
 describe("ManagementApiError", () => {
-  const forbidden = {
-    message: "You cannot access this project.",
-    code: "project_not_accessible",
-    type: "auth",
-    link: "https://docs.meilisearch.com/errors#project_not_accessible",
-  };
-
   it("passes the API's error body through, like a Meilisearch one, with no hint on a 403", () => {
     const rendered = toRenderedError(
       new ManagementApiError(403, forbidden, "https://m/api/v2/projects/343"),

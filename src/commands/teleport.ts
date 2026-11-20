@@ -175,9 +175,9 @@ The same steps, without questions: ${WITHOUT_TELEPORT}`;
 
     status(() => "Loading the regions, the organizations and the teams");
     const [regions, organizations, teams] = await Promise.all([
-      everyPage((query) => listRegions({ client, query }), {}),
-      everyPage((query) => listOrganizations({ client, query }), {}),
-      everyPage((query) => listTeams({ client, query }), {}),
+      everyPage((query) => listRegions({ client, query })),
+      everyPage((query) => listOrganizations({ client, query })),
+      everyPage((query) => listTeams({ client, query })),
     ]);
     const region = await choose("region", "Region of the new project", await closestFirst(regions));
     step("Region", region.name);
@@ -332,9 +332,8 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
     dashboard: string,
   ): Promise<Project> {
     const client = this.managementClient;
-    const resources = await everyPage(
-      (query) => listResources({ client, query: { ...query, regionId } }),
-      {},
+    const resources = await everyPage((query) =>
+      listResources({ client, query: { ...query, regionId } }),
     );
     let name = firstName;
     const trialId = resources.find((resource) => resource.plan === "free_trial")?.id;

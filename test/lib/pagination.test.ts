@@ -28,15 +28,11 @@ describe("iteratePages", () => {
   it("fetches page after page and yields each one", async () => {
     const calls: number[] = [];
     const pages: unknown[][] = [];
-    for await (const page of iteratePages(
-      async (query: OffsetQuery) => {
-        const offset = query.offset ?? 0;
-        calls.push(offset);
-        return { results: [1, 2, 3, 4, 5].slice(offset, offset + 2), offset, limit: 2, total: 5 };
-      },
-      {},
-      nextOffsetQuery,
-    )) {
+    for await (const page of iteratePages(async (query: OffsetQuery) => {
+      const offset = query.offset ?? 0;
+      calls.push(offset);
+      return { results: [1, 2, 3, 4, 5].slice(offset, offset + 2), offset, limit: 2, total: 5 };
+    }, {})) {
       pages.push([...page.results]);
     }
     expect(calls).toEqual([0, 2, 4]);
