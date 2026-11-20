@@ -10,7 +10,7 @@ exports[`meili teleport > asks for another source when the key cannot export, th
   ✔ Logged in   ada@example.com
 
 [J  ⠋ Loading the regions, the organizations and the teams
-[J  ✔ Region      San Francisco
+[J  ✔ Region      Frankfurt
   ✔ Team        Search (Acme)
   Your free trial is already used. Get help to choose the right plan based on your usage here: https://www.meilisearch.com/pricing
   Add a payment method and an address at https://dashboard.test/teams/12/billing, then run \`meili teleport\` again.

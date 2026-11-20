@@ -89,7 +89,8 @@ const IDENTIFIERS: Record<string, { of: "own" | string; flag: "id" | "ids" }> = 
 
 // OpenAPI, the little the rules read from it
 
-type OpenApiParameter = { name: string; in: string } | { $ref: string };
+type InlineParameter = { name: string; in: string };
+type OpenApiParameter = InlineParameter | { $ref: string };
 
 interface OpenApiSchema {
   $ref?: string;
@@ -111,7 +112,7 @@ export interface OpenApiDocument {
   paths: Record<string, OpenApiPathItem>;
   components?: {
     schemas?: Record<string, OpenApiSchema>;
-    parameters?: Record<string, { name: string; in: string }>;
+    parameters?: Record<string, InlineParameter>;
     securitySchemes?: Record<string, { type?: string }>;
   };
 }
@@ -462,13 +463,17 @@ export function projectFlagForRoute(route: Route): "id" | "project-id" | undefin
   return resourceOf(commandId) === "project" && flags.includes("id") ? "id" : undefined;
 }
 
+/** The name a `$ref` points to under `components`: `"#/components/schemas/Team"` is `Team`. */
+function refName(ref: string): string {
+  return ref.split("/").at(-1) ?? "";
+}
+
 function resolveSchema(
   spec: OpenApiDocument,
   schema: OpenApiSchema | undefined,
 ): OpenApiSchema | undefined {
   if (schema?.$ref === undefined) return schema;
-  const name = schema.$ref.split("/").at(-1) ?? "";
-  return spec.components?.schemas?.[name];
+  return spec.components?.schemas?.[refName(schema.$ref)];
 }
 
 function schemaProperties(
@@ -508,9 +513,7 @@ export function flagsForRoute(spec: OpenApiDocument, route: Route, commandId: st
     ...(operation.parameters ?? []),
   ].flatMap((parameter) => {
     const resolved =
-      "$ref" in parameter
-        ? spec.components?.parameters?.[parameter.$ref.split("/").at(-1) ?? ""]
-        : parameter;
+      "$ref" in parameter ? spec.components?.parameters?.[refName(parameter.$ref)] : parameter;
     return resolved?.in === "query" ? [resolved.name] : [];
   });
 

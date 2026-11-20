@@ -9,6 +9,7 @@ import {
   MANAGEMENT_URL,
   managementEnv,
   managementHandlers,
+  organization,
   project,
   type ReceivedRequest,
   team,
@@ -106,6 +107,7 @@ const regions = [
     name: "San Francisco",
     awsRegion: "us-west-1",
     countryCode: "US",
+    greenLabel: false,
     regionUrl: "sfo.meilisearch.io",
   },
   {
@@ -121,10 +123,11 @@ const regions = [
     name: "Sydney",
     awsRegion: "ap-southeast-2",
     countryCode: "AU",
+    greenLabel: false,
     regionUrl: "syd.meilisearch.io",
   },
 ];
-const [sanFrancisco, frankfurt] = regions;
+const [, frankfurt] = regions;
 const missingPayload = {
   message: "A json payload is missing.",
   code: "missing_payload",
@@ -184,25 +187,21 @@ function cloud(
   created: ReceivedRequest[] = [],
   create = managementHandlers.createProject(created),
 ) {
-  const page = (results: unknown[]) =>
-    HttpResponse.json({ offset: 0, limit: 20, total: results.length, results });
   return [
     http.get(`${MANAGEMENT_URL}/api/v2/me`, () =>
       HttpResponse.json({ name: "Ada", email: "ada@example.com" }),
     ),
-    http.get(`${MANAGEMENT_URL}/api/v2/regions`, () => page(regions)),
-    http.get(`${MANAGEMENT_URL}/api/v2/organizations`, () =>
-      page([
-        { id: 1, name: "Acme", identifier: "acme" },
-        { id: 2, name: "Labs", identifier: "labs" },
-      ]),
-    ),
+    managementHandlers.listRegions(regions),
+    managementHandlers.listOrganizations([
+      organization,
+      { ...organization, id: 2, name: "Labs", identifier: "labs" },
+    ]),
     managementHandlers.listTeams([
       team,
       { ...team, id: 14, name: "Research", organizationId: 2 },
       { ...team, id: 13, name: "Other" },
     ]),
-    http.get(`${MANAGEMENT_URL}/api/v2/resources`, () => page([...plans, trial])),
+    managementHandlers.listResources([...plans, trial]),
     create,
     managementHandlers.getProject([{ ...project, name: "local-cloud" }]),
   ];
@@ -303,7 +302,7 @@ describe("meili teleport", () => {
       bad: { url: "http://bad.test:7700", apiKey: "nope" },
       local: { url: MEILISEARCH_URL, apiKey: "masterKey" },
     });
-    human.answers.push("local", sanFrancisco, team, "local-cloud", 4);
+    human.answers.push("local", frankfurt, team, "local-cloud", 4);
 
     const result = await runCommand(Teleport, ["--project", "bad"], {
       env: { ...env, ...configEnv },

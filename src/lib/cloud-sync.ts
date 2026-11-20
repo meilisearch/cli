@@ -14,19 +14,21 @@ import type { Pagination, Project } from "./clients/management/generated/types.g
 import type { ManagementClient } from "./clients/management.js";
 import { type CloudIdentifiers, type ProjectEntry, parseUrl } from "./config.js";
 import { ManagementApiError, MeiliCliError, toRenderedError, writeWarning } from "./errors.js";
-import { iteratePages, nextOffsetQuery, type OffsetQuery } from "./pagination.js";
+import { iteratePages, type OffsetQuery } from "./pagination.js";
 import { formatDuration, type PollOptions, pollUntil } from "./tasks.js";
 
 /** A project the CLI can write an entry for: one with a URL. */
 export type ReachableProject = Project & { url: string };
 
-/** Every item of a list route of the Management API, page after page. */
-export async function everyPage<Q extends OffsetQuery, T>(
-  fetchPage: (query: Q) => Promise<Pagination & { results: T[] }>,
-  query: Q,
+/**
+ * Every item of a list route of the Management API, page after page. The pages
+ * are as large as the API allows, to make as few requests as possible.
+ */
+export async function everyPage<T>(
+  fetchPage: (query: OffsetQuery) => Promise<Pagination & { results: T[] }>,
 ): Promise<T[]> {
   const items: T[] = [];
-  for await (const page of iteratePages(fetchPage, query, nextOffsetQuery)) {
+  for await (const page of iteratePages(fetchPage, { limit: 100 })) {
     items.push(...page.results);
   }
   return items;
@@ -34,7 +36,7 @@ export async function everyPage<Q extends OffsetQuery, T>(
 
 /** The projects the token sees, or the ones of a team. */
 export function listCloudProjects(client: ManagementClient, teamId?: number): Promise<Project[]> {
-  return everyPage((query) => listProjects({ client, query }), { offset: 0, teamId });
+  return everyPage((query) => listProjects({ client, query: { ...query, teamId } }));
 }
 
 /** The Cloud project whose URL has the scheme and host of `url`, or `cli_config`. */
@@ -66,7 +68,7 @@ function warnApiError(error: ManagementApiError, message: string, hint?: string)
  */
 export async function readTeamNames(client: ManagementClient): Promise<Map<number, string>> {
   try {
-    const teams = await everyPage((query) => listTeams({ client, query }), {});
+    const teams = await everyPage((query) => listTeams({ client, query }));
     return new Map(teams.map((team) => [team.id, team.name]));
   } catch (error) {
     if (!(error instanceof ManagementApiError)) throw error;
