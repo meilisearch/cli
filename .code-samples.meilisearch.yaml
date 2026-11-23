@@ -1154,3 +1154,35 @@ rbac_multi_level_1: |-
     --index documents \
     --q sensitive \
     --filter '_foreign(access, (user = "jeremy@meilisearch.com" AND roles IN ["editor", "owner"]) OR (teams IN ["product", "engineering"] AND roles IN ["editor"]))'
+management_list_organizations_1: |-
+  meili organization list
+management_get_organization_1: |-
+  meili organization view --id 1
+management_update_organization_1: |-
+  meili organization update --id 1 --name Acme
+management_delete_organization_1: |-
+  meili organization delete --id 1 --yes
+management_list_teams_1: |-
+  meili team list --organization-id 1
+management_create_team_1: |-
+  meili team add --name 'Search team' --organization-id 1
+management_get_team_1: |-
+  meili team view --id 12
+management_update_team_1: |-
+  meili team update --id 12 --name 'Search team'
+management_delete_team_1: |-
+  meili team delete --id 12 --yes
+management_list_projects_1: |-
+  meili project list --team-id 12
+management_create_project_1: |-
+  meili project add --name my-project --team-id 12 --resource-id 3
+management_get_project_1: |-
+  meili project view --id 343
+management_update_project_1: |-
+  meili project update --id 343 --name my-project
+management_delete_project_1: |-
+  meili project delete --id 343 --yes
+management_list_regions_1: |-
+  meili region list
+management_list_resources_1: |-
+  meili resource list --region-id 1
