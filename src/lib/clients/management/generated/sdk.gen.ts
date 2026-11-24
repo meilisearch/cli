@@ -19,7 +19,9 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 /**
- * Retrieves the authenticated user identity
+ * Get current user
+ *
+ * Returns the user the token authenticates as. Use it to check that a token is valid.
  */
 export const getMe = <ThrowOnError extends boolean = true>(options?: Options<GetMeData, ThrowOnError>): RequestResult<GetMeResponses, GetMeErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<GetMeResponses, GetMeErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -37,7 +39,9 @@ export const getMe = <ThrowOnError extends boolean = true>(options?: Options<Get
 });
 
 /**
- * Lists the active Meilisearch versions
+ * List Meilisearch versions
+ *
+ * Lists the Meilisearch versions you can create a project with or upgrade a project to.
  */
 export const listMeilisearchVersions = <ThrowOnError extends boolean = true>(options?: Options<ListMeilisearchVersionsData, ThrowOnError>): RequestResult<ListMeilisearchVersionsResponses, ListMeilisearchVersionsErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<ListMeilisearchVersionsResponses, ListMeilisearchVersionsErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -55,7 +59,9 @@ export const listMeilisearchVersions = <ThrowOnError extends boolean = true>(opt
 });
 
 /**
- * Lists organizations the authenticated user can access
+ * List organizations
+ *
+ * Lists the organizations the authenticated user owns or belongs to through a team.
  */
 export const listOrganizations = <ThrowOnError extends boolean = true>(options?: Options<ListOrganizationsData, ThrowOnError>): RequestResult<ListOrganizationsResponses, ListOrganizationsErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<ListOrganizationsResponses, ListOrganizationsErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -73,7 +79,9 @@ export const listOrganizations = <ThrowOnError extends boolean = true>(options?:
 });
 
 /**
- * Deletes an organization
+ * Delete organization
+ *
+ * Deletes an organization and its teams. Only the organization owner can delete it, once the organization has no active project.
  */
 export const deleteOrganization = <ThrowOnError extends boolean = true>(options: Options<DeleteOrganizationData, ThrowOnError>): RequestResult<DeleteOrganizationResponses, DeleteOrganizationErrors, ThrowOnError, 'data'> => (options.client ?? client).delete<DeleteOrganizationResponses, DeleteOrganizationErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -91,7 +99,9 @@ export const deleteOrganization = <ThrowOnError extends boolean = true>(options:
 });
 
 /**
- * Retrieves an organization
+ * Get organization
+ *
+ * Returns an organization the authenticated user can access.
  */
 export const getOrganization = <ThrowOnError extends boolean = true>(options: Options<GetOrganizationData, ThrowOnError>): RequestResult<GetOrganizationResponses, GetOrganizationErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetOrganizationResponses, GetOrganizationErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -109,7 +119,9 @@ export const getOrganization = <ThrowOnError extends boolean = true>(options: Op
 });
 
 /**
- * Updates an organization
+ * Update organization
+ *
+ * Renames an organization. Only the organization owner can update it.
  */
 export const updateOrganization = <ThrowOnError extends boolean = true>(options: Options<UpdateOrganizationData, ThrowOnError>): RequestResult<UpdateOrganizationResponses, UpdateOrganizationErrors, ThrowOnError, 'data'> => (options.client ?? client).patch<UpdateOrganizationResponses, UpdateOrganizationErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -131,9 +143,9 @@ export const updateOrganization = <ThrowOnError extends boolean = true>(options:
 });
 
 /**
- * Returns the estimated cost of a project usage
+ * Get project cost
  *
- * Gross estimation of the cost of the project usage over the window: quantity × unit price of the project plan, before free tiers shared across the organization, discounts and taxes. The window is the same as the usage one.
+ * Returns a gross estimation of the cost of a project usage over the window: quantity × unit price of the project plan, before free tiers shared across the organization, discounts and taxes. The window is the same as the usage one.
  */
 export const getProjectCost = <ThrowOnError extends boolean = true>(options: Options<GetProjectCostData, ThrowOnError>): RequestResult<GetProjectCostResponses, GetProjectCostErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetProjectCostResponses, GetProjectCostErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -151,9 +163,9 @@ export const getProjectCost = <ThrowOnError extends boolean = true>(options: Opt
 });
 
 /**
- * Retrieves a project with its master key
+ * Get project master key
  *
- * Returns the project including its current master key. Restricted to team and organization owners.
+ * Returns a project with its current master key. Only the team owner or the organization owner can read it.
  */
 export const getProjectMasterKey = <ThrowOnError extends boolean = true>(options: Options<GetProjectMasterKeyData, ThrowOnError>): RequestResult<GetProjectMasterKeyResponses, GetProjectMasterKeyErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetProjectMasterKeyResponses, GetProjectMasterKeyErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -171,7 +183,7 @@ export const getProjectMasterKey = <ThrowOnError extends boolean = true>(options
 });
 
 /**
- * Rotates the master key of a project
+ * Rotate project master key
  *
  * Generates a new master key and restarts the instance to apply it. The previous master key and every API key derived from it stop working.
  */
@@ -191,7 +203,9 @@ export const rotateProjectMasterKey = <ThrowOnError extends boolean = true>(opti
 });
 
 /**
- * Changes the plan (resource) of a project
+ * Update project plan
+ *
+ * Moves a project to another resource, which sets its machine size and plan. The change runs in the background: the project `status` is `changing_plan` until it is done. Only the team owner or the organization owner can change the plan.
  */
 export const changeProjectPlan = <ThrowOnError extends boolean = true>(options: Options<ChangeProjectPlanData, ThrowOnError>): RequestResult<ChangeProjectPlanResponses, ChangeProjectPlanErrors, ThrowOnError, 'data'> => (options.client ?? client).patch<ChangeProjectPlanResponses, ChangeProjectPlanErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -213,9 +227,9 @@ export const changeProjectPlan = <ThrowOnError extends boolean = true>(options: 
 });
 
 /**
- * Returns the daily usage of a project
+ * Get project usage
  *
- * Usage per UTC day. The window is clamped to the project lifetime, terminated projects included.
+ * Returns the usage of a project per UTC day: runtime, storage, bandwidth, documents, searches, and chat tokens. The window is clamped to the project lifetime, terminated projects included.
  */
 export const getProjectUsage = <ThrowOnError extends boolean = true>(options: Options<GetProjectUsageData, ThrowOnError>): RequestResult<GetProjectUsageResponses, GetProjectUsageErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetProjectUsageResponses, GetProjectUsageErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -233,7 +247,9 @@ export const getProjectUsage = <ThrowOnError extends boolean = true>(options: Op
 });
 
 /**
- * Upgrades the Meilisearch version of a project
+ * Upgrade project version
+ *
+ * Upgrades a project to a newer Meilisearch version. The upgrade runs in the background: the project `status` is `updating` until it is done. Downgrades are not supported: once upgraded, a project cannot go back to an older version. The project must be `running`.
  */
 export const upgradeProjectVersion = <ThrowOnError extends boolean = true>(options: Options<UpgradeProjectVersionData, ThrowOnError>): RequestResult<UpgradeProjectVersionResponses, UpgradeProjectVersionErrors, ThrowOnError, 'data'> => (options.client ?? client).patch<UpgradeProjectVersionResponses, UpgradeProjectVersionErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -255,7 +271,9 @@ export const upgradeProjectVersion = <ThrowOnError extends boolean = true>(optio
 });
 
 /**
- * Lists the projects of the accessible teams
+ * List projects
+ *
+ * Lists the projects of the teams the authenticated user can access. Terminated projects are only returned with `includeTerminated`.
  */
 export const listProjects = <ThrowOnError extends boolean = true>(options?: Options<ListProjectsData, ThrowOnError>): RequestResult<ListProjectsResponses, ListProjectsErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<ListProjectsResponses, ListProjectsErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -273,7 +291,9 @@ export const listProjects = <ThrowOnError extends boolean = true>(options?: Opti
 });
 
 /**
- * Creates a project in a team
+ * Create project
+ *
+ * Creates a Meilisearch project in a team. The response contains the master key. The instance is deployed in the background: its `status` is `creating` until it is `running`.
  */
 export const createProject = <ThrowOnError extends boolean = true>(options: Options<CreateProjectData, ThrowOnError>): RequestResult<CreateProjectResponses, CreateProjectErrors, ThrowOnError, 'data'> => (options.client ?? client).post<CreateProjectResponses, CreateProjectErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -295,7 +315,9 @@ export const createProject = <ThrowOnError extends boolean = true>(options: Opti
 });
 
 /**
- * Deletes a project
+ * Delete project
+ *
+ * Terminates a project and its Meilisearch instance. Only the team owner or the organization owner can delete it.
  */
 export const deleteProject = <ThrowOnError extends boolean = true>(options: Options<DeleteProjectData, ThrowOnError>): RequestResult<DeleteProjectResponses, DeleteProjectErrors, ThrowOnError, 'data'> => (options.client ?? client).delete<DeleteProjectResponses, DeleteProjectErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -313,9 +335,9 @@ export const deleteProject = <ThrowOnError extends boolean = true>(options: Opti
 });
 
 /**
- * Retrieves a project
+ * Get project
  *
- * Also returns a terminated project, e.g. to read its usage until termination.
+ * Returns a project, terminated projects included, e.g. to read their usage until termination. The response does not contain the master key.
  */
 export const getProject = <ThrowOnError extends boolean = true>(options: Options<GetProjectData, ThrowOnError>): RequestResult<GetProjectResponses, GetProjectErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetProjectResponses, GetProjectErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -333,7 +355,9 @@ export const getProject = <ThrowOnError extends boolean = true>(options: Options
 });
 
 /**
- * Updates a project
+ * Update project
+ *
+ * Renames a project. To change its plan or its Meilisearch version, use the dedicated routes.
  */
 export const updateProject = <ThrowOnError extends boolean = true>(options: Options<UpdateProjectData, ThrowOnError>): RequestResult<UpdateProjectResponses, UpdateProjectErrors, ThrowOnError, 'data'> => (options.client ?? client).patch<UpdateProjectResponses, UpdateProjectErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -355,7 +379,9 @@ export const updateProject = <ThrowOnError extends boolean = true>(options: Opti
 });
 
 /**
- * Lists the active regions
+ * List regions
+ *
+ * Lists the regions where you can create a project.
  */
 export const listRegions = <ThrowOnError extends boolean = true>(options?: Options<ListRegionsData, ThrowOnError>): RequestResult<ListRegionsResponses, ListRegionsErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<ListRegionsResponses, ListRegionsErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -373,7 +399,9 @@ export const listRegions = <ThrowOnError extends boolean = true>(options?: Optio
 });
 
 /**
- * Lists the active resources of active regions, with the pricing of public plans
+ * List resources
+ *
+ * Lists the machine sizes and plans you can create a project with or move a project to, with the pricing of public plans.
  */
 export const listResources = <ThrowOnError extends boolean = true>(options?: Options<ListResourcesData, ThrowOnError>): RequestResult<ListResourcesResponses, ListResourcesErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<ListResourcesResponses, ListResourcesErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -391,7 +419,9 @@ export const listResources = <ThrowOnError extends boolean = true>(options?: Opt
 });
 
 /**
- * Lists the members and pending invitees of a team
+ * List team members
+ *
+ * Lists the members of a team, then its pending invitations.
  */
 export const listTeamMembers = <ThrowOnError extends boolean = true>(options: Options<ListTeamMembersData, ThrowOnError>): RequestResult<ListTeamMembersResponses, ListTeamMembersErrors, ThrowOnError, 'data'> => (options.client ?? client).get<ListTeamMembersResponses, ListTeamMembersErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -409,7 +439,9 @@ export const listTeamMembers = <ThrowOnError extends boolean = true>(options: Op
 });
 
 /**
- * Invites a member to a team
+ * Add team member
+ *
+ * Adds a user to a team by email and notifies them. A user without a Meilisearch Cloud account stays a pending invitation until they sign up. Only the team owner or the organization owner can add members.
  */
 export const inviteTeamMember = <ThrowOnError extends boolean = true>(options: Options<InviteTeamMemberData, ThrowOnError>): RequestResult<InviteTeamMemberResponses, InviteTeamMemberErrors, ThrowOnError, 'data'> => (options.client ?? client).post<InviteTeamMemberResponses, InviteTeamMemberErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -431,7 +463,9 @@ export const inviteTeamMember = <ThrowOnError extends boolean = true>(options: O
 });
 
 /**
- * Removes a member from a team
+ * Remove team member
+ *
+ * Removes a member from a team, or cancels a pending invitation. The team owner cannot be removed.
  */
 export const removeTeamMember = <ThrowOnError extends boolean = true>(options: Options<RemoveTeamMemberData, ThrowOnError>): RequestResult<RemoveTeamMemberResponses, RemoveTeamMemberErrors, ThrowOnError, 'data'> => (options.client ?? client).delete<RemoveTeamMemberResponses, RemoveTeamMemberErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -449,7 +483,9 @@ export const removeTeamMember = <ThrowOnError extends boolean = true>(options: O
 });
 
 /**
- * Lists teams the authenticated user can access
+ * List teams
+ *
+ * Lists the teams the authenticated user can access, optionally only the ones of an organization.
  */
 export const listTeams = <ThrowOnError extends boolean = true>(options?: Options<ListTeamsData, ThrowOnError>): RequestResult<ListTeamsResponses, ListTeamsErrors, ThrowOnError, 'data'> => (options?.client ?? client).get<ListTeamsResponses, ListTeamsErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -467,7 +503,9 @@ export const listTeams = <ThrowOnError extends boolean = true>(options?: Options
 });
 
 /**
- * Creates a team
+ * Create team
+ *
+ * Creates a team in an organization, owned by the authenticated user. Only the organization owner can create teams.
  */
 export const createTeam = <ThrowOnError extends boolean = true>(options: Options<CreateTeamData, ThrowOnError>): RequestResult<CreateTeamResponses, CreateTeamErrors, ThrowOnError, 'data'> => (options.client ?? client).post<CreateTeamResponses, CreateTeamErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -489,7 +527,9 @@ export const createTeam = <ThrowOnError extends boolean = true>(options: Options
 });
 
 /**
- * Deletes a team
+ * Delete team
+ *
+ * Deletes a team that has no active project. Only the team owner or the organization owner can delete it.
  */
 export const deleteTeam = <ThrowOnError extends boolean = true>(options: Options<DeleteTeamData, ThrowOnError>): RequestResult<DeleteTeamResponses, DeleteTeamErrors, ThrowOnError, 'data'> => (options.client ?? client).delete<DeleteTeamResponses, DeleteTeamErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -507,7 +547,9 @@ export const deleteTeam = <ThrowOnError extends boolean = true>(options: Options
 });
 
 /**
- * Retrieves a team
+ * Get team
+ *
+ * Returns a team the authenticated user can access.
  */
 export const getTeam = <ThrowOnError extends boolean = true>(options: Options<GetTeamData, ThrowOnError>): RequestResult<GetTeamResponses, GetTeamErrors, ThrowOnError, 'data'> => (options.client ?? client).get<GetTeamResponses, GetTeamErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
@@ -525,7 +567,9 @@ export const getTeam = <ThrowOnError extends boolean = true>(options: Options<Ge
 });
 
 /**
- * Updates a team
+ * Update team
+ *
+ * Renames a team or transfers its ownership to one of its members. Only the team owner or the organization owner can update it.
  */
 export const updateTeam = <ThrowOnError extends boolean = true>(options: Options<UpdateTeamData, ThrowOnError>): RequestResult<UpdateTeamResponses, UpdateTeamErrors, ThrowOnError, 'data'> => (options.client ?? client).patch<UpdateTeamResponses, UpdateTeamErrors, ThrowOnError, 'data'>({
     responseStyle: 'data',
