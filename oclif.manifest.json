@@ -13855,6 +13855,210 @@
         "teleport.js"
       ]
     },
+    "trial:start": {
+      "aliases": [],
+      "args": {},
+      "description": "Start a free 14-day trial of Meilisearch Cloud.\n\nLogs in with a browser when no session exists, creating an account if needed. Then creates a free trial project, waits until it runs, and adds it to the config file with its master key. Prints the project, and never its master key. When a free trial project already exists, prints it with \"created\": false and creates nothing.",
+      "examples": [
+        "<%= config.bin %> <%= command.id %>",
+        "<%= config.bin %> <%= command.id %> --name my-app --region-id 2",
+        "<%= config.bin %> <%= command.id %> --team-id 12",
+        "<%= config.bin %> <%= command.id %> --no-login"
+      ],
+      "flags": {
+        "json": {
+          "description": "Print compact JSON. The default when stdout is not a terminal.",
+          "helpGroup": "OUTPUT",
+          "name": "json",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "no-color": {
+          "description": "Print without colors. NO_COLOR does the same.",
+          "helpGroup": "OUTPUT",
+          "name": "no-color",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "debug": {
+          "description": "Print every HTTP request and response on stderr, secrets redacted.",
+          "name": "debug",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name of the project. Default: the name of the current directory.",
+          "name": "name",
+          "hasDynamicHelp": false,
+          "helpValue": "<name>",
+          "multiple": false,
+          "type": "option"
+        },
+        "team-id": {
+          "description": "Team that owns the project. Required when the account has several teams.",
+          "name": "team-id",
+          "hasDynamicHelp": false,
+          "helpValue": "<id>",
+          "multiple": false,
+          "type": "option"
+        },
+        "region-id": {
+          "description": "Region of the project. Default: the closest region that offers a free trial.",
+          "name": "region-id",
+          "hasDynamicHelp": false,
+          "helpValue": "<id>",
+          "multiple": false,
+          "type": "option"
+        },
+        "login": {
+          "description": "Log in with a browser when no session exists. --no-login fails with cli_auth_missing instead.",
+          "name": "login",
+          "allowNo": true,
+          "type": "boolean"
+        }
+      },
+      "hasDynamicHelp": false,
+      "hiddenAliases": [],
+      "id": "trial:start",
+      "pluginAlias": "@meilisearch/cli",
+      "pluginName": "@meilisearch/cli",
+      "pluginType": "core",
+      "strict": true,
+      "enableJsonFlag": false,
+      "api": "none",
+      "routes": [],
+      "keyActions": [],
+      "alwaysJson": false,
+      "connectionFlags": {
+        "project-url": {
+          "description": "Project URL, the Meilisearch instance to talk to. One of --project or --project-url is required.",
+          "helpValue": "<url>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project-api-key": {
+          "description": "Project API key. `-` reads it from stdin.",
+          "helpValue": "<key>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "project": {
+          "char": "p",
+          "description": "A project of the config file. Cannot be combined with --project-url. One of --project or --project-url is required.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "cloudProjectFlags": {
+        "project": {
+          "char": "p",
+          "description": "A project of the config file, whose cloud.id names the Cloud project, in place of --id.",
+          "helpValue": "<name>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "syncWithCloudFlags": {
+        "sync-with-cloud": {
+          "description": "Write the entry's cloud identifiers from Meilisearch Cloud, and its master key when the entry has no key. Never replaces a key.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "waitFlags": {
+        "wait": {
+          "description": "Poll the task until it reaches a final status, then print the final task.",
+          "allowNo": false,
+          "type": "boolean"
+        },
+        "timeout": {
+          "description": "Maximum wait time, for example 30s, 2m. Default 10m. Only with --wait.",
+          "helpValue": "<duration>",
+          "dependsOn": [
+            "wait"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "paginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "offset": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "all": {
+          "description": "Fetch every page, and print them as one list.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "fromPaginationFlags": {
+        "limit": {
+          "description": "Passed to the API.",
+          "helpValue": "<n>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "from": {
+          "description": "Passed to the API: the uid the page starts at, going down.",
+          "helpValue": "<uid>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "bodyInputFlags": {
+        "file": {
+          "description": "Read the body from a file. `-` reads from stdin.",
+          "helpValue": "<path>",
+          "exclusive": [
+            "data"
+          ],
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        },
+        "data": {
+          "description": "Inline JSON body.",
+          "helpValue": "<json>",
+          "input": [],
+          "multiple": false,
+          "type": "option"
+        }
+      },
+      "confirmFlags": {
+        "yes": {
+          "required": true,
+          "description": "Confirm the deletion. Nothing is sent to the API without it.",
+          "allowNo": false,
+          "type": "boolean"
+        }
+      },
+      "isESM": true,
+      "relativePath": [
+        "dist",
+        "commands",
+        "trial",
+        "start.js"
+      ]
+    },
     "version": {
       "aliases": [],
       "args": {},

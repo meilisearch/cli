@@ -7,6 +7,7 @@
 import { Command, Errors, Flags, type Interfaces } from "@oclif/core";
 import type { EnqueuedTask, Meilisearch, Task } from "meilisearch";
 import { flagNames, sendAnalytics, track } from "./analytics.js";
+import { getMe } from "./clients/management/generated/sdk.gen.js";
 import { createManagementClient, type ManagementClient } from "./clients/management.js";
 import { createMeilisearchClient } from "./clients/meilisearch.js";
 import { installHttpTrace } from "./clients/trace.js";
@@ -23,6 +24,7 @@ import {
 } from "./config.js";
 import {
   EXIT_CODES,
+  ManagementApiError,
   MeiliCliError,
   toRenderedError,
   writeError,
@@ -31,6 +33,7 @@ import {
 } from "./errors.js";
 import { defaultView, itemView, taskOutcome } from "./human.js";
 import { readStdin } from "./input.js";
+import { logInWithBrowser } from "./login.js";
 import {
   type HumanView,
   outputMode,
@@ -301,6 +304,34 @@ export abstract class BaseCommand extends Command {
       ...credentials,
       userAgent: this.userAgent,
     });
+  }
+
+  /**
+   * The user of the stored session, or undefined when there is none or the
+   * server refuses it. `teleport` and `trial start` log in when it is undefined.
+   */
+  protected async loggedInUser(): Promise<{ email: string } | undefined> {
+    try {
+      await this.connectManagement();
+      return await getMe({ client: this.managementClient });
+    } catch (error) {
+      const refused =
+        error instanceof MeiliCliError
+          ? error.code === "cli_auth_missing" || error.code === "cli_auth_failed"
+          : error instanceof ManagementApiError && error.status === 401;
+      if (refused) return undefined;
+      throw error;
+    }
+  }
+
+  /**
+   * The browser login of `auth login`, then the client of the new session and
+   * its user. `say` writes the URL to approve for the human.
+   */
+  protected async logInWithBrowser(say?: (line: string) => void): Promise<{ email: string }> {
+    await logInWithBrowser(this.env, true, this.userAgent, say);
+    await this.connectManagement();
+    return getMe({ client: this.managementClient });
   }
 
   /** What both APIs see in their client header: `meili-cli (v1.2.3)`. */

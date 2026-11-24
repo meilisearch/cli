@@ -29,6 +29,15 @@ curl -fsSL https://raw.githubusercontent.com/meilisearch/cli/main/scripts/instal
 
 ## Get started
 
+**New to Meilisearch Cloud?** One command logs you in, or creates your account, in a browser. Then it creates a free 14-day trial project and adds it to the config file:
+
+```sh
+meili trial start
+meili index list --project <name>   # the name that trial start prints
+```
+
+It asks no question. `--name`, `--region-id` and `--team-id` change the defaults. Run it again: it returns the same project and creates nothing.
+
 **1. Log in to Meilisearch Cloud**, once, in a browser:
 
 ```sh

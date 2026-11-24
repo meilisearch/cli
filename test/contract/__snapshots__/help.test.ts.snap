@@ -34,6 +34,7 @@ CLI COMMANDS
             full.
   teleport  Move a self-hosted project to Meilisearch Cloud. Interactive
             command.
+  trial     start
   version   Print the CLI version and platform information.
 
 MEILISEARCH COMMANDS

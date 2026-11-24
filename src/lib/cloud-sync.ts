@@ -10,8 +10,9 @@ import {
   listProjects,
   listTeams,
 } from "./clients/management/generated/sdk.gen.js";
-import type { Pagination, Project } from "./clients/management/generated/types.gen.js";
+import type { Pagination, Project, Region } from "./clients/management/generated/types.gen.js";
 import type { ManagementClient } from "./clients/management.js";
+import { regionLatency } from "./clients/ping.js";
 import { type CloudIdentifiers, type ProjectEntry, parseUrl } from "./config.js";
 import { ManagementApiError, MeiliCliError, toRenderedError, writeWarning } from "./errors.js";
 import { iteratePages, type OffsetQuery } from "./pagination.js";
@@ -175,5 +176,17 @@ export function waitForProject(
         { hint: `Run \`meili project view --id ${id}\` to check its status.` },
       ),
     { ...options, initialIntervalMs: 1000, maxIntervalMs: 5000 },
+  );
+}
+
+/** The regions with their latency, the closest first. A region that does not answer comes last. */
+export async function byLatency(
+  regions: Region[],
+): Promise<Array<{ region: Region; latency: number | undefined }>> {
+  const measured = await Promise.all(
+    regions.map(async (region) => ({ region, latency: await regionLatency(region.regionUrl) })),
+  );
+  return measured.sort(
+    (a, b) => (a.latency ?? Number.POSITIVE_INFINITY) - (b.latency ?? Number.POSITIVE_INFINITY),
   );
 }

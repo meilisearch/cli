@@ -77,14 +77,22 @@ export class ManagementApiError extends Error {
   readonly status: number;
   readonly body: unknown;
   readonly url: string;
+  /** The CLI's hint, given by a command that knows the next step for this error. */
+  readonly hint: string | undefined;
 
-  constructor(status: number, body: unknown, url: string) {
+  constructor(status: number, body: unknown, url: string, hint?: string) {
     super(parseErrorBody(body)?.message ?? `The Management API answered HTTP ${status} to ${url}.`);
     this.name = "ManagementApiError";
     this.status = status;
     this.body = body;
     this.url = url;
+    this.hint = hint;
   }
+}
+
+/** The `code` of a Management API error body. */
+export function apiErrorCode(error: unknown): string | undefined {
+  return error instanceof ManagementApiError ? parseErrorBody(error.body)?.code : undefined;
 }
 
 /** The error object of either API, or undefined when the body is not one. */
@@ -188,11 +196,12 @@ export function toRenderedError(
       name: "Management API",
       // A 403 is a right the account lacks: no new credential grants it.
       hint: (status) =>
-        status !== 401
+        error.hint ??
+        (status !== 401
           ? undefined
           : managementTokenFromEnv
             ? "Unset or replace `MEILI_MANAGEMENT_TOKEN`: it is used in place of the session of `meili auth login`."
-            : "Run `meili auth login` to log in again.",
+            : "Run `meili auth login` to log in again."),
     });
   }
 
