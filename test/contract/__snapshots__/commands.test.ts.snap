@@ -3726,6 +3726,44 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
     },
     {
       "api": "none",
+      "description": "Start a free 14-day trial of Meilisearch Cloud.
+
+Logs in with a browser when no session exists, creating an account if needed. Then creates a free trial project, waits until it runs, and adds it to the config file with its master key. Prints the project, and never its master key. When a free trial project already exists, prints it with "created": false and creates nothing.",
+      "examples": [
+        "meili trial start",
+        "meili trial start --name my-app --region-id 2",
+        "meili trial start --team-id 12",
+        "meili trial start --no-login",
+      ],
+      "flags": [
+        {
+          "description": "Name of the project. Default: the name of the current directory.",
+          "helpValue": "<name>",
+          "name": "name",
+          "type": "option",
+        },
+        {
+          "description": "Team that owns the project. Required when the account has several teams.",
+          "helpValue": "<id>",
+          "name": "team-id",
+          "type": "option",
+        },
+        {
+          "description": "Region of the project. Default: the closest region that offers a free trial.",
+          "helpValue": "<id>",
+          "name": "region-id",
+          "type": "option",
+        },
+        {
+          "description": "Log in with a browser when no session exists. --no-login fails with cli_auth_missing instead.",
+          "name": "login",
+          "type": "boolean",
+        },
+      ],
+      "id": "trial start",
+    },
+    {
+      "api": "none",
       "description": "Print the CLI version and platform information.",
       "examples": [
         "meili version",
@@ -4119,6 +4157,10 @@ The same steps, without questions: Run \`meili auth login\`, then \`meili projec
       {
         "description": "Move a self-hosted project to Meilisearch Cloud. Interactive command.",
         "id": "teleport",
+      },
+      {
+        "description": "Start a free 14-day trial of Meilisearch Cloud.",
+        "id": "trial start",
       },
       {
         "description": "Print the CLI version and platform information.",

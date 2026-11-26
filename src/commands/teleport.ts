@@ -3,7 +3,6 @@ import { type Meilisearch, MeilisearchApiError } from "meilisearch";
 import { type Api, BaseCommand } from "../lib/base-command.js";
 import {
   createProject,
-  getMe,
   listOrganizations,
   listRegions,
   listResources,
@@ -17,17 +16,15 @@ import type {
   Team,
 } from "../lib/clients/management/generated/types.gen.js";
 import { probeExport, triggerExport } from "../lib/clients/meilisearch.js";
-import { regionLatency } from "../lib/clients/ping.js";
-import { cloudOf, everyPage, type ReachableProject, waitForProject } from "../lib/cloud-sync.js";
-import { assertNoProject, type ConfigFile, isProjectUrl, writeConfigFile } from "../lib/config.js";
 import {
-  EXIT_CODES,
-  ManagementApiError,
-  MeiliCliError,
-  parseErrorBody,
-  toRenderedError,
-} from "../lib/errors.js";
-import { logInWithBrowser } from "../lib/login.js";
+  byLatency,
+  cloudOf,
+  everyPage,
+  type ReachableProject,
+  waitForProject,
+} from "../lib/cloud-sync.js";
+import { assertNoProject, type ConfigFile, isProjectUrl, writeConfigFile } from "../lib/config.js";
+import { apiErrorCode, EXIT_CODES, MeiliCliError, toRenderedError } from "../lib/errors.js";
 import { resolveOauthClient } from "../lib/session.js";
 import { isTaskFailure, isTaskFinal, pollUntil } from "../lib/tasks.js";
 import {
@@ -298,26 +295,9 @@ ${paint("dim", `Tip: ${tip.replaceAll("<name>", name)}`)}`;
     let me = await this.loggedInUser();
     if (me === undefined) {
       say("Log in to Meilisearch Cloud in your browser. Without an account, you create one there.");
-      await logInWithBrowser(this.env, true, this.userAgent, detail);
-      await this.connectManagement();
-      me = await getMe({ client: this.managementClient });
+      me = await this.logInWithBrowser(detail);
     }
     step("Logged in", me.email);
-  }
-
-  /** The user of the stored session, or undefined when there is none or the server refuses it. */
-  private async loggedInUser(): Promise<{ email: string } | undefined> {
-    try {
-      await this.connectManagement();
-      return await getMe({ client: this.managementClient });
-    } catch (error) {
-      const refused =
-        error instanceof MeiliCliError
-          ? error.code === "cli_auth_missing" || error.code === "cli_auth_failed"
-          : error instanceof ManagementApiError && error.status === 401;
-      if (refused) return undefined;
-      throw error;
-    }
   }
 
   /**
@@ -459,12 +439,7 @@ async function exportProblem(client: Meilisearch): Promise<string | undefined> {
 async function closestFirst(
   regions: Region[],
 ): Promise<Array<{ name: string; value: Region; id: string }>> {
-  const measured = await Promise.all(
-    regions.map(async (region) => ({ region, latency: await regionLatency(region.regionUrl) })),
-  );
-  measured.sort(
-    (a, b) => (a.latency ?? Number.POSITIVE_INFINITY) - (b.latency ?? Number.POSITIVE_INFINITY),
-  );
+  const measured = await byLatency(regions);
   const width = Math.max(...regions.map((region) => region.name.length)) + 3;
   return measured.map(({ region, latency }, index) => {
     const name = `${region.name}${region.greenLabel ? " 🌱" : ""}`.padEnd(width);
@@ -561,11 +536,6 @@ function describeResource(resource: Resource, estimation: number): string {
   ].filter((part) => part !== undefined);
   const note = resource.name === "XS" ? " (recommended for development only)" : "";
   return `${resource.name}: ${[...size, `about ${USD.format(estimation)} a month`].join(", ")}${note}`;
-}
-
-/** The `code` of a Management API error body. */
-function apiErrorCode(error: unknown): string | undefined {
-  return error instanceof ManagementApiError ? parseErrorBody(error.body)?.code : undefined;
 }
 
 /** Follows the export task of the source, with the progress of its batch. */

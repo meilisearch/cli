@@ -7,7 +7,7 @@ This file defines what `meili` writes, where it writes it, and in which format. 
 - stdout carries data only: one JSON document, or for a human the text of that data. Nothing else, ever.
 - stderr carries everything else: errors, warnings, progress, debug traces, deprecation notices, and for a human the status sentence and the next steps of a command.
 - A command that produces no data (for example a delete that the API answers with 204) writes nothing on stdout and exits with code 0. It may write one line on stderr when stderr is a TTY, and for a human it says what it did.
-- A command that waits for a human, `auth login`, writes on stderr what that human must act on, TTY or not. The URL to approve must reach a person even when the output is piped.
+- A command that waits for a human, `auth login` or the login step of `trial start`, writes on stderr what that human must act on, TTY or not. The URL to approve must reach a person even when the output is piped.
 - An interactive command, such as `teleport`, writes its questions, its progress and its messages on stderr, and nothing on stdout. It is for humans, so the rules of this file for readability do not bind it: in a terminal, it may use colors, symbols and animations. `NO_COLOR` removes the colors. Its errors are text for a human. Without a terminal, it fails with the JSON error of this file. See ADR 0015.
 
 ## Format
@@ -103,10 +103,10 @@ The CLI warns when the config file is readable by others, see `config.md`.
 | 2 | Usage error: unknown command, bad or missing flag, flags that call for two different routes, invalid input file. |
 | 3 | Authentication or authorization failed: missing API key or token, HTTP 401 or 403 from either API. |
 | 4 | Resource not found: HTTP 404 from either API. |
-| 5 | Timeout: `--wait` exceeded `--timeout`, or the HTTP request timed out. |
+| 5 | Timeout: `--wait` exceeded `--timeout`, `trial start` waited for its project longer than `MEILI_TIMEOUT`, a login waited five minutes, or the HTTP request timed out. |
 | 6 | Cannot connect: DNS failure, connection refused, TLS error. |
-| 7 | Task finished with status `failed` or `canceled`, or the project of `project add` with status `failed` (only with `--wait`). The final task or project is still printed on stdout. |
-| 130 | Interrupted: Ctrl-C (SIGINT) stopped `--wait`, or `teleport`. |
+| 7 | Task finished with status `failed` or `canceled`, or the project of `project add` with status `failed` (only with `--wait`). The final task or project is still printed on stdout. The project of `trial start` with status `failed`: nothing on stdout. |
+| 130 | Interrupted: Ctrl-C (SIGINT) stopped `--wait`, the wait of `trial start`, or `teleport`. |
 
 No other code is used on purpose. If a new situation needs its own code, add it to this table first.
 

@@ -79,6 +79,9 @@
       },
       "team": {
         "description": "Meilisearch Cloud teams. A delete command requires --yes."
+      },
+      "trial": {
+        "description": "Start a free trial of Meilisearch Cloud."
       }
     }
   },
